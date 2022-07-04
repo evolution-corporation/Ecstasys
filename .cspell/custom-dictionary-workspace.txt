@@ -1,0 +1,9 @@
+# Custom Dictionary Words
+Эсватини
+backref
+ecstasys
+Familys
+reduxjs
+roboto
+scrollview
+swiper
