@@ -9,7 +9,6 @@ import {
   TextStyle,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import UserModel from "~models/User";
 import style, { colors } from "~styles";
 
 const UserInformation: FC<Props> = (props) => {
@@ -51,7 +50,7 @@ const UserInformation: FC<Props> = (props) => {
 type Props = General & (PropsSmall | PropsProfile);
 
 interface General {
-  user: UserModel;
+  user: UserData;
   styleView?: ViewStyle;
   styleImage?: ImageStyle;
   styleNickname?: TextStyle;

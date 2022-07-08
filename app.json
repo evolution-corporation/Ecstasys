@@ -1,8 +1,9 @@
 {
   "expo": {
+    "jsEngine": "hermes",
     "name": "Ecstasys",
     "slug": "ecstasys",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "orientation": "portrait",
     "githubUrl": "https://github.com/HardKot/ecstasys",
     "icon": "./assets/icon.png",
@@ -34,7 +35,8 @@
     "plugins": [
       "expo-dev-client",
       "expo-splash-screen",
-      "expo-image-picker"
+      "expo-image-picker",
+      "expo-community-flipper"    
     ],
     "sdkVersion": "45.0.0"
   },

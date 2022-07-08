@@ -1,10 +1,9 @@
 import react from "react";
 import * as reactNative from "react-native";
-import { UserAccount } from "~models/User";
 import Icon from "~assets/icons";
 import i18n from "~i18n";
 import style, { colors } from "~styles";
-
+import { checkNickname as checkNicknameServer } from "~api/user";
 enum StatusCheck {
   NULL,
   FREE,
@@ -36,7 +35,7 @@ const NicknameInput: react.FC<Props> = (props) => {
   const checkNickname = async (nickName: string) => {
     try {
       const { checking_unique_nick_name, nickname_variable } =
-        await UserAccount.checkNickname(nickName, generateNickname);
+        await checkNicknameServer(nickName, generateNickname);
       dispatch({
         type: "VerificationResult",
         payload: {

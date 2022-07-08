@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as auth_1 from "firebase/auth";
 import app from "~firebase";
 import i18n from "~i18n";
@@ -31,4 +32,27 @@ export async function getHeader(options?: {
     header.set("Content-Type", "application/json");
   }
   return header;
+}
+
+export const enum AsyncStorageKey {
+  MentalState = "@UserMentalState",
+  ParamsMeditation = "@MeditationParameters",
+  WeekStatistic = "@MeditationWeekStatistic",
+}
+
+export function serverRequest(request: Function) {
+  try {
+    request();
+  } catch (error) {
+    console.error(error);
+    throw new Error(`Function Error`);
+  }
+}
+
+export function removeUserData() {
+  AsyncStorage.multiRemove([
+    AsyncStorageKey.MentalState,
+    AsyncStorageKey.ParamsMeditation,
+    AsyncStorageKey.WeekStatistic,
+  ]);
 }

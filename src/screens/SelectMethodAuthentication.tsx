@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
-import BackgroundGradient from "~components/BackgroundGradient";
+import BackgroundGradient from "~containers/BackgroundGradient";
 import Logo from "~assets/icons/LogoApp.svg";
 import i18n from "~i18n";
 import Swiper from "react-native-swiper";

@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start --dev-client",
-    "build Dev": "eas build --platform android --profile development"
+    "build Dev": "eas build --platform android --profile development",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
   },
   "dependencies": {
     "@expo-google-fonts/roboto": "^0.2.2",
@@ -11,8 +13,9 @@
     "@react-navigation/devtools": "^6.0.7",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/native-stack": "^6.6.2",
-    "@reduxjs/toolkit": "^1.8.2",
+    "@reduxjs/toolkit": "^1.8.3",
     "expo": "~45.0.0",
+    "expo-community-flipper": "^45.1.0",
     "expo-dev-client": "~1.0.0",
     "expo-firebase-recaptcha": "~2.2.0",
     "expo-image-picker": "~13.1.1",
@@ -24,6 +27,8 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-native": "0.68.2",
+    "react-native-flipper": "^0.153.0",
+    "react-native-reanimated": "~2.8.0",
     "react-native-safe-area-context": "4.2.4",
     "react-native-screens": "~3.11.1",
     "react-native-snap-carousel": "^3.9.1",
@@ -32,6 +37,8 @@
     "react-native-web": "0.17.7",
     "react-native-webview": "11.18.1",
     "react-native-wheel-scrollview-picker": "^2.0.1",
+    "react-redux": "^8.0.2",
+    "redux-flipper": "^2.0.2",
     "validator": "^13.7.0"
   },
   "devDependencies": {
@@ -55,13 +62,5 @@
     ],
     "ignoreWords": [],
     "import": []
-  },
-  "overrides": {
-    "react-native": {
-      "react-devtools-core": "~4.14.0"
-    }
-  },
-  "resolutions": {
-    "react-devtools-core": "~4.14.0"
   }
 }

@@ -16,7 +16,7 @@ module.exports = function(api) {
             '.tsx',
             '.jsx',
             '.js',
-            '.json',
+            '.json'
           ],
           alias: {
             '~core': './src/core/Core',
@@ -25,14 +25,19 @@ module.exports = function(api) {
             '~assets': './assets',
             '~i18n': './src/i18n',
             '~styles': './src/styles',
-            '~models': './src/models',
+            '~api': './src/api',
             '~components': './src/components',
             '~firebase': './src/Firebase',
-            '~constants': './src/constants'
+            '~constants': './src/constants',
+            '~store': './src/store',
+            '~containers': './src/containers'
+
           },
         },
-        "@babel/plugin-transform-typescript"
+        "@babel/plugin-transform-typescript",
+        
       ],
+      'react-native-reanimated/plugin'
     ]
   };
 };

@@ -14,28 +14,69 @@ declare type ActionReducerNoWithPayload<T> = { type: T };
 
 declare type PositionComponent = { x: number; y: number };
 
-declare type ScreenName =
-  | "Main"
-  | "SelectMoon"
-  | "SelectionMeditationsParameters"
-  | "Player";
+declare interface UserData extends UserMinimalData {
+  uid: string;
+  status?: string;
+  role: UserRole;
+  gender: UserGender;
+  category: UserCategory;
+  imageId?: string;
+}
 
-declare type AppController = {
-  goBack: () => void;
-  editScreen: (screenName: ScreenName, data?: any) => void;
-};
+declare type UserMood =
+  | "IRRITATION"
+  | "ANXIETY"
+  | "CONCENTRATION"
+  | "HAPPINESS";
 
-declare type ScreenPropsWithUserData = ScreenProps & {
-  accountInformation: UserAccount;
-};
+declare interface UserMinimalData {
+  nickName: string;
+  birthday: Date;
+  image?: string;
+  displayName?: string;
+}
 
-declare type ScreenProps = {
-  appController: AppController;
-  isActiveScreen: 0 | 1 | 2;
-  screenControl?: RefObject<ScreenRef>;
-  isFocused?: boolean;
-};
+declare interface MeditationData {
+  lengthAudio: number;
+  name: string;
+  type: TypeMeditation;
+  image: string;
+  description: string;
+  imageId: string;
+}
 
-declare type optionScreenRef = {
-  setParams: (data: any) => void;
-};
+declare type CountDay_ParameterMeditation = "2-3days" | "4-5days" | "6-7days";
+declare type Time_ParameterMeditation =
+  | "lessThan15minutes"
+  | "moreThan15AndLessThan60Minutes"
+  | "moreThan60Minutes";
+declare interface ParametersMeditation {
+  countDay: CountDay_ParameterMeditation;
+  time: Time_ParameterMeditation;
+  type: TypeMeditation[];
+}
+
+declare interface WeekStatistic {
+  count: number;
+  time: number;
+}
+
+declare type UserRole = "NO_REGISTRATION" | "USER" | "ADMIN";
+declare type UserGender = "MALE" | "FEMALE" | "OTHER";
+
+declare type UserCategory =
+  | "BLOGGER"
+  | "COMMUNITY"
+  | "ORGANIZATION"
+  | "EDITOR"
+  | "WRITER"
+  | "GARDENER"
+  | "FLOWER_MAN"
+  | "PHOTOGRAPHER";
+
+declare type TypeMeditation =
+  | "relaxation"
+  | "breathingPractices"
+  | "directionalVisualizations"
+  | "dancePsychotechnics"
+  | "DMD";

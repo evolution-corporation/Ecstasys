@@ -1,29 +1,9 @@
-import React, {
-  FC,
-  useCallback,
-  useMemo,
-  useState,
-  useImperativeHandle,
-  forwardRef,
-  ComponentRef,
-  RefObject,
-  createRef,
-  Component,
-  FunctionComponent,
-} from "react";
-import {
-  ColorValue,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextStyle,
-  TouchableOpacity,
-  ViewStyle,
-} from "react-native";
+import React, { useMemo } from "react";
+import * as reactNative from "react-native";
 import Icon, { IconName } from "~assets/icons";
 import style, { colors } from "~styles";
 
-const ColorButton = forwardRef<Ref, Props>((props, ref) => {
+const ColorButton = React.forwardRef<Ref, Props>((props, ref) => {
   const {
     styleButton,
     type,
@@ -33,25 +13,23 @@ const ColorButton = forwardRef<Ref, Props>((props, ref) => {
     styleText,
     text,
     iconPosition = "left",
+    iconStyle,
   } = props;
-  const [isSelected, setIsSelected] = useState<boolean>(
+  const [isSelected, setIsSelected] = React.useState<boolean>(
     props.isSwitch ? props.initValue ?? false : false
   );
-  const action = useCallback(
-    (value?: boolean) => {
-      if (onPress) {
-        if (isSwitch) {
-          onPress(!isSelected);
-          setIsSelected(!isSelected);
-        } else {
-          onPress();
-        }
+  const action = React.useCallback(() => {
+    if (onPress) {
+      if (isSwitch) {
+        onPress(!isSelected);
+        setIsSelected(!isSelected);
+      } else {
+        onPress();
       }
-    },
-    [isSwitch, isSelected]
-  );
+    }
+  }, [isSwitch, isSelected]);
 
-  const color = useMemo(() => {
+  const color = React.useMemo(() => {
     if (isSelected && isSwitch) {
       return {
         text: props.textColorSelected ?? colors.white,
@@ -75,7 +53,7 @@ const ColorButton = forwardRef<Ref, Props>((props, ref) => {
   const noSelect = () => setIsSelected(false);
   const select = () => setIsSelected(true);
 
-  useImperativeHandle(ref, () => ({
+  React.useImperativeHandle(ref, () => ({
     select,
     noSelect,
   }));
@@ -91,6 +69,7 @@ const ColorButton = forwardRef<Ref, Props>((props, ref) => {
       colorText={color.text}
       colorButton={color.background}
       iconPosition={iconPosition}
+      iconStyle={iconStyle}
     />
   );
 });
@@ -104,69 +83,113 @@ interface SimpleButton {
 
 interface Switch {
   isSwitch: true;
-  textColorSelected?: ColorValue;
-  buttonColorSelected?: ColorValue;
+  textColorSelected?: reactNative.ColorValue;
+  buttonColorSelected?: reactNative.ColorValue;
   onPress?: (value: boolean) => void;
   initValue?: boolean;
 }
 
-const ShowButton: FC<ButtonParameters> = (props) => {
-  const [size, setSize] = useState<{ height: number; width: number }>({
+const ShowButton: React.FC<ButtonParameters> = (props) => {
+  const {
+    colorButton,
+    colorText,
+    onPress,
+    type,
+    icon,
+    iconPosition,
+    styleButton,
+    styleText,
+    text,
+    iconStyle,
+  } = props;
+  const [size, setSize] = React.useState<{ height: number; width: number }>({
     height: 0,
     width: 0,
   });
+
+  const iconView = useMemo(() => {
+    if (!!icon) {
+      if (
+        iconPosition == "top" ||
+        (size.width >= 300 && iconPosition == "left")
+      ) {
+        if (typeof icon == "string") {
+          return (
+            <Icon
+              name={icon}
+              style={[
+                styles.icon,
+                iconPosition == "left"
+                  ? { position: "absolute", left: 10 }
+                  : {},
+              ]}
+            />
+          );
+        } else {
+          return (
+            <reactNative.Image
+              source={icon}
+              style={[
+                styles.icon,
+                iconStyle,
+                iconPosition == "left"
+                  ? { position: "absolute", left: 10 }
+                  : {},
+              ]}
+              resizeMethod={"resize"}
+              resizeMode={"contain"}
+            />
+          );
+        }
+      }
+    }
+    return null;
+  }, [icon, iconPosition, iconStyle, size.width]);
+
   return (
-    <TouchableOpacity
+    <reactNative.TouchableOpacity
       style={[
         styles.backgroundButton,
-        props.type == "fullWidth" ? styles.fullWidthType : styles.smallType,
-        props.styleButton,
+        type == "fullWidth" ? styles.fullWidthType : styles.smallType,
+        styleButton,
         {
-          backgroundColor: props.colorButton,
-          flexDirection: props.iconPosition == "top" ? "column" : "row",
+          backgroundColor: colorButton,
+          flexDirection: iconPosition == "top" ? "column" : "row",
         },
       ]}
-      onPress={props.onPress}
+      onPress={onPress}
       onLayout={({ nativeEvent: { layout } }) =>
         setSize({ width: layout.width, height: layout.height })
       }
     >
-      {!!props.icon && (size.width >= 300 || props.iconPosition == "top") && (
-        <Icon
-          name={props.icon}
-          style={[
-            styles.icon,
-            props.iconPosition == "left"
-              ? { position: "absolute", left: 10 }
-              : {},
-          ]}
-        />
-      )}
-      <Text
-        style={[styles.textButton, props.styleText, { color: props.colorText }]}
+      {iconView}
+      <reactNative.Text
+        adjustsFontSizeToFit={true}
+        style={[styles.textButton, styleText, { color: colorText }]}
       >
-        {props.text}
-      </Text>
-    </TouchableOpacity>
+        {text}
+      </reactNative.Text>
+    </reactNative.TouchableOpacity>
   );
 };
 
 interface ButtonParameters extends General {
   onPress: () => void;
-  colorText: ColorValue;
-  colorButton: ColorValue;
+  colorText: reactNative.ColorValue;
+  colorButton: reactNative.ColorValue;
 }
 
 interface General {
   text?: string;
-  styleText?: TextStyle | TextStyle[];
-  styleButton?: ViewStyle | ViewStyle[];
+  styleText?: reactNative.TextStyle | reactNative.TextStyle[];
+  styleButton?: reactNative.ViewStyle | reactNative.ViewStyle[];
   type: "fullWidth" | "small";
-  icon?: IconName;
+  icon?: IconName | reactNative.ImageSourcePropType;
+  iconStyle?: reactNative.ImageStyle;
   iconPosition?: "top" | "left";
 }
 
-const styles = StyleSheet.create({
+const styles = reactNative.StyleSheet.create({
   backgroundButton: {
     backgroundColor: colors.white,
     borderRadius: 100,
@@ -192,24 +215,25 @@ const styles = StyleSheet.create({
   },
   icon: {
     width: "100%",
-
     alignSelf: "center",
   },
 });
 
-export const TextButton: FC<TextButton> = (props) => {
+export const TextButton: React.FC<TextButton> = (props) => {
   const { styleText, onPress, text } = props;
 
   return (
-    <Pressable hitSlop={10} onPress={onPress}>
-      <Text style={[styles.textLink, styleText]}>{text}</Text>
-    </Pressable>
+    <reactNative.Pressable hitSlop={10} onPress={onPress}>
+      <reactNative.Text style={[styles.textLink, styleText]}>
+        {text}
+      </reactNative.Text>
+    </reactNative.Pressable>
   );
 };
 
 interface TextButton {
   text?: string;
-  styleText?: TextStyle | TextStyle[];
+  styleText?: reactNative.TextStyle | reactNative.TextStyle[];
   onPress: () => void;
 }
 
@@ -223,16 +247,16 @@ interface Ref {
 export type ColorButtonRef = Ref;
 
 export function createListSelectedUnique<WrapperProps>(
-  ComponentWrapper: FunctionComponent<WrapperProps>,
-  values: any[],
+  ComponentWrapper: React.FunctionComponent<WrapperProps>,
+  values: [any, any][],
   ComponentProps: (item: any, index?: number) => WrapperProps
 ) {
-  class SelectedList extends Component<SelectedProps, SelectedState> {
-    private refElements: RefObject<ColorButtonRef>[] = [];
+  class SelectedList extends React.Component<SelectedProps, SelectedState> {
+    private refElements: React.RefObject<ColorButtonRef>[] = [];
     constructor(props: SelectedProps) {
       super(props);
       for (let i = 0; i < values.length; i++) {
-        this.refElements.push(createRef());
+        this.refElements.push(React.createRef());
       }
       this.state = {
         selectedIndex: props.initValue,
@@ -246,7 +270,7 @@ export function createListSelectedUnique<WrapperProps>(
             <ComponentWrapper
               {...ComponentProps(item, index)}
               ref={this.refElements[index]}
-              initValue={this.props.initValue == index}
+              initValue={this.props.initValue == item[0]}
               onChange={() => this.selectItem(index)}
               key={index.toString()}
             />
@@ -258,7 +282,7 @@ export function createListSelectedUnique<WrapperProps>(
     private selectItem(index: number) {
       this.refElements.forEach((elementRef) => elementRef.current?.noSelect());
       this.refElements[index].current?.select();
-      this.props.onChange(index);
+      this.props.onChange(values[index][0]);
     }
   }
   return SelectedList;
@@ -266,10 +290,10 @@ export function createListSelectedUnique<WrapperProps>(
 
 interface SelectedProps {
   onChange: (data: any) => void;
-  initValue?: number;
-  ref?: RefObject<ColorButtonRef>;
+  initValue?: number | string;
+  ref?: React.RefObject<ColorButtonRef>;
 }
 
 interface SelectedState {
-  selectedIndex?: number;
+  selectedIndex?: any;
 }

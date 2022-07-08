@@ -1,6 +1,6 @@
 import React, { Component, ComponentRef, createRef, RefObject } from "react";
 import { Animated, StyleSheet, Text } from "react-native";
-import BackgroundGradient from "~components/BackgroundGradient";
+import BackgroundGradient from "~containers/BackgroundGradient";
 import ColorButton from "~components/ColorButton";
 import NumberInput from "~components/NumberInput";
 import i18n from "~i18n";

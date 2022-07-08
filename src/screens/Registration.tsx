@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import BackgroundGradient from "~components/BackgroundGradient";
+import BackgroundGradient from "~containers/BackgroundGradient";
 import ColorButton from "~components/ColorButton";
 import NicknameInput from "~components/NicknameInput";
 import SelectBirthday from "~components/SelectBirthday";
@@ -9,7 +9,8 @@ import i18n from "~i18n";
 import style, { colors, styleText } from "~styles";
 import * as auth_1 from "firebase/auth";
 import app from "~firebase";
-import UserModel, { UserAccount } from "~models/User";
+import { useAppDispatch } from "~store/index";
+import { registration } from "~store/account";
 
 const auth = auth_1.getAuth(app);
 
@@ -116,22 +117,18 @@ export default class extends Component<Props, State> {
     this.setState(state);
   }
 
-  private async Registration() {
-    const user = auth.currentUser;
-    this.props.editUserData(
-      await UserAccount.registrationUser({
-        nickname: this.state.nickName,
-        birthday: this.state.birthday,
-        image: this.state.image,
-        displayName: user?.displayName ?? this.state.nickName,
-      })
-    );
+  private Registration() {
+    const data = {
+      nickname: this.state.nickName,
+      birthday: this.state.birthday,
+      image: this.state.image,
+      displayName: auth.currentUser?.displayName ?? this.state.nickName,
+    };
+    useAppDispatch(registration(data));
   }
 }
 
-interface Props {
-  editUserData: (user: UserAccount) => void;
-}
+interface Props {}
 interface State {
   screenPart: ScreenPart;
   nickName: string;

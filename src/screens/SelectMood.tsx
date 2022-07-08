@@ -1,108 +1,55 @@
-import React, {
-  Component,
-  ComponentRef,
-  forwardRef,
-  RefObject,
-  useImperativeHandle,
-  useState,
-} from "react";
+import React, { forwardRef, useImperativeHandle, useState, FC } from "react";
 import {
   StyleSheet,
   Image,
   View,
-  ActivityIndicator,
   ImageStyle,
   TextStyle,
   Text,
   TouchableOpacity,
+  ViewStyle,
 } from "react-native";
-import BackgroundGradient from "~components/BackgroundGradient";
+import BackgroundGradient from "~containers/BackgroundGradient";
 import ColorButton, {
   ColorButtonRef,
   createListSelectedUnique,
 } from "~components/ColorButton";
-import { ScreenRef } from "~components/Screen";
+import { editMood } from "~store/account";
 import i18n from "~i18n";
-import { UserAccount, UserMood } from "~models/User";
+import { useAppSelector, useAppDispatch } from "~store/index";
 import style, { colors } from "~styles";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-export default class SelectMoodScreen extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      isLoading: true,
-      isActivate: false,
-    };
-  }
+const SelectMoodScreen: FC<
+  NativeStackScreenProps<RootStackParamList, "SelectMood">
+> = ({ navigation }) => {
+  const dispatch = useAppDispatch();
+  const initMood = useAppSelector((state) => state.account.mood);
 
-  render() {
-    let screenPart;
-    if (this.state.isLoading) {
-      screenPart = (
-        <View style={styles.backgroundLoading}>
-          <ActivityIndicator color={colors.white} size={"large"} />
-        </View>
-      );
-    } else {
-      screenPart = (
-        <>
-          <View style={style.fullWidth}>
-            <SelectedComponent
-              initValue={this.state.mood}
-              onChange={(mood: UserMood) => this.setState({ mood })}
-            />
-          </View>
-          <ColorButton
-            text={i18n.t("ready")}
-            type={"small"}
-            styleButton={styles.readyButton}
-            styleText={styles.readyButtonText}
-            onPress={() => this.saveMood()}
-          />
-        </>
-      );
-    }
-    return (
-      <BackgroundGradient
-        style={styles.background}
-        isImage={true}
-        imageName={"leaves"}
-        name="SelectMood"
-        isAnimation={true}
-        ref={this.props.screenControl}
-        zIndex={this.props.zIndex}
-      >
-        {screenPart}
-      </BackgroundGradient>
-    );
-  }
-
-  componentDidMount() {
-    this.setState({
-      isActivate: true,
-      unSubscribeEditMood: this.props.accountInformation.on(
-        "editMood",
-        (mood: UserMood) => {
-          if (this.state.isActivate) {
-            this.setState({ mood: mood, isLoading: false });
-          }
-        }
-      ),
-    });
-  }
-
-  componentWillUnmount() {
-    this.setState({ isActivate: false });
-    if (this.state.unSubscribeEditMood) this.state.unSubscribeEditMood();
-  }
-
-  private saveMood() {
-    if (this.state.mood) {
-      this.props.accountInformation.editMood(this.state.mood);
-    }
-    this.props.appController.goBack();
-  }
-}
+  return (
+    <BackgroundGradient
+      style={styles.background}
+      isImage={true}
+      imageName={"leaves"}
+    >
+      <View style={style.fullWidth}>
+        <SelectedComponent
+          initValue={initMood}
+          onChange={(mood: UserMood) => {
+            dispatch(editMood(mood));
+          }}
+        />
+      </View>
+      <ColorButton
+        text={i18n.t("ready")}
+        type={"small"}
+        styleButton={styles.readyButton}
+        styleText={styles.readyButtonText}
+        onPress={() => navigation.goBack()}
+      />
+    </BackgroundGradient>
+  );
+};
 
 const VariableAnswer = forwardRef<
   ColorButtonRef,
@@ -146,15 +93,6 @@ const VariableAnswer = forwardRef<
     </TouchableOpacity>
   );
 });
-
-interface Props extends ScreenPropsWithUserData {}
-
-interface State {
-  mood?: UserMood;
-  isLoading: boolean;
-  isActivate: boolean;
-  unSubscribeEditMood?: () => void;
-}
 
 const styles = StyleSheet.create({
   background: {
@@ -234,43 +172,54 @@ const styles = StyleSheet.create({
   },
 });
 
-const data = [
-  {
-    image: require("~assets/vaultBoy.png"),
-    fixImage: styles.fixImage1,
-    fixText: styles.fixText1,
-  },
-  {
-    image: require("~assets/hourglassMan.png"),
-    fixImage: styles.fixImage2,
-    fixText: styles.fixText2,
-  },
-
-  {
-    image: require("~assets/sleepwalker.png"),
-    fixImage: styles.fixImage4,
-    fixText: styles.fixText4,
-  },
-  {
-    image: require("~assets/rainbowGirl.png"),
-    fixImage: styles.fixImage3,
-    fixText: styles.fixText3,
-  },
+const data: [
+  UserMood,
+  { image: NodeRequire; fixImage: ViewStyle; fixText: ViewStyle }
+][] = [
+  [
+    "IRRITATION",
+    {
+      image: require("~assets/vaultBoy.png"),
+      fixImage: styles.fixImage1,
+      fixText: styles.fixText1,
+    },
+  ],
+  [
+    "ANXIETY",
+    {
+      image: require("~assets/hourglassMan.png"),
+      fixImage: styles.fixImage2,
+      fixText: styles.fixText2,
+    },
+  ],
+  [
+    "HAPPINESS",
+    {
+      image: require("~assets/rainbowGirl.png"),
+      fixImage: styles.fixImage3,
+      fixText: styles.fixText3,
+    },
+  ],
+  [
+    "CONCENTRATION",
+    {
+      image: require("~assets/sleepwalker.png"),
+      fixImage: styles.fixImage4,
+      fixText: styles.fixText4,
+    },
+  ],
 ];
 
 const SelectedComponent = createListSelectedUnique(
   VariableAnswer,
   data,
   (item, index = 0) => ({
-    image: item.image,
-    fixImage: item.fixImage,
-    fixText: item.fixText,
-    text: i18n.t("ec2e50e0-0f79-42c2-bff3-b8fad59c12c8", {
-      composite: {
-        compositeIndex: index,
-        composite: true,
-      },
-    }),
+    image: item[1].image,
+    fixImage: item[1].fixImage,
+    fixText: item[1].fixText,
+    text: i18n.getMood(item[0], 1),
     isStart: index % 2 == 0,
   })
 );
+
+export default SelectMoodScreen;

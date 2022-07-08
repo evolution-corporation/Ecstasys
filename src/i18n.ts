@@ -169,6 +169,45 @@ export class I18nClass {
         )}`;
     }
   }
+
+  public getMood(mood: UserMood, variable: number = 0) {
+    const moodTranslate = this.translate?.["[Mood]"];
+    if (moodTranslate == undefined) return this.errorTranslateMessage;
+    if (moodTranslate[mood].length - 1 < variable) variable = 0;
+    return moodTranslate[mood][variable];
+  }
+
+  public getTypeMeditation(
+    typeMeditation: TypeMeditation,
+    variable: number = 0
+  ) {
+    const typeMeditationTranslate = this.translate?.["[TypeMeditation]"];
+    if (typeMeditationTranslate == undefined) return this.errorTranslateMessage;
+    if (typeMeditationTranslate[typeMeditation].length - 1 < variable)
+      variable = 0;
+    return typeMeditationTranslate[typeMeditation][variable];
+  }
+
+  public getSpecialTranslate(
+    nameParameters:
+      | "[CountDay_ParameterMeditation]"
+      | "[Time_ParameterMeditation]",
+    value: CountDay_ParameterMeditation | Time_ParameterMeditation
+  ): string {
+    const translate = this.translate?.[nameParameters];
+    if (translate == undefined) return this.errorTranslateMessage;
+    return translate[value];
+  }
+
+  public getCountDay_ParameterMeditation(
+    countDay: CountDay_ParameterMeditation
+  ) {
+    return this.getSpecialTranslate("[CountDay_ParameterMeditation]", countDay);
+  }
+
+  public getTime_ParameterMeditation(time: Time_ParameterMeditation) {
+    return this.getSpecialTranslate("[Time_ParameterMeditation]", time);
+  }
 }
 
 const i18n = new I18nClass(TranslateLib as LibraryTranslates, {
@@ -387,7 +426,9 @@ export type LanguageApp = "System" | languageCode;
 
 export type TextRowTranslate =
   | string
-  | { [index: string | number]: string | { [index: string]: string } }
+  | {
+      [index: string | number]: string | { [index: string]: string } | string[];
+    }
   | string[];
 export interface Translates {
   "[MonthList]": string[];
@@ -396,6 +437,12 @@ export interface Translates {
   "[Time]": {
     [index in "secund" | "minute" | "hour"]: { [index: string]: string };
   };
+  "[Mood]": { [index in UserMood]: string[] };
+  "[TypeMeditation]": { [index in TypeMeditation]: string[] };
+  "[CountDay_ParameterMeditation]": {
+    [index in CountDay_ParameterMeditation]: string;
+  };
+  "[Time_ParameterMeditation]": { [index in Time_ParameterMeditation]: string };
   [index: string]: TextRowTranslate;
 }
 
