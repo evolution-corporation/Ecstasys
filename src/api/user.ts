@@ -1,5 +1,7 @@
+import { useCallback } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { URL_API, URL_IMAGE, getHeader, AsyncStorageKey } from "./config";
+import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 
 export async function checkNickname(
   nickName: string,
@@ -149,4 +151,17 @@ export function createUserData(data: UserData): UserData {
       return `https://firebasestorage.googleapis.com/v0/b/plants-336217.appspot.com/o/avatars%2FGroup%20638.png?alt=media&token=130ffa3d-5672-447c-b156-222382e612bf`;
     },
   };
+}
+
+export async function requestSMSCode(
+  numberPhone: string
+): Promise<FirebaseAuthTypes.ConfirmationResult> {
+  return await auth().signInWithPhoneNumber(numberPhone);
+}
+
+export async function checkSMSCode(
+  code: string,
+  confirm: FirebaseAuthTypes.ConfirmationResult
+) {
+  await confirm.confirm(code);
 }

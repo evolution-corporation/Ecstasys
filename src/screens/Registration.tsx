@@ -7,12 +7,10 @@ import SelectBirthday from "~components/SelectBirthday";
 import SelectImageButton from "~components/SelectImageButton";
 import i18n from "~i18n";
 import style, { colors, styleText } from "~styles";
-import * as auth_1 from "firebase/auth";
-import app from "~firebase";
+import auth from "@react-native-firebase/auth";
+
 import { useAppDispatch } from "~store/index";
 import { registration } from "~store/account";
-
-const auth = auth_1.getAuth(app);
 
 export default class extends Component<Props, State> {
   constructor(props: Props) {
@@ -122,7 +120,7 @@ export default class extends Component<Props, State> {
       nickname: this.state.nickName,
       birthday: this.state.birthday,
       image: this.state.image,
-      displayName: auth.currentUser?.displayName ?? this.state.nickName,
+      displayName: auth().currentUser?.displayName ?? this.state.nickName,
     };
     useAppDispatch(registration(data));
   }

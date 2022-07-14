@@ -206,6 +206,8 @@ const styles = reactNative.StyleSheet.create({
     color: colors.TextOnTheBackground,
     fontSize: 13,
     ...style.getFontOption("500"),
+    textAlignVertical: "center",
+    textAlign: "center",
   },
   fullWidthType: {
     width: "100%",
@@ -224,7 +226,10 @@ export const TextButton: React.FC<TextButton> = (props) => {
 
   return (
     <reactNative.Pressable hitSlop={10} onPress={onPress}>
-      <reactNative.Text style={[styles.textLink, styleText]}>
+      <reactNative.Text
+        style={[styles.textLink, styleText]}
+        adjustsFontSizeToFit
+      >
         {text}
       </reactNative.Text>
     </reactNative.Pressable>

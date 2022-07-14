@@ -37,12 +37,15 @@ declare interface UserMinimalData {
 }
 
 declare interface MeditationData {
+  id: string;
   lengthAudio: number;
   name: string;
   type: TypeMeditation;
   image: string;
   description: string;
   imageId: string;
+  audio?: string;
+  audioId?: string;
 }
 
 declare type CountDay_ParameterMeditation = "2-3days" | "4-5days" | "6-7days";
@@ -80,3 +83,10 @@ declare type TypeMeditation =
   | "directionalVisualizations"
   | "dancePsychotechnics"
   | "DMD";
+
+declare type RequestSMSCodeFunction = {
+  (
+    numberPhone: string,
+    numberPhoneIsValidate: boolean
+  ): Promise<CheckSMSCodeFunction>;
+};

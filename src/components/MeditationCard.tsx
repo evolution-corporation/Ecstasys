@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React, { FC } from "react";
 import {
   ImageBackground,
@@ -9,11 +10,11 @@ import {
 } from "react-native";
 import Icon from "~assets/icons";
 import i18n from "~i18n";
-import Meditation from "~models/Meditation";
 import style, { colors } from "~styles";
 
 const MeditationCard: FC<Props> = (props) => {
   const { meditation } = props;
+  const navigation = useNavigation();
   return (
     <ImageBackground
       source={{ uri: meditation.image }}
@@ -28,7 +29,13 @@ const MeditationCard: FC<Props> = (props) => {
         <Text style={styles.lengthAudio}>
           {i18n.getTime(meditation.lengthAudio / 60, "minute")}
         </Text>
-        <TouchableOpacity onPress={props.onPress}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("MeditationListener", {
+              meditationID: meditation.id,
+            })
+          }
+        >
           <Icon name="Play" variable="violet" />
         </TouchableOpacity>
       </View>
@@ -37,7 +44,7 @@ const MeditationCard: FC<Props> = (props) => {
 };
 
 interface Props extends ViewProps {
-  meditation: Meditation;
+  meditation: MeditationData;
   onPress?: () => void;
 }
 

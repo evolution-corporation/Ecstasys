@@ -1,6 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as auth_1 from "firebase/auth";
-import app from "~firebase";
+import auth from "@react-native-firebase/auth";
 import i18n from "~i18n";
 
 export const HOST_URL = new URL("http://192.168.1.146:5000");
@@ -8,12 +7,10 @@ export const URL_API = new URL("api", HOST_URL);
 export const URL_IMAGE = new URL("image", HOST_URL);
 export type ApiError = { codeError: number; name: string };
 
-const auth = auth_1.getAuth(app);
-
 export async function getToken(): Promise<string> {
-  const user = auth.currentUser;
+  const user = auth().currentUser;
   if (user == null) throw new Error("User not found");
-  return await auth_1.getIdToken(user);
+  return await user.getIdToken();
 }
 
 export type MethodSendingData = "json" | "form-data";

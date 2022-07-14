@@ -11,6 +11,7 @@ import {
 } from "@expo-google-fonts/roboto";
 
 import { LoadingStatus } from "~constants";
+import { ToastOptions } from "react-native-root-toast";
 
 export type FontWeight =
   | "normal"
@@ -148,3 +149,12 @@ export const styleText = StyleSheet.create({
     textAlign: "center",
   },
 });
+
+export const toastOptions: ToastOptions = {
+  textColor: colors.gray,
+  backgroundColor: colors.white,
+  shadowColor: colors.DarkGlass,
+  containerStyle: {
+    borderRadius: 15,
+  },
+};

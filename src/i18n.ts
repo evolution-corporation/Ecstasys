@@ -199,6 +199,12 @@ export class I18nClass {
     return translate[value];
   }
 
+  public getLegalDocument(type: "userAgreement" | "privacyPolicy"): string {
+    const LegalDocumentTranslate = this.translate?.["[DocumentName]"][type];
+    if (LegalDocumentTranslate == undefined) return this.errorTranslateMessage;
+    return LegalDocumentTranslate;
+  }
+
   public getCountDay_ParameterMeditation(
     countDay: CountDay_ParameterMeditation
   ) {
@@ -443,6 +449,7 @@ export interface Translates {
     [index in CountDay_ParameterMeditation]: string;
   };
   "[Time_ParameterMeditation]": { [index in Time_ParameterMeditation]: string };
+  "[DocumentName]": { userAgreement: string; privacyPolicy: string };
   [index: string]: TextRowTranslate;
 }
 

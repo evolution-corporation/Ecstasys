@@ -4,6 +4,7 @@ declare interface MeditationState {
   weekStatistic: WeekStatistic;
   meditationPopularToDay?: MeditationData;
   meditationRecommendToDay?: MeditationData;
+  meditationCurrentPlayId?: string;
 }
 declare interface AccountState {
   mood?: UserMood;

@@ -20,7 +20,11 @@ import Rainbow from "./Rainbow.svg";
 import Leaf from "./Leaf.svg";
 import Puzzle from "./Puzzle.svg";
 import CheckMarkerWhiteThin from "./CheckMarker_WhiteThin.svg";
-import { useState } from "react";
+
+import ControlButton_Left from "./ControlButton_Left.svg";
+import ControlButton_Pause from "./ControlButton_Pause.svg";
+import ControlButton_Play from "./ControlButton_Play.svg";
+import ControlButton_Right from "./ControlButton_Right.svg";
 
 const Icon: FC<Props> = (props) => {
   const { style, name } = props;
@@ -83,6 +87,18 @@ const Icon: FC<Props> = (props) => {
           default:
             return CrossMarkerWhite;
         }
+      case "ControlButton":
+        switch (props.variable) {
+          case "Left":
+            return ControlButton_Left;
+          case "Play":
+            return ControlButton_Play;
+          case "Right":
+            return ControlButton_Right;
+          case "Pause":
+          default:
+            return ControlButton_Pause;
+        }
     }
   }, [name]);
 
@@ -122,7 +138,8 @@ type ManyVariable =
   | IconWithManyVariable<"CheckMarker", "green" | "white" | "whiteThin">
   | IconWithManyVariable<"CrossMarker", "white">
   | IconWithManyVariable<"TheArrow", "whiteTop" | "whiteLeft">
-  | IconWithManyVariable<"Play", "violet">;
+  | IconWithManyVariable<"Play", "violet">
+  | IconWithManyVariable<"ControlButton", "Left" | "Pause" | "Play" | "Right">;
 
 type IconWithManyVariable<T, P> = { name: T; variable?: P };
 

@@ -30,7 +30,9 @@ module.exports = function(api) {
             '~firebase': './src/Firebase',
             '~constants': './src/constants',
             '~store': './src/store',
-            '~containers': './src/containers'
+            '~containers': './src/containers',
+            '~hooks': './src/hooks',
+            '~contexts': './src/contexts'
 
           },
         },

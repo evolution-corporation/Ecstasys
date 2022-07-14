@@ -26,6 +26,7 @@ export async function getMeditationData(
     //   urlParams += "&params=true";
     // }
     const url = new URL(`meditation${urlParams}`, URL_API);
+
     const headers = await getHeader({ token: true });
     const request = await fetch(url, {
       method: "GET",
@@ -95,7 +96,7 @@ export async function getMeditationToDay(
   params?: ParametersMeditation
 ): Promise<{
   popularToDay: MeditationData;
-  meditationRecommend: MeditationData;
+  meditationRecommend: MeditationData | null;
 }> {
   try {
     let urlParams = `isMinimal=true&popularToDay=true`;
@@ -115,7 +116,9 @@ export async function getMeditationToDay(
       const result = json.result;
       return {
         popularToDay: createMeditationData(result.popularToDay),
-        meditationRecommend: createMeditationData(result.recommend),
+        meditationRecommend: result.recommend
+          ? createMeditationData(result.recommend)
+          : null,
       };
     }
     throw new Error(`API ERROR. CODE: ${request.status}`);
@@ -185,11 +188,39 @@ interface ParamsGetMeditation {
 }
 
 export function createMeditationData(data: MeditationData): MeditationData {
-  return {
+  let model: MeditationData = {
     ...data,
     imageId: data.image,
     get image() {
-      return `${URL_IMAGE.toString()}/meditation/${this.imageId}`;
+      return new URL(
+        this.imageId,
+        `${URL_IMAGE.toString()}/meditation`
+      ).toString();
     },
   };
+  if (data.audio) {
+    model = {
+      ...model,
+      audioId: data.audio,
+      get audio() {
+        return new URL(
+          this.id,
+          `${URL_API.toString()}/meditation.play`
+        ).toString();
+      },
+    };
+  }
+  return model;
+}
+
+export async function getAudioData(
+  meditation: MeditationData
+): Promise<{ uri: string; headers: { [fieldName: string]: string } }> {
+  if (meditation.audio) {
+    return {
+      uri: meditation.audio,
+      headers: (await getHeader()).map,
+    };
+  }
+  throw new Error("audioId Not Found");
 }

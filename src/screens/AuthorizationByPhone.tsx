@@ -1,4 +1,10 @@
-import React, { Component, ComponentRef, createRef, RefObject } from "react";
+import React, {
+  Component,
+  ComponentRef,
+  createRef,
+  FC,
+  RefObject,
+} from "react";
 import { Animated, StyleSheet, Text } from "react-native";
 import BackgroundGradient from "~containers/BackgroundGradient";
 import ColorButton from "~components/ColorButton";
@@ -10,10 +16,15 @@ import * as auth_1 from "firebase/auth";
 import app from "~firebase";
 import SMSCodeInput, * as SMSCodeInput_1 from "~components/SMSCodeInput";
 import Toast from "~components/Toast";
+import {
+  createNativeStackNavigator,
+  NativeStackScreenProps,
+} from "@react-navigation/native-stack";
+import { NavigatorScreenParams } from "@react-navigation/native";
 
 const auth = auth_1.getAuth(app);
 
-export default class extends Component<Props, State> {
+export class test extends Component<Props, State> {
   private reCAPTCHA: RefObject<expoFirebaseRecaptcha.FirebaseRecaptchaVerifierModal> =
     createRef();
   private codeInput: RefObject<ComponentRef<typeof SMSCodeInput>> = createRef();
@@ -32,24 +43,7 @@ export default class extends Component<Props, State> {
     let screenPart = null;
     switch (this.state.screenPart) {
       case ScreenPart.numberInput:
-        screenPart = (
-          <>
-            <NumberInput
-              onChange={(number: string, isValidate) =>
-                this.dispatch({
-                  type: "editNumber",
-                  payload: { number, isValidate },
-                })
-              }
-            />
-            <ColorButton
-              type="fullWidth"
-              text={i18n.t("continue")}
-              styleButton={styles.colorButton}
-              onPress={() => this.requestSMSCode()}
-            />
-          </>
-        );
+        screenPart = <></>;
         break;
       case ScreenPart.SMSCodeInput:
         screenPart = (
@@ -74,6 +68,7 @@ export default class extends Component<Props, State> {
     }
     return (
       <BackgroundGradient
+        title={i18n.t("aa8609dd-caa8-4563-a1b5-e4cb896d03ae")}
         style={[
           styles.background,
           {

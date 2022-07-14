@@ -27,7 +27,9 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.ecorp.ecstasys"
+      "package": "com.ecorp.ecstasys",
+      "googleServicesFile": "./google-services.json"
+
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -36,7 +38,7 @@
       "expo-dev-client",
       "expo-splash-screen",
       "expo-image-picker",
-      "expo-community-flipper"    
+      "@react-native-firebase/app"
     ],
     "sdkVersion": "45.0.0"
   },

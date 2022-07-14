@@ -12,9 +12,9 @@ import style, { colors } from "~styles";
 import { getMeditationToDay } from "~store/meditation";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-const MainScreen: React.FC<
-  NativeStackScreenProps<RootStackParamList, "Main">
-> = ({ navigation }) => {
+const Main: React.FC<NativeStackScreenProps<RootStackParamList, "Main">> = ({
+  navigation,
+}) => {
   const dispatch = useAppDispatch();
   const account = useAppSelector((state) => state.account.user);
   const mood = useAppSelector((state) => state.account.mood);
@@ -102,11 +102,12 @@ const MainScreen: React.FC<
     return null;
   }
 
-  const openEditParametersMeditation = () =>
+  const openEditParametersMeditation = () => {
     navigation.navigate("EditMeditationsParameters");
+  };
 
   return (
-    <reactNative.View style={{ ...reactNative.StyleSheet.absoluteFillObject }}>
+    <reactNative.View style={{ flex: 1 }}>
       <reactNative.ImageBackground
         source={require("~assets/backgroundImage/greetingImage.png")}
         style={styles.greeting}
@@ -277,10 +278,10 @@ const MainScreen: React.FC<
                     />
                   ),
                 },
-              ].map(({ content, title, subTitle }) => (
+              ].map(({ content, title, subTitle }, index) => (
                 <reactNative.View
                   style={styles.infoCard}
-                  key={Math.random().toString()}
+                  key={index.toString()}
                 >
                   <reactNative.Text style={styles.textTitle}>
                     {title}
@@ -298,23 +299,6 @@ const MainScreen: React.FC<
     </reactNative.View>
   );
 };
-
-interface Props {}
-
-const InfoCard: React.FC<
-  {
-    title: string;
-    subTitle: string;
-  } & reactNative.ViewProps
-> = (props) => (
-  <reactNative.View style={styles.infoCard} key={Math.random().toString()}>
-    <reactNative.Text style={styles.textTitle}>{props.title}</reactNative.Text>
-    <reactNative.Text style={styles.textSubTitle}>
-      {props.subTitle}
-    </reactNative.Text>
-    <reactNative.View style={props.style}>{props.children}</reactNative.View>
-  </reactNative.View>
-);
 
 const StaticCard: React.FC<{
   icon: IconName;
@@ -443,4 +427,4 @@ const styles = reactNative.StyleSheet.create({
   },
 });
 
-export default MainScreen;
+export default Main;

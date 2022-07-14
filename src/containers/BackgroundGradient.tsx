@@ -17,15 +17,19 @@ const BackgroundGradient: FC<Props> = (props) => {
   const navigation = useNavigation();
   useEffect(() => {
     console.log("mount");
-    navigation.setOptions({
-      headerTitleStyle: {
-        fontSize: 20,
-        color: colors.white,
-        ...gStyle.getFontOption("bold"),
-      },
-      headerTintColor: colors.white,
-      title: props.title ?? null,
-    });
+    let navigate = navigation;
+    while (navigate != undefined) {
+      navigate.setOptions({
+        headerTitleStyle: {
+          fontSize: 20,
+          color: colors.white,
+          ...gStyle.getFontOption("bold"),
+        },
+        headerTintColor: colors.white,
+        headerTitleAlign: "center",
+      });
+      navigate = navigate.getParent();
+    }
   }, [navigation]);
   if (props.isImage) {
     switch (props.imageName) {
@@ -60,12 +64,7 @@ const BackgroundGradient: FC<Props> = (props) => {
             style={StyleSheet.absoluteFill}
           >
             <LinearGradient
-              colors={[
-                "rgba(92, 157, 255, 0)",
-                "rgba(97, 115, 212, 1)",
-                "rgba(106, 35, 130, 1)",
-                "rgba(106, 35, 130, 1)",
-              ]}
+              colors={["rgba(92, 157, 255, 0)", "#947EC1", "#9195D8"]}
               style={[
                 styles.contentsBackground,
                 props.style,
