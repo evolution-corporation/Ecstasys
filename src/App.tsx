@@ -1,31 +1,32 @@
-import React, { FC, useEffect, useMemo, useReducer, useState } from "react";
+import React, { FC, useEffect, useReducer } from "react";
 import { Provider } from "react-redux";
 import * as SplashScreen from "expo-splash-screen";
 import { connectToDevTools } from "react-devtools-core";
 import store from "~store/index";
-import { authentication, signOut, editMood } from "~store/account";
+import { editMood, authentication } from "~store/account";
 import {
   editParametersMeditation,
   removeParametersMeditation,
 } from "~store/meditation";
-import app from "~firebase";
 import i18n, { LanguageApp } from "~i18n";
 import style from "~styles";
-import { onAuthStateChanged, getAuth } from "firebase/auth";
 import { LoadingStatus, AuthenticationStatus } from "~constants";
 import { getMood } from "~api/user";
 import { getParametersMeditation } from "~api/meditation";
 import Routes from "~routes/index";
+import useAuthorization from "~hooks/useAuthorization";
 import { Platform, UIManager } from "react-native";
+import { RootSiblingParent } from "react-native-root-siblings";
+import FlipperAsyncStorage from "rn-flipper-async-storage-advanced";
+import useAudio from "~hooks/useAudio";
+import AudioControlContext from "~contexts/audioControl";
 
-const auth = getAuth(app);
-
-if (__DEV__) {
-  connectToDevTools({
-    host: "localhost",
-    port: 8097,
-  });
-}
+// if (__DEV__) {
+//   connectToDevTools({
+//     host: "localhost",
+//     port: 8097,
+//   });
+// }
 
 function useLoadingModule(): LoadingStatus {
   const [state, dispatch] = useReducer(
@@ -69,29 +70,6 @@ function useLoadingModule(): LoadingStatus {
   return state.appStatus;
 }
 
-function useAuthenticationStatus(): [AuthenticationStatus, boolean] {
-  const [authenticationStatus, setAuthenticationStatus] =
-    useState<AuthenticationStatus>(AuthenticationStatus.NONE);
-  const [isRegistration, setIsRegistration] = useState<boolean>(false);
-  useEffect(() => {
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const data = await store.dispatch(authentication()).unwrap();
-        if (data == null) {
-          setIsRegistration(false);
-        } else {
-          setIsRegistration(true);
-        }
-        setAuthenticationStatus(AuthenticationStatus.AUTHORIZED);
-      } else {
-        store.dispatch(signOut());
-        setAuthenticationStatus(AuthenticationStatus.NO_AUTHORIZED);
-      }
-    });
-  }, [setAuthenticationStatus, setIsRegistration]);
-
-  return [authenticationStatus, isRegistration];
-}
 if (Platform.OS === "android") {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -99,9 +77,12 @@ if (Platform.OS === "android") {
 }
 const AppCore: FC<Props> = (props) => {
   const moduleStatus = useLoadingModule();
-  const [authenticationStatus, isRegistration] = useAuthenticationStatus();
+  const { authenticationStatus, isRegistration } = useAuthorization();
+  const { audioControl, audioData, setMeditationId } = useAudio();
+
   useEffect(() => {
     if (authenticationStatus == AuthenticationStatus.AUTHORIZED) {
+      store.dispatch(authentication());
       getMood().then((mood) => {
         store.dispatch(editMood(mood));
       });
@@ -126,17 +107,28 @@ const AppCore: FC<Props> = (props) => {
     }
   }, [authenticationStatus, moduleStatus]);
 
+  useEffect(() => {
+    console.log(`Hermes ${!!global.HermesInternal ? "" : "не"} используется`);
+  }, [1]);
+
   if (
     moduleStatus == LoadingStatus.READY &&
     authenticationStatus != AuthenticationStatus.NONE
   ) {
     return (
-      <Provider store={store}>
-        <Routes
-          authenticationStatus={authenticationStatus}
-          isRegistration={isRegistration}
-        />
-      </Provider>
+      <RootSiblingParent>
+        <FlipperAsyncStorage />
+        <Provider store={store}>
+          <AudioControlContext.Provider
+            value={{ audioControl, audioData, setAudioData: setMeditationId }}
+          >
+            <Routes
+              authenticationStatus={authenticationStatus}
+              isRegistration={isRegistration}
+            />
+          </AudioControlContext.Provider>
+        </Provider>
+      </RootSiblingParent>
     );
   }
   return null;
