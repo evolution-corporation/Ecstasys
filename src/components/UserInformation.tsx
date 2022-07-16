@@ -21,7 +21,9 @@ const UserInformation: FC<Props> = (props) => {
           style={[
             stylesSmall.background,
             styleView,
-            { top: position.y, left: position.x },
+            position
+              ? { top: position.y, left: position.x, position: "absolute" }
+              : null,
           ]}
         >
           <Image
@@ -58,7 +60,7 @@ interface General {
 
 interface PropsSmall {
   type: "small";
-  position: {
+  position?: {
     x: number;
     y: number;
   };
@@ -71,7 +73,7 @@ interface PropsProfile {
 
 const stylesSmall = StyleSheet.create({
   background: {
-    position: "absolute",
+    // position: "absolute",
     height: 44,
     paddingHorizontal: 3,
     borderRadius: 22,

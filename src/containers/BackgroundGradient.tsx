@@ -28,6 +28,7 @@ const BackgroundGradient: FC<Props> = (props) => {
         headerTintColor: colors.white,
         headerTitleAlign: "center",
       });
+      if (props.title) navigate.setOptions({ title: props.title });
       navigate = navigate.getParent();
     }
   }, [navigation]);
@@ -45,8 +46,8 @@ const BackgroundGradient: FC<Props> = (props) => {
               source={require("~assets/backgroundImage/leaves.png")}
               style={[
                 styles.contentsBackground,
-                props.style,
                 { paddingTop: headerHeight },
+                props.style,
               ]}
               resizeMethod={"resize"}
               resizeMode={"cover"}
@@ -67,8 +68,8 @@ const BackgroundGradient: FC<Props> = (props) => {
               colors={["rgba(92, 157, 255, 0)", "#947EC1", "#9195D8"]}
               style={[
                 styles.contentsBackground,
-                props.style,
                 { paddingTop: headerHeight },
+                props.style,
               ]}
             >
               {props.children}
@@ -84,8 +85,8 @@ const BackgroundGradient: FC<Props> = (props) => {
         end={{ x: 0, y: 1 }}
         style={[
           styles.contentsBackground,
-          props.style,
           { paddingTop: headerHeight },
+          props.style,
         ]}
       >
         {props.children}

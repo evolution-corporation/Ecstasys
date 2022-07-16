@@ -3,14 +3,18 @@ import {
   setParametersMeditation,
   removeParametersMeditation as removeParametersMeditationMemory,
   getMeditationToDay as getMeditationToDayServer,
+  removeFavoriteMeditation as removeFavoriteMeditationMemory,
+  addFavoriteMeditation as addFavoriteMeditationMemory,
+  setWeekStatistic,
 } from "~api/meditation";
-import type { AppDispatch, RootState } from ".";
+import type { RootState } from ".";
 
 const initialState: MeditationState = {
   weekStatistic: {
     count: 0,
     time: 0,
   },
+  favoriteMeditationId: [],
 };
 
 const meditationSlice = createSlice({
@@ -36,6 +40,7 @@ const meditationSlice = createSlice({
     ) => {
       state.weekStatistic.count += 1;
       state.weekStatistic.time += payload;
+      setWeekStatistic(state.weekStatistic);
     },
     addWeekStatic: (
       state: MeditationState,
@@ -43,6 +48,32 @@ const meditationSlice = createSlice({
     ) => {
       state.weekStatistic.count += payload.count;
       state.weekStatistic.time += payload.time;
+      setWeekStatistic(state.weekStatistic);
+    },
+    addFavoriteMeditation: (
+      state: MeditationState,
+      { payload }: PayloadAction<string | string[]>
+    ) => {
+      if (Array.isArray(payload)) {
+        state.favoriteMeditationId = [
+          ...state.favoriteMeditationId,
+          ...payload,
+        ];
+      } else {
+        if (!state.favoriteMeditationId.includes(payload))
+          state.favoriteMeditationId.push(payload);
+        addFavoriteMeditationMemory(payload);
+      }
+    },
+    removeFavoriteMeditation: (
+      state: MeditationState,
+      { payload }: PayloadAction<string>
+    ) => {
+      if (state.favoriteMeditationId.includes(payload))
+        state.favoriteMeditationId = [
+          ...state.favoriteMeditationId.filter((item) => item != payload),
+        ];
+      removeFavoriteMeditationMemory(payload);
     },
   },
   extraReducers: (builder) => {
@@ -70,5 +101,11 @@ export const getMeditationToDay = createAsyncThunk(
 
 export default meditationSlice.reducer;
 
-export const { editParametersMeditation, removeParametersMeditation } =
-  meditationSlice.actions;
+export const {
+  editParametersMeditation,
+  removeParametersMeditation,
+  addWeekStaticOneSeance,
+  addWeekStatic,
+  addFavoriteMeditation,
+  removeFavoriteMeditation,
+} = meditationSlice.actions;

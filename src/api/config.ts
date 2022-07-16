@@ -20,7 +20,7 @@ export async function getHeader(options?: {
   token?: boolean;
 }): Promise<Headers> {
   const header = new Headers();
-  header.set("app", "ecstasys");
+  header.set("appName", "Ecstasys");
   header.set("Accept-Language", i18n.language ?? "ru");
   if (options?.token ?? true) {
     header.set("authorization", await getToken());
@@ -35,6 +35,7 @@ export const enum AsyncStorageKey {
   MentalState = "@UserMentalState",
   ParamsMeditation = "@MeditationParameters",
   WeekStatistic = "@MeditationWeekStatistic",
+  FavoriteMeditations = "@FavoriteMeditations",
 }
 
 export function serverRequest(request: Function) {

@@ -21,6 +21,7 @@ declare interface UserData extends UserMinimalData {
   gender: UserGender;
   category: UserCategory;
   imageId?: string;
+  subscribeInfo?: SubscribeInfo;
 }
 
 declare type UserMood =
@@ -31,7 +32,7 @@ declare type UserMood =
 
 declare interface UserMinimalData {
   nickName: string;
-  birthday: Date;
+  birthday: string;
   image?: string;
   displayName?: string;
 }
@@ -46,6 +47,7 @@ declare interface MeditationData {
   imageId: string;
   audio?: string;
   audioId?: string;
+  permission: boolean;
 }
 
 declare type CountDay_ParameterMeditation = "2-3days" | "4-5days" | "6-7days";
@@ -77,12 +79,13 @@ declare type UserCategory =
   | "FLOWER_MAN"
   | "PHOTOGRAPHER";
 
-declare type TypeMeditation =
+declare type TypeMeditation = Practices | "DMD";
+
+declare type PracticesMeditation =
   | "relaxation"
   | "breathingPractices"
   | "directionalVisualizations"
-  | "dancePsychotechnics"
-  | "DMD";
+  | "dancePsychotechnics";
 
 declare type RequestSMSCodeFunction = {
   (
@@ -90,3 +93,10 @@ declare type RequestSMSCodeFunction = {
     numberPhoneIsValidate: boolean
   ): Promise<CheckSMSCodeFunction>;
 };
+
+declare type SubscribeInfo = {
+  id: string;
+  dateEndSubscribe: string;
+};
+
+declare type BackgroundMusic = "Test" | "Test2";

@@ -1,16 +1,10 @@
-import React, {
-  FC,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { FC, useContext } from "react";
 import {
   ImageBackground,
   StyleSheet,
-  ActivityIndicator,
+  TouchableOpacity,
   View,
+  Text,
 } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -19,6 +13,8 @@ import ButtonControlPlayer from "~components/ButtonControlPlayer";
 import TimeLine from "~components/TimeLine";
 import useAudio from "~hooks/useAudio";
 import AudioControlContext from "~contexts/audioControl";
+import Icon from "~assets/icons";
+import i18n from "~i18n";
 
 const PlayerScreen: FC<
   NativeStackScreenProps<MeditationListenerParametersList, "Player">
@@ -35,7 +31,10 @@ const PlayerScreen: FC<
   //     </Animated.View>
   //   );
   // }
-  if (!audioData) return null;
+  if (!audioData?.audioData) return null;
+  const openBackgroundMusicMenu = () => {
+    navigation.navigate("BackgroundMusic");
+  };
   return (
     <ImageBackground
       source={{ uri: route.params.image }}
@@ -48,6 +47,17 @@ const PlayerScreen: FC<
           positionMillis={audioData.audioData.positionMillis}
         />
       </View>
+      <TouchableOpacity
+        style={styles.backgroundMusicMenu}
+        onPress={openBackgroundMusicMenu}
+      >
+        <Icon name={"Headphones"} variable={"white"} />
+        <Text style={styles.backgroundMusicName}>
+          {audioData.backgroundMusicName
+            ? i18n.getBackgroundMusicImage(audioData.backgroundMusicName)
+            : i18n.t("12ee6d3a-ad58-4c4a-9b87-63645efe9c90")}
+        </Text>
+      </TouchableOpacity>
     </ImageBackground>
   );
 };
@@ -101,5 +111,26 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 130,
+  },
+  backgroundMusicMenu: {
+    backgroundColor: "rgba(255, 255, 255, 0.5)",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    height: 41,
+    borderRadius: 20.5,
+    paddingHorizontal: 13,
+    width: "auto",
+
+    position: "absolute",
+    left: 30,
+
+    bottom: 40,
+  },
+  backgroundMusicName: {
+    color: colors.white,
+    fontSize: 14,
+    ...style.getFontOption("400"),
+    marginLeft: 24,
   },
 });

@@ -18,11 +18,10 @@ import { editMood } from "~store/account";
 import i18n from "~i18n";
 import { useAppSelector, useAppDispatch } from "~store/index";
 import style, { colors } from "~styles";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-const SelectMoodScreen: FC<
-  NativeStackScreenProps<RootStackParamList, "SelectMood">
-> = ({ navigation }) => {
+const SelectMoodScreen: FC<RootStackScreenProps<"SelectMood">> = ({
+  navigation,
+}) => {
   const dispatch = useAppDispatch();
   const initMood = useAppSelector((state) => state.account.mood);
 

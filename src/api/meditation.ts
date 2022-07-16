@@ -162,10 +162,13 @@ export async function getWeekStatistic(): Promise<WeekStatistic> {
     };
   } else {
     const data = JSON.parse(item);
-    const startWeek = new Date();
-    startWeek.setDate(startWeek.getDate() - startWeek.getDay());
-    startWeek.setHours(0, 0, 0, 0);
-    if (new Date(Date.parse(data.dateUpdate)) < startWeek) {
+    const startNextWeek = new Date();
+    startNextWeek.setDate(startNextWeek.getDate() + 7 - startNextWeek.getDay());
+    startNextWeek.setHours(0, 0, 0, 0);
+
+    if (
+      new Date(Date.parse(data.dateUpdate)).getTime() < startNextWeek.getTime()
+    ) {
       return { count: data.count, time: data.time };
     } else {
       setWeekStatistic({ count: 0, time: 0 });
@@ -174,7 +177,7 @@ export async function getWeekStatistic(): Promise<WeekStatistic> {
   }
 }
 
-export async function setWeekStatistic(data: { count: number; time: number }) {
+export async function setWeekStatistic(data: WeekStatistic) {
   const toDay = new Date();
   toDay.setHours(0, 0, 0, 0);
   AsyncStorage.setItem(
@@ -223,4 +226,62 @@ export async function getAudioData(
     };
   }
   throw new Error("audioId Not Found");
+}
+
+export async function getFavoriteMeditation(): Promise<string[]> {
+  return JSON.parse(
+    (await AsyncStorage.getItem(AsyncStorageKey.FavoriteMeditations)) ?? "[]"
+  );
+}
+
+export async function addFavoriteMeditation(meditationId: string) {
+  const favoriteMeditation = await getFavoriteMeditation();
+  if (!favoriteMeditation.includes(meditationId)) {
+    favoriteMeditation.push(meditationId);
+    await saveFavoriteMeditation(favoriteMeditation);
+  }
+}
+
+export async function removeFavoriteMeditation(meditationId: string) {
+  const favoriteMeditation = await getFavoriteMeditation();
+  if (favoriteMeditation.includes(meditationId)) {
+    await saveFavoriteMeditation([
+      ...favoriteMeditation.filter((item) => item != meditationId),
+    ]);
+  }
+}
+
+async function saveFavoriteMeditation(
+  favoriteMeditation: string[]
+): Promise<void> {
+  await AsyncStorage.setItem(
+    AsyncStorageKey.FavoriteMeditations,
+    JSON.stringify(favoriteMeditation)
+  );
+}
+
+export async function getMeditationListByType(
+  typeMeditation: TypeMeditation
+): Promise<MeditationData[]> {
+  try {
+    let urlParams = `typeMeditation=${typeMeditation}`;
+
+    const url = new URL(`meditation?${urlParams}`, URL_API);
+    const headers = await getHeader({ token: true });
+    const request = await fetch(url, {
+      method: "GET",
+      headers,
+    });
+    if (request.ok) {
+      const json = await request.json();
+      const result = json.result;
+      return result.typeMeditation.map((meditation) =>
+        createMeditationData(meditation)
+      );
+    }
+    throw new Error(`API ERROR. CODE: ${request.status}`);
+  } catch (error) {
+    console.error(error);
+    throw new Error(`Function Error`);
+  }
 }

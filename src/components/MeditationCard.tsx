@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { FC } from "react";
 import {
+  Dimensions,
   ImageBackground,
   StyleSheet,
   Text,
@@ -11,41 +12,74 @@ import {
 import Icon from "~assets/icons";
 import i18n from "~i18n";
 import style, { colors } from "~styles";
+import EditFavoriteStatusMeditation from "./EditFavoriteStatusMeditation";
 
 const MeditationCard: FC<Props> = (props) => {
-  const { meditation } = props;
-  const navigation = useNavigation();
+  const { meditation, type = "full", isBlocked = false, onPress } = props;
+  // const navigation = useNavigation<
+  //   RootStackScreenProps,
+  //   "MeditationListener"
+  // >();
+
+  // const openPlayer = () =>
+  //   navigation.navigate("MeditationListener", {
+  //     meditationID: meditation.id,
+  //   });
+
+  if (type == "compact") {
+    return (
+      <ImageBackground
+        source={{ uri: meditation.image }}
+        style={[
+          styles.imageMeditationCompact,
+          isBlocked
+            ? { alignItems: "center", justifyContent: "center" }
+            : { justifyContent: "flex-end" },
+        ]}
+      >
+        {isBlocked ? (
+          <View style={styles.blockedIcon}>
+            <Icon name={"Lock"} />
+          </View>
+        ) : (
+          <View style={styles.containerImageCompact}>
+            <Text style={styles.timeFontCompact}>
+              {i18n.getTime(meditation.lengthAudio / 60, "minute")}
+            </Text>
+            <EditFavoriteStatusMeditation id={meditation.id} onlyView />
+          </View>
+        )}
+      </ImageBackground>
+    );
+  }
+
   return (
-    <ImageBackground
-      source={{ uri: meditation.image }}
-      {...props}
-      style={[styles.background, props.style]}
-    >
-      <View>
-        <Text style={styles.title}>{meditation.name}</Text>
-        <Text style={styles.description}>{meditation.description}</Text>
-      </View>
-      <View style={styles.footer}>
-        <Text style={styles.lengthAudio}>
-          {i18n.getTime(meditation.lengthAudio / 60, "minute")}
-        </Text>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("MeditationListener", {
-              meditationID: meditation.id,
-            })
-          }
-        >
+    <TouchableOpacity onPress={onPress ?? console.log}>
+      <ImageBackground
+        source={{ uri: meditation.image }}
+        {...props}
+        style={[styles.background, props.style]}
+      >
+        <View>
+          <Text style={styles.title}>{meditation.name}</Text>
+          <Text style={styles.description}>{meditation.description}</Text>
+        </View>
+        <View style={styles.footer}>
+          <Text style={styles.lengthAudio}>
+            {i18n.getTime(meditation.lengthAudio / 60, "minute")}
+          </Text>
           <Icon name="Play" variable="violet" />
-        </TouchableOpacity>
-      </View>
-    </ImageBackground>
+        </View>
+      </ImageBackground>
+    </TouchableOpacity>
   );
 };
 
 interface Props extends ViewProps {
   meditation: MeditationData;
   onPress?: () => void;
+  type?: "full" | "compact";
+  isBlocked?: boolean;
 }
 
 const paddingVertical = 20;
@@ -91,6 +125,36 @@ const styles = StyleSheet.create({
     // left: paddingHorizontal,
   },
   buttonPlay: {},
+  imageMeditationCompact: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 28,
+    ...style.getShadows(2, 3),
+    overflow: "hidden",
+    // paddingBottom: 17,
+    zIndex: 1,
+  },
+  containerImageCompact: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    zIndex: 1,
+    alignItems: "flex-end",
+    marginHorizontal: 14,
+    marginBottom: 17,
+  },
+  timeFontCompact: {
+    fontSize: 13,
+    color: colors.white,
+    ...style.getFontOption("600"),
+  },
+  blockedIcon: {
+    height: 110,
+    width: 110,
+    backgroundColor: "rgba(0,0,0,0.49)",
+    borderRadius: 55,
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
 
 export default MeditationCard;

@@ -12,7 +12,7 @@ import style, { colors } from "~styles";
 import { getMeditationToDay } from "~store/meditation";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-const Main: React.FC<NativeStackScreenProps<RootStackParamList, "Main">> = ({
+const MainScreen: React.FC<TabNavigatorScreenProps<"Main">> = ({
   navigation,
 }) => {
   const dispatch = useAppDispatch();
@@ -106,6 +106,23 @@ const Main: React.FC<NativeStackScreenProps<RootStackParamList, "Main">> = ({
     navigation.navigate("EditMeditationsParameters");
   };
 
+  const openPlayer = (
+    type: "meditationRecommend" | "meditationPopularToDay"
+  ) => {
+    if (type == "meditationRecommend" && meditationList.meditationRecommend) {
+      navigation.navigate("MeditationListener", {
+        meditationID: meditationList.meditationRecommend.id,
+      });
+    } else if (
+      type == "meditationPopularToDay" &&
+      meditationList.meditationPopularToDay
+    ) {
+      navigation.navigate("MeditationListener", {
+        meditationID: meditationList.meditationPopularToDay.id,
+      });
+    }
+  };
+
   return (
     <reactNative.View style={{ flex: 1 }}>
       <reactNative.ImageBackground
@@ -183,7 +200,8 @@ const Main: React.FC<NativeStackScreenProps<RootStackParamList, "Main">> = ({
             showsVerticalScrollIndicator={false}
             scrollEnabled={isOpenMeditationListInfo}
           >
-            {meditationList.isLoading ? (
+            {meditationList.isLoading ||
+            meditationList.meditationPopularToDay == undefined ? (
               <reactNative.View
                 style={{
                   width: "100%",
@@ -212,6 +230,9 @@ const Main: React.FC<NativeStackScreenProps<RootStackParamList, "Main">> = ({
                       {meditationList.meditationRecommend ? (
                         <MeditationCard
                           meditation={meditationList.meditationRecommend}
+                          onPress={() => {
+                            openPlayer("meditationRecommend");
+                          }}
                         />
                       ) : (
                         <>
@@ -262,7 +283,7 @@ const Main: React.FC<NativeStackScreenProps<RootStackParamList, "Main">> = ({
                       <StaticCard
                         icon={"Timer"}
                         backgroundColor={colors.StrokePanel}
-                        data={weekStatic.time}
+                        data={Math.floor(weekStatic.time / 60)}
                         text={i18n.t("10ced895-7fa8-40cb-bc8a-b8880b6086b0")}
                         textColor={colors.white}
                       />
@@ -275,6 +296,9 @@ const Main: React.FC<NativeStackScreenProps<RootStackParamList, "Main">> = ({
                   content: (
                     <MeditationCard
                       meditation={meditationList.meditationPopularToDay}
+                      onPress={() => {
+                        openPlayer("meditationPopularToDay");
+                      }}
                     />
                   ),
                 },
@@ -427,4 +451,4 @@ const styles = reactNative.StyleSheet.create({
   },
 });
 
-export default Main;
+export default MainScreen;

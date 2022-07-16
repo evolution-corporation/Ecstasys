@@ -5,6 +5,7 @@ declare interface MeditationState {
   meditationPopularToDay?: MeditationData;
   meditationRecommendToDay?: MeditationData;
   meditationCurrentPlayId?: string;
+  favoriteMeditationId: string[];
 }
 declare interface AccountState {
   mood?: UserMood;

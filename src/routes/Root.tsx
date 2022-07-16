@@ -1,17 +1,17 @@
 import React, { FC } from "react";
 
-import Main from "~screens/Main";
-
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SelectMood from "~screens/SelectMood";
 import EditMeditationsParameters from "./EditMeditationsParameters";
 import i18n from "~i18n";
 import MeditationListenerRoutes from "./MeditationListener";
-const RootStack = createNativeStackNavigator<RootStackParamList>();
+import TabNavigatorRouter from "./TabNavigator";
+import MeditationPracticeList from "~screens/MeditationPracticeList";
+const RootStack = createNativeStackNavigator<RootStackParametersList>();
 
 const RootRoutes: FC<{}> = () => (
   <RootStack.Navigator
-    initialRouteName="Main"
+    initialRouteName="TabNavigator"
     screenOptions={{
       animationTypeForReplace: "push",
       animation: "default",
@@ -19,7 +19,7 @@ const RootRoutes: FC<{}> = () => (
       headerShown: false,
     }}
   >
-    <RootStack.Screen component={Main} name="Main" />
+    <RootStack.Screen component={TabNavigatorRouter} name={"TabNavigator"} />
     <RootStack.Screen component={SelectMood} name="SelectMood" />
     <RootStack.Screen
       component={EditMeditationsParameters}
@@ -28,6 +28,12 @@ const RootRoutes: FC<{}> = () => (
     <RootStack.Screen
       component={MeditationListenerRoutes}
       name={"MeditationListener"}
+      initialParams={{ meditationID: "1054ce51-7ed2-4ed0-ab66-d6b53e15a88c" }}
+    />
+    <RootStack.Screen
+      component={MeditationPracticeList}
+      name={"MeditationPracticeList"}
+      options={{ headerShown: true }}
     />
   </RootStack.Navigator>
 );

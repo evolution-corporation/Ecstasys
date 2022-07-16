@@ -5,21 +5,25 @@ import { connectToDevTools } from "react-devtools-core";
 import store from "~store/index";
 import { editMood, authentication } from "~store/account";
 import {
+  addWeekStatic,
   editParametersMeditation,
   removeParametersMeditation,
+  addFavoriteMeditation,
 } from "~store/meditation";
 import i18n, { LanguageApp } from "~i18n";
 import style from "~styles";
 import { LoadingStatus, AuthenticationStatus } from "~constants";
 import { getMood } from "~api/user";
-import { getParametersMeditation } from "~api/meditation";
+import {
+  getParametersMeditation,
+  getWeekStatistic,
+  getFavoriteMeditation,
+} from "~api/meditation";
 import Routes from "~routes/index";
 import useAuthorization from "~hooks/useAuthorization";
 import { Platform, UIManager } from "react-native";
 import { RootSiblingParent } from "react-native-root-siblings";
 import FlipperAsyncStorage from "rn-flipper-async-storage-advanced";
-import useAudio from "~hooks/useAudio";
-import AudioControlContext from "~contexts/audioControl";
 
 // if (__DEV__) {
 //   connectToDevTools({
@@ -78,7 +82,6 @@ if (Platform.OS === "android") {
 const AppCore: FC<Props> = (props) => {
   const moduleStatus = useLoadingModule();
   const { authenticationStatus, isRegistration } = useAuthorization();
-  const { audioControl, audioData, setMeditationId } = useAudio();
 
   useEffect(() => {
     if (authenticationStatus == AuthenticationStatus.AUTHORIZED) {
@@ -93,6 +96,12 @@ const AppCore: FC<Props> = (props) => {
           store.dispatch(removeParametersMeditation());
         }
       });
+      getWeekStatistic().then((weekStatistic: WeekStatistic) => {
+        store.dispatch(addWeekStatic(weekStatistic));
+      });
+      getFavoriteMeditation().then((FavoriteMeditation: string[]) =>
+        store.dispatch(addFavoriteMeditation(FavoriteMeditation))
+      );
     }
   }, [authenticationStatus]);
 
@@ -119,14 +128,10 @@ const AppCore: FC<Props> = (props) => {
       <RootSiblingParent>
         <FlipperAsyncStorage />
         <Provider store={store}>
-          <AudioControlContext.Provider
-            value={{ audioControl, audioData, setAudioData: setMeditationId }}
-          >
-            <Routes
-              authenticationStatus={authenticationStatus}
-              isRegistration={isRegistration}
-            />
-          </AudioControlContext.Provider>
+          <Routes
+            authenticationStatus={authenticationStatus}
+            isRegistration={isRegistration}
+          />
         </Provider>
       </RootSiblingParent>
     );

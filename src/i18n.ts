@@ -214,6 +214,24 @@ export class I18nClass {
   public getTime_ParameterMeditation(time: Time_ParameterMeditation) {
     return this.getSpecialTranslate("[Time_ParameterMeditation]", time);
   }
+
+  public getTypeMeditationDescription(
+    typeMeditation: TypeMeditation,
+    variable: "small" | "full" = "small"
+  ): string {
+    const typeMeditationTranslate =
+      this.translate?.["[TypeMeditationDescription]"];
+    if (typeMeditationTranslate == undefined) return this.errorTranslateMessage;
+
+    return typeMeditationTranslate[typeMeditation][variable];
+  }
+
+  public getBackgroundMusicImage(backgroundMusicName: BackgroundMusic): string {
+    const typeMeditationTranslate = this.translate?.["[BackgroundMusicName]"];
+    if (typeMeditationTranslate == undefined) return this.errorTranslateMessage;
+
+    return typeMeditationTranslate[backgroundMusicName];
+  }
 }
 
 const i18n = new I18nClass(TranslateLib as LibraryTranslates, {
@@ -450,6 +468,12 @@ export interface Translates {
   };
   "[Time_ParameterMeditation]": { [index in Time_ParameterMeditation]: string };
   "[DocumentName]": { userAgreement: string; privacyPolicy: string };
+  "[TypeMeditationDescription]": {
+    [index in TypeMeditation]: { [key in "small" | "full"]: string };
+  };
+  "[BackgroundMusicName]": {
+    [key in BackgroundMusic]: string;
+  };
   [index: string]: TextRowTranslate;
 }
 

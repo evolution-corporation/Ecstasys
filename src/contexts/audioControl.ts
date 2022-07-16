@@ -4,7 +4,9 @@ import { AVPlaybackStatusSuccess } from "expo-av";
 
 const AudioControlContext = createContext<{
   audioControl: AudioControl;
-  audioData: AVPlaybackStatusSuccess;
-  setAudioData: (id: string) => void;
+  audioData: AVPlaybackStatusSuccess | undefined;
+  meditationData: MeditationData | undefined;
+  backgroundMusicName: BackgroundMusic | null;
+  backgroundMusicVolume: number;
 } | null>(null);
 export default AudioControlContext;

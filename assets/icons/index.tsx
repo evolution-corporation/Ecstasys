@@ -13,18 +13,29 @@ import ChartColumns from "./ChartColumns.svg";
 import Calendar from "./Calendar.svg";
 import Timer from "./Timer.svg";
 import PlayViolet from "./Play_Violet.svg";
-import Headphones from "./Headphones.svg";
-import Sun from "./Sun.svg";
+import Headphones_violet from "./Headphones_violet.svg";
+import Headphones_white from "./Headphones_white.svg";
+import Sun_yellow from "./Sun_yellow.svg";
+import Sun_violet from "./Sun_Violet.svg";
+import Sun_gray from "./Sun_Gray.svg";
+
 import Moon from "./Moon.svg";
 import Rainbow from "./Rainbow.svg";
 import Leaf from "./Leaf.svg";
 import Puzzle from "./Puzzle.svg";
 import CheckMarkerWhiteThin from "./CheckMarker_WhiteThin.svg";
+import Lock from "./Lock.svg";
 
 import ControlButton_Left from "./ControlButton_Left.svg";
 import ControlButton_Pause from "./ControlButton_Pause.svg";
 import ControlButton_Play from "./ControlButton_Play.svg";
 import ControlButton_Right from "./ControlButton_Right.svg";
+
+import Heart_Red from "./Heart_Red.svg";
+import Heart_Transparent from "./Heart_Transparent.svg";
+
+import Home_Violet from "./Home_Violet.svg";
+import Home_White from "./Home_White.svg";
 
 const Icon: FC<Props> = (props) => {
   const { style, name } = props;
@@ -32,7 +43,14 @@ const Icon: FC<Props> = (props) => {
   const Icons = useMemo<FC<SvgProps>>(() => {
     switch (name) {
       case "Headphones":
-        return Headphones;
+        switch (props.variable) {
+          case "white":
+            return Headphones_white;
+          case "violet":
+          default:
+            return Headphones_violet;
+        }
+
       case "Google":
         return GoogleLogo;
       case "LogoApp":
@@ -53,9 +71,26 @@ const Icon: FC<Props> = (props) => {
         return ChartColumns;
       case "Timer":
         return Timer;
-
+      case "Lock":
+        return Lock;
       case "Sun":
-        return Sun;
+        switch (props.variable) {
+          case "violet":
+            return Sun_violet;
+          case "gray":
+            return Sun_gray;
+          case "yellow":
+          default:
+            return Sun_yellow;
+        }
+      case "Home":
+        switch (props.variable) {
+          case "violet":
+            return Home_Violet;
+          case "white":
+          default:
+            return Home_White;
+        }
       case "Rainbow":
         return Rainbow;
       case "Moon":
@@ -99,6 +134,14 @@ const Icon: FC<Props> = (props) => {
           default:
             return ControlButton_Pause;
         }
+      case "Heart":
+        switch (props.variable) {
+          case "red":
+            return Heart_Red;
+          case "transparent":
+          default:
+            return Heart_Transparent;
+        }
     }
   }, [name]);
 
@@ -139,7 +182,11 @@ type ManyVariable =
   | IconWithManyVariable<"CrossMarker", "white">
   | IconWithManyVariable<"TheArrow", "whiteTop" | "whiteLeft">
   | IconWithManyVariable<"Play", "violet">
-  | IconWithManyVariable<"ControlButton", "Left" | "Pause" | "Play" | "Right">;
+  | IconWithManyVariable<"ControlButton", "Left" | "Pause" | "Play" | "Right">
+  | IconWithManyVariable<"Heart", "red" | "transparent">
+  | IconWithManyVariable<"Sun", "gray" | "violet" | "yellow">
+  | IconWithManyVariable<"Home", "white" | "violet">
+  | IconWithManyVariable<"Headphones", "violet" | "white">;
 
 type IconWithManyVariable<T, P> = { name: T; variable?: P };
 
@@ -150,11 +197,10 @@ type IconNameOneVariable =
   | "Timer"
   | "Calendar"
   | "ChartColumns"
-  | "Sun"
   | "Puzzle"
   | "Leaf"
   | "Rainbow"
   | "Moon"
-  | "Headphones";
+  | "Lock";
 
 export default Icon;

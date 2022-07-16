@@ -121,12 +121,14 @@ export const colors = {
   DarkLetters: "#555555",
   black: "#000000",
   WhiteGlass: "rgba(255, 255, 255, 0.2)",
+  WhiteBrightGlass: "rgba(255, 255, 255, 0.8)",
   gray: "#3D3D3D",
   DarkGlass: "rgba(0, 0,0 ,0.2)",
   orange: "#FF5C00",
   grayGlass: "rgba(240, 242, 238, 0.19)",
   violet: "#702D87",
   grayHell: "#A0A0A0",
+  skin: "#FEEBED",
 };
 
 export const styleText = StyleSheet.create({

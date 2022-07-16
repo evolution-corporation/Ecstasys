@@ -19,6 +19,7 @@ import {
 import AudioControlContext from "~contexts/audioControl";
 import style, { colors } from "~styles";
 
+//! Перевести в HOC
 const TimeLine: FC<TimeLineProps> = (props) => {
   // const [isAnimation, setIsAnimation] = useState<boolean>(false);
   const [positionMillisCurrent, setPositionMillisCurrent] = useState<number>(0);

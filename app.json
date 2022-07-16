@@ -3,7 +3,7 @@
     "jsEngine": "hermes",
     "name": "Ecstasys",
     "slug": "ecstasys",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "orientation": "portrait",
     "githubUrl": "https://github.com/HardKot/ecstasys",
     "icon": "./assets/icon.png",
@@ -24,9 +24,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#FFFFFF"
       },
+      "icon": "./assets/adaptive-icon.png",
       "package": "com.ecorp.ecstasys",
       "googleServicesFile": "./google-services.json"
 

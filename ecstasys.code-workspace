@@ -2,9 +2,6 @@
   "folders": [
     {
       "path": "."
-    },
-    {
-      "path": "../EvolutionServer"
     }
   ],
   "settings": {
@@ -19,20 +16,6 @@
   },
   "launch": {
     "version": "0.2.0",
-    "configurations": [
-      {
-        "name": "Server",
-        "type": "python",
-        "request": "launch",
-        "module": "flask",
-        "env": {
-          "FLASK_APP": "main.py",
-          "FLASK_ENV": "development"
-        },
-        "args": ["run", "--no-debugger", "--host=192.168.1.146"],
-        "jinja": true,
-        "justMyCode": true
-      }
-    ]
+    "configurations": []
   }
 }

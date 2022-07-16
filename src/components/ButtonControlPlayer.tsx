@@ -1,4 +1,4 @@
-import React, { FC, forwardRef, useContext } from "react";
+import React, { FC, forwardRef, useContext, useMemo } from "react";
 import {
   View,
   Text,
@@ -13,9 +13,12 @@ import AudioControlContext from "~contexts/audioControl";
 const ButtonControlPlayer: FC<ButtonControlPlayerProps> = (props) => {
   const { style } = props;
   const audioControlContext = useContext(AudioControlContext);
-  const isPlaying = !!audioControlContext?.audioData.isPlaying;
+  const isLoaded = !audioControlContext?.audioData?.isLoaded;
+  const isPlaying = useMemo(
+    () => !!audioControlContext?.audioData?.isPlaying,
+    [isLoaded, audioControlContext?.audioData]
+  );
   if (!audioControlContext) return null;
-
   return (
     <View style={[styles.playerButton, style]}>
       {isPlaying && (
@@ -30,9 +33,11 @@ const ButtonControlPlayer: FC<ButtonControlPlayerProps> = (props) => {
 
       <TouchableOpacity
         style={[styles.playButton, styles.controlPlayButton]}
-        onPress={() => {
-          audioControlContext.audioControl.PlayPause();
-        }}
+        onPress={
+          isPlaying
+            ? audioControlContext.audioControl.pause
+            : audioControlContext.audioControl.play
+        }
       >
         {isPlaying ? (
           <Icon name="ControlButton" variable={"Pause"} key={"pause"} />
