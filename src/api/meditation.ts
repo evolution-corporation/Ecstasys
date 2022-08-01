@@ -153,7 +153,7 @@ export async function removeParametersMeditation() {
   AsyncStorage.removeItem(AsyncStorageKey.ParamsMeditation);
 }
 
-export async function getWeekStatistic(): Promise<WeekStatistic> {
+export async function getWeekStatistic(): Promise<StatisticMeditation> {
   const item = await AsyncStorage.getItem(AsyncStorageKey.WeekStatistic);
   if (item == null) {
     return {
@@ -177,13 +177,73 @@ export async function getWeekStatistic(): Promise<WeekStatistic> {
   }
 }
 
-export async function setWeekStatistic(data: WeekStatistic) {
+export async function setWeekStatistic(data: StatisticMeditation) {
   const toDay = new Date();
   toDay.setHours(0, 0, 0, 0);
   AsyncStorage.setItem(
     AsyncStorageKey.WeekStatistic,
     JSON.stringify({ ...data, dateUpdate: toDay.toISOString() })
   );
+}
+
+export async function getMonthStatistic(): Promise<StatisticMeditation> {
+  const item = await AsyncStorage.getItem(AsyncStorageKey.MonthStatistic);
+  if (item == null) {
+    return {
+      count: 0,
+      time: 0,
+    };
+  } else {
+    const data = JSON.parse(item);
+
+    const startMonth = new Date();
+    startMonth.setDate(1);
+    startMonth.setHours(0, 0, 0, 0);
+    startMonth.setMonth(startMonth.getDate() + 1);
+    if (startMonth.getTime() > Date.now()) {
+      return { count: data.count, time: data.time };
+    } else {
+      setMonthStatistic({ count: 0, time: 0 });
+      return { count: 0, time: 0 };
+    }
+  }
+}
+
+export async function setMonthStatistic(data: StatisticMeditation) {
+  const toDay = new Date();
+  toDay.setHours(0, 0, 0, 0);
+  AsyncStorage.setItem(
+    AsyncStorageKey.MonthStatistic,
+    JSON.stringify({ ...data, dateUpdate: toDay.toISOString() })
+  );
+}
+
+export async function getAllTimeStatistic(): Promise<StatisticMeditation> {
+  const item = await AsyncStorage.getItem(AsyncStorageKey.AllTimeStatistic);
+  if (item == null) {
+    return {
+      count: 0,
+      time: 0,
+    };
+  } else {
+    const { count, time } = JSON.parse(item);
+    return { count: count, time: time };
+  }
+}
+
+export async function setAllTimeStatistic(data: StatisticMeditation) {
+  AsyncStorage.setItem(
+    AsyncStorageKey.AllTimeStatistic,
+    JSON.stringify({ ...data })
+  );
+}
+
+export async function getStatistic(): Promise<StatisticOject> {
+  return {
+    all: await getAllTimeStatistic(),
+    month: await getMonthStatistic(),
+    week: await getWeekStatistic(),
+  };
 }
 
 interface ParamsGetMeditation {
@@ -228,31 +288,37 @@ export async function getAudioData(
   throw new Error("audioId Not Found");
 }
 
-export async function getFavoriteMeditation(): Promise<string[]> {
+export async function getFavoriteMeditation(): Promise<
+  { id: string; name: string; type: MediaDecodingType }[]
+> {
   return JSON.parse(
     (await AsyncStorage.getItem(AsyncStorageKey.FavoriteMeditations)) ?? "[]"
   );
 }
 
-export async function addFavoriteMeditation(meditationId: string) {
+export async function addFavoriteMeditation(meditation: {
+  id: string;
+  name: string;
+  type: MediaDecodingType;
+}) {
   const favoriteMeditation = await getFavoriteMeditation();
-  if (!favoriteMeditation.includes(meditationId)) {
-    favoriteMeditation.push(meditationId);
+  if (!!favoriteMeditation.find((item) => item.id == meditation.id)) {
+    favoriteMeditation.push(meditation);
     await saveFavoriteMeditation(favoriteMeditation);
   }
 }
 
 export async function removeFavoriteMeditation(meditationId: string) {
   const favoriteMeditation = await getFavoriteMeditation();
-  if (favoriteMeditation.includes(meditationId)) {
+  if (!!favoriteMeditation.find((item) => item.id == meditationId)) {
     await saveFavoriteMeditation([
-      ...favoriteMeditation.filter((item) => item != meditationId),
+      ...favoriteMeditation.filter((item) => item.id != meditationId),
     ]);
   }
 }
 
 async function saveFavoriteMeditation(
-  favoriteMeditation: string[]
+  favoriteMeditation: { id: string; name: string; type: MediaDecodingType }[]
 ): Promise<void> {
   await AsyncStorage.setItem(
     AsyncStorageKey.FavoriteMeditations,

@@ -7,6 +7,13 @@ import i18n from "~i18n";
 import MeditationListenerRoutes from "./MeditationListener";
 import TabNavigatorRouter from "./TabNavigator";
 import MeditationPracticeList from "~screens/MeditationPracticeList";
+import ProfileScreen from "~screens/Profile";
+import OptionsScreen from "~screens/Options";
+import { TouchableOpacity } from "react-native";
+import Icon from "~assets/icons";
+import EditUserData from "./EditUserData";
+import FavoriteMeditationScreen from "~screens/FavoriteMeditation";
+
 const RootStack = createNativeStackNavigator<RootStackParametersList>();
 
 const RootRoutes: FC<{}> = () => (
@@ -34,6 +41,42 @@ const RootRoutes: FC<{}> = () => (
       component={MeditationPracticeList}
       name={"MeditationPracticeList"}
       options={{ headerShown: true }}
+    />
+    <RootStack.Screen
+      component={ProfileScreen}
+      name={"Profile"}
+      options={({ navigation }) => ({
+        headerShown: true,
+        headerRight: () => (
+          <TouchableOpacity onPress={() => navigation.navigate("Options")}>
+            <Icon name={"ThreeLine"} />
+          </TouchableOpacity>
+        ),
+      })}
+    />
+    <RootStack.Screen
+      component={EditUserData}
+      name={"EditUserData"}
+      options={{
+        headerShown: true,
+        title: i18n.t("Profile"),
+      }}
+    />
+    <RootStack.Screen
+      component={OptionsScreen}
+      name={"Options"}
+      options={{
+        headerShown: true,
+        title: i18n.t("options"),
+      }}
+    />
+    <RootStack.Screen
+      name={"FavoriteMeditationList"}
+      component={FavoriteMeditationScreen}
+      options={{
+        headerShown: true,
+        title: i18n.t("favorite"),
+      }}
     />
   </RootStack.Navigator>
 );

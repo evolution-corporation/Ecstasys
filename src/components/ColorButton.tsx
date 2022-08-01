@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import * as reactNative from "react-native";
+import { PressableProps } from "react-native";
 import Icon, { IconName } from "~assets/icons";
 import style, { colors } from "~styles";
 
@@ -111,7 +112,8 @@ const ShowButton: React.FC<ButtonParameters> = (props) => {
     if (!!icon) {
       if (
         iconPosition == "top" ||
-        (size.width >= 300 && iconPosition == "left")
+        (size.width >= 300 &&
+          (iconPosition == "left" || iconPosition == "right"))
       ) {
         if (typeof icon == "string") {
           return (
@@ -121,6 +123,8 @@ const ShowButton: React.FC<ButtonParameters> = (props) => {
                 styles.icon,
                 iconPosition == "left"
                   ? { position: "absolute", left: 10 }
+                  : iconPosition == "right"
+                  ? { position: "absolute", right: 10 }
                   : {},
               ]}
             />
@@ -186,7 +190,7 @@ interface General {
   type: "fullWidth" | "small";
   icon?: IconName | reactNative.ImageSourcePropType;
   iconStyle?: reactNative.ImageStyle;
-  iconPosition?: "top" | "left";
+  iconPosition?: "top" | "left" | "right";
 }
 
 const styles = reactNative.StyleSheet.create({
@@ -225,7 +229,7 @@ export const TextButton: React.FC<TextButton> = (props) => {
   const { styleText, onPress, text } = props;
 
   return (
-    <reactNative.Pressable hitSlop={10} onPress={onPress}>
+    <reactNative.Pressable hitSlop={10} onPress={onPress} {...props}>
       <reactNative.Text
         style={[styles.textLink, styleText]}
         adjustsFontSizeToFit
@@ -236,7 +240,7 @@ export const TextButton: React.FC<TextButton> = (props) => {
   );
 };
 
-interface TextButton {
+interface TextButton extends PressableProps {
   text?: string;
   styleText?: reactNative.TextStyle | reactNative.TextStyle[];
   onPress: () => void;

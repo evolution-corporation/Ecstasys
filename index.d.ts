@@ -13,6 +13,7 @@ declare type ActionReducerWithPayload<T, P> = { type: T; payload: P };
 declare type ActionReducerNoWithPayload<T> = { type: T };
 
 declare type PositionComponent = { x: number; y: number };
+declare type SizeComponent = { height: number; width: number };
 
 declare interface UserData extends UserMinimalData {
   uid: string;
@@ -28,13 +29,19 @@ declare type UserMood =
   | "IRRITATION"
   | "ANXIETY"
   | "CONCENTRATION"
-  | "HAPPINESS";
+  | "HAPPINESS"
+  | "FATIGUE"
+  | "PACIFICATION"
+  | "SADNESS"
+  | "ABSENTMINDEDNESS";
 
 declare interface UserMinimalData {
   nickName: string;
   birthday: string;
   image?: string;
-  displayName?: string;
+  name?: string;
+  subname?: string;
+  sub?: string;
 }
 
 declare interface MeditationData {
@@ -61,7 +68,7 @@ declare interface ParametersMeditation {
   type: TypeMeditation[];
 }
 
-declare interface WeekStatistic {
+declare interface StatisticMeditation {
   count: number;
   time: number;
 }
@@ -100,3 +107,11 @@ declare type SubscribeInfo = {
 };
 
 declare type BackgroundMusic = "Test" | "Test2";
+
+declare type StatisticOject = {
+  week: StatisticMeditation;
+  month: StatisticMeditation;
+  all: StatisticMeditation;
+};
+
+declare var HermesInternal: boolean;

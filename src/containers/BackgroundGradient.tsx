@@ -16,7 +16,6 @@ const BackgroundGradient: FC<Props> = (props) => {
   const headerHeight = useHeaderHeight();
   const navigation = useNavigation();
   useEffect(() => {
-    console.log("mount");
     let navigate = navigation;
     while (navigate != undefined) {
       navigate.setOptions({

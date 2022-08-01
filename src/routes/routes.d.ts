@@ -18,6 +18,10 @@ declare type RootStackParametersList = {
   SelectMood: undefined;
   MeditationListener: { meditationID: string };
   MeditationPracticeList: { typeMeditation: TypeMeditation };
+  Options: undefined;
+  Profile: undefined;
+  EditUserData: undefined;
+  FavoriteMeditationList: undefined;
 };
 
 declare type RootStackScreenProps<T extends keyof RootStackParametersList> =
@@ -42,10 +46,20 @@ declare type MeditationListenerScreenProps<
 > = StackScreenProps<MeditationListenerParametersList, T>;
 
 declare type TabNavigatorParametersList = {
-  Main: undefined;
+  Start: undefined;
   Practices: undefined;
 };
 
 declare type TabNavigatorScreenProps<
   T extends keyof TabNavigatorParametersList
 > = CompositeScreenProps<TabNavigatorParametersList, T>;
+
+declare type MainStackScreenProps<T extends keyof MainStackParametersList> =
+  StackScreenProps<MainStackParametersList, T>;
+
+declare type EditUserDataList = {
+  EditMainUserData: undefined;
+  SelectBirthday: undefined;
+};
+declare type EditUserDataScreenProps<T extends keyof EditUserDataList> =
+  StackScreenProps<EditUserDataList, T>;

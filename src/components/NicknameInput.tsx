@@ -1,9 +1,11 @@
-import react from "react";
+import react, { useEffect, useRef } from "react";
 import * as reactNative from "react-native";
 import Icon from "~assets/icons";
 import i18n from "~i18n";
 import style, { colors } from "~styles";
 import { checkNickname as checkNicknameServer } from "~api/user";
+import useIsServerAccess from "~hooks/useIsServerAccess";
+
 enum StatusCheck {
   NULL,
   FREE,
@@ -30,8 +32,21 @@ const NicknameInput: react.FC<Props> = (props) => {
     nickNameInit,
     showMessage = false,
     styleMessage,
+    checkInitLogin = false,
   } = props;
   const [state, dispatch] = react.useReducer(reducer, initState);
+  const isServerAccess = useIsServerAccess();
+
+  const animation = useRef<reactNative.Animated.Value>(
+    new reactNative.Animated.Value(0.3)
+  ).current;
+  useEffect(() => {
+    reactNative.Animated.timing(animation, {
+      toValue: isServerAccess ? 1 : 0.5,
+      useNativeDriver: true,
+    }).start();
+  }, [isServerAccess]);
+
   const checkNickname = async (nickName: string) => {
     try {
       const { checking_unique_nick_name, nickname_variable } =
@@ -51,6 +66,10 @@ const NicknameInput: react.FC<Props> = (props) => {
   };
 
   const nickNameInput = (nickName: string) => {
+    if (nickName == nickNameInit && !checkInitLogin) {
+      dispatch({ type: "NicknameInit", payload: nickName });
+      return;
+    }
     if (onChange) onChange(nickName);
     if (state.timer) clearTimeout(state.timer);
     dispatch({ type: "NicknameInput", payload: nickName });
@@ -72,7 +91,7 @@ const NicknameInput: react.FC<Props> = (props) => {
         type: "VerificationResult",
         payload: { result: StatusCheck.INCORRECT },
       });
-    } else if (nickName.length >= 1) {
+    } else if (nickName.length >= 1 && isServerAccess) {
       dispatch({
         type: "CheckNickname",
         payload: {
@@ -141,17 +160,20 @@ const NicknameInput: react.FC<Props> = (props) => {
   };
 
   react.useEffect(() => {
-    if (nickNameInit) nickNameInput(nickNameInit);
+    if (nickNameInit) {
+      nickNameInput(nickNameInit);
+    }
   }, [dispatch]);
 
   return (
     <>
-      <reactNative.View
+      <reactNative.Animated.View
         style={[
           styles.backgroundTextInput,
           styleNicknameInputView,
           {
             borderColor: statusViewInfo.color.border,
+            opacity: animation,
           },
         ]}
       >
@@ -163,11 +185,12 @@ const NicknameInput: react.FC<Props> = (props) => {
           placeholderTextColor={placeHolderColor}
           maxLength={16}
           placeholder={i18n.t("f212a1ac-9688-4671-bbd1-6cbe20662ad7")}
+          editable={isServerAccess}
         />
         <reactNative.View style={styles.indicatorImage}>
           {statusViewInfo.image}
         </reactNative.View>
-      </reactNative.View>
+      </reactNative.Animated.View>
       {showMessage && statusViewInfo.text && (
         <reactNative.Text
           style={[
@@ -198,6 +221,9 @@ const initState: State = {
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
+    case "NicknameInit":
+      state.nickName = action.payload;
+      break;
     case "CheckNickname":
       state.nickName = action.payload.nickName;
       state.timer = action.payload.timerID;
@@ -236,6 +262,7 @@ interface Props {
   nickNameInit?: string;
   showMessage?: boolean;
   styleMessage?: reactNative.TextStyle;
+  checkInitLogin?: boolean;
 }
 
 interface State {
@@ -247,6 +274,7 @@ interface State {
 }
 
 type Action =
+  | ActionReducerWithPayload<"NicknameInit", string>
   | ActionReducerWithPayload<
       "CheckNickname",
       { timerID: NodeJS.Timer; nickName: string }

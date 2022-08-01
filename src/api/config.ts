@@ -1,6 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import auth from "@react-native-firebase/auth";
+import NetInfo from "@react-native-community/netinfo";
 import i18n from "~i18n";
+import { LoadingStatus } from "~constants";
 
 export const HOST_URL = new URL("http://192.168.1.146:5000");
 export const URL_API = new URL("api", HOST_URL);
@@ -36,6 +38,10 @@ export const enum AsyncStorageKey {
   ParamsMeditation = "@MeditationParameters",
   WeekStatistic = "@MeditationWeekStatistic",
   FavoriteMeditations = "@FavoriteMeditations",
+  MonthStatistic = "@MeditationMonthStatistic",
+  AllTimeStatistic = "@MeditationAllTimeStatistic",
+  AccountData = "@AccountData",
+  LazyUserData = "@LazyUserData",
 }
 
 export function serverRequest(request: Function) {
@@ -53,4 +59,22 @@ export function removeUserData() {
     AsyncStorageKey.ParamsMeditation,
     AsyncStorageKey.WeekStatistic,
   ]);
+}
+
+export async function checkServerAccess(
+  forceCheckConnect: boolean = false
+): Promise<boolean> {
+  if (forceCheckConnect) {
+    const netInformation = await NetInfo.fetch();
+    if (!(netInformation.isConnected ?? false)) {
+      return false;
+    }
+  }
+  const testUrl = new URL("204", URL_API);
+  try {
+    const request = await fetch(testUrl.toString());
+    return request.ok;
+  } catch (error) {
+    return false;
+  }
 }

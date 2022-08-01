@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
-  Dimensions,
+  Image,
   ImageBackground,
   StyleSheet,
   Text,
@@ -9,22 +9,39 @@ import {
   View,
   ViewProps,
 } from "react-native";
+import { getMeditationData } from "~api/meditation";
 import Icon from "~assets/icons";
+import useIsServerAccess from "~hooks/useIsServerAccess";
 import i18n from "~i18n";
 import style, { colors } from "~styles";
 import EditFavoriteStatusMeditation from "./EditFavoriteStatusMeditation";
 
 const MeditationCard: FC<Props> = (props) => {
-  const { meditation, type = "full", isBlocked = false, onPress } = props;
-  // const navigation = useNavigation<
-  //   RootStackScreenProps,
-  //   "MeditationListener"
-  // >();
+  const { type = "full", isBlocked = false } = props;
+  const serverAccess = useIsServerAccess();
+  const [meditation, setMeditation] = useState(props.meditation);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // const openPlayer = () =>
-  //   navigation.navigate("MeditationListener", {
-  //     meditationID: meditation.id,
-  //   });
+  useEffect(() => {
+    if (
+      !meditation.description ||
+      !meditation.image ||
+      !meditation.permission ||
+      !meditation.type ||
+      !meditation.name ||
+      !meditation.lengthAudio
+    ) {
+      if (serverAccess) {
+        setIsLoading(true);
+        getMeditationData(meditation.id).then(() => {
+          setMeditation(meditation);
+          setIsLoading(false);
+        });
+      }
+    }
+  }, [meditation]);
+
+  const navigation = useNavigation();
 
   if (type == "compact") {
     return (
@@ -53,8 +70,32 @@ const MeditationCard: FC<Props> = (props) => {
     );
   }
 
+  if (type == "compact-vertical") {
+    return (
+      <TouchableOpacity style={props.style}>
+        <View style={styles.imageCompactVertical}>
+          <Image
+            source={
+              serverAccess
+                ? { uri: meditation.image }
+                : require("~assets/notFoundImage.jpeg")
+            }
+            style={{ width: 140, height: 183 }}
+          />
+        </View>
+        <Text style={styles.textCompactVertical}>{meditation.name}</Text>
+      </TouchableOpacity>
+    );
+  }
+
   return (
-    <TouchableOpacity onPress={onPress ?? console.log}>
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate("MeditationListener", {
+          meditationID: meditation.id,
+        })
+      }
+    >
       <ImageBackground
         source={{ uri: meditation.image }}
         {...props}
@@ -78,7 +119,7 @@ const MeditationCard: FC<Props> = (props) => {
 interface Props extends ViewProps {
   meditation: MeditationData;
   onPress?: () => void;
-  type?: "full" | "compact";
+  type?: "full" | "compact" | "compact-vertical";
   isBlocked?: boolean;
 }
 
@@ -154,6 +195,17 @@ const styles = StyleSheet.create({
     borderRadius: 55,
     alignItems: "center",
     justifyContent: "center",
+  },
+  imageCompactVertical: {
+    borderRadius: 20,
+    ...style.getShadows(2, 3),
+    marginBottom: 4,
+    overflow: "hidden",
+  },
+  textCompactVertical: {
+    color: colors.white,
+    fontSize: 16,
+    ...style.getFontOption("600"),
   },
 });
 

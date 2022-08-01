@@ -112,12 +112,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     ...style.getFontOption("600"),
     marginHorizontal: 10,
+    textAlign: "center",
   },
   description: {
     color: colors.StrokePanel,
     fontSize: 14,
     ...style.getFontOption("400"),
     marginHorizontal: 10,
+    textAlign: "center",
   },
   imageType: {
     width: "100%",

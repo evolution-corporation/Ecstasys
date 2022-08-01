@@ -138,7 +138,6 @@ export default function useAudio(meditationId: string): AudionControl {
 
   const audioControl: AudioControl = {
     play: () => {
-      console.log("test");
       audio.playAsync();
     },
     pause: () => audio.pauseAsync(),

@@ -18,7 +18,7 @@ import Headphones_white from "./Headphones_white.svg";
 import Sun_yellow from "./Sun_yellow.svg";
 import Sun_violet from "./Sun_Violet.svg";
 import Sun_gray from "./Sun_Gray.svg";
-
+import Sun_white from "./Sun_white.svg";
 import Moon from "./Moon.svg";
 import Rainbow from "./Rainbow.svg";
 import Leaf from "./Leaf.svg";
@@ -37,11 +37,35 @@ import Heart_Transparent from "./Heart_Transparent.svg";
 import Home_Violet from "./Home_Violet.svg";
 import Home_White from "./Home_White.svg";
 
+import ThreeLine from "./ThreeLine.svg";
+
+import Star from "./Star.svg";
+
+import Bell from "./Bell.svg";
+import User from "./User.svg";
+import Mail from "./Mail.svg";
+import LogOut from "./LogOut.svg";
+
+import Pencil from "./Pencil.svg";
+
 const Icon: FC<Props> = (props) => {
   const { style, name } = props;
   // const [sizeTransform, setSizeTransform] = useState<number>(1);
   const Icons = useMemo<FC<SvgProps>>(() => {
     switch (name) {
+      case "Pencil":
+        return Pencil;
+      case "Bell":
+        return Bell;
+      case "User":
+        return User;
+      case "Mail":
+        return Mail;
+      case "LogOut":
+        return LogOut;
+
+      case "Star":
+        return Star;
       case "Headphones":
         switch (props.variable) {
           case "white":
@@ -50,7 +74,8 @@ const Icon: FC<Props> = (props) => {
           default:
             return Headphones_violet;
         }
-
+      case "ThreeLine":
+        return ThreeLine;
       case "Google":
         return GoogleLogo;
       case "LogoApp":
@@ -79,6 +104,8 @@ const Icon: FC<Props> = (props) => {
             return Sun_violet;
           case "gray":
             return Sun_gray;
+          case "white":
+            return Sun_white;
           case "yellow":
           default:
             return Sun_yellow;
@@ -136,11 +163,11 @@ const Icon: FC<Props> = (props) => {
         }
       case "Heart":
         switch (props.variable) {
-          case "red":
-            return Heart_Red;
           case "transparent":
-          default:
             return Heart_Transparent;
+          case "red":
+          default:
+            return Heart_Red;
         }
     }
   }, [name]);
@@ -184,7 +211,7 @@ type ManyVariable =
   | IconWithManyVariable<"Play", "violet">
   | IconWithManyVariable<"ControlButton", "Left" | "Pause" | "Play" | "Right">
   | IconWithManyVariable<"Heart", "red" | "transparent">
-  | IconWithManyVariable<"Sun", "gray" | "violet" | "yellow">
+  | IconWithManyVariable<"Sun", "gray" | "violet" | "yellow" | "white">
   | IconWithManyVariable<"Home", "white" | "violet">
   | IconWithManyVariable<"Headphones", "violet" | "white">;
 
@@ -201,6 +228,13 @@ type IconNameOneVariable =
   | "Leaf"
   | "Rainbow"
   | "Moon"
-  | "Lock";
+  | "Lock"
+  | "Star"
+  | "ThreeLine"
+  | "Bell"
+  | "User"
+  | "Mail"
+  | "LogOut"
+  | "Pencil";
 
 export default Icon;

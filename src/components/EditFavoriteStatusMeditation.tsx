@@ -8,16 +8,26 @@ import {
 } from "~store/meditation";
 import { colors } from "~styles";
 
-const EditFavoriteStatusMeditation: FC<Props> = ({ id, style, onlyView }) => {
+const EditFavoriteStatusMeditation: FC<Props> = ({
+  meditation,
+  style,
+  onlyView,
+}) => {
   const isFavorite = useAppSelector((store) =>
-    store.meditation.favoriteMeditationId.includes(id)
+    store.meditation.favoriteMeditation.find((item) => item.id == meditation.id)
   );
   const dispatch = useAppDispatch();
   const editStatus = () => {
     if (isFavorite) {
-      dispatch(removeFavoriteMeditation(id));
+      dispatch(removeFavoriteMeditation(meditation.id));
     } else {
-      dispatch(addFavoriteMeditation(id));
+      dispatch(
+        addFavoriteMeditation({
+          id: meditation.id,
+          name: meditation.name,
+          type: meditation.type,
+        })
+      );
     }
   };
 
@@ -63,7 +73,7 @@ const EditFavoriteStatusMeditation: FC<Props> = ({ id, style, onlyView }) => {
 };
 
 interface Props extends ViewProps {
-  id: string;
+  meditation: MeditationData;
   onlyView?: boolean;
 }
 

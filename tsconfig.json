@@ -19,7 +19,8 @@
       "~store": ["./src/store/index"],
       "~containers/*": ["./src/containers/*"],
       "~hooks/*": ["./src/hooks/*"],
-      "~contexts/*": ["./src/contexts/*"]
+      "~contexts/*": ["./src/contexts/*"],
+      "~HOC/*": ["./src/HOC/*"]
     },
     "typeRoots": [
       "./node_modules/@types",

@@ -3,22 +3,11 @@ import { Provider } from "react-redux";
 import * as SplashScreen from "expo-splash-screen";
 import { connectToDevTools } from "react-devtools-core";
 import store from "~store/index";
-import { editMood, authentication } from "~store/account";
-import {
-  addWeekStatic,
-  editParametersMeditation,
-  removeParametersMeditation,
-  addFavoriteMeditation,
-} from "~store/meditation";
+
 import i18n, { LanguageApp } from "~i18n";
 import style from "~styles";
 import { LoadingStatus, AuthenticationStatus } from "~constants";
-import { getMood } from "~api/user";
-import {
-  getParametersMeditation,
-  getWeekStatistic,
-  getFavoriteMeditation,
-} from "~api/meditation";
+
 import Routes from "~routes/index";
 import useAuthorization from "~hooks/useAuthorization";
 import { Platform, UIManager } from "react-native";
@@ -62,7 +51,6 @@ function useLoadingModule(): LoadingStatus {
   );
 
   useEffect(() => {
-    console.log("Loading Module");
     i18n.on(({ language }) => {
       dispatch({ type: "EditLanguage", payload: language });
     });
@@ -84,28 +72,6 @@ const AppCore: FC<Props> = (props) => {
   const { authenticationStatus, isRegistration } = useAuthorization();
 
   useEffect(() => {
-    if (authenticationStatus == AuthenticationStatus.AUTHORIZED) {
-      store.dispatch(authentication());
-      getMood().then((mood) => {
-        store.dispatch(editMood(mood));
-      });
-      getParametersMeditation().then((parameters) => {
-        if (parameters[0] == "exist") {
-          store.dispatch(editParametersMeditation(parameters[1]));
-        } else {
-          store.dispatch(removeParametersMeditation());
-        }
-      });
-      getWeekStatistic().then((weekStatistic: WeekStatistic) => {
-        store.dispatch(addWeekStatic(weekStatistic));
-      });
-      getFavoriteMeditation().then((FavoriteMeditation: string[]) =>
-        store.dispatch(addFavoriteMeditation(FavoriteMeditation))
-      );
-    }
-  }, [authenticationStatus]);
-
-  useEffect(() => {
     if (
       authenticationStatus != AuthenticationStatus.NONE &&
       moduleStatus == LoadingStatus.READY
@@ -118,7 +84,7 @@ const AppCore: FC<Props> = (props) => {
 
   useEffect(() => {
     console.log(`Hermes ${!!global.HermesInternal ? "" : "не"} используется`);
-  }, [1]);
+  });
 
   if (
     moduleStatus == LoadingStatus.READY &&
@@ -152,6 +118,7 @@ interface State {
 
 type Action =
   | ActionReducerWithPayload<"EditLanguage", LanguageApp>
-  | ActionReducerWithPayload<"EditTheme", { result: LoadingStatus }>;
+  | ActionReducerWithPayload<"EditTheme", { result: LoadingStatus }>
+  | ActionReducerWithPayload<"LoadingNetwork", LoadingStatus>;
 
 export default AppCore;

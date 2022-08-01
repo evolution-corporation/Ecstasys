@@ -129,6 +129,7 @@ export const colors = {
   violet: "#702D87",
   grayHell: "#A0A0A0",
   skin: "#FEEBED",
+  perano: "#A7A9E0",
 };
 
 export const styleText = StyleSheet.create({

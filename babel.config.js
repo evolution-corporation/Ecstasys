@@ -32,8 +32,8 @@ module.exports = function(api) {
             '~store': './src/store',
             '~containers': './src/containers',
             '~hooks': './src/hooks',
-            '~contexts': './src/contexts'
-
+            '~contexts': './src/contexts',
+            '~HOC': './src/HOC'
           },
         },
         "@babel/plugin-transform-typescript",

@@ -39,9 +39,7 @@ const EditMeditationsParametersDateScreen: FC<
     MeditationParams?.removeParameters();
     navigation.navigate("ScreenFinallyResult", { result: false });
   };
-  useEffect(() => {
-    console.log(parametersMeditationStatus);
-  }, [parametersMeditationStatus]);
+
   return (
     <BackgroundGradient
       isImage={true}

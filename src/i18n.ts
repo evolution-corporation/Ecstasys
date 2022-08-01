@@ -1,6 +1,7 @@
 import * as Localization from "expo-localization";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import TranslateLib from "~assets/i18n";
+import { connect } from "react-redux";
 
 export class I18nClass {
   public language?: LanguageApp = "ru";
@@ -231,6 +232,12 @@ export class I18nClass {
     if (typeMeditationTranslate == undefined) return this.errorTranslateMessage;
 
     return typeMeditationTranslate[backgroundMusicName];
+  }
+
+  public normalizedDate(date: Date): string {
+    return `${date.getDate() < 10 ? "0" : ""}${date.getDate()}.${
+      date.getMonth() + 1 < 10 ? "0" : ""
+    }${date.getMonth() + 1}.${date.getFullYear()}`;
   }
 }
 
