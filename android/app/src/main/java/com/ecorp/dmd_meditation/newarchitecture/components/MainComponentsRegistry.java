@@ -1,4 +1,4 @@
-package com.ecorp.ecstasys.newarchitecture.components;
+package com.ecorp.dmd_meditation.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

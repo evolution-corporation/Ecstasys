@@ -1,4 +1,4 @@
-package com.ecorp.ecstasys.newarchitecture;
+package com.ecorp.dmd_meditation.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.ecorp.ecstasys.BuildConfig;
-import com.ecorp.ecstasys.newarchitecture.components.MainComponentsRegistry;
-import com.ecorp.ecstasys.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.ecorp.dmd_meditation.BuildConfig;
+import com.ecorp.dmd_meditation.newarchitecture.components.MainComponentsRegistry;
+import com.ecorp.dmd_meditation.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

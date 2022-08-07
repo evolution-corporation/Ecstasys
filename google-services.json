@@ -8,12 +8,80 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:878799007977:android:21b673c1465fe74fda0078",
+        "android_client_info": {
+          "package_name": "com.ecorp.dmd_meditation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "878799007977-4fhpin3rafs4itmfsn4hpi86ljhigtlg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ecorp.dmd_meditation",
+            "certificate_hash": "880857e96cc6c22d0b43d84970d3f7e7f9da062d"
+          }
+        },
+        {
+          "client_id": "878799007977-ktuc7hdbk44st0sireeue24q2j10fiks.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ecorp.dmd_meditation",
+            "certificate_hash": "1f84dfeb18041c13f169b28d70720dd89697f59b"
+          }
+        },
+        {
+          "client_id": "878799007977-cj3549ni87jre2rmg4eq0hiolp08igh2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0lKHzxRYFSr--dBsOh9zt2G009m6g7hg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "878799007977-cj3549ni87jre2rmg4eq0hiolp08igh2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "878799007977-n3kvt3geq3l57ua4qjgr6dun4eho0vn8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.evolution.plants"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:878799007977:android:f4ec824dae754c09da0078",
         "android_client_info": {
           "package_name": "com.ecorp.ecstasys"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "878799007977-4i1gi7d98kcdp5gm3g5jqp6kp3njhlmq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ecorp.ecstasys",
+            "certificate_hash": "1f84dfeb18041c13f169b28d70720dd89697f59b"
+          }
+        },
+        {
+          "client_id": "878799007977-ltauca92dt1k4s6qk001lnvorcgsm55l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ecorp.ecstasys",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
         {
           "client_id": "878799007977-cj3549ni87jre2rmg4eq0hiolp08igh2.apps.googleusercontent.com",
           "client_type": 3

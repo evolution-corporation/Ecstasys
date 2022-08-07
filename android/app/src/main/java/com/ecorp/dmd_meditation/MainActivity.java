@@ -1,4 +1,4 @@
-package com.ecorp.ecstasys;
+package com.ecorp.dmd_meditation;
 
 import android.os.Build;
 import android.os.Bundle;
