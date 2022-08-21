@@ -38,12 +38,7 @@ const MeditationPracticeListScreen: FC<
   }, [refCarousel.current?.currentIndex, meditationList]);
 
   return (
-    <BackgroundGradient
-      title={i18n.getTypeMeditation(typeMeditation)}
-      isImage
-      imageName={"leaves"}
-      style={styles.background}
-    >
+    <View style={styles.background}>
       <Text style={styles.descriptionType}>
         {i18n.getTypeMeditationDescription(typeMeditation, "full")}
       </Text>
@@ -103,7 +98,7 @@ const MeditationPracticeListScreen: FC<
           )}
         </View>
       </View>
-    </BackgroundGradient>
+    </View>
   );
 };
 
@@ -119,6 +114,8 @@ const styles = StyleSheet.create({
   background: {
     paddingHorizontal: 20,
     justifyContent: "space-between",
+    backgroundColor: colors.moreViolet,
+    flex: 1,
   },
   carouselStyle: {
     // height: (Dimensions.get("window").width - 150) * 1.09,

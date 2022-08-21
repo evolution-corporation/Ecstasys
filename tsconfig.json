@@ -1,6 +1,7 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "target": "ES5",
     "jsx": "react",
     "strict": true,
     "baseUrl": "./",
@@ -11,7 +12,7 @@
       "~assets/*": ["./assets/*"],
       "~i18n": ["./src/i18n"],
       "~styles": ["./src/styles"],
-      "~api/*": ["./src/api/*"],
+      "~api": ["./src/api"],
       "~components/*": ["./src/components/*"],
       "~firebase": ["./src/Firebase"],
       "~constants": ["./src/constants"],
@@ -20,12 +21,14 @@
       "~containers/*": ["./src/containers/*"],
       "~hooks/*": ["./src/hooks/*"],
       "~contexts/*": ["./src/contexts/*"],
-      "~HOC/*": ["./src/HOC/*"]
+      "~HOC/*": ["./src/HOC/*"],
+      "~modules/*": ["./src/modules/*"]
     },
     "typeRoots": [
       "./node_modules/@types",
       "./src/store/store",
-      "./src/routes/routes"
+      "./src/routes/routes",
+      "./src/modules/account"
     ],
     "experimentalDecorators": true
   }

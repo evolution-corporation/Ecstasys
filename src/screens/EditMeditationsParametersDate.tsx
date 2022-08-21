@@ -41,11 +41,7 @@ const EditMeditationsParametersDateScreen: FC<
   };
 
   return (
-    <BackgroundGradient
-      isImage={true}
-      imageName={"leaves"}
-      style={styles.background}
-    >
+    <View style={styles.background}>
       <Icon name={"Calendar"} style={styles.IconPart} />
       <Text style={styles.title}>
         {i18n.t("206ac2e0-788b-4541-a9b2-54c665bf3162")}
@@ -86,7 +82,7 @@ const EditMeditationsParametersDateScreen: FC<
           onPress={() => removeParameters()}
         />
       ) : null}
-    </BackgroundGradient>
+    </View>
   );
 };
 
@@ -97,6 +93,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
+    backgroundColor: colors.moreViolet,
+    flex: 1,
   },
   title: {
     ...styleText.h1,

@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { ElementRef, FC, useContext, useRef, useState } from "react";
-import { Text, StyleSheet } from "react-native";
+import { Text, StyleSheet, View } from "react-native";
 import SMSCodeInput, {
   SMSCodeInputInfo,
   SMSCodeInputInfoShow,
@@ -35,11 +35,7 @@ const SMSCodeInputScreen: FC<
   };
 
   return (
-    <BackgroundGradient
-      isImage={true}
-      imageName={"leaves"}
-      style={styles.background}
-    >
+    <View style={styles.background}>
       <Text style={styles.header}>
         {i18n.t("cfdefbe6-ae49-4e17-8628-bbe46d144418")}
       </Text>
@@ -50,7 +46,7 @@ const SMSCodeInputScreen: FC<
         onPress={requestSMS}
         seconds={60}
       />
-    </BackgroundGradient>
+    </View>
   );
 };
 
@@ -60,6 +56,8 @@ const styles = StyleSheet.create({
   background: {
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: colors.moreViolet,
+    flex: 1,
   },
   SMSCodeInputInfoStyle: {
     marginTop: 20,

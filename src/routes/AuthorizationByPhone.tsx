@@ -4,6 +4,8 @@ import NumberInput from "~screens/NumberInput";
 import SMSCodeInput from "~screens/SMSCodeInput";
 import AuthorizationWithPhoneContexts from "~contexts/authorizationWithPhone";
 import useAuthorizationWithPhoneHook from "~hooks/useAuthorizationWithPhone";
+import i18n from "~i18n";
+import { colors } from "~styles";
 
 const AuthorizationByPhoneStack =
   createNativeStackNavigator<AuthorizationByPhoneParamList>();
@@ -18,13 +20,17 @@ const AuthorizationByPhoneRoutes: FC<{}> = () => {
         screenOptions={{
           animationTypeForReplace: "pop",
           animation: "default",
-          headerTransparent: true,
           headerShown: true,
+          headerStyle: { backgroundColor: colors.moreViolet },
+          headerTintColor: colors.white,
         }}
       >
         <AuthorizationByPhoneStack.Screen
           component={NumberInput}
           name="NumberInput"
+          options={{
+            title: i18n.t("aa8609dd-caa8-4563-a1b5-e4cb896d03ae"),
+          }}
         />
         <AuthorizationByPhoneStack.Screen
           component={SMSCodeInput}

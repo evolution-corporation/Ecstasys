@@ -3,7 +3,7 @@
     "jsEngine": "hermes",
     "name": "DMD Meditation",
     "slug": "dmd_meditation",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "orientation": "portrait",
     "githubUrl": "https://github.com/HardKot/ecstasys",
     "icon": "./assets/icon.png",
@@ -30,9 +30,7 @@
       "icon": "./assets/icon.png",
       "package": "com.ecorp.dmd_meditation",
       "googleServicesFile": "./google-services.json"
-
     },
-    
     "plugins": [
       "expo-dev-client",
       "expo-splash-screen",

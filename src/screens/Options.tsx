@@ -10,11 +10,7 @@ import { signOut } from "~store/account";
 const OptionsScreen: FC<RootStackScreenProps<"Options">> = ({ navigation }) => {
   const dispatch = useAppDispatch();
   return (
-    <BackgroundGradient
-      isImage={true}
-      imageName={"leaves"}
-      style={styles.background}
-    >
+    <View style={styles.background}>
       <TouchableOpacity
         key={"editProfile"}
         style={styles.editSetting}
@@ -53,7 +49,7 @@ const OptionsScreen: FC<RootStackScreenProps<"Options">> = ({ navigation }) => {
           {i18n.t("c9bcb9a8-e59c-4ee5-97f1-94dae753a716")}
         </Text>
       </TouchableOpacity>
-    </BackgroundGradient>
+    </View>
   );
 };
 
@@ -73,6 +69,8 @@ const styles = StyleSheet.create({
   },
   background: {
     paddingHorizontal: 20,
+    backgroundColor: colors.moreViolet,
+    flex: 1,
   },
 });
 

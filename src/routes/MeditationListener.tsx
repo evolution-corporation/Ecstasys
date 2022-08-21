@@ -40,7 +40,7 @@ const MeditationListenerRoutes: FC<
     >
       <MeditationListenerStack.Navigator
         initialRouteName="Player"
-        screenOptions={{ headerTransparent: true }}
+        screenOptions={{ headerTransparent: false }}
       >
         <MeditationListenerStack.Screen
           component={PlayerScreen}
@@ -48,6 +48,7 @@ const MeditationListenerRoutes: FC<
           initialParams={meditationData}
           options={({ route }) => ({
             headerShown: true,
+            headerTransparent: true,
             headerTitle: () => (
               <View style={styles.headerPlayer}>
                 <Text

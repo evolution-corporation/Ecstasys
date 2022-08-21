@@ -10,11 +10,7 @@ import style, { colors } from "~styles";
 const ScreenFinallyResult: FC<
   NativeStackScreenProps<EditMeditationsParametersList, "ScreenFinallyResult">
 > = ({ navigation, route }) => (
-  <BackgroundGradient
-    isImage={true}
-    imageName={"leaves"}
-    style={styles.background}
-  >
+  <View style={styles.background}>
     <View style={styles.info}>
       <Icon name={"CheckMarker"} variable={"whiteThin"} />
       <Text style={[styles.title, styles.text]}>{i18n.t("ready")}!</Text>
@@ -43,7 +39,7 @@ const ScreenFinallyResult: FC<
         navigation.getParent()?.goBack();
       }}
     />
-  </BackgroundGradient>
+  </View>
 );
 
 export default ScreenFinallyResult;
@@ -53,6 +49,8 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center",
     paddingBottom: 70,
+    backgroundColor: colors.moreViolet,
+    flex: 1,
   },
   buttonReady: {
     backgroundColor: colors.violet,

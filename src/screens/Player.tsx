@@ -70,6 +70,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.violet,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: colors.moreViolet,
+    flex: 1,
   },
 
   playerButton: {

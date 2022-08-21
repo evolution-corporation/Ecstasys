@@ -26,11 +26,7 @@ const SelectMoodScreen: FC<RootStackScreenProps<"SelectMood">> = ({
   const initMood = useAppSelector((state) => state.account.mood);
 
   return (
-    <BackgroundGradient
-      style={styles.background}
-      isImage={true}
-      imageName={"leaves"}
-    >
+    <View style={styles.background}>
       <View style={style.fullWidth}>
         <SelectedComponent
           initValue={initMood}
@@ -46,7 +42,7 @@ const SelectMoodScreen: FC<RootStackScreenProps<"SelectMood">> = ({
         styleText={styles.readyButtonText}
         onPress={() => navigation.goBack()}
       />
-    </BackgroundGradient>
+    </View>
   );
 };
 
@@ -101,6 +97,8 @@ const styles = StyleSheet.create({
     paddingLeft: 55,
     alignItems: "center",
     paddingBottom: 75,
+    backgroundColor: colors.moreViolet,
+    flex: 1,
   },
   readyButton: {
     backgroundColor: colors.violet,

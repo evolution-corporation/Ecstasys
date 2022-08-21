@@ -56,11 +56,7 @@ const EditMeditationsParametersTypeScreen: FC<
   };
 
   return (
-    <BackgroundGradient
-      isImage={true}
-      imageName={"leaves"}
-      style={styles.background}
-    >
+    <View style={styles.background}>
       <Text style={styles.title}>
         {i18n.t("005e12c3-a364-483b-b6e4-832258e74ea2")}
       </Text>
@@ -96,7 +92,7 @@ const EditMeditationsParametersTypeScreen: FC<
         type={"small"}
         onPress={() => saveParameter()}
       />
-    </BackgroundGradient>
+    </View>
   );
 };
 
@@ -106,6 +102,8 @@ const styles = StyleSheet.create({
   background: {
     alignItems: "center",
     paddingHorizontal: 0,
+    backgroundColor: colors.moreViolet,
+    flex: 1,
   },
   title: {
     ...styleText.h1,

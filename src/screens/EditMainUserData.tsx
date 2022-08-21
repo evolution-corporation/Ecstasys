@@ -42,11 +42,7 @@ const EditMainUserDataScreen: FC<RootStackScreenProps<"EditUserData">> = ({
   }, [editUserData.modifiedUserData.birthday]);
 
   return (
-    <BackgroundGradient
-      isImage={true}
-      imageName={"leaves"}
-      style={styles.background}
-    >
+    <View style={styles.background}>
       <View style={style.fullWidth}>
         <SelectImageButton
           style={styles.buttonEditImage}
@@ -103,7 +99,7 @@ const EditMainUserDataScreen: FC<RootStackScreenProps<"EditUserData">> = ({
         type={"fullWidth"}
         onPress={() => updateData()}
       />
-    </BackgroundGradient>
+    </View>
   );
 };
 
@@ -112,6 +108,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     justifyContent: "space-between",
     paddingBottom: 80,
+    backgroundColor: colors.moreViolet,
+    flex: 1,
   },
   editSettingName: {
     marginLeft: 33,

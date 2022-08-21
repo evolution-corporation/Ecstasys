@@ -67,8 +67,7 @@ export class test extends Component<Props, State> {
         break;
     }
     return (
-      <BackgroundGradient
-        title={i18n.t("aa8609dd-caa8-4563-a1b5-e4cb896d03ae")}
+      <View
         style={[
           styles.background,
           {
@@ -93,7 +92,7 @@ export class test extends Component<Props, State> {
           text={i18n.t("cb73fed3-bf9e-4621-8db3-fc9471991792")}
           ref={this.toast}
         />
-      </BackgroundGradient>
+      </View>
     );
   }
 
@@ -160,6 +159,8 @@ export class test extends Component<Props, State> {
 const styles = StyleSheet.create({
   background: {
     paddingHorizontal: 30,
+    backgroundColor: colors.moreViolet,
+    flex: 1,
   },
   colorButton: {
     marginTop: 14,

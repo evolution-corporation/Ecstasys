@@ -2,15 +2,15 @@ import React, { FC } from "react";
 
 import AuthorizationByPhone from "./AuthorizationByPhone";
 import SelectMethodAuthentication from "~screens/SelectMethodAuthentication";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Intro from "~screens/Intro";
 
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 const AuthorizationStack =
   createNativeStackNavigator<AuthorizationStackParamList>();
 
 const AuthorizationRoutes: FC<{}> = () => (
-  <AuthorizationStack.Navigator
-    screenOptions={{ headerShown: true, headerTransparent: true }}
-  >
+  <AuthorizationStack.Navigator screenOptions={{ headerShown: false }}>
+    <AuthorizationStack.Screen component={Intro} name={"Intro"} />
     <AuthorizationStack.Screen
       component={SelectMethodAuthentication}
       name={"SelectMethodAuthentication"}

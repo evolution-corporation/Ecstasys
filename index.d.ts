@@ -115,3 +115,12 @@ declare type StatisticOject = {
 };
 
 declare var HermesInternal: boolean;
+
+declare class GlobalApi {
+  protected static HOST_URL: URL
+  protected static checkServerAccess(forceCheckConnect?: boolean): Promise<boolean>
+  protected static headers(): Promise<{ appName: string, authorization: string
+    "Content-Type": string, "Accept-Language": string }>
+}
+
+declare var globalApi: GlobalApi

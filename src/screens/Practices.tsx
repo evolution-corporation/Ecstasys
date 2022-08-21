@@ -36,7 +36,7 @@ const PracticesScreen: FC<TabNavigatorScreenProps<"Practices">> = ({
   const userData = useAppSelector((store) => store.account.user);
 
   return (
-    <BackgroundGradient isImage imageName={"leaves"} style={styles.background}>
+    <View style={styles.background}>
       <ScrollView
         style={styles.backgroundScroll}
         showsVerticalScrollIndicator={false}
@@ -72,7 +72,7 @@ const PracticesScreen: FC<TabNavigatorScreenProps<"Practices">> = ({
           </TouchableOpacity>
         ))}
       </ScrollView>
-    </BackgroundGradient>
+    </View>
   );
 };
 
@@ -82,6 +82,8 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
     paddingTop: 15,
+    backgroundColor: colors.moreViolet,
+    flex: 1,
   },
   backgroundScroll: {
     paddingHorizontal: 20,

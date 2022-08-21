@@ -82,11 +82,7 @@ export default class extends Component<Props, State> {
           </>
         );
     }
-    return (
-      <BackgroundGradient style={styles.background}>
-        {screenPart}
-      </BackgroundGradient>
-    );
+    return <View style={styles.background}>{screenPart}</View>;
   }
 
   private dispatch(action: Action) {
@@ -154,6 +150,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     paddingBottom: 75,
     justifyContent: "space-between",
+    backgroundColor: colors.moreViolet,
+    flex: 1,
   },
   ColorButtonStyle: { marginVertical: 10 },
   selectImage: {

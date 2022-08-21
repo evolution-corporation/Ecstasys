@@ -86,9 +86,11 @@ const EditMeditationsParametersRoutes: FC<
         initialRouteName="SelectDate"
         screenOptions={{
           animationTypeForReplace: "pop",
-          headerTransparent: true,
+          headerTransparent: false,
           title: i18n.t("b18185ed-887d-4946-9bce-3daf791828ae"),
           animation: "fade",
+          headerStyle: { backgroundColor: colors.moreViolet },
+          headerTintColor: colors.white,
         }}
       >
         <EditMeditationsParametersStack.Screen

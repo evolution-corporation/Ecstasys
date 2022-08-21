@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import account from "./account";
+import { Redux as account } from "~modules/account";
 import meditation from "./meditation";
 
 const createDebugger = require("redux-flipper").default;

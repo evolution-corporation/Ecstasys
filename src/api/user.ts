@@ -6,7 +6,9 @@ import {
   AsyncStorageKey,
   checkServerAccess,
 } from "./config";
-import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import auth, { firebase, FirebaseAuthTypes } from "@react-native-firebase/auth";
+import * as Notifications from "expo-notifications";
+import nickname_variable_lib from "~assets/nick_name_word_scheme.json";
 
 export async function checkNickname(
   nickName: string,
@@ -29,9 +31,28 @@ export async function checkNickname(
         headers: header,
       }
     );
+    if (request.status == 404) {
+      return { checking_unique_nick_name: true };
+    }
     if (request.ok) {
-      const json = await request.json();
-      return json.result as ReturnCheckNickname;
+      if (generate!) {
+        return { checking_unique_nick_name: false };
+      }
+      const nickname_variable = [];
+      const nickname_part = [...nickname_variable_lib.random_part_words];
+      while (nickname_variable.length <= 5 || nickname_part.length > 0) {
+        const idPart = Math.floor(Math.random() * nickName.length);
+        const variable_nickname = `${nickName}_${
+          nickname_part.splice(idPart, 1)[0]
+        }`;
+        if (
+          (await checkNickname(variable_nickname, false))
+            .checking_unique_nick_name
+        ) {
+          nickname_variable.push(variable_nickname);
+        }
+      }
+      return { nickname_variable, checking_unique_nick_name: false };
     } else {
       throw new Error(`API ERROR. CODE: ${request.status}`);
     }
@@ -65,15 +86,20 @@ export async function authentication() {
   const serverAccess = await checkServerAccess(true);
   if (serverAccess) {
     try {
-      const url = new URL(`/authentication`, URL_API);
+      const uid = firebase.auth().currentUser?.uid;
+      const url = new URL(`/user/${uid}`, URL_API);
       const headers = await getHeader();
       const request = await fetch(url, {
         method: "GET",
         headers,
       });
+      if (request.status === 404) {
+        return null;
+      }
       if (request.ok) {
         const json = await request.json();
         const result = json.result;
+        console.log(result);
         if (result) {
           AsyncStorage.setItem(
             AsyncStorageKey.AccountData,
@@ -103,27 +129,6 @@ export async function authentication() {
   throw new Error(`Function Error`);
 }
 
-export async function registration(userData: UserMinimalData) {
-  try {
-    const url = new URL(`/users`, URL_API);
-    const headers = await getHeader();
-    let body: string = JSON.stringify(userData);
-    const request = await fetch(url, {
-      method: "POST",
-      headers,
-      body,
-    });
-    if (request.ok) {
-      const json = await request.json();
-      return createUserData(json.result as UserData);
-    } else {
-      throw new Error(`API ERROR. CODE: ${request.status}`);
-    }
-  } catch (error) {
-    console.error(error);
-    throw new Error(`Function Error`);
-  }
-}
 
 export async function getMood(): Promise<{
   mood: UserMood | undefined;

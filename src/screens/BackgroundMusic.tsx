@@ -65,7 +65,7 @@ const BackgroundMusicScreen: FC<
 
   if (!audioData?.audioData) return null;
   return (
-    <BackgroundGradient isImage imageName={"leaves"} style={styles.background}>
+    <View style={styles.background}>
       <View style={styles.librarySound}>
         {backgroundMusicNames.map((backgroundMusicName) => (
           <TouchableOpacity
@@ -130,7 +130,7 @@ const BackgroundMusicScreen: FC<
           />
         </Animated.View>
       </View>
-    </BackgroundGradient>
+    </View>
   );
 };
 
@@ -164,6 +164,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingBottom: 58,
     paddingHorizontal: 20,
+    backgroundColor: colors.moreViolet,
+    flex: 1,
   },
   librarySound: {
     flex: 1,

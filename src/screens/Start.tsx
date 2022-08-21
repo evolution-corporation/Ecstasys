@@ -8,7 +8,7 @@ import UserInformation from "~components/UserInformation";
 import i18n from "~i18n";
 import style, { colors } from "~styles";
 import { getMeditationToDay } from "~store/meditation";
-import MoodInformation from "~components/MoodInformation";
+import MoodInformation from "~modules/mood/components/MoodInformation";
 import Feed from "~components/Feed";
 import { useBackHandler } from "@react-native-community/hooks";
 import ProfessorMessage from "~components/ProfessorMessage";

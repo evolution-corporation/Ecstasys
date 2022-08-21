@@ -12,18 +12,19 @@ import Svg, {
 import i18n from "~i18n";
 import { useAppSelector } from "~store";
 import { colors } from "~styles";
-import ColorButton from "./ColorButton";
-import IndicatorMood from "./IndicatorMood";
-import StatusMood from "./StatusMood";
+import ColorButton from "~components/ColorButton";
+import IndicatorMood from "~components/IndicatorMood";
+import StatusMood from "~components/StatusMood";
+import {useMood} from "~modules/mood/hook";
 
 const MoodInformation: FC<Props> = (props) => {
   const { type } = props;
   const navigation = useNavigation();
-  const mood = useAppSelector((state) => state.account.mood);
+  const { moodScore, lastMood } = useMood()
   if (type == "minimal") {
     return (
       <ColorButton
-        text={mood ? i18n.getMood(mood, 0) : i18n.t("answer")}
+        text={lastMood ? i18n.getMood(lastMood, 0) : i18n.t("answer")}
         type={"small"}
         onPress={() => navigation.navigate("SelectMood")}
       />

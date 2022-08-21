@@ -6,7 +6,7 @@ import {
 import { useFlipper } from "@react-navigation/devtools";
 import RootRoutes from "./Root";
 import AuthorizationRoutes from "./Authorization";
-import RegistrationRoutes from "./Registration";
+import { Routes as RegistrationRoutes } from "~modules/account";
 import { LoadingStatus, AuthenticationStatus } from "~constants";
 
 const Routes: FC<{

@@ -65,6 +65,8 @@ const EditMeditationsParametersRoutes: FC<
         screenOptions={{
           animationTypeForReplace: "pop",
           headerShown: false,
+          headerStyle: { backgroundColor: colors.moreViolet },
+          headerTintColor: colors.white,
         }}
       >
         <EdiUserDataStack.Screen

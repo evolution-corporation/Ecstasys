@@ -130,6 +130,9 @@ export const colors = {
   grayHell: "#A0A0A0",
   skin: "#FEEBED",
   perano: "#A7A9E0",
+  carbon: "#3D3D3D",
+  moreViolet: "#9765A8",
+  moreGray: "rgba(64, 64, 64, 0.71)",
 };
 
 export const styleText = StyleSheet.create({

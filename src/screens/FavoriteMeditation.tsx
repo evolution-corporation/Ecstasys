@@ -29,11 +29,7 @@ const FavoriteMeditationScreen: FC<Props> = () => {
     return typeList;
   }, [meditationFavoriteList]);
   return (
-    <BackgroundGradient
-      isImage={true}
-      imageName={"leaves"}
-      style={styles.background}
-    >
+    <View style={styles.background}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {typeMeditationList.map((typeMeditation) => (
           <View key={typeMeditation} style={styles.favoriteTypeMeditationCard}>
@@ -61,13 +57,15 @@ const FavoriteMeditationScreen: FC<Props> = () => {
           </View>
         ))}
       </ScrollView>
-    </BackgroundGradient>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   background: {
     alignItems: "flex-start",
+    backgroundColor: colors.moreViolet,
+    flex: 1,
   },
   typeName: {
     color: colors.white,

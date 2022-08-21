@@ -19,6 +19,8 @@ const styles = StyleSheet.create({
   background: {
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: colors.moreViolet,
+    flex: 1,
   },
   title: {
     fontFamily: "Gilroy",

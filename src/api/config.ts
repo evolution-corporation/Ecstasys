@@ -4,8 +4,8 @@ import NetInfo from "@react-native-community/netinfo";
 import i18n from "~i18n";
 import { LoadingStatus } from "~constants";
 
-export const HOST_URL = new URL("http://192.168.1.146:5000");
-export const URL_API = new URL("api", HOST_URL);
+export const HOST_URL = new URL("http://62.84.125.238:8000");
+export const URL_API = HOST_URL; //new URL("api", HOST_URL);
 export const URL_IMAGE = new URL("image", HOST_URL);
 export type ApiError = { codeError: number; name: string };
 
@@ -70,7 +70,7 @@ export async function checkServerAccess(
       return false;
     }
   }
-  const testUrl = new URL("204", URL_API);
+  const testUrl = new URL("api/204", URL_API);
   try {
     const request = await fetch(testUrl.toString());
     return request.ok;

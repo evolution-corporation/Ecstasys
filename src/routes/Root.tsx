@@ -13,6 +13,7 @@ import { TouchableOpacity } from "react-native";
 import Icon from "~assets/icons";
 import EditUserData from "./EditUserData";
 import FavoriteMeditationScreen from "~screens/FavoriteMeditation";
+import { colors } from "~styles";
 
 const RootStack = createNativeStackNavigator<RootStackParametersList>();
 
@@ -22,8 +23,10 @@ const RootRoutes: FC<{}> = () => (
     screenOptions={{
       animationTypeForReplace: "push",
       animation: "default",
-      headerTransparent: true,
+      headerTransparent: false,
       headerShown: false,
+      headerStyle: { backgroundColor: colors.moreViolet },
+      headerTintColor: colors.white,
     }}
   >
     <RootStack.Screen component={TabNavigatorRouter} name={"TabNavigator"} />
@@ -40,7 +43,10 @@ const RootRoutes: FC<{}> = () => (
     <RootStack.Screen
       component={MeditationPracticeList}
       name={"MeditationPracticeList"}
-      options={{ headerShown: true }}
+      options={({ route }) => ({
+        headerShown: true,
+        title: i18n.getTypeMeditation(route.params.typeMeditation),
+      })}
     />
     <RootStack.Screen
       component={ProfileScreen}

@@ -1,7 +1,7 @@
 import React, { FC, useRef, useContext, useEffect } from "react";
 
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import NumberInput from "~components/NumberInput";
 import ColorButton from "~components/ColorButton";
 import i18n from "~i18n";
@@ -28,12 +28,7 @@ const NumberInputScreen: FC<
   };
 
   return (
-    <BackgroundGradient
-      isImage={true}
-      imageName={"leaves"}
-      style={styles.background}
-      title={i18n.t("aa8609dd-caa8-4563-a1b5-e4cb896d03ae")}
-    >
+    <View style={styles.background}>
       <NumberInput
         onChange={(numberPhone: string, isValidate: boolean) => {
           NumberPhone.current = { numberPhone, isValidate };
@@ -45,7 +40,7 @@ const NumberInputScreen: FC<
         styleButton={styles.colorButton}
         onPress={requestSMSCode}
       />
-    </BackgroundGradient>
+    </View>
   );
 };
 
@@ -54,6 +49,8 @@ export default NumberInputScreen;
 const styles = StyleSheet.create({
   background: {
     paddingHorizontal: 20,
+    backgroundColor: colors.moreViolet,
+    flex: 1,
   },
   colorButton: {
     marginTop: 14,
