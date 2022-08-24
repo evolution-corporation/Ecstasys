@@ -5,9 +5,6 @@ declare module "*.svg" {
   export default content;
 }
 
-declare type ActionReducer =
-  | ActionReducerNoWithPayload
-  | ActionReducerWithPayload;
 
 declare type ActionReducerWithPayload<T, P> = { type: T; payload: P };
 declare type ActionReducerNoWithPayload<T> = { type: T };

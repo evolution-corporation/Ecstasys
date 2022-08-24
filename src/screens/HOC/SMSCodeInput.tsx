@@ -8,8 +8,8 @@ import i18n from "~i18n";
 import { colors, styleText, toastOptions } from "~styles";
 import Toast from "react-native-root-toast";
 
-import {AccountStackScreenProps} from "../types";
-import {useAccountContext} from "../context";
+import {AccountStackScreenProps} from "~modules/account/types";
+import {useAccountContext} from "~modules/account/context";
 
 const SMSCodeInputScreen: AccountStackScreenProps< "SMSCodeInput"> = ({  }) => {
   const refSMSCodeInput = useRef<ElementRef<typeof SMSCodeInput>>(null);

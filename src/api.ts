@@ -1,6 +1,5 @@
 import auth from "@react-native-firebase/auth";
 import NetInfo from "@react-native-community/netinfo";
-import i18n from "~i18n";
 
 export const HOST_URL = new URL("http://62.84.125.238:8000");
 export const url204 = `${HOST_URL}/api/204`
@@ -23,7 +22,7 @@ export async function headers() {
 	if (user == null) throw new Error("User not found");
 	return ({
 		appName: "DMD Meditation",
-		"Accept-Language": i18n.language ?? "ru",
+		"Accept-Language": "ru",
 		"authorization": await user.getIdToken(),
 		"Content-Type": "application/json",
 	})

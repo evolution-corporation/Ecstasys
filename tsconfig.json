@@ -6,12 +6,10 @@
     "strict": true,
     "baseUrl": "./",
     "paths": {
-      "~core": ["./src/core/Core"],
+      "~core": ["./src/core"],
       "~routes/*": ["./src/routes/*"],
       "~screens/*": ["./src/screens/*"],
       "~assets/*": ["./assets/*"],
-      "~i18n": ["./src/i18n"],
-      "~styles": ["./src/styles"],
       "~api": ["./src/api"],
       "~components/*": ["./src/components/*"],
       "~firebase": ["./src/Firebase"],

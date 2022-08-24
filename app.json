@@ -37,6 +37,6 @@
       "expo-image-picker",
       "@react-native-firebase/app"
     ],
-    "sdkVersion": "45.0.0"
+    "sdkVersion": "46.0.0"
   }
 }

@@ -1,23 +1,6 @@
 // @ts-ignore
 import type { FC } from 'react'
-import type {NativeStackScreenProps} from "@react-navigation/native-stack";
-import type {FirebaseAuthTypes} from "@react-native-firebase/auth";
-
-export type AccountStackList = {
-	SelectMethodAuthentication: undefined;
-	SMSCodeInput: undefined;
-	NumberInput: undefined;
-	InputNickName: undefined;
-	InputImageAndBirthday: undefined;
-	Profile: undefined,
-	EditMainUserData: undefined,
-	EditBirthday: undefined,
-	Root: undefined
-};
-
-
-export type AccountStackScreenProps<T extends keyof AccountStackList> =
-	FC<NativeStackScreenProps<AccountStackList, T>>;
+import type { FirebaseAuthTypes } from "@react-native-firebase/auth";
 
 export interface UserDataApplication  {
 	name?: string;
@@ -56,7 +39,12 @@ export interface State {
 	authenticationStatus:'authentication' | 'noAuthentication'
 	editUserData?:UpdateUserData,
 	confirmResultByPhone?: FirebaseAuthTypes.ConfirmationResult,
-	phone?: string
+	phone?: string,
+}
+
+export interface State_v2 extends State {
+	isCanRequestSMSCode: boolean,
+	timeLeft: number | null
 }
 
 export type Action = ActionReducerNoWithPayload<'out'> | ActionReducerWithPayload<'in', UserDataApplication | null>

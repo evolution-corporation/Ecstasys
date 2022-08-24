@@ -1,17 +1,13 @@
-import {createContext, useContext, useEffect, useMemo, useReducer} from 'react'
+import { useEffect, useMemo, useReducer, useRef, useState} from 'react'
 import auth from "@react-native-firebase/auth";
 
-import {Action, State, UpdateUserData, UserDataApplication, Func} from './types'
+import {Action, State, UpdateUserData, Func, State_v2} from './types'
 import {authentication, registration, update} from "./api";
 
-export const AccountContext = createContext<{ user: UserDataApplication | undefined, func: Func, state: State } | null>(null)
-
-
-export function useAccountHook() {
+const useAccountHook_v1 = function () {
 	const [state, dispatch] = useReducer(Reducer, {
 		authenticationStatus: 'authentication'
 	})
-
 	useEffect(()=>{
 		auth().onAuthStateChanged(async (user)=>{
 			if (!user) {
@@ -41,7 +37,7 @@ export function useAccountHook() {
 				})
 			}
 		},
-		authenticationWithPhone: async (phone: string) => {
+		authenticationWithPhone: async (phone) => {
 			dispatch({
 				type: 'authorizationByPhone',
 				payload: { confirm: await auth().signInWithPhoneNumber(phone), phone: phone}
@@ -61,8 +57,6 @@ export function useAccountHook() {
 
 	return { state, func }
 }
-
-
 
 function Reducer(state: State, action: Action): State {
 	switch (action.type) {
@@ -120,17 +114,52 @@ function Reducer(state: State, action: Action): State {
 	return { ...state }
 }
 
-export const useAccountContext = () => {
-	const accountState = useContext(AccountContext)
-	if (!accountState) throw new Error('Account context not initialization')
-	return accountState
+
+// Добавлен таймер запроса SMS с подверждением
+const useAccountHook_2 = function (timeOutWithSeconds: number = 60) {
+	const { state, func } = useAccountHook_v1()
+	const [isCanRequestSMSCode, setIsCanRequestSMSCode] = useState<boolean>(true)
+	const [timeLeft, setTimeLeft] = useState<null | number>(null)
+	const timerId = useRef<NodeJS.Timer | null>(null)
+
+	const newState: State_v2 = useMemo(()=> ({
+		...state,
+		isCanRequestSMSCode,
+		timeLeft
+	}), [state, isCanRequestSMSCode, timeLeft])
+
+	const newFunc: Func = useMemo(() => ({
+		...func,
+		authenticationWithPhone: async (phone) => {
+			await func.authenticationWithPhone(phone)
+			setIsCanRequestSMSCode(false)
+		},
+		requestSMSCode: async () => {
+			await func.requestSMSCode()
+			setIsCanRequestSMSCode(false)
+		}
+	}), [func, isCanRequestSMSCode])
+
+	useEffect(() => {
+		function timer(timeLeft_: number): NodeJS.Timer | undefined {
+			setTimeLeft(timeLeft_)
+			if (timeLeft_ === 0) {
+				setIsCanRequestSMSCode(true)
+				return
+			}
+			timerId.current = setTimeout(timer, 1000, timeLeft_ - 1)
+		}
+		if (isCanRequestSMSCode) {
+			setTimeLeft(null)
+		} else {
+			if (!!timerId.current) {
+				clearTimeout(timerId.current)
+			}
+			timer(timeOutWithSeconds)
+		}
+	}, [isCanRequestSMSCode, timeOutWithSeconds])
+
+	return { state: newState, func: newFunc }
 }
 
-
-export default () => {
-	const context = useContext(AccountContext);
-	if (!!context) {
-		return { user: context.user, func: context.func }
-	}
-	throw new Error("User context not initialization")
-}
+export default useAccountHook_2

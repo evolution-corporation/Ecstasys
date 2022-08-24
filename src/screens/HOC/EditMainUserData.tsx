@@ -5,8 +5,8 @@ import style, { colors } from "~styles";
 import SelectImageButton from "~components/SelectImageButton";
 import NicknameInput from "~components/NicknameInput";
 import ColorButton from "~components/ColorButton";
-import {AccountStackScreenProps, UpdateUserData} from "../types";
-import {useAccountContext} from "../context";
+import {AccountStackScreenProps, UpdateUserData} from "~modules/account/types";
+import {useAccountContext} from "~modules/account/context";
 const EditMainUserDataScreen: AccountStackScreenProps<"EditMainUserData"> = ({
   navigation,
 }) => {

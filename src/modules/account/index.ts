@@ -1,30 +1,36 @@
-import React, {FC, useEffect, Children} from "react";
-import Routes from  './routes'
+import React, { FC } from "react";
+import Routes, { Props as RoutesProps } from  './routes'
 
-
-import useUserContext, { AccountContext, useAccountContext, useAccountHook } from './context'
+import useAccountHook from './useAccountHook'
+import AccountContext, { useAccountContext, useUserContext, useTimerSMSRequestContext } from "~modules/account/AccountContext";
 
 const e = React.createElement
 
-const Account: FC = ({ children }) => {
+const Account: FC<Props> = ({ routes }) => {
 	const { state, func } = useAccountHook()
-
-	useEffect(()=>{
-		if (!Children.only(children)) {
-			throw new Error('Need only children!')
-		}
-	},[children])
 
 	return (
 		e(AccountContext.Provider,
-			{ value: { user: state.userData,  func: func, state: state } },
+			{ value: { user: state.userData, func: func, state: state } },
 			e(Routes,
-				{},
-					children
+				routes ,
 				)
 		)
 	)
 }
 
+interface Props {
+	routes: RoutesProps
+}
+
+const contextHook = {
+	account: useAccountContext,
+	user: useAccountContext,
+	timerSMSRequest: useTimerSMSRequestContext
+
+}
+
 export default Account
-export { Routes, useUserContext, AccountContext, useAccountContext, useAccountHook }
+export {
+	Routes, useUserContext, AccountContext, contextHook
+}

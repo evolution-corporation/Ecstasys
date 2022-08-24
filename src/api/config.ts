@@ -1,7 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import auth from "@react-native-firebase/auth";
 import NetInfo from "@react-native-community/netinfo";
-import i18n from "~i18n";
 import { LoadingStatus } from "~constants";
 
 export const HOST_URL = new URL("http://62.84.125.238:8000");
@@ -23,7 +22,7 @@ export async function getHeader(options?: {
 }): Promise<Headers> {
   const header = new Headers();
   header.set("appName", "Ecstasys");
-  header.set("Accept-Language", i18n.language ?? "ru");
+  header.set("Accept-Language", "ru");
   if (options?.token ?? true) {
     header.set("authorization", await getToken());
   }

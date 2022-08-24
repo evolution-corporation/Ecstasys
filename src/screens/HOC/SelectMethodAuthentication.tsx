@@ -7,7 +7,7 @@ import ColorButton from "~components/ColorButton";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import NameApplication from "~components/Text/NameApplication";
 import SmallDescriptionApplication from "~components/Carousel/SmallDescriptionApplication";
-import {AccountStackScreenProps} from "../types";
+import {AccountStackScreenProps} from "~modules/account/types";
 
 
 const SelectMethodAuthentication: AccountStackScreenProps<"SelectMethodAuthentication"> = ({ navigation }) => {

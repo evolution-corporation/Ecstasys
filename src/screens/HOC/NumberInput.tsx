@@ -4,9 +4,9 @@ import NumberInput from "~components/NumberInput";
 import ColorButton from "~components/ColorButton";
 import i18n from "~i18n";
 import style, { colors } from "~styles";
-import { useAccountContext } from "../context";
+import { useAccountContext } from "~modules/account/context";
 
-import {AccountStackScreenProps} from "../types";
+import {AccountStackScreenProps} from "~modules/account/types";
 
 const NumberInputScreen: AccountStackScreenProps<"NumberInput"> = ({ navigation }) => {
   const NumberPhone = useRef<{ numberPhone: string; isValidate: boolean }>({

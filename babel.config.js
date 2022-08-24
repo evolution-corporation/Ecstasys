@@ -19,12 +19,10 @@ module.exports = function(api) {
             '.json'
           ],
           alias: {
-            '~core': './src/core/Core',
+            '~core': './src/core',
             '~routes': './src/routes',
             '~screens': './src/screens',
             '~assets': './assets',
-            '~i18n': './src/i18n',
-            '~styles': './src/styles',
             '~api': './src/api',
             '~components': './src/components',
             '~firebase': './src/Firebase',
@@ -33,7 +31,8 @@ module.exports = function(api) {
             '~containers': './src/containers',
             '~hooks': './src/hooks',
             '~contexts': './src/contexts',
-            '~HOC': './src/HOC'
+            '~HOC': './src/HOC',
+            '~modules': './src/modules'
           },
         },
         "@babel/plugin-transform-typescript",
