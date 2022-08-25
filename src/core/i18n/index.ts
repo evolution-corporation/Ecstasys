@@ -1,10 +1,7 @@
 import { I18n } from "i18n-js";
 import * as translate from './translations'
 import * as Localization from "expo-localization";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import {CodeCountryISOType} from "~i18n";
-import CodeCountry from "./CodeCountry";
-
+import CodeCountry from './CodeCountry';
 
 const i18n = new I18n(translate)
 i18n.defaultLocale = Object.keys(translate)[0]

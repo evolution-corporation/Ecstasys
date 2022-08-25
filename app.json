@@ -29,14 +29,25 @@
       },
       "icon": "./assets/icon.png",
       "package": "com.ecorp.dmd_meditation",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "plugins": [
       "expo-dev-client",
       "expo-splash-screen",
       "expo-image-picker",
-      "@react-native-firebase/app"
+      "@react-native-firebase/app",
+      "expo-av",
+      "expo-updates",
+      "expo-community-flipper",
+      "expo-notifications"
     ],
-    "sdkVersion": "46.0.0"
+    "extra": {
+      "eas": {
+        "projectId": "65b7d342-ce66-4baa-9507-071987162a44"
+      }
+    }
   }
 }

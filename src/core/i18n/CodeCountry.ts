@@ -1,4 +1,4 @@
-const codeCountry =[
+export default [
 	"AU",
 	"AT",
 	"AZ",
@@ -196,6 +196,3 @@ const codeCountry =[
 	"JM",
 	"JP",
 ];
-
-
-export default codeCountry

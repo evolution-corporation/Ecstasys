@@ -2,13 +2,11 @@ import React, { FC, useEffect } from "react";
 import {
   NavigationContainer,
 } from "@react-navigation/native";
-import { useCustomFonts } from '~core'
-import {Platform, UIManager, View} from "react-native";
+import { Platform, UIManager, View, Text } from "react-native";
+import * as SplashScreen from 'expo-splash-screen';
+import {useCustomFonts} from "~core";
+import AccountModule from '~modules/account'
 import { RootSiblingParent } from "react-native-root-siblings";
-import FlipperAsyncStorage from "rn-flipper-async-storage-advanced";
-import Account from '~modules/account'
-import RootRoutes from "./routes";
-import * as TestAccount from "~screens/Test/Account"
 
 if (Platform.OS === "android") {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -16,27 +14,26 @@ if (Platform.OS === "android") {
   }
 }
 const AppCore: FC<Props> = (props) => {
+  // Загрузка кастомных шрифтов
+  const [loaded, error] = useCustomFonts()
 
-  const [loaded] = useCustomFonts() // Загрузка кастомных шрифтов
-  useEffect(() => {
-    console.log(`Hermes ${!!global.HermesInternal ? "" : "не"} используется`);
-  }, [1]);
+  useEffect(()=>{
+    if (loaded) {
+      console.log(`Hermes ${!!global.HermesInternal ? "" : "не "}используется`);
+      SplashScreen.hideAsync().catch(console.error)
+    } else {
+      SplashScreen.preventAutoHideAsync().catch(console.error)
+    }
+  }, [loaded])
 
-  if (loaded) {
     return (
       <RootSiblingParent>
-        <FlipperAsyncStorage />
-        <NavigationContainer>
-          <Account routes={{
-            authorization: <TestAccount.AccountAuthentication />,
-            registration: <TestAccount.AccountRegistration />,
-            root: <View />
-          }}/>
-        </NavigationContainer>
+        {/*<FlipperAsyncStorage />*/}
+        {/*<NavigationContainer>*/}
+          <AccountModule />
+        {/*</NavigationContainer>*/}
       </RootSiblingParent>
     );
-  }
-  return null;
 };
 
 interface Props {}

@@ -207,10 +207,11 @@
     "October": "Октябрь",
     "November": "Ноябрь",
     "December": "Декабрь",
-    "secund": {
+    "second": {
         "one": "%{count} секунда",
         "few": "%{count} секунды",
-        "many": "%{count} секунд" ,
+        "many": "%{count} секунд"
+    },
     "minute": {
         "one": "%{count} минута",
         "few": "%{count} минуты",

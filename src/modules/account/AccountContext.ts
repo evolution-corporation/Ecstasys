@@ -1,5 +1,5 @@
 import {createContext, useContext} from "react";
-import {Func, State, State_v2, UserDataApplication} from "~modules/account/types";
+import {Func, State_v2, UserDataApplication} from "~modules/account/types";
 
 //const AccountContext = createContext<{ user: UserDataApplication | undefined, func: Func, state: State } | null>(null)
 const AccountContext = createContext<{ user: UserDataApplication | undefined, func: Func, state: State_v2 } | null>(null)

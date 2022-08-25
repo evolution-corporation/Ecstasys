@@ -1,9 +1,10 @@
 import i18n, { getCountryName, getCountryList } from "./i18n";
-import style, { useCustomFonts, styleImage, styleText, toastOptions } from './styles'
+import gStyle, { useCustomFonts, toastOptions, styleImage, styleText } from './styles'
+
 
 export default {
 	i18n,
-	style,
+	gStyle
 }
 
-export { getCountryList, getCountryName, style, styleImage, useCustomFonts, styleText, toastOptions }
+export { useCustomFonts, toastOptions, styleImage, styleText }
