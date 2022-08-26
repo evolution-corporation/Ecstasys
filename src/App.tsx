@@ -5,7 +5,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useCustomFonts } from "~core";
 import AccountModule from "~modules/account";
 import { RootSiblingParent } from "react-native-root-siblings";
-import { InputSMSCode } from "~components/screens";
+import { InputNickname } from "~components/screens";
 
 if (Platform.OS === "android") {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -25,7 +25,7 @@ const AppCore: FC<Props> = (props) => {
     }
   }, [loaded]);
 
-  return <InputSMSCode />;
+  return <InputNickname />;
 
   return (
     <RootSiblingParent>
