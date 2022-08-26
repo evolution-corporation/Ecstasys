@@ -1,12 +1,11 @@
 import React, { FC, useEffect } from "react";
-import {
-  NavigationContainer,
-} from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { Platform, UIManager, View, Text } from "react-native";
-import * as SplashScreen from 'expo-splash-screen';
-import {useCustomFonts} from "~core";
-import AccountModule from '~modules/account'
+import * as SplashScreen from "expo-splash-screen";
+import { useCustomFonts } from "~core";
+import AccountModule from "~modules/account";
 import { RootSiblingParent } from "react-native-root-siblings";
+import { InputSMSCode } from "~components/screens";
 
 if (Platform.OS === "android") {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -15,25 +14,27 @@ if (Platform.OS === "android") {
 }
 const AppCore: FC<Props> = (props) => {
   // Загрузка кастомных шрифтов
-  const [loaded, error] = useCustomFonts()
+  const [loaded, error] = useCustomFonts();
 
-  useEffect(()=>{
+  useEffect(() => {
     if (loaded) {
       console.log(`Hermes ${!!global.HermesInternal ? "" : "не "}используется`);
-      SplashScreen.hideAsync().catch(console.error)
+      SplashScreen.hideAsync().catch(console.error);
     } else {
-      SplashScreen.preventAutoHideAsync().catch(console.error)
+      SplashScreen.preventAutoHideAsync().catch(console.error);
     }
-  }, [loaded])
+  }, [loaded]);
 
-    return (
-      <RootSiblingParent>
-        {/*<FlipperAsyncStorage />*/}
-        {/*<NavigationContainer>*/}
-          <AccountModule />
-        {/*</NavigationContainer>*/}
-      </RootSiblingParent>
-    );
+  return <InputSMSCode />;
+
+  return (
+    <RootSiblingParent>
+      {/*<FlipperAsyncStorage />*/}
+      {/*<NavigationContainer>*/}
+      <AccountModule />
+      {/*</NavigationContainer>*/}
+    </RootSiblingParent>
+  );
 };
 
 interface Props {}

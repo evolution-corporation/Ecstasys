@@ -1,1 +1,5 @@
-export { default as ru } from './ru.json'
+import ru from "./ru-RU.json";
+
+export default {
+  "ru-RU": ru,
+};

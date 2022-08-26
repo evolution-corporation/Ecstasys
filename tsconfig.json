@@ -8,7 +8,6 @@
     "paths": {
       "~core": ["./src/core"],
       "~routes/*": ["./src/routes/*"],
-      "~screens/*": ["./src/screens/*"],
       "~assets/*": ["./assets/*"],
       "~api": ["./src/api"],
       "~components/*": ["./src/components/*"],
@@ -16,10 +15,8 @@
       "~constants": ["./src/constants"],
       "~store/*": ["./src/store/*"],
       "~store": ["./src/store/index"],
-      "~containers/*": ["./src/containers/*"],
       "~hooks/*": ["./src/hooks/*"],
       "~contexts/*": ["./src/contexts/*"],
-      "~HOC/*": ["./src/HOC/*"],
       "~modules/*": ["./src/modules/*"]
     },
     "typeRoots": [

@@ -1,44 +1,45 @@
 import { I18n } from "i18n-js";
-import * as translate from './translations'
+import translate from "./translations";
 import * as Localization from "expo-localization";
-import CodeCountry from './CodeCountry';
+import CodeCountry from "./CodeCountry";
 
-const i18n = new I18n(translate)
-i18n.defaultLocale = Object.keys(translate)[0]
+const i18n = new I18n(translate);
+i18n.defaultLocale = Object.keys(translate)[0];
 i18n.locale = Localization.locale;
 
-i18n.pluralization.register("ru", (_i18n, count)=>{
-	const mod10 = count % 10;
-	const mod100 = count % 100;
-	let key;
+i18n.pluralization.register("ru", (_i18n, count) => {
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  let key;
 
-	const one = mod10 === 1 && mod100 !== 11;
-	const few = [2, 3, 4].includes(mod10) && ![12, 13, 14].includes(mod100);
-	const many =
-		mod10 === 0 ||
-		[5, 6, 7, 8, 9].includes(mod10) ||
-		[11, 12, 13, 14].includes(mod100);
+  const one = mod10 === 1 && mod100 !== 11;
+  const few = [2, 3, 4].includes(mod10) && ![12, 13, 14].includes(mod100);
+  const many =
+    mod10 === 0 ||
+    [5, 6, 7, 8, 9].includes(mod10) ||
+    [11, 12, 13, 14].includes(mod100);
 
-	if (one) {
-		key = "one";
-	} else if (few) {
-		key = "few";
-	} else if (many) {
-		key = "many";
-	} else {
-		key = "other";
-	}
+  if (one) {
+    key = "one";
+  } else if (few) {
+    key = "few";
+  } else if (many) {
+    key = "many";
+  } else {
+    key = "other";
+  }
 
-	return [key];
-})
+  return [key];
+});
 
-export default i18n
-
+export default i18n;
 
 export function getCountryList(): { [index: string]: string } {
-	return Object.fromEntries(CodeCountry.map(codeCountry => [codeCountry, getCountryName(codeCountry)]))
+  return Object.fromEntries(
+    CodeCountry.map((codeCountry) => [codeCountry, getCountryName(codeCountry)])
+  );
 }
 
 export function getCountryName(code: string): string {
-	return i18n.t(code)
+  return i18n.t(code);
 }
