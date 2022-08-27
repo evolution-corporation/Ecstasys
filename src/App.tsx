@@ -23,7 +23,6 @@ if (Platform.OS === "android") {
 const AppCore: FC<Props> = (props) => {
   // Загрузка кастомных шрифтов
   const [loaded, error] = useCustomFonts();
-
   useEffect(() => {
     if (loaded) {
       console.log(`Hermes ${!!global.HermesInternal ? "" : "не "}используется`);
