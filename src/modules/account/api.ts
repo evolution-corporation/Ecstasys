@@ -4,38 +4,35 @@ import { getExpoPushTokenAsync } from "expo-notifications";
 import { Platform } from "react-native";
 import { headers } from "~api";
 
-import {
-  converterNameSurnameToDisplayName,
-  ConverterUserDataToApplication,
-  serverUrl,
-} from "./tools";
+import { ConverterUserDataToApplication, serverUrl } from "./tools";
 import { UpdateUserData } from "./types";
 
-const isEmulator = Platform.OS === "android" && !!productName?.includes("emu");
+const isEmulator =
+  true || (Platform.OS === "android" && !!productName?.includes("emu"));
 
 export async function registration(
   nickname: string,
   birthday: Date,
   image?: string
 ) {
-  console.log(isEmulator);
   const request = await fetch(serverUrl.usersURL, {
     method: "POST",
     headers: await headers(),
     body: JSON.stringify({
-      NickName: nickname,
+      nickName: nickname,
       birthday: birthday.toISOString(),
-      Image: image,
-      ExpoToken: isEmulator
-        ? (
+      image: image,
+      expoToken: isEmulator
+        ? "test token"
+        : (
             await getExpoPushTokenAsync()
-          ).data
-        : "test Token",
+          ).data,
     }),
   });
   if (request.ok) {
     const json = await request.json();
-    return ConverterUserDataToApplication(json.result);
+    console.log(json);
+    return ConverterUserDataToApplication(json);
   } else {
     throw new Error(`API ERROR. CODE: ${request.status}`);
   }
@@ -56,7 +53,7 @@ export async function authentication() {
   }
   if (request.ok) {
     const json = await request.json();
-    return ConverterUserDataToApplication(json.result);
+    return ConverterUserDataToApplication(json);
   } else {
     throw new Error(`API ERROR. CODE: ${request.status}`);
   }
@@ -70,7 +67,7 @@ export async function update(data: UpdateUserData) {
       Image: data.image,
       Birthday: data.birthday,
       Nickname: data.nickName,
-      Display_name: converterNameSurnameToDisplayName(data.name, data.surname),
+      Display_name: data.display_name,
     }),
   });
   if (request.ok) {
@@ -83,8 +80,7 @@ export async function update(data: UpdateUserData) {
 
 export async function checkNickname(nickname: string): Promise<boolean> {
   try {
-    return false;
-    const url = `${serverUrl.usersURL}users/${nickname}`;
+    const url = `${serverUrl.nickname}?nickname=${nickname}`;
     const request = await fetch(url);
     if (request.status == 404) {
       return true;

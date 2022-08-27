@@ -12,11 +12,11 @@ const NumberInputScreen = () => {
     numberPhone: "",
     isValidate: false,
   });
-  // const { func } = contextHook.account();
+  const { func } = contextHook.account();
 
   const requestSMSCode = useCallback(async () => {
     if (NumberPhone.current.isValidate && !!NumberPhone.current.numberPhone) {
-      // await func.authenticationWithPhone(NumberPhone.current.numberPhone);
+      await func.authenticationWithPhone(NumberPhone.current.numberPhone);
     }
   }, []);
 

@@ -1,26 +1,28 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
-import ColorButton from "~components/ColorButton";
-import NicknameInput from "~components/NicknameInput";
-import Tools from "~core";
 
+import { ColorButton } from "~components/dump";
+import Tools from "~core";
 import { contextHook } from "~modules/account";
-import { NicknameWithVariable } from "~components/dump";
+
+import { NicknameWithVariable } from "./components";
 
 const InputLoginScreen = ({}) => {
-  const nickname = useRef({ text: "", permission: false });
-  // const accountState = useAccountContext();
-  const saveNickName = async () => {
-    if (nickname.current.permission) {
-      // await accountState.func.editUserData({ nickName: nickname.current.text });
-    }
-  };
+  const { func } = contextHook.account();
+  const [statusChecked, setStatusChecked] = useState<boolean>(false);
+
   return (
     <View style={styles.background}>
-      <NicknameWithVariable />
+      <NicknameWithVariable
+        onEndChange={(nickName, status) => {
+          setStatusChecked(status === "FREE");
+          func.editUserData({ nickName });
+        }}
+      />
       <Text style={styles.subText}>
         {Tools.i18n.t("f0955b62-3ce1-49d6-bf79-aba68266ef8e")}
       </Text>
+      <ColorButton>{Tools.i18n.t("continue")}</ColorButton>
     </View>
   );
 };

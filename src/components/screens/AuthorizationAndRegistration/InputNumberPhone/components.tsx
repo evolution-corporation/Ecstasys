@@ -177,7 +177,7 @@ interface Props {
 const styles = StyleSheet.create({
   background: {
     borderRadius: 15,
-    backgroundColor: "rgba(255, 255, 255, 0.2",
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
     borderWidth: 1,
     borderColor: "#C2A9CE",
     height: 45,

@@ -15,12 +15,12 @@ const SMSCodeInputScreen = () => {
   const [status, setStatus] = useState<SMSCodeInputInfoShow>(
     SMSCodeInputInfoShow.requestSMS
   );
-  // const { func } = contextHook.account();
+  const { func } = contextHook.account();
 
   const checkSMSCode = useCallback(
     async (code: string) => {
       setStatus(SMSCodeInputInfoShow.loadingIndicator);
-      // await func.checkSMSCode(code).catch(console.error);
+      await func.checkSMSCode(code).catch(console.error);
     },
     [refSMSCodeInput]
   );

@@ -3,3 +3,5 @@ export { default as SelectMethodAuthentication } from "./AuthorizationAndRegistr
 export { default as InputNumberPhone } from "./AuthorizationAndRegistration/InputNumberPhone";
 export { default as InputSMSCode } from "./AuthorizationAndRegistration/InputSMSCode";
 export { default as InputNickname } from "./AuthorizationAndRegistration/InputNickname";
+export { default as InputImageAndBirthday } from "./AuthorizationAndRegistration/InputImageAndBirthday";
+export { default as Greeting } from "./AuthorizationAndRegistration/Greeting";

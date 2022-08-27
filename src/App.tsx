@@ -5,7 +5,15 @@ import * as SplashScreen from "expo-splash-screen";
 import { useCustomFonts } from "~core";
 import AccountModule from "~modules/account";
 import { RootSiblingParent } from "react-native-root-siblings";
-import { InputNickname } from "~components/screens";
+import {
+  Greeting,
+  InputImageAndBirthday,
+  InputNickname,
+  InputNumberPhone,
+  InputSMSCode,
+  Intro,
+  SelectMethodAuthentication,
+} from "~components/screens";
 
 if (Platform.OS === "android") {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -25,13 +33,11 @@ const AppCore: FC<Props> = (props) => {
     }
   }, [loaded]);
 
-  return <InputNickname />;
-
   return (
     <RootSiblingParent>
       {/*<FlipperAsyncStorage />*/}
       {/*<NavigationContainer>*/}
-      <AccountModule />
+      <AccountModule dev_screen={Greeting} />
       {/*</NavigationContainer>*/}
     </RootSiblingParent>
   );

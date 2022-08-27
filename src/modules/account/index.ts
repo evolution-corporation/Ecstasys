@@ -1,13 +1,16 @@
 import React, { ComponentType, FC } from "react";
 
 import useAccountHook from "./useAccountHook";
-import { AccountAuthentication, AccountRegistration } from "./TestScreens";
+import {
+  AccountAuthentication,
+  AccountRegistration,
+  Profile,
+} from "./TestScreens";
 import AccountContext, {
   useAccountContext,
   useUserContext,
   useTimerSMSRequestContext,
 } from "./AccountContext";
-import { View } from "react-native";
 
 const e = React.createElement;
 
@@ -15,14 +18,17 @@ const Account: FC<Props> = (props) => {
   const {
     authorization = AccountAuthentication,
     registration = AccountRegistration,
-    root = View,
+    root = Profile,
+    dev_screen,
   } = props;
   const { state, func } = useAccountHook();
 
   return e(
     AccountContext.Provider,
     { value: { user: state.userData, func: func, state: state } },
-    state.authenticationStatus === "noAuthentication"
+    !!dev_screen
+      ? e(dev_screen)
+      : state.authenticationStatus === "noAuthentication"
       ? e(authorization)
       : state.registrationStatus === "noRegistration"
       ? e(registration)
@@ -34,6 +40,7 @@ interface Props {
   authorization?: ComponentType;
   registration?: ComponentType;
   root?: ComponentType;
+  dev_screen?: ComponentType;
 }
 
 const contextHook = {

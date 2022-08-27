@@ -37,7 +37,7 @@ export function useCheckUniqueNickname() {
               setIsLoading(false);
             }
           },
-          500,
+          1000,
           nickname
         );
       }

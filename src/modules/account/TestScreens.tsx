@@ -23,11 +23,8 @@ const AccountAuthentication = () => {
   const [phone, setPhone] = useState<string>("");
   const [inputSMSCode, setInputSMSCode] = useState<boolean>(false);
   return (
-    // @ts-ignore
     <View style={styles.background}>
-      {/*@ts-ignore*/}
       <Text> Авторизация по номеру телефона </Text>
-      {/*@ts-ignore*/}
       <TextInput
         value={phone}
         onChangeText={(text) => {
@@ -39,7 +36,6 @@ const AccountAuthentication = () => {
       />
       {inputSMSCode ? (
         <>
-          {/*@ts-ignore*/}
           <TextInput
             placeholder={"SMS код:"}
             onChangeText={(text) => {
@@ -50,7 +46,6 @@ const AccountAuthentication = () => {
             style={styles.textInput}
           />
           {timeLeft === null ? (
-            // @ts-ignore
             <Button
               title={"Повторно получить выслать код"}
               onPress={() => {
@@ -58,12 +53,10 @@ const AccountAuthentication = () => {
               }}
             />
           ) : (
-            // @ts-ignore
             <Text>{timeLeft}</Text>
           )}
         </>
       ) : (
-        //@ts-ignore
         <Button
           title={"Получить SMS код для авторизации"}
           onPress={() => {
@@ -129,11 +122,8 @@ const AccountRegistration = () => {
   }, [setBirthday]);
 
   return (
-    // @ts-ignore
     <View style={styles.background}>
-      {/* @ts-ignore */}
-      <Text> Авторизация по номеру телефона </Text>
-      {/* @ts-ignore */}
+      <Text> Регистрация </Text>
       <TextInput
         value={nickname}
         onChangeText={(text) => {
@@ -143,15 +133,12 @@ const AccountRegistration = () => {
         placeholder={"Никнейм:"}
         style={styles.textInput}
       />
-      {/* @ts-ignore */}
       {image && <Image source={{ uri: image }} style={styles.avatar} />}
-      {/* @ts-ignore */}
 
       <Button
         title={"Выбрать изображение пользователя"}
         onPress={() => selectImage()}
       />
-      {/* @ts-ignore */}
       <Button
         title={"Выберите дату рождения"}
         onPress={() => selectBirthday()}
@@ -166,11 +153,95 @@ const AccountRegistration = () => {
           }}
         />
       )}
-      {/* @ts-ignore */}
       <Button title={"Зарегестрироваться"} onPress={func.registration} />
     </View>
   );
 };
+
+const Profile = () => {
+  const { user, func, state } = useAccountContext();
+  if (user === undefined) throw new Error("User not Found");
+  const [isShowDateTimePicker, setIsShowDateTimePicker] =
+    useState<boolean>(false);
+  const [image, setImage] = useState<string>(user.image);
+  const [statusPermission, requestPermission] =
+    ImagePicker.useMediaLibraryPermissions();
+
+  const selectImage = useCallback(async () => {
+    if (!statusPermission?.granted) {
+      let permission = await requestPermission();
+      while (!permission.granted && permission.canAskAgain) {
+        permission = await requestPermission();
+      }
+      if (!permission.canAskAgain || !permission.granted) {
+        return;
+      }
+    }
+    const image = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      base64: true,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 0.8,
+    });
+    if (!image.cancelled && !!image.base64) {
+      setImage(image.uri);
+      func.editUserData({ image: image.base64 }).catch(console.error);
+    }
+  }, [setImage]);
+
+  const selectBirthday = useCallback(async () => {
+    if (Platform.OS === "android") {
+      DateTimePickerAndroid.open({
+        value: state.editUserData?.birthday ?? user.birthday,
+        onChange: (_, selectDate) => {
+          if (!!selectDate) {
+            func
+              .editUserData({ birthday: new Date(selectDate) })
+              .catch(console.error);
+          }
+        },
+      });
+    } else {
+      setIsShowDateTimePicker(true);
+    }
+  }, [setIsShowDateTimePicker]);
+
+  return (
+    <View style={styles.background}>
+      <TextInput
+        value={state.editUserData?.nickName ?? user.nickName}
+        onChangeText={(text) => {
+          func.editUserData({ nickName: text }).catch(console.error);
+        }}
+        placeholder={"Никнейм:"}
+        style={styles.textInput}
+      />
+      <Image source={{ uri: image }} style={styles.avatar} />
+      <Button
+        title={"Обновить изображение пользователя"}
+        onPress={() => selectImage()}
+      />
+      <Button
+        title={"Выберите дату рождения"}
+        onPress={() => selectBirthday()}
+      />
+      {isShowDateTimePicker && (
+        <DateTimePicker
+          value={state.editUserData?.birthday ?? user.birthday}
+          mode={"date"}
+          onChange={(_, date) => {
+            if (!!date) {
+              func.editUserData({ birthday: date });
+            }
+            setIsShowDateTimePicker(false);
+          }}
+        />
+      )}
+      <Button title={"Обновить"} onPress={func.update} />
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   background: {
     flex: 1,
@@ -188,4 +259,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { AccountAuthentication, AccountRegistration };
+export { AccountAuthentication, AccountRegistration, Profile };

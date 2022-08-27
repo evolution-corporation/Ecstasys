@@ -13,10 +13,11 @@ import Tools from "~core";
 import NicknameBase, {
   Props as NicknameBaseProps,
   Ref as NicknameBaseRef,
-} from "./NicknameBase";
+} from "~components/dump/NicknameInput/NicknameBase";
+
 import { useGenerateUniqueNickname } from "~modules/account/hook";
 
-const NicknameWithVariable: FC<Props> = (props) => {
+export const NicknameWithVariable: FC<NicknameWithVariableProps> = (props) => {
   const { variableNicknameList } = props;
   const { nicknameVariableList, setNickname } = useGenerateUniqueNickname();
   const _nickname = useRef<{ nickname: string; permission: boolean } | null>(
@@ -87,8 +88,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export interface Props extends NicknameBaseProps {
+export interface NicknameWithVariableProps extends NicknameBaseProps {
   variableNicknameList?: ViewProps;
 }
-
-export default NicknameWithVariable;

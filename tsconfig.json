@@ -17,7 +17,8 @@
       "~store": ["./src/store/index"],
       "~hooks/*": ["./src/hooks/*"],
       "~contexts/*": ["./src/contexts/*"],
-      "~modules/*": ["./src/modules/*"]
+      "~modules/*": ["./src/modules/*"],
+      "~tools": ["./src/tools"]
     },
     "typeRoots": [
       "./node_modules/@types",
