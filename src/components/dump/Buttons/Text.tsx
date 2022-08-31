@@ -5,7 +5,7 @@ import { Pressable, Text } from "react-native";
 import Tools from "~core";
 
 const TextButton: React.FC<TextButton> = (props) => {
-  const { styleText, onPress, text } = props;
+  const { styleText, onPress, children } = props;
 
   return (
     <Pressable hitSlop={10} onPress={onPress} {...props}>
@@ -22,14 +22,14 @@ const TextButton: React.FC<TextButton> = (props) => {
         ]}
         adjustsFontSizeToFit
       >
-        {text}
+        {children}
       </Text>
     </Pressable>
   );
 };
 
 interface TextButton extends PressableProps {
-  text?: string;
+  children?: string;
   styleText?: TextStyle | TextStyle[];
 }
 

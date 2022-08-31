@@ -23,7 +23,7 @@ export function ConverterUserDataToApplication(
   }
   return {
     uid: data.id,
-    displayName: data.display_name,
+    displayName: data.displayName,
     image: image,
     birthday: new Date(data.birthday),
     nickName: data.nickName,

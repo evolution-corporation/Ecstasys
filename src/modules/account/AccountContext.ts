@@ -9,8 +9,8 @@ const AccountContext = createContext<{
 
 export function useAccountContext() {
   const accountState = useContext(AccountContext);
-  if (!accountState) throw new Error("Account context not initialization");
-  return accountState;
+  if (!!accountState) return accountState;
+  throw new Error("Account context not initialization");
 }
 
 export function useUserContext() {

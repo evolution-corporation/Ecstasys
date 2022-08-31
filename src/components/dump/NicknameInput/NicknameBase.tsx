@@ -32,8 +32,9 @@ const NicknameInput = forwardRef<Ref, Props>((props, ref) => {
     defaultValue,
     onEndChange,
   } = props;
-  const [_nickname, _setNickname] = useState<string>(defaultValue ?? "");
-  const { isLoading, setNickname, statusCheck } = useCheckUniqueNickname();
+  const [_nickname, _setNickname] = useState<string>(`${""}`);
+  const { isLoading, setNickname, statusCheck } =
+    useCheckUniqueNickname(defaultValue);
 
   const _colorBorderView = useSharedValue("#FF5C00");
 
@@ -60,6 +61,12 @@ const NicknameInput = forwardRef<Ref, Props>((props, ref) => {
   useImperativeHandle(ref, () => ({
     editNickname,
   }));
+
+  useEffect(() => {
+    if (_nickname.length === 0 && defaultValue) {
+      _setNickname(defaultValue);
+    }
+  }, [defaultValue]);
 
   return (
     <>
@@ -104,10 +111,6 @@ const NicknameInput = forwardRef<Ref, Props>((props, ref) => {
 export interface Props extends TextInputProps {
   styleNicknameInputText?: TextStyle;
   styleNicknameInputView?: ViewStyle;
-  autFocus?: boolean;
-  nickNameInit?: string;
-  showMessage?: boolean;
-  checkInitLogin?: boolean;
   onEndChange?: (nickname: string, statusCheck: StatusCheck) => void;
 }
 

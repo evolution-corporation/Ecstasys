@@ -27,7 +27,7 @@ const SMSCodeInputScreen = () => {
 
   const reRequestSMSCode = useCallback(async () => {
     setStatus(SMSCodeInputInfoShow.loadingIndicator);
-    // await func.requestSMSCode().catch(console.error)
+    await func.requestSMSCode().catch(console.error);
     setStatus(SMSCodeInputInfoShow.requestSMS);
   }, [refSMSCodeInput]);
 

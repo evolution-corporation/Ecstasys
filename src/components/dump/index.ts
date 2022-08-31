@@ -5,3 +5,5 @@ export { default as ColorButtonDoubleText } from "./Buttons/ColorDoubleText";
 export { default as NicknameInput } from "./NicknameInput/NicknameBase";
 export { default as SelectImageButton } from "./Buttons/SelectImage";
 export { default as SelectBirthday } from "./SelectBirthday";
+export { default as ViewStatisticsMeditation } from "./ViewStatisticsMeditation";
+export { default as UserButton } from "./Buttons/User";

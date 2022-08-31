@@ -3,7 +3,7 @@ import { checkNickname, generateNickname } from "./api";
 
 export type StatusCheck = null | "FREE" | "USED" | "INCORRECT";
 
-export function useCheckUniqueNickname() {
+export function useCheckUniqueNickname(defaultValue?: string) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [statusCheck, setStatusCheck] = useState<StatusCheck>(null);
   const [nickname, setNickname] = useState<string>("");
@@ -19,6 +19,10 @@ export function useCheckUniqueNickname() {
 
   useEffect(() => {
     if (nickname.length > 0) {
+      if (!!defaultValue && defaultValue === nickname) {
+        if (timerID.current) clearTimeout(timerID.current);
+        setStatusCheck(null);
+      }
       setIsLoading(true);
       if (timerID.current) clearTimeout(timerID.current);
       if (!/^[a-z\d\._]*$/.test(nickname) || nickname.length > 16) {

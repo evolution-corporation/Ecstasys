@@ -102,17 +102,14 @@ function Reducer(state: State, action: Action): State {
       if (!state.editUserData) {
         state.editUserData = {};
       }
-      if (!!action.payload.name) {
-        state.editUserData.name = action.payload.name;
+      if (!!action.payload.display_name) {
+        state.editUserData.display_name = action.payload.display_name;
       }
       if (!!action.payload.image) {
         state.editUserData.image = action.payload.image;
       }
       if (!!action.payload.birthday) {
         state.editUserData.birthday = action.payload.birthday;
-      }
-      if (!!action.payload.surname) {
-        state.editUserData.surname = action.payload.surname;
       }
       if (!!action.payload.nickName) {
         state.editUserData.nickName = action.payload.nickName;

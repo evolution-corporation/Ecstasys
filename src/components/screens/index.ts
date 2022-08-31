@@ -5,3 +5,8 @@ export { default as InputSMSCode } from "./AuthorizationAndRegistration/InputSMS
 export { default as InputNickname } from "./AuthorizationAndRegistration/InputNickname";
 export { default as InputImageAndBirthday } from "./AuthorizationAndRegistration/InputImageAndBirthday";
 export { default as Greeting } from "./AuthorizationAndRegistration/Greeting";
+export { default as Main } from "./Main/Main";
+export { default as Profile } from "./Profile/Profile";
+export { default as EditMainUserData } from "./Profile/EditMainUserData_old";
+export { default as EditDateUserBirthday } from "./Profile/SelectDateBirthday_old";
+export { default as PracticesList } from "./Practices/PracticesList";

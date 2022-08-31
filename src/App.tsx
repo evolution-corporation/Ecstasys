@@ -1,10 +1,12 @@
 import React, { FC, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { Platform, UIManager, View, Text } from "react-native";
+import FlipperAsyncStorage from "rn-flipper-async-storage-advanced";
+import { RootSiblingParent } from "react-native-root-siblings";
 import * as SplashScreen from "expo-splash-screen";
+
 import { useCustomFonts } from "~core";
 import AccountModule from "~modules/account";
-import { RootSiblingParent } from "react-native-root-siblings";
 import {
   Greeting,
   InputImageAndBirthday,
@@ -13,7 +15,13 @@ import {
   InputSMSCode,
   Intro,
   SelectMethodAuthentication,
+  Main,
+  Profile,
+  EditMainUserData,
+  EditDateUserBirthday,
+  PracticesList,
 } from "~components/screens";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 if (Platform.OS === "android") {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -33,12 +41,14 @@ const AppCore: FC<Props> = (props) => {
   }, [loaded]);
 
   return (
-    <RootSiblingParent>
-      {/*<FlipperAsyncStorage />*/}
-      {/*<NavigationContainer>*/}
-      <AccountModule dev_screen={Greeting} />
-      {/*</NavigationContainer>*/}
-    </RootSiblingParent>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <RootSiblingParent>
+        <FlipperAsyncStorage />
+        {/*<NavigationContainer>*/}
+        <AccountModule dev_screen={PracticesList} />
+        {/*</NavigationContainer>*/}
+      </RootSiblingParent>
+    </GestureHandlerRootView>
   );
 };
 

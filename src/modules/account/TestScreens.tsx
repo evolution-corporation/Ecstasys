@@ -12,10 +12,8 @@ import * as ImagePicker from "expo-image-picker";
 import DateTimePicker, {
   DateTimePickerAndroid,
 } from "@react-native-community/datetimepicker";
-import {
-  useAccountContext,
-  useTimerSMSRequestContext,
-} from "~modules/account/AccountContext";
+
+import { useAccountContext, useTimerSMSRequestContext } from "./AccountContext";
 
 const AccountAuthentication = () => {
   const { func } = useAccountContext();
@@ -160,7 +158,10 @@ const AccountRegistration = () => {
 
 const Profile = () => {
   const { user, func, state } = useAccountContext();
-  if (user === undefined) throw new Error("User not Found");
+  if (user === undefined) {
+    return null;
+    throw new Error("User not Found");
+  }
   const [isShowDateTimePicker, setIsShowDateTimePicker] =
     useState<boolean>(false);
   const [image, setImage] = useState<string>(user.image);
@@ -214,6 +215,14 @@ const Profile = () => {
           func.editUserData({ nickName: text }).catch(console.error);
         }}
         placeholder={"Никнейм:"}
+        style={styles.textInput}
+      />
+      <TextInput
+        value={state.editUserData?.display_name ?? user.displayName}
+        onChangeText={(text) => {
+          func.editUserData({ display_name: text }).catch(console.error);
+        }}
+        placeholder={"Имя пользователя:"}
         style={styles.textInput}
       />
       <Image source={{ uri: image }} style={styles.avatar} />

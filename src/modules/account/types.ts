@@ -16,7 +16,7 @@ export interface UserDataServer {
   role: UserRole;
   gender: UserGender;
   category: UserCategory;
-  display_name?: string;
+  displayName?: string;
   id: string;
   subscribeInfo?: SubscribeInfo;
   hasPhoto: boolean;

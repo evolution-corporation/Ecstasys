@@ -3,7 +3,7 @@
     "jsEngine": "hermes",
     "name": "DMD Meditation",
     "slug": "dmd_meditation",
-    "version": "0.0.2",
+    "version": "0.0.4",
     "orientation": "portrait",
     "githubUrl": "https://github.com/HardKot/ecstasys",
     "icon": "./assets/icon.png",

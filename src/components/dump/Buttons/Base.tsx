@@ -11,7 +11,7 @@ import {
 
 import Tools from "~core";
 
-const ColorBase: FC<Props> = (props) => {
+const Base: FC<Props> = (props) => {
   const {
     children,
     styleButton,
@@ -35,6 +35,7 @@ export interface Props extends PressableProps {
   styleText?: StyleProp<TextStyle>;
   secondItem?: JSX.Element;
   onPress?: () => void;
+  children?: string;
 }
 
 const styles = StyleSheet.create({
@@ -53,4 +54,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ColorBase;
+export default Base;

@@ -21,7 +21,7 @@ export async function registration(
     body: JSON.stringify({
       nickName: nickname,
       birthday: birthday.toISOString(),
-      image: image,
+      Image: image,
       expoToken: isEmulator
         ? "test token"
         : (
@@ -61,13 +61,13 @@ export async function authentication() {
 
 export async function update(data: UpdateUserData) {
   const request = await fetch(serverUrl.usersURL, {
-    method: "UPDATE",
+    method: "PATCH",
     headers: await headers(),
     body: JSON.stringify({
       Image: data.image,
-      Birthday: data.birthday,
-      Nickname: data.nickName,
-      Display_name: data.display_name,
+      birthday: data.birthday,
+      nickName: data.nickName,
+      DisplayName: data.display_name,
     }),
   });
   if (request.ok) {
