@@ -1,30 +1,26 @@
-import React, {FC, useRef} from 'react';
-import {MeditationContext, useMeditationContext} from './context';
-import * as API from './api';
-import Screens from './screens';
-import Routes from './routes';
-import Components from './components';
-import { Meditation } from './types'
+import React, { FC, useRef } from "react";
+import { MeditationContext, useMeditationContext } from "./context";
+import * as API from "./api";
+import { Meditation as MeditationType } from "./types";
+import * as Hooks from "./hook";
 
 const e = React.createElement;
+
 const Meditation: FC<Props> = (props) => {
   const { children } = props;
-  const meditation = useRef<Meditation>()
+  const meditation = useRef<MeditationType>();
   if (meditation.current === undefined) {
-    return null
+    return null;
   }
 
-  return e(MeditationContext.Provider,
+  return e(
+    MeditationContext.Provider,
     { value: { meditation: meditation.current } },
     children
-    )
-}
+  );
+};
 
-interface Props{
+interface Props {}
+export default Meditation;
 
-}
-export default Meditation
-
-
-
-export {useMeditationContext, API, Routes, Screens, Components, Hooks}
+export { useMeditationContext, API, Hooks };

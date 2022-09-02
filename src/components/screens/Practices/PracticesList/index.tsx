@@ -1,76 +1,112 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import {
   Text,
   TouchableOpacity,
   Image,
   StyleSheet,
   View,
-  Dimensions,
+  ScrollView,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
 
 import { DoubleColorView } from "~components/containers";
 import Tools from "~core";
-import { useCountMeditation } from "./hooks";
+// import { useCountMeditation } from "./hooks";
 
 const PracticesList = () => {
+  const [getPaddingTopFunc, setGetPaddingTopFunc] = useState<{
+    f: (width: number) => number;
+  } | null>(null);
+  const [widthTitle, setWidthTitle] = useState<number | null>(null);
+
+  const topPaddingContent = useMemo(() => {
+    if (!getPaddingTopFunc || !widthTitle) return null;
+    return getPaddingTopFunc.f(widthTitle);
+  }, [getPaddingTopFunc, widthTitle]);
+
   return (
-    <DoubleColorView heightViewPart={100}>
-      <Text style={styles.title}>
-        {Tools.i18n.t("db8e7216-be7c-4ecc-8ddd-0cf9ff83f419")}
-      </Text>
-      <FlatList
-        data={CategoryMeditation}
-        renderItem={({ item }) => (
-          <TouchableOpacity style={{ width: 92 }}>
-            <Image source={item.image} style={styles.imageSmall} />
-            <Text style={styles.textNameSmall}>{Tools.i18n.t(item.name)}</Text>
-          </TouchableOpacity>
-        )}
-        keyExtractor={(item) => `${item.id}_small`}
-        horizontal={true}
-        ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
-        inverted={true}
-        style={{ marginTop: 18, marginBottom: 49 }}
-      />
-      <FlatList
-        data={CategoryMeditation}
-        renderItem={({ item }) => {
-          const count = useCountMeditation(item.id);
-          return (
-            <TouchableOpacity style={styles.backgroundNormal}>
-              <Image source={item.image} style={styles.imageNormal} />
-              <View style={styles.backgroundTextNormal}>
-                <Text style={styles.textNameNormal}>
-                  {Tools.i18n.t(item.name)}
+    <DoubleColorView
+      onFunctionGetPaddingTop={(getPaddingTop) => {
+        setGetPaddingTopFunc({ f: getPaddingTop });
+      }}
+      hideElementVioletPart
+    >
+      <ScrollView
+        contentContainerStyle={[
+          topPaddingContent
+            ? { paddingTop: topPaddingContent, paddingBottom: 120 }
+            : null,
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
+        <Text
+          style={[styles.title, styles.contentVerticalMargin]}
+          onLayout={({ nativeEvent: { layout } }) => {
+            if (!widthTitle) setWidthTitle(layout.width);
+          }}
+        >
+          {Tools.i18n.t("db8e7216-be7c-4ecc-8ddd-0cf9ff83f419")}
+        </Text>
+        <FlatList
+          data={CategoryMeditation}
+          renderItem={({ item }) => (
+            <TouchableOpacity style={{ width: 92 }}>
+              <Image source={item.image} style={styles.imageSmall} />
+              <Text style={styles.textNameSmall}>
+                {Tools.i18n.t(item.name)}
+              </Text>
+            </TouchableOpacity>
+          )}
+          keyExtractor={(item) => `${item.id}_small`}
+          horizontal={true}
+          ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
+          inverted={true}
+          style={{
+            marginTop: 18,
+            marginBottom: 49,
+          }}
+          contentContainerStyle={{ paddingRight: 20 }}
+          showsHorizontalScrollIndicator={false}
+        />
+        {CategoryMeditation.map((item, index) => (
+          <TouchableOpacity
+            style={[
+              styles.backgroundNormal,
+              index !== CategoryMeditation.length - 1
+                ? { marginBottom: 20 }
+                : null,
+              styles.contentVerticalMargin,
+            ]}
+            key={`${item.id}_normall`}
+          >
+            <Image source={item.image} style={styles.imageNormal} />
+            <View style={styles.backgroundTextNormal}>
+              <Text style={styles.textNameNormal}>
+                {Tools.i18n.t(item.name)}
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={styles.textDescription}>
+                  {Tools.i18n.t(item.description)}
                 </Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text style={styles.textDescription}>
-                    {Tools.i18n.t(item.description)}
+                <View style={{ alignItems: "center" }}>
+                  <Feather name={"headphones"} size={25} color={"#FFFFFF"} />
+                  <Text style={styles.countMeditation}>
+                    {Tools.i18n.t("9790bd12-4b66-419f-a3e0-705134494734", {
+                      count: 0,
+                    })}
                   </Text>
-                  <View style={{ alignItems: "center" }}>
-                    <Feather name={"headphones"} size={25} color={"#FFFFFF"} />
-                    <Text style={styles.countMeditation}>
-                      {Tools.i18n.t("9790bd12-4b66-419f-a3e0-705134494734", {
-                        count,
-                      })}
-                    </Text>
-                  </View>
                 </View>
               </View>
-            </TouchableOpacity>
-          );
-        }}
-        keyExtractor={(item) => `${item.id}_normall`}
-        ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-        style={{ marginTop: 18, marginBottom: 49 }}
-      />
+            </View>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
     </DoubleColorView>
   );
 };
@@ -81,10 +117,14 @@ const styles = StyleSheet.create({
     height: 92,
     borderRadius: 10,
   },
+  contentVerticalMargin: {
+    marginHorizontal: 20,
+  },
   title: {
     color: "rgba(112, 45, 135, 1)",
     fontSize: 24,
     ...Tools.gStyle.font("600"),
+    alignSelf: "flex-start",
   },
   textNameSmall: {
     color: "rgba(112, 45, 135, 1)",

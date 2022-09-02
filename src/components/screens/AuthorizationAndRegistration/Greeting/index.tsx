@@ -50,7 +50,7 @@ const GreetingScreen = () => {
         </Animated.Text>
         <View style={styles.menuButton}>
           {isShowSkipButton ? (
-            <TextButton text={Tools.i18n.t("skip")} />
+            <TextButton>{Tools.i18n.t("skip")}</TextButton>
           ) : (
             <ArrowButton onPress={() => prevPage()} color={"#9765A8"} />
           )}
@@ -83,9 +83,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     textAlign: "left",
-    fontFamily: "Gilroy",
+    fontFamily: "Inter_700Bold",
     fontWeight: "700",
-    width: "60%",
+    width: "100%",
   },
   description: {
     fontSize: 16,

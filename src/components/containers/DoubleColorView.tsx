@@ -1,36 +1,82 @@
-import React, { FC } from "react";
-import { StyleSheet, View, ViewProps } from "react-native";
+import React, { FC, Children, useState, useEffect, useRef } from "react";
+import {
+  LayoutChangeEvent,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+  ViewProps,
+} from "react-native";
+
+export const heightViewPart2 = 42;
 
 const DoubleColorView: FC<DoubleColorViewProps> = (props) => {
-  const { children, style, heightViewPart = 300 } = props;
-
+  const {
+    children,
+    style,
+    heightViewPart = 0,
+    hideElementVioletPart = true,
+    onFunctionGetPaddingTop,
+  } = props;
+  const { width } = useWindowDimensions();
   return (
-    <>
-      <View style={styles.background}>
-        <View style={StyleSheet.absoluteFill}>
+    <View style={styles.background}>
+      <View
+        style={[styles.header, { zIndex: hideElementVioletPart ? 10 : 0 }]}
+        onLayout={(event) => {
+          if (onFunctionGetPaddingTop) {
+            console.log(heightViewPart2, width);
+            onFunctionGetPaddingTop(
+              (widthComponent) =>
+                (widthComponent * heightViewPart2) / width + heightViewPart
+            );
+          }
+        }}
+      >
+        <View style={[StyleSheet.absoluteFill]}>
+          {heightViewPart > 0 && (
+            <View
+              style={[
+                styles.part1,
+                styles.colorPart,
+                { height: heightViewPart },
+              ]}
+            />
+          )}
           <View
-            style={[styles.part1, styles.colorPart, { height: heightViewPart }]}
+            style={[
+              styles.part2,
+              styles.colorPart,
+              {
+                transform: [
+                  {
+                    rotate: `${
+                      (Math.atan(heightViewPart2 / width) * 180) / Math.PI
+                    }deg`,
+                  },
+                ],
+              },
+            ]}
           />
-          <View style={[styles.part2, styles.colorPart]} />
         </View>
       </View>
-      <View style={[StyleSheet.absoluteFill, style]}>{children}</View>
-    </>
+      <View style={style}>{children}</View>
+    </View>
   );
 };
 
 export interface DoubleColorViewProps extends ViewProps {
   heightViewPart?: number;
+  hideElementVioletPart?: boolean;
+  getTopPaddingFirstElement?: number;
+  onFunctionGetPaddingTop?: (getPaddingTop: (width: number) => number) => void;
 }
 
 const styles = StyleSheet.create({
-  masked: {
-    flex: 1,
-  },
   background: {
-    flex: 1,
     backgroundColor: "#FFFFFF",
-    ...StyleSheet.absoluteFillObject,
+  },
+  header: {
+    zIndex: 0,
   },
   contentContainer: {
     position: "absolute",
@@ -47,8 +93,7 @@ const styles = StyleSheet.create({
   },
   part2: {
     width: "200%",
-    height: 50,
-    transform: [{ rotate: "6.08deg" }],
+    height: heightViewPart2,
   },
 });
 
