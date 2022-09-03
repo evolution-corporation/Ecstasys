@@ -14,7 +14,7 @@ const DoubleColorView: FC<DoubleColorViewProps> = (props) => {
     children,
     style,
     heightViewPart = 0,
-    hideElementVioletPart = true,
+    hideElementVioletPart = false,
     onFunctionGetPaddingTop,
   } = props;
   const { width } = useWindowDimensions();
@@ -24,7 +24,6 @@ const DoubleColorView: FC<DoubleColorViewProps> = (props) => {
         style={[styles.header, { zIndex: hideElementVioletPart ? 10 : 0 }]}
         onLayout={(event) => {
           if (onFunctionGetPaddingTop) {
-            console.log(heightViewPart2, width);
             onFunctionGetPaddingTop(
               (widthComponent) =>
                 (widthComponent * heightViewPart2) / width + heightViewPart

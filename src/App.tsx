@@ -20,6 +20,7 @@ import {
   EditMainUserData,
   EditDateUserBirthday,
   PracticesList,
+  SelectSubscribeScreen,
 } from "~components/screens";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
@@ -45,7 +46,7 @@ const AppCore: FC<Props> = (props) => {
       <RootSiblingParent>
         <FlipperAsyncStorage />
         {/*<NavigationContainer>*/}
-        <AccountModule dev_screen={PracticesList} />
+        <AccountModule dev_screen={SelectSubscribeScreen} />
         {/*</NavigationContainer>*/}
       </RootSiblingParent>
     </GestureHandlerRootView>
