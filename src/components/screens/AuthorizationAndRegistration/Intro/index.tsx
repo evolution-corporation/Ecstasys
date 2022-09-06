@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { StyleSheet, Text, Image, View, Dimensions } from "react-native";
+import { StyleSheet, Text, Image, View, Dimensions, Platform } from "react-native";
 import Animated from "react-native-reanimated";
 
 import Tools from "~core";
@@ -16,6 +16,8 @@ const IntroScreen = () => {
   });
   const [isShowNameApp, setIsShowNameApp] = useState<boolean>(true);
   const [isShowSkipButton, setIsShowSkipButton] = useState<boolean>(true);
+  const [fontSizeTitle, setFontSizeTitle] = useState<number| null>(null) //! Это фикс adjustsFontSizeToFit
+  const [fontSizeDescription, setFontSizeDescription] = useState<number| null>(null) //! Это фикс adjustsFontSizeToFit
   const nextPage = useCallback(async () => {
     setNextValue();
     setText({
@@ -35,11 +37,11 @@ const IntroScreen = () => {
     setIsShowNameApp(true);
     setIsShowSkipButton(true);
   }, []);
-
+  console.log(Dimensions.get('window').width, ' - ширина экрана')
   return (
     <Animated.View style={[aStyles.background, styles.background]}>
       <Animated.View style={[aStyles.professor, styles.professor]}>
-        <Image source={require("./assets/professor.png")} />
+        <Image source={require("./assets/professor.png")} resizeMode={'contain'} style={{ height: 450, width: 450 }}/>
       </Animated.View>
       <Animated.View style={[aStyles.bird, styles.bird]}>
         <Image
@@ -50,18 +52,54 @@ const IntroScreen = () => {
         />
       </Animated.View>
       <View style={styles.text}>
-        <Animated.Text style={[aStyles.title, styles.title]}>
+        <Animated.Text style={[aStyles.title,styles.title, { fontSize: Platform.OS === 'android' ? fontSizeTitle ?? 32 : 32 }]} adjustsFontSizeToFit={Platform.OS !== 'android'} onLayout={({ nativeEvent: { layout } })=>{
+          const { width } = layout
+          if (!fontSizeTitle) {
+            let fontSize: number | undefined
+            if (width >= 300) {
+              fontSize = 28
+            }
+            if (width >= 350) {
+              fontSize = 30
+            }
+            if (width >= 380) {
+              fontSize = 40
+            }
+            if (fontSize === undefined) {
+              fontSize = 32
+            }
+            setFontSizeTitle(fontSize )
+          }
+        }}>
           {text.title}
           {isShowNameApp && (
-            <Text style={{ color: "#9765A8" }}>DMD Meditation!</Text>
+            <Text style={{ color: "#9765A8" , fontFamily: "Inter_700Bold"}}>dmd meditation!</Text>
           )}
         </Animated.Text>
-        <Animated.Text style={[aStyles.description, styles.description]}>
+        <Animated.Text style={[aStyles.description, styles.description, { fontSize: Platform.OS === 'android' ? fontSizeDescription ?? 32 : 32 }]} adjustsFontSizeToFit={Platform.OS !== 'android'} onLayout={({ nativeEvent: { layout } })=>{
+          const { width } = layout
+          console.log(width)
+          if (!fontSizeDescription) {
+            let fontSize: number | undefined
+            if (width >= 300) {
+              fontSize = 16
+            }
+            if (width >= 350) {
+              fontSize = 16
+            }
+            if (fontSize === undefined) {
+              fontSize = 20
+            }
+            setFontSizeDescription(fontSize)
+          }
+        }}>
           {text.description}
         </Animated.Text>
         <View style={styles.menuButton}>
           {isShowSkipButton ? (
-            <TextButton text={Tools.i18n.t("skip")} />
+            <TextButton>
+              {Tools.i18n.t("skip")}
+            </TextButton>
           ) : (
             <ArrowButton onPress={() => prevPage()} />
           )}
@@ -83,30 +121,43 @@ const styles = StyleSheet.create({
   },
   professor: {
     position: "absolute",
-    zIndex: 2,
+    zIndex: 200,
+    alignSelf: 'center',
+    top: -25,
+    // borderColor: 'red',
+    // borderWidth: 1,
+    // transform: [
+    //   {scale: 0.38,}
+    // ],
   },
   bird: {
     alignSelf: "center",
     flex: 3,
   },
   title: {
-    fontSize: 32,
     textAlign: "left",
-    fontFamily: "Gilroy",
+    fontFamily: "Inter_700Bold",
     fontWeight: "700",
+    // lineHeight: 35.4,
+    width: '100%',
+    
   },
   description: {
-    fontSize: 16,
+    //fontSize: 20,
     ...Tools.gStyle.font("400"),
     color: "#404040",
     opacity: 0.71,
-    lineHeight: 22.4,
+    lineHeight: 25.4,
     marginVertical: 26,
+    height: 130,
+    
+    
   },
   text: {
     flex: 2,
     paddingHorizontal: 20,
     marginBottom: 25,
+    fontFamily: "Inter_700Bold",
   },
   menuButton: {
     flexDirection: "row",

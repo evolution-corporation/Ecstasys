@@ -50,23 +50,23 @@ export default function () {
   }, [preValue]);
 
   const background = useAnimatedStyle(() => ({
-    backgroundColor: withTiming(_backgroundColor.value, { duration: 1000 }),
+    backgroundColor: withTiming(_backgroundColor.value, {duration: 500}),
   }));
 
   const bird = useAnimatedStyle(() => ({
     transform: [
       { scale: withTiming(_scaleBird.value) },
-      { translateX: withTiming(_translateXBird.value, { duration: 1000 }) },
-      { translateY: withTiming(_translateYBird.value, { duration: 1000 }) },
+      { translateX: withTiming(_translateXBird.value, {duration: 500}) },
+      { translateY: withTiming(_translateYBird.value, {duration: 500}) },
     ],
   }));
 
   const title = useAnimatedStyle(() => ({
-    color: withTiming(_colorTitle.value),
+    color: withTiming(_colorTitle.value, {duration: 500}),
   }));
 
   const description = useAnimatedStyle(() => ({
-    color: withTiming(_colorDescription.value, { duration: 1000 }),
+    color: withTiming(_colorDescription.value, {duration: 500}),
   }));
 
   const button = {
@@ -75,7 +75,7 @@ export default function () {
   };
 
   const professor = useAnimatedStyle(() => ({
-    opacity: withTiming(_opacityProfessor.value, { duration: 200 }),
+    opacity: withTiming(_opacityProfessor.value, {duration: 200}),
   }));
 
   return {
@@ -95,8 +95,8 @@ export default function () {
 
 const preValue = {
   backgroundColor: "rgba(151, 101, 168, 1)",
-  scaleBird: 3.2,
-  translateBird: { x: 0, y: -10 },
+  scaleBird: 1,
+  translateBird: { x: 0, y: -210 },
   colorTitle: "#FFFFFF",
   colorDescription: "#E7DDEC",
   backgroundColorButton: "#FFFFFF",
@@ -105,8 +105,8 @@ const preValue = {
 };
 const nextValue = {
   backgroundColor: "rgba(151, 101, 168, 0)",
-  scaleBird: 1,
-  translateBird: { x: 0, y: 35 },
+  scaleBird: 0.35,
+  translateBird: { x: 0, y: -40 },
   colorTitle: "#3D3D3D",
   colorDescription: "rgba(64, 64, 64, 0.71)",
   backgroundColorButton: "#9765A8",

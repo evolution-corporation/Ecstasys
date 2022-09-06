@@ -36,7 +36,8 @@ const GreetingScreen = () => {
   return (
     <Animated.View style={[aStyles.background, styles.background]}>
       <Animated.View style={[aStyles.professor, styles.professor]}>
-        <Image source={require("./assets/professor.png")} />
+        <Image source={require("./assets/professor.png")}
+           />
       </Animated.View>
       <Animated.View style={[aStyles.bird, styles.bird]}>
         <Bird colorBird={aStyles._colorBird} />
@@ -50,7 +51,7 @@ const GreetingScreen = () => {
         </Animated.Text>
         <View style={styles.menuButton}>
           {isShowSkipButton ? (
-            <TextButton>{Tools.i18n.t("skip")}</TextButton>
+            <TextButton text={Tools.i18n.t("skip")} />
           ) : (
             <ArrowButton onPress={() => prevPage()} color={"#9765A8"} />
           )}
@@ -73,7 +74,12 @@ const styles = StyleSheet.create({
   professor: {
     position: "absolute",
     zIndex: 0,
-    right: 0,
+    right: -430,
+    top: -600,
+    //width: "50%", height: "50%",
+    transform: [
+      {scale: 0.38,}
+    ]
   },
   bird: {
     alignSelf: "center",
@@ -84,11 +90,10 @@ const styles = StyleSheet.create({
     fontSize: 32,
     textAlign: "left",
     fontFamily: "Inter_700Bold",
-    fontWeight: "700",
-    width: "100%",
+    width: "82%",
   },
   description: {
-    fontSize: 16,
+    fontSize: 20,
     ...Tools.gStyle.font("400"),
     color: "#404040",
     opacity: 0.71,
