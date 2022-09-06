@@ -1,7 +1,6 @@
 import React, { FC, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { Platform, UIManager, View, Text } from "react-native";
-import FlipperAsyncStorage from "rn-flipper-async-storage-advanced";
 import { RootSiblingParent } from "react-native-root-siblings";
 import * as SplashScreen from "expo-splash-screen";
 
@@ -44,9 +43,8 @@ const AppCore: FC<Props> = (props) => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <RootSiblingParent>
-        <FlipperAsyncStorage />
         {/*<NavigationContainer>*/}
-        <AccountModule dev_screen={SelectSubscribeScreen} />
+        <AccountModule dev_screen={Main} />
         {/*</NavigationContainer>*/}
       </RootSiblingParent>
     </GestureHandlerRootView>

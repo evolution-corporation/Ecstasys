@@ -1,5 +1,6 @@
 android/
-
+.yarnrc.yml
+.yarn/
 
 node_modules/
 .expo*/
@@ -12,7 +13,6 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
-google-services.json
 
 .idea
 .vscode/

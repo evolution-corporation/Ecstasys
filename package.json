@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start --dev-client",
-    "build Dev": "eas build --platform android --profile development --local",
+    "build Dev": "eas build --platform android --profile development",
     "build prev": "eas build --platform android --profile preview",
     "android": "expo run:android",
     "ios": "expo run:ios",
@@ -28,7 +28,6 @@
     "expo": "~46.0.9",
     "expo-av": "~12.0.4",
     "expo-blur": "~11.2.0",
-    "expo-community-flipper": "^45.1.0",
     "expo-dev-client": "~1.2.1",
     "expo-device": "~4.3.0",
     "expo-image-picker": "~13.3.1",
@@ -43,7 +42,6 @@
     "react-devtools-core": "^4.24.7",
     "react-dom": "18.0.0",
     "react-native": "0.69.5",
-    "react-native-flipper": "^0.153.0",
     "react-native-gesture-handler": "~2.5.0",
     "react-native-reanimated": "~2.9.1",
     "react-native-root-toast": "^3.4.0",
@@ -58,7 +56,6 @@
     "react-native-wheel-scrollview-picker": "^2.0.1",
     "react-redux": "^8.0.2",
     "redux-flipper": "^2.0.2",
-    "rn-flipper-async-storage-advanced": "^1.0.4",
     "validator": "^13.7.0"
   },
   "devDependencies": {
@@ -93,5 +90,9 @@
     ],
     "ignoreWords": [],
     "import": []
+  },
+  "packageManager": "yarn@3.2.3",
+  "installConfig": {
+    "hoistingLimits": "workspaces"
   }
 }

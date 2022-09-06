@@ -9,14 +9,23 @@
       "channel": "dev",
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "YARN_ENABLE_IMMUTABLE_INSTALLS": "false"
       }
     },
     "preview": {
       "distribution": "internal",
-      "channel": "dev"
+      "channel": "dev",
+      "env": {
+        "YARN_ENABLE_IMMUTABLE_INSTALLS": "false"
+      }
     },
     "production": {
-      "channel": "main"
+      "channel": "main",
+      "env": {
+        "YARN_ENABLE_IMMUTABLE_INSTALLS": "false"
+      }
     }
   },
   "submit": {
