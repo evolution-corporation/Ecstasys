@@ -44,7 +44,7 @@ const AppCore: FC<Props> = (props) => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <RootSiblingParent>
         {/*<NavigationContainer>*/}
-        <AccountModule dev_screen={Intro} />
+        <AccountModule dev_screen={SelectSubscribeScreen} />
         {/*</NavigationContainer>*/}
       </RootSiblingParent>
     </GestureHandlerRootView>

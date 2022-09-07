@@ -12,6 +12,7 @@ import { Feather } from "@expo/vector-icons";
 
 import { DoubleColorView } from "~components/containers";
 import Tools from "~core";
+import { useCountMeditation } from "./hooks";
 // import { useCountMeditation } from "./hooks";
 
 const PracticesList = () => {
@@ -69,43 +70,46 @@ const PracticesList = () => {
           contentContainerStyle={{ paddingRight: 20 }}
           showsHorizontalScrollIndicator={false}
         />
-        {CategoryMeditation.map((item, index) => (
-          <TouchableOpacity
-            style={[
-              styles.backgroundNormal,
-              index !== CategoryMeditation.length - 1
-                ? { marginBottom: 20 }
-                : null,
-              styles.contentVerticalMargin,
-            ]}
-            key={`${item.id}_normall`}
-          >
-            <Image source={item.image} style={styles.imageNormal} />
-            <View style={styles.backgroundTextNormal}>
-              <Text style={styles.textNameNormal}>
-                {Tools.i18n.t(item.name)}
-              </Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Text style={styles.textDescription}>
-                  {Tools.i18n.t(item.description)}
+        {CategoryMeditation.map((item, index) => {
+          const count = useCountMeditation(item.id);
+          return (
+            <TouchableOpacity
+              style={[
+                styles.backgroundNormal,
+                index !== CategoryMeditation.length - 1
+                  ? { marginBottom: 20 }
+                  : null,
+                styles.contentVerticalMargin,
+              ]}
+              key={`${item.id}_normall`}
+            >
+              <Image source={item.image} style={styles.imageNormal} />
+              <View style={styles.backgroundTextNormal}>
+                <Text style={styles.textNameNormal}>
+                  {Tools.i18n.t(item.name)}
                 </Text>
-                <View style={{ alignItems: "center" }}>
-                  <Feather name={"headphones"} size={25} color={"#FFFFFF"} />
-                  <Text style={styles.countMeditation}>
-                    {Tools.i18n.t("9790bd12-4b66-419f-a3e0-705134494734", {
-                      count: 0,
-                    })}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={styles.textDescription}>
+                    {Tools.i18n.t(item.description)}
                   </Text>
+                  <View style={{ alignItems: "center" }}>
+                    <Feather name={"headphones"} size={25} color={"#FFFFFF"} />
+                    <Text style={styles.countMeditation}>
+                      {Tools.i18n.t("9790bd12-4b66-419f-a3e0-705134494734", {
+                        count,
+                      })}
+                    </Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          </TouchableOpacity>
-        ))}
+            </TouchableOpacity>
+          );
+        })}
       </ScrollView>
     </DoubleColorView>
   );
@@ -134,7 +138,8 @@ const styles = StyleSheet.create({
     marginTop: 9,
   },
   backgroundNormal: {
-    borderRadius: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
     overflow: "hidden",
   },
   imageNormal: {

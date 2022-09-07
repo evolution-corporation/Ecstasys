@@ -6,7 +6,7 @@ export async function getMeditation(paramas: {
   count?: number;
 }) {
   try {
-    let url = `${HOST_URL}`;
+    let url = `${HOST_URL}meditation`;
     if (paramas.id !== undefined) {
       url += `${paramas.id}`;
     } else {
@@ -18,9 +18,10 @@ export async function getMeditation(paramas: {
         url += `count=${paramas.count}&`;
       }
     }
-    if (url[url.length - 1] == "$" || url[url.length - 1] == "?") {
+    if (url[url.length - 1] === "&" || url[url.length - 1] == "?") {
       url = url.slice(0, url.length - 1);
     }
+    console.log(url);
     const request = await fetch(url);
     if (request.ok) {
       const json = await request.json();

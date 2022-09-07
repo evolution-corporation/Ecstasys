@@ -58,7 +58,7 @@ const DoubleColorView: FC<DoubleColorViewProps> = (props) => {
           />
         </View>
       </View>
-      <View style={style}>{children}</View>
+      <View style={[style, { flex: 1 }]}>{children}</View>
     </View>
   );
 };
@@ -73,6 +73,7 @@ export interface DoubleColorViewProps extends ViewProps {
 const styles = StyleSheet.create({
   background: {
     backgroundColor: "#FFFFFF",
+    flex: 1,
   },
   header: {
     zIndex: 0,
