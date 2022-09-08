@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ElementRef, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import {
@@ -7,7 +7,7 @@ import {
   withSpring,
 } from "react-native-reanimated";
 
-import { DoubleColorView } from "~components/containers";
+import { CustomModal, DoubleColorView } from "~components/containers";
 import { ColorButton } from "~components/dump";
 import Tools from "~core";
 
@@ -32,6 +32,9 @@ const SelectSubscribeScreen = () => {
   });
   const [selectedSubscribe, setSelectedSubscribe] =
     useState<typeSubscribe>(null);
+
+  const modalRef = useRef<ElementRef<typeof CustomModal>>(null);
+
   const _transpareteYButton = useSharedValue(300);
   const aStyle = {
     button: useAnimatedStyle(() => ({
@@ -141,10 +144,43 @@ const SelectSubscribeScreen = () => {
         styleButton={styles.button}
         styleText={styles.buttonText}
         animationStyle={aStyle.button}
-        // TODO: Navigation
+        onPress={() => {
+          modalRef.current?.open();
+        }}
       >
         {Tools.i18n.t("Arrange")}
       </ColorButton>
+      <CustomModal
+        ref={modalRef}
+        style={styles.informationMessage}
+        mainStyle={{
+          justifyContent: "center",
+          alignItems: "center",
+          flex: 1,
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+        }}
+      >
+        <Text style={styles.titleInformation}>
+          {Tools.i18n.t(
+            selectedSubscribe
+              ? "2a881f76-a942-4175-a734-462661892693"
+              : "0f3b106b-5bfb-4870-8405-3735cf6ac3a5"
+          )}
+        </Text>
+        <Text style={styles.messageInformation}>
+          {Tools.i18n.t(
+            selectedSubscribe
+              ? "664c1f21-3425-485a-b4d1-d59f8578207f"
+              : "274347f0-628b-4128-8595-d6be9611ea03"
+          )}
+        </Text>
+        <ColorButton
+          styleButton={styles.buttonModal}
+          styleText={styles.buttonModalText}
+        >
+          {Tools.i18n.t(selectedSubscribe ? "edit" : "off")}
+        </ColorButton>
+      </CustomModal>
     </DoubleColorView>
   );
 };
@@ -157,12 +193,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     ...Tools.gStyle.font("600"),
   },
-  priceSubs: {
-    fontSize: 14,
-    ...Tools.gStyle.font("400"),
-    width: 160,
-    lineHeight: 16,
-  },
+
   price: {
     ...Tools.gStyle.font("600"),
   },
@@ -187,14 +218,7 @@ const styles = StyleSheet.create({
   textPrice: {
     justifyContent: "space-between",
   },
-  imageCard: {
-    flexDirection: "row",
-  },
-  imagePeople: {
-    position: "absolute",
-    alignSelf: "center",
-    right: 38,
-  },
+
   currentMeditationInfo: {
     color: "#E7DDEC",
     textAlign: "center",
@@ -202,11 +226,7 @@ const styles = StyleSheet.create({
     ...Tools.gStyle.font("400"),
     width: "80%",
   },
-  checkSelectedSubscribe: {
-    position: "absolute",
-    bottom: 10,
-    right: 10,
-  },
+
   isHaveSubscribe: {
     color: "#FFFFFF",
     fontSize: 20,
@@ -226,12 +246,7 @@ const styles = StyleSheet.create({
     ...Tools.gStyle.font("600"),
     textAlign: "center",
   },
-  benefitPriceView: {
-    backgroundColor: "#FFFFFF",
-    paddingHorizontal: 27,
-    paddingVertical: 7,
-    borderRadius: 15,
-  },
+
   benefitPrice: {
     color: "#FBBC05",
     backgroundColor: "#FFFFFF",
@@ -241,5 +256,29 @@ const styles = StyleSheet.create({
     fontSize: 13,
     ...Tools.gStyle.font("600"),
     marginTop: 12,
+  },
+  informationMessage: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 20,
+    paddingHorizontal: 40,
+    paddingVertical: 47,
+  },
+  titleInformation: {
+    color: "#3D3D3D",
+    fontSize: 20,
+    textAlign: "center",
+  },
+  messageInformation: {
+    color: "rgba(64, 64, 64, 0.71)",
+    fontSize: 14,
+    ...Tools.gStyle.font("400"),
+    textAlign: "center",
+    marginVertical: 24,
+  },
+  buttonModal: {
+    backgroundColor: "#C2A9CE",
+  },
+  buttonModalText: {
+    color: "#FFFFFF",
   },
 });
