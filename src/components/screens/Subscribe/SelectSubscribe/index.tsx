@@ -26,9 +26,9 @@ const SelectSubscribeScreen = () => {
     lastDatePayment?: Date;
     type: typeSubscribe;
   }>({
-    autoPayment: false,
+    autoPayment: true,
     lastDatePayment: new Date(2022, 9, 1),
-    type: null,
+    type: "6 month",
   });
   const [selectedSubscribe, setSelectedSubscribe] =
     useState<typeSubscribe>(null);
@@ -47,7 +47,10 @@ const SelectSubscribeScreen = () => {
   };
 
   useEffect(() => {
-    if (selectedSubscribe !== null) {
+    if (
+      selectedSubscribe !== null &&
+      selectedSubscribe !== subscribeInformation.type
+    ) {
       _transpareteYButton.value = 0;
     }
   }, [selectedSubscribe]);

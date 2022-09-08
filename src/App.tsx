@@ -19,7 +19,8 @@ import {
   EditMainUserData,
   EditDateUserBirthday,
   PracticesList,
-  SelectSubscribeScreen,
+  SelectSubscribe,
+  ResultSubscribe,
 } from "~components/screens";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
@@ -44,7 +45,7 @@ const AppCore: FC<Props> = (props) => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <RootSiblingParent>
         {/*<NavigationContainer>*/}
-        <AccountModule dev_screen={SelectSubscribeScreen} />
+        <AccountModule dev_screen={ResultSubscribe} />
         {/*</NavigationContainer>*/}
       </RootSiblingParent>
     </GestureHandlerRootView>

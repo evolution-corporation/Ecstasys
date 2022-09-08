@@ -10,4 +10,5 @@ export { default as Profile } from "./Profile/Profile";
 export { default as EditMainUserData } from "./Profile/EditMainUserData_old";
 export { default as EditDateUserBirthday } from "./Profile/SelectDateBirthday_old";
 export { default as PracticesList } from "./Practices/PracticesList";
-export { default as SelectSubscribeScreen } from "./Subscribe/SelectSubscribe";
+export { default as SelectSubscribe } from "./Subscribe/SelectSubscribe";
+export { default as ResultSubscribe } from "./Subscribe/ResultSubscribe";
