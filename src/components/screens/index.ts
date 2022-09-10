@@ -12,3 +12,4 @@ export { default as EditDateUserBirthday } from "./Profile/SelectDateBirthday_ol
 export { default as PracticesList } from "./Practices/PracticesList";
 export { default as SelectSubscribe } from "./Subscribe/SelectSubscribe";
 export { default as ResultSubscribe } from "./Subscribe/ResultSubscribe";
+export { default as MeditationPracticeList } from "./Practices/MeditationPracticeList";

@@ -23,4 +23,4 @@ const Meditation: FC<Props> = (props) => {
 interface Props {}
 export default Meditation;
 
-export { useMeditationContext, API, Hooks };
+export { useMeditationContext, API, Hooks, MeditationType };

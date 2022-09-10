@@ -21,6 +21,7 @@ import {
   PracticesList,
   SelectSubscribe,
   ResultSubscribe,
+  MeditationPracticeList,
 } from "~components/screens";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
@@ -45,7 +46,7 @@ const AppCore: FC<Props> = (props) => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <RootSiblingParent>
         {/*<NavigationContainer>*/}
-        <AccountModule dev_screen={ResultSubscribe} />
+        <AccountModule dev_screen={MeditationPracticeList} />
         {/*</NavigationContainer>*/}
       </RootSiblingParent>
     </GestureHandlerRootView>
