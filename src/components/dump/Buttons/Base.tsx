@@ -1,3 +1,4 @@
+import { LinearGradient } from "expo-linear-gradient";
 import React, { FC } from "react";
 import {
   TouchableOpacity,
@@ -8,6 +9,8 @@ import {
   TextStyle,
   StyleProp,
   Pressable,
+  ColorValue,
+  ViewProps,
 } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -26,6 +29,8 @@ const Base: FC<Props> = (props) => {
     styleText,
     onPress = () => {},
     animationStyle,
+    disabled,
+    colors,
   } = props;
   const _opacityButton = useSharedValue(1);
 
@@ -46,14 +51,35 @@ const Base: FC<Props> = (props) => {
     onPress();
   };
 
-  return (
-    <Pressable onPress={() => _onPress()}>
+  let WrapperComponent: FC<ViewProps>;
+  if (colors) {
+    const strColors = colors as string[];
+    WrapperComponent = ({ children }) => (
+      <Animated.View style={[animationStyle, button]}>
+        <LinearGradient
+          colors={strColors}
+          style={[styles.backgroundButton, styleButton]}
+        >
+          {children}
+        </LinearGradient>
+      </Animated.View>
+    );
+  } else {
+    WrapperComponent = ({ children }) => (
       <Animated.View
         style={[styles.backgroundButton, styleButton, animationStyle, button]}
       >
+        {children}
+      </Animated.View>
+    );
+  }
+
+  return (
+    <Pressable onPress={() => _onPress()} disabled={disabled}>
+      <WrapperComponent>
         {secondItem}
         <Text style={[styles.textButton, styleText]}>{children}</Text>
-      </Animated.View>
+      </WrapperComponent>
     </Pressable>
   );
 };
@@ -65,6 +91,7 @@ export interface Props extends PressableProps {
   onPress?: () => void;
   children?: string;
   animationStyle?: StyleProp<Animated.AnimateStyle<StyleProp<ViewStyle>>>;
+  colors?: ColorValue[];
 }
 
 const styles = StyleSheet.create({

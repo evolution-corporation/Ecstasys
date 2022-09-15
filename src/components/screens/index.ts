@@ -13,3 +13,5 @@ export { default as PracticesList } from "./Practices/PracticesList";
 export { default as SelectSubscribe } from "./Subscribe/SelectSubscribe";
 export { default as ResultSubscribe } from "./Subscribe/ResultSubscribe";
 export { default as MeditationPracticeList } from "./Practices/MeditationPracticeList";
+export { default as PlayerMeditationPractices } from "./Practices/Player";
+export { default as BackgroundSound } from "./Practices/BackgroundSound";

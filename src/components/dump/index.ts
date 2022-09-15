@@ -8,3 +8,4 @@ export { default as SelectBirthday } from "./SelectBirthday";
 export { default as ViewStatisticsMeditation } from "./ViewStatisticsMeditation";
 export { default as UserButton } from "./Buttons/User";
 export { default as FavoriteMeditation } from "./FavoriteMeditation";
+export { default as TimeLine } from "./TimeLine";

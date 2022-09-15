@@ -15,7 +15,7 @@ export default function (
   }
 ) {
   if (config.initIndex === undefined) {
-    config.initIndex = Math.floor(length / 2);
+    config.initIndex = 0;
   }
   const listAnimatedValue: {
     scale: SharedValue<number>;

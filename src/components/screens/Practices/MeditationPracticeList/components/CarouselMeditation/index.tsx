@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -22,11 +22,10 @@ const CarouselMeditation: FC<CarouselMeditationProps> = (props) => {
     data,
     widthComponent = Dimensions.get("screen").width,
     style,
+    onChange,
   } = props;
-  const [SelectedIndex, setSelectedIndex] = useState<number>(
-    Math.floor(data.length / 2)
-  );
-
+  const [SelectedIndex, setSelectedIndex] = useState<number>(0);
+  const isSelects = useRef<boolean>(false);
   const {
     listAnimatedStyle,
     onEndAnimationScrollData,
@@ -40,9 +39,6 @@ const CarouselMeditation: FC<CarouselMeditationProps> = (props) => {
 
   const _onViewableItemsChanged = useRef(
     ({ viewableItems }: { viewableItems: ViewToken[] }) => {
-      console.log("====================================");
-      console.log(viewableItems);
-      console.log("====================================");
       if (viewableItems.length > 0) {
         const mediumIndex = Math.floor(viewableItems.length / 2);
         if (viewableItems[mediumIndex].index !== null) {
@@ -89,18 +85,23 @@ const CarouselMeditation: FC<CarouselMeditationProps> = (props) => {
       )}
       viewabilityConfig={_viewabilityConfig}
       onViewableItemsChanged={_onViewableItemsChanged}
-      // getItemLayout={(data, index) => ({
-      //   index,
-      //   length: widthComponent,
-      //   offset: widthComponent * index,
-      // })}
       disableIntervalMomentum={true}
       snapToInterval={widthComponent}
       style={style}
-      onScrollBeginDrag={() => onStartAnimationScrollData()}
+      onScrollBeginDrag={() => {
+        if (onChange) {
+          onChange(null, true);
+        }
+        onStartAnimationScrollData();
+      }}
       contentContainerStyle={{
         paddingHorizontal:
           (Dimensions.get("window").width - widthComponent) / 2,
+      }}
+      onScrollEndDrag={() => {
+        if (onChange) {
+          onChange(data[SelectedIndex], false);
+        }
       }}
     />
   );
@@ -109,6 +110,7 @@ const CarouselMeditation: FC<CarouselMeditationProps> = (props) => {
 interface CarouselMeditationProps extends ViewProps {
   data: MeditationType[];
   widthComponent?: number;
+  onChange?: (meditation: MeditationType | null, isSelects: boolean) => void;
 }
 
 const styles = StyleSheet.create({

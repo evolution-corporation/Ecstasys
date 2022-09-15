@@ -54,7 +54,7 @@ export interface MeditationAudio {
 export interface BackgroundAudio {
   sound: Audio.Sound;
   name: string;
-  image: string;
+  // image: string;
 }
 
 export type DMDAudio = { name: string; data: MeditationAudio };

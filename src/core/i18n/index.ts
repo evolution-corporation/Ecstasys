@@ -4,8 +4,11 @@ import * as Localization from "expo-localization";
 import CodeCountry from "./CodeCountry";
 
 const i18n = new I18n(translate);
-i18n.defaultLocale = Object.keys(translate)[0];
-i18n.locale = Localization.locale;
+const supportLocale = Object.keys(translate);
+
+i18n.locale = supportLocale.includes(Localization.locale)
+  ? Localization.locale
+  : supportLocale[0];
 
 i18n.pluralization.register("ru-RU", (_i18n, count) => {
   const mod10 = count % 10;
