@@ -23,8 +23,13 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { useHeaderHeight } from "@react-navigation/elements";
 
-const BackgroundSoundSreen = () => {
+import type { MeditationPracticesScreenProps } from "src/routes";
+
+const BackgroundSoundSreen: MeditationPracticesScreenProps<
+  "BackgroundSound"
+> = ({ navigation }) => {
   const { meditation } = useMeditationContext();
   const TimeLineRef = useRef<ElementRef<typeof TimeLine>>(null);
   const [selectedBackgroundSoung, setSelectedBackgroundSoung] = useState<
@@ -34,6 +39,8 @@ const BackgroundSoundSreen = () => {
   const [zIndexMax, setZIndexMax] = useState<
     keyof typeof BackgroundSound | null
   >(null);
+
+  const heightHeade = useHeaderHeight();
 
   useEffect(() => {
     TimeLineRef.current?.setValue(meditation.backgroundSoundVolume);
@@ -51,6 +58,20 @@ const BackgroundSoundSreen = () => {
       meditation.unsetMeditationBackground();
     }
   }, [selectedBackgroundSoung]);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: () => (
+        <Text style={styles.title}>
+          {Tools.i18n.t("12ee6d3a-ad58-4c4a-9b87-63645efe9c90")}
+        </Text>
+      ),
+
+      headerTransparent: true,
+      headerTitleAlign: "center",
+      headerTintColor: "#FFFFFF",
+    });
+  }, [setSelectedBackgroundSoung]);
 
   const scalePressable: { [index: string]: SharedValue<number> } = {};
   const aStyle: { [index: string]: any } = {};
@@ -70,7 +91,7 @@ const BackgroundSoundSreen = () => {
       source={{ uri: meditation.image }}
       style={styles.background}
     >
-      <View style={styles.contentWrapper}>
+      <View style={[styles.contentWrapper, { paddingTop: heightHeade }]}>
         <View style={styles.backgroundSoundList}>
           {Object.entries(BackgroundSound).map((item) => (
             <Pressable
@@ -155,5 +176,11 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     textAlign: "center",
     ...Tools.gStyle.font("500"),
+  },
+  title: {
+    color: "#FFFFFF",
+    fontSize: 20,
+    ...Tools.gStyle.font("700"),
+    textAlign: "center",
   },
 });

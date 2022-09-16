@@ -1,4 +1,10 @@
-import React, { ElementRef, useEffect, useRef, useState } from "react";
+import React, {
+  ElementRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   ImageBackground,
   StyleSheet,
@@ -16,7 +22,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 import Tools from "~core";
-import { ColorButton, TimeLine } from "~components/dump";
+import { ColorButton, TimeLine, FavoriteMeditation } from "~components/dump";
 import { useMeditationContext, BackgroundSound } from "~modules/meditation";
 
 import useAnimation from "./animated";
@@ -26,8 +32,12 @@ import ArrowRight from "./assets/arrowRight.svg";
 import ArrowLeft from "./assets/arrowLeft.svg";
 import Pause from "./assets/pause.svg";
 import Play from "./assets/Play.svg";
+import type { MeditationPracticesScreenProps } from "src/routes";
+import { useFocusEffect } from "@react-navigation/native";
 
-const PlayerScreen = ({}) => {
+const PlayerScreen: MeditationPracticesScreenProps<"PlayerScreen"> = ({
+  navigation,
+}) => {
   const { meditation } = useMeditationContext();
   const { width } = useWindowDimensions();
   const [positionMilliseconds, setPositionMilliseconds] =
@@ -61,6 +71,26 @@ const PlayerScreen = ({}) => {
         setIsPlaying(isPlaying);
       }
     );
+
+    navigation.setOptions({
+      headerTitle: () => (
+        <View>
+          <Text style={styles.meditationName}>{meditation.name}</Text>
+          <Text style={styles.meditationType}>
+            {Tools.i18n.t(meditation.typeMeditation)}
+          </Text>
+        </View>
+      ),
+      headerRight: () => (
+        <FavoriteMeditation
+          idMeditation={meditation.id}
+          displayWhenNotFavorite
+        />
+      ),
+      headerTransparent: true,
+      headerTitleAlign: "center",
+      headerTintColor: "#FFFFFF",
+    });
   }, [meditation.id]);
 
   useEffect(() => {
@@ -88,6 +118,12 @@ const PlayerScreen = ({}) => {
       }
     }, 10000);
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      hiddenTimer();
+    }, [])
+  );
 
   return (
     <Pressable style={{ flex: 1 }} onPressIn={() => cancelTimer()}>
@@ -187,6 +223,9 @@ const PlayerScreen = ({}) => {
               styleButton={styles.buttonBackgroundSound}
               styleText={styles.buttonBackgroundText}
               secondItem={<Headphones style={{ marginRight: 24 }} />}
+              onPress={() => {
+                navigation.navigate("BackgroundSound");
+              }}
             >
               {Tools.i18n.t(
                 meditation.nameMeditationBackground !== null
@@ -292,5 +331,17 @@ const styles = StyleSheet.create({
     height: 196,
     borderRadius: 98,
     color: "#FFFFFF",
+  },
+  meditationName: {
+    color: "#FFFFFF",
+    fontSize: 20,
+    ...Tools.gStyle.font("700"),
+    textAlign: "center",
+  },
+  meditationType: {
+    color: "#FFFFFF",
+    fontSize: 14,
+    ...Tools.gStyle.font("400"),
+    textAlign: "center",
   },
 });

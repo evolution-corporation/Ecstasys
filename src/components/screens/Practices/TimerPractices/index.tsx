@@ -1,6 +1,7 @@
 //! 50% Не работает нормально
 //TODO: требуется рефракторинг
 
+import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
 
 import {
@@ -28,7 +29,16 @@ const TimerPractices = () => {
   return (
     <View style={styles.background}>
       <ImageBackground source={{ uri: meditation.image }} style={styles.image}>
-        <Text>{}</Text>
+        <LinearGradient
+          style={styles.timeMinutesBox}
+          colors={["#75348B", "#6A2382"]}
+        >
+          <Text style={styles.timeMinutes}>
+            {Core.i18n.t("minute", {
+              count: Math.floor(timeMilleseconds / 60000),
+            })}
+          </Text>
+        </LinearGradient>
       </ImageBackground>
       <Text style={styles.mainText}>
         {Core.i18n.t("e233a33c-3f87-4695-b7ac-29d57ff11ad2")}{" "}
@@ -39,7 +49,6 @@ const TimerPractices = () => {
       <ScrollTime
         onChange={(time) => {
           setTimeMilleseconds((time.minutes * 60 + time.seconds) * 1000);
-          console.log((time.minutes * 60 + time.seconds) * 1000);
         }}
       />
       <View style={{ width: "100%" }}>
@@ -93,5 +102,18 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#FFFFFF",
     textAlign: "center",
+  },
+  timeMinutes: {
+    color: "#FFFFFF",
+    fontSize: 13,
+    ...Core.gStyle.font("600"),
+  },
+  timeMinutesBox: {
+    borderRadius: 15,
+    paddingHorizontal: 34,
+    height: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
   },
 });

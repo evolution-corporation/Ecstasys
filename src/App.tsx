@@ -28,9 +28,7 @@ import {
 } from "~components/screens";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import Meditation from "~modules/meditation";
-import MeditationModels, { Relax } from "~modules/meditation/models"; //! debug
-import { Audio } from "expo-av"; //! debug
+import { MeditationPracticesRoutes } from "./routes";
 
 if (Platform.OS === "android") {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -61,36 +59,10 @@ const AppCore: FC<Props> = (props) => {
 };
 
 const AppPlayer = () => {
-  const [meditation, setMeditation] = useState<MeditationModels | null>(null);
-  useEffect(() => {
-    const init = async () => {
-      const { sound } = await Audio.Sound.createAsync(require("../test.mp3"));
-      let lengthAudio = 60000;
-      const audioStatus = await sound.getStatusAsync();
-      if (audioStatus.isLoaded) {
-        lengthAudio = audioStatus.durationMillis ?? 6000;
-      }
-      setMeditation(
-        new Relax(
-          "1",
-          "Test Name",
-          "testDiscription",
-          "https://oir.mobi/uploads/posts/2021-06/1623116905_30-oir_mobi-p-nochnaya-doroga-v-lesu-priroda-krasivo-fot-35.jpg",
-          {
-            length: lengthAudio,
-            sound: sound,
-          }
-        )
-      );
-    };
-    init();
-    return () => {};
-  }, [setMeditation]);
-  if (meditation == null) return null;
   return (
-    <Meditation meditation={meditation}>
-      <TimerPractices />
-    </Meditation>
+    <NavigationContainer>
+      <MeditationPracticesRoutes />
+    </NavigationContainer>
   );
 };
 

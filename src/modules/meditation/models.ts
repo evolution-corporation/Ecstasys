@@ -5,6 +5,7 @@ import {
   Instruction,
   MeditationAudio,
   TypeDMDNotification,
+  TypeMeditation,
 } from "~modules/meditation/types";
 
 import BackgroundSound from "./backgroundSound";
@@ -105,6 +106,7 @@ class MeditationV1 {
 }
 
 class Meditation extends MeditationV1 {
+  typeMeditation: TypeMeditation;
   constructor(
     id: string,
     name: string,
@@ -112,9 +114,11 @@ class Meditation extends MeditationV1 {
     image: string,
     isHaveBackground: boolean,
     instruction: Instruction = DefaultInstruction,
-    audio?: MeditationAudio
+    audio?: MeditationAudio,
+    typeMeditation: TypeMeditation = "relaxation"
   ) {
     super(id, name, description, image, isHaveBackground, instruction, audio);
+    this.typeMeditation = typeMeditation;
   }
   public getLengthTime(type: TypeReturnTime = "mm:ss"): string {
     if (this.mainAudio === undefined) {
@@ -408,7 +412,16 @@ export class Relax extends Meditation {
     image: string,
     audio: MeditationAudio
   ) {
-    super(id, name, description, image, true, DefaultInstruction, audio);
+    super(
+      id,
+      name,
+      description,
+      image,
+      true,
+      DefaultInstruction,
+      audio,
+      "relaxation"
+    );
   }
 }
 
