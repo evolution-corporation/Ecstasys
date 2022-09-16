@@ -4,7 +4,9 @@ import * as API from "./api";
 import { Meditation as MeditationType } from "./types";
 import MeditationModel, { Relax } from "./models";
 import * as Hooks from "./hook";
-import BackgroundSound from "./backgroundSound";
+import BackgroundSound, {
+  playFragmentMeditationBackground,
+} from "./backgroundSound";
 
 const e = React.createElement;
 
@@ -27,4 +29,11 @@ interface Props {
 }
 export default Meditation;
 
-export { useMeditationContext, API, Hooks, MeditationType, BackgroundSound };
+export {
+  useMeditationContext,
+  API,
+  Hooks,
+  MeditationType,
+  BackgroundSound,
+  playFragmentMeditationBackground,
+};

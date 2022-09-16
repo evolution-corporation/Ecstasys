@@ -21,7 +21,13 @@ import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Tools, { setColorOpacity } from "~core";
 
 const TimeLine = forwardRef<Ref, TimeLineProps>((props, ref) => {
-  const { color = "#FFFFFF", onChange, onStartChange, onEndChange } = props;
+  const {
+    color = "#FFFFFF",
+    onChange,
+    onStartChange,
+    onEndChange,
+    onUpdate,
+  } = props;
 
   const [maxWidth, setMaxWidth] = useState<number | null>(null);
 
@@ -37,6 +43,7 @@ const TimeLine = forwardRef<Ref, TimeLineProps>((props, ref) => {
       transform: [{ scale: withTiming(_scaleCircle.value) }],
     })),
   };
+
   //! В принципе должно работать, но не стоит этому доверять. ч1
   const stackMaxWidth = useRef<{ value: null | { (_maxWidth: number): void } }>(
     { value: null }
@@ -65,6 +72,22 @@ const TimeLine = forwardRef<Ref, TimeLineProps>((props, ref) => {
     },
   }));
 
+  const timerReturnOnUpadte = useRef<NodeJS.Timeout | null>(null);
+
+  const returnUpdate = (width: number) => {
+    if (maxWidth && onUpdate) {
+      if (timerReturnOnUpadte.current !== null) {
+        clearTimeout(timerReturnOnUpadte.current);
+      }
+      timerReturnOnUpadte.current = setTimeout(() => {
+        let percent = width / maxWidth;
+        if (percent > 1) percent = 1;
+        if (percent < 0) percent = 0;
+        onUpdate(percent);
+      }, 10);
+    }
+  };
+
   const lineGestureTap = Gesture.Pan()
     .onBegin((event) => {
       _frontLineWidth.value = withTiming(event.x);
@@ -74,6 +97,9 @@ const TimeLine = forwardRef<Ref, TimeLineProps>((props, ref) => {
     .onUpdate((event) => {
       if (maxWidth && event.x >= 0 && event.x <= maxWidth) {
         _frontLineWidth.value = event.x;
+        if (onUpdate) {
+          runOnJS(returnUpdate)(event.x);
+        }
       }
     })
     .onFinalize((event) => {
@@ -133,6 +159,7 @@ interface TimeLineProps extends ViewProps {
   onChange?: (percent: number) => void;
   onStartChange?: () => void;
   onEndChange?: () => void;
+  onUpdate?: (percent: number) => void;
 }
 
 interface Ref {

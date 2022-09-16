@@ -1,10 +1,28 @@
 import React, { ElementRef, useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, ImageBackground, View, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  ImageBackground,
+  View,
+  Image,
+  Pressable,
+} from "react-native";
 
-import { useMeditationContext, BackgroundSound } from "~modules/meditation";
+import {
+  useMeditationContext,
+  BackgroundSound,
+  playFragmentMeditationBackground,
+} from "~modules/meditation";
 import { TimeLine } from "~components/dump";
 import Tools from "~core";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import Animated, {
+  interpolate,
+  SharedValue,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 const BackgroundSoundSreen = () => {
   const { meditation } = useMeditationContext();
@@ -12,6 +30,10 @@ const BackgroundSoundSreen = () => {
   const [selectedBackgroundSoung, setSelectedBackgroundSoung] = useState<
     keyof typeof BackgroundSound | null
   >(meditation.nameMeditationBackground);
+  const offPlayBackgroundSound = useRef<{ (): Promise<void> } | null>(null);
+  const [zIndexMax, setZIndexMax] = useState<
+    keyof typeof BackgroundSound | null
+  >(null);
 
   useEffect(() => {
     TimeLineRef.current?.setValue(meditation.backgroundSoundVolume);
@@ -30,6 +52,18 @@ const BackgroundSoundSreen = () => {
     }
   }, [selectedBackgroundSoung]);
 
+  const scalePressable: { [index: string]: SharedValue<number> } = {};
+  const aStyle: { [index: string]: any } = {};
+
+  for (let nameBackgroundSound of Object.keys(BackgroundSound)) {
+    scalePressable[nameBackgroundSound] = useSharedValue(1);
+    aStyle[nameBackgroundSound] = useAnimatedStyle(() => ({
+      transform: [
+        { scale: withTiming(scalePressable[nameBackgroundSound].value) },
+      ],
+    }));
+  }
+
   return (
     <ImageBackground
       blurRadius={2}
@@ -39,7 +73,8 @@ const BackgroundSoundSreen = () => {
       <View style={styles.contentWrapper}>
         <View style={styles.backgroundSoundList}>
           {Object.entries(BackgroundSound).map((item) => (
-            <TouchableOpacity
+            <Pressable
+              style={{ zIndex: item[0] === zIndexMax ? 2 : 1 }}
               key={item[0]}
               onPress={() => {
                 setSelectedBackgroundSoung(
@@ -48,15 +83,37 @@ const BackgroundSoundSreen = () => {
                     : (item[0] as keyof typeof BackgroundSound)
                 );
               }}
+              onLongPress={async () => {
+                setZIndexMax(item[0] as keyof typeof BackgroundSound);
+                scalePressable[item[0]].value = 2;
+                offPlayBackgroundSound.current =
+                  await playFragmentMeditationBackground(
+                    item[0] as keyof typeof BackgroundSound
+                  );
+              }}
+              onPressOut={async () => {
+                if (offPlayBackgroundSound.current !== null) {
+                  await offPlayBackgroundSound.current();
+                  offPlayBackgroundSound.current = null;
+                }
+                scalePressable[item[0]].value = 1;
+              }}
             >
-              <Image
-                source={item[1].image}
-                style={styles.iconBackgroundSound}
-              />
-              <Text style={styles.nameBackgroundSound}>
-                {Tools.i18n.t(item[1].translate)}
-              </Text>
-            </TouchableOpacity>
+              <Animated.View style={aStyle[item[0]]}>
+                <Image
+                  source={item[1].image}
+                  style={[
+                    styles.iconBackgroundSound,
+                    selectedBackgroundSoung === item[0]
+                      ? { borderColor: "#FFFFFF", borderWidth: 2 }
+                      : null,
+                  ]}
+                />
+                <Text style={styles.nameBackgroundSound}>
+                  {Tools.i18n.t(item[1].translate)}
+                </Text>
+              </Animated.View>
+            </Pressable>
           ))}
         </View>
         <TimeLine

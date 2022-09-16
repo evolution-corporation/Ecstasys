@@ -31,6 +31,7 @@ const Base: FC<Props> = (props) => {
     animationStyle,
     disabled,
     colors,
+    onLayout,
   } = props;
   const _opacityButton = useSharedValue(1);
 
@@ -75,7 +76,11 @@ const Base: FC<Props> = (props) => {
   }
 
   return (
-    <Pressable onPress={() => _onPress()} disabled={disabled}>
+    <Pressable
+      onPress={() => _onPress()}
+      disabled={disabled}
+      onLayout={onLayout}
+    >
       <WrapperComponent>
         {secondItem}
         <Text style={[styles.textButton, styleText]}>{children}</Text>

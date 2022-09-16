@@ -138,6 +138,10 @@ class Meditation extends MeditationV1 {
   protected _timerNode?: NodeJS.Timer;
   protected _isPlaying: boolean = false;
 
+  public get isPlaying() {
+    return this._isPlaying;
+  }
+
   public setOnUpdateAudioData(
     callback: (status: StatusMeditationAudio) => void,
     typeView: TypeReturnTime = "mm:ss"
@@ -263,7 +267,25 @@ class Meditation extends MeditationV1 {
       : null;
   }
 
-  //TODO Написать функцию для воспроизведения отрывка 15-30 секунд
+  public getLengthTimeFake(
+    precent: number,
+    type: TypeReturnTime = "mm:ss"
+  ): string {
+    if (this.mainAudio === undefined) {
+      return "Not found Audio";
+    }
+    const time = this.mainAudio.length * precent;
+    if (type === "mm:ss") {
+      const allSeconds = Math.floor(time / 1000);
+      const minutes = Math.floor(allSeconds / 60);
+      const seconds = allSeconds % 60;
+      return `${minutes < 10 ? "0" + minutes : minutes}:${
+        seconds < 10 ? "0" + seconds : seconds
+      }`;
+    } else {
+      return `${time}`;
+    }
+  }
 }
 
 export class DMD extends Meditation {

@@ -88,7 +88,7 @@ const AppPlayer = () => {
   if (meditation == null) return null;
   return (
     <Meditation meditation={meditation}>
-      <BackgroundSound />
+      <PlayerMeditationPractices />
     </Meditation>
   );
 };
