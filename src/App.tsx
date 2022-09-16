@@ -24,6 +24,7 @@ import {
   MeditationPracticeList,
   PlayerMeditationPractices,
   BackgroundSound,
+  TimerPractices,
 } from "~components/screens";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
@@ -88,7 +89,7 @@ const AppPlayer = () => {
   if (meditation == null) return null;
   return (
     <Meditation meditation={meditation}>
-      <PlayerMeditationPractices />
+      <TimerPractices />
     </Meditation>
   );
 };

@@ -286,6 +286,12 @@ class Meditation extends MeditationV1 {
       return `${time}`;
     }
   }
+
+  async setLengthMeditation(milliseconds: number) {
+    if (this.mainAudio !== undefined) {
+      this.mainAudio.length = milliseconds;
+    }
+  }
 }
 
 export class DMD extends Meditation {
