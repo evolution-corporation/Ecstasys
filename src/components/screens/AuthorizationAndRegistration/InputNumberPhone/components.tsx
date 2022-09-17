@@ -38,6 +38,7 @@ export const NumberInput: FC<Props> = (props) => {
     defaultCode = "RU",
     autoFocus = false,
     onChange = (number: string, isValidate) => console.info(number, isValidate),
+    fixHeigth = 0,
   } = props;
 
   const [regionCode, setRegionCode] =
@@ -90,7 +91,7 @@ export const NumberInput: FC<Props> = (props) => {
             if (Platform.OS !== "web") {
               setWidthAndPositionRegionList({
                 width: layout.width / 3,
-                y: layout.y + layout.height,
+                y: layout.y + layout.height + fixHeigth,
                 x: layout.x,
               });
             }
@@ -172,6 +173,7 @@ interface Props {
   defaultCode?: keyof typeof listCodePhoneCountry;
   autoFocus?: boolean;
   onChange?: (number: string, isValidate: boolean) => void;
+  fixHeigth?: number;
 }
 
 const styles = StyleSheet.create({

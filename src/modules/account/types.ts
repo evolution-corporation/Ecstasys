@@ -64,3 +64,7 @@ export interface Func {
   requestSMSCode: () => Promise<void>;
   checkSMSCode: (code: string) => Promise<void>;
 }
+
+export interface Func_V2 extends Func {
+  authenticationWithGoogle: () => Promise<void>;
+}

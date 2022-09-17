@@ -16,3 +16,5 @@ export { default as MeditationPracticeList } from "./Practices/MeditationPractic
 export { default as PlayerMeditationPractices } from "./Practices/Player";
 export { default as BackgroundSound } from "./Practices/BackgroundSound";
 export { default as TimerPractices } from "./Practices/TimerPractices";
+export { default as IntroPracticesScreen } from "./Practices/Intro";
+export { default as DMDIntro } from "./Practices/IntroDMD";

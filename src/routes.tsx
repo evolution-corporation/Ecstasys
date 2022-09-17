@@ -1,5 +1,4 @@
 import React, { FC, useEffect, useState } from "react";
-import { View } from "react-native";
 
 import {
   createNativeStackNavigator,
@@ -7,25 +6,20 @@ import {
 } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
+import Core from "~core";
 import Meditation from "~modules/meditation";
-
-import {
-  PlayerMeditationPractices,
-  BackgroundSound,
-  TimerPractices,
-} from "~components/screens";
 import MeditationModels, { Relax } from "~modules/meditation/models"; //! debug
+import * as Screens from "~components/screens";
+
 import { Audio } from "expo-av"; //! debug
 
+// * Авторизированные и зарегестрированые пользователи
 const TabNavigator = createBottomTabNavigator();
 
 const TabRoutes = () => (
   //@ts-ignore
   <TabNavigator.Navigator>
-    <TabNavigator.Screen
-      name={"Profile"}
-      component={() => <View>{null}</View>}
-    />
+    <TabNavigator.Screen name={"Profile"} component={Screens.Profile} />
   </TabNavigator.Navigator>
 );
 
@@ -64,15 +58,15 @@ export const MeditationPracticesRoutes: FC = () => {
       <MeditationPractices.Navigator>
         <MeditationPractices.Screen
           name={"TimerPractices"}
-          component={TimerPractices}
+          component={Screens.TimerPractices}
         />
         <MeditationPractices.Screen
           name={"PlayerScreen"}
-          component={PlayerMeditationPractices}
+          component={Screens.PlayerMeditationPractices}
         />
         <MeditationPractices.Screen
           name={"BackgroundSound"}
-          component={BackgroundSound}
+          component={Screens.BackgroundSound}
         />
       </MeditationPractices.Navigator>
     </Meditation>
@@ -84,7 +78,6 @@ const RootNavigation = createNativeStackNavigator<RootStackList>();
 const RootRoutes: FC = () => {
   console.log("root");
   return (
-    //@ts-ignore
     <RootNavigation.Navigator>
       <RootNavigation.Screen name={"TabNavigator"} component={TabRoutes} />
     </RootNavigation.Navigator>
@@ -108,4 +101,86 @@ export type RootStackList = {
 };
 export type RootScreenProps<T extends keyof RootStackList> = FC<
   NativeStackScreenProps<RootStackList, T>
+>;
+
+// * неавторизированные пользователи
+
+const AuthenticationNavigation =
+  createNativeStackNavigator<AuthenticationStackList>();
+
+export const AuthenticationRoutes: FC = () => {
+  console.log("Authentication");
+  return (
+    <AuthenticationNavigation.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#9765A8",
+        },
+        headerTintColor: "#FFFFFF",
+        headerShadowVisible: false,
+      }}
+    >
+      <AuthenticationNavigation.Screen
+        name={"Intro"}
+        component={Screens.Intro}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <AuthenticationNavigation.Screen
+        name={"SelectMethodAuthentication"}
+        component={Screens.SelectMethodAuthentication}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <AuthenticationNavigation.Screen
+        name={"InputNumberPhone"}
+        component={Screens.InputNumberPhone}
+        options={{
+          title: Core.i18n.t("aa8609dd-caa8-4563-a1b5-e4cb896d03ae"),
+        }}
+      />
+      <AuthenticationNavigation.Screen
+        name={"InputSMSCode"}
+        component={Screens.InputSMSCode}
+        options={{
+          title: "",
+        }}
+      />
+    </AuthenticationNavigation.Navigator>
+  );
+};
+
+export type AuthenticationStackList = {
+  Intro: undefined;
+  SelectMethodAuthentication: undefined;
+  InputNumberPhone: undefined;
+  InputSMSCode: undefined;
+};
+export type AuthenticationScreenProps<T extends keyof AuthenticationStackList> =
+  FC<NativeStackScreenProps<AuthenticationStackList, T>>;
+
+// * Не зарегестированные пользователи
+const RegistrationNavigation =
+  createNativeStackNavigator<RegistrationStackList>();
+
+export const RegistrationRoutes: FC = () => {
+  console.log("Registration");
+  return (
+    <RegistrationNavigation.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#9765A8",
+        },
+        headerTintColor: "#FFFFFF",
+        headerShadowVisible: false,
+      }}
+    ></RegistrationNavigation.Navigator>
+  );
+};
+
+export type RegistrationStackList = {};
+export type RegistrationScreenProps<T extends keyof RegistrationStackList> = FC<
+  NativeStackScreenProps<RegistrationStackList, T>
 >;

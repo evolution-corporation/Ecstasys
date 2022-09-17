@@ -103,6 +103,8 @@ const CarouselMeditation: FC<CarouselMeditationProps> = (props) => {
           onChange(data[SelectedIndex], false);
         }
       }}
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
     />
   );
 };

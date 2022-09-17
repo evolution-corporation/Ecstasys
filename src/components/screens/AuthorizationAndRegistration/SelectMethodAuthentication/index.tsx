@@ -1,13 +1,33 @@
-import React, { FC } from "react";
-import { ImageBackground, StyleSheet, Text, View, Image } from "react-native";
+import React from "react";
+import {
+  ImageBackground,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Platform,
+  BackHandler,
+} from "react-native";
 import Swiper from "react-native-swiper";
+import { useBackHandler } from "@react-native-community/hooks";
 
 import Tools from "~core";
 import GoogleLogo from "~assets/icons/GoogleLogo.svg";
 import { ColorButton, ColorWithIconButton } from "~components/dump";
-type ElementName = "CarouselText" | "Title" | "Logo";
+import { contextHook } from "~modules/account";
+import type { AuthenticationScreenProps } from "src/routes";
 
-const SelectMethodAuthentication = () => {
+const SelectMethodAuthentication: AuthenticationScreenProps<
+  "SelectMethodAuthentication"
+> = ({ navigation }) => {
+  const { func } = contextHook.account();
+
+  useBackHandler(() => {
+    if (Platform.OS === "android") {
+      BackHandler.exitApp();
+    }
+    return true;
+  });
   return (
     <ImageBackground
       style={styles.background}
@@ -44,10 +64,21 @@ const SelectMethodAuthentication = () => {
         </View>
       </View>
       <View style={styles.selectMethodBox}>
-        <ColorButton styleButton={styles.button}>
+        <ColorButton
+          styleButton={styles.button}
+          onPress={() => {
+            navigation.navigate("InputNumberPhone");
+          }}
+        >
           {Tools.i18n.t("526fba9f-2b69-4fe6-aefd-d491e86e59da")}
         </ColorButton>
-        <ColorWithIconButton icon={<GoogleLogo />} styleButton={styles.button}>
+        <ColorWithIconButton
+          icon={<GoogleLogo />}
+          styleButton={styles.button}
+          onPress={() => {
+            func.authenticationWithGoogle();
+          }}
+        >
           {Tools.i18n.t("235a94d8-5deb-460a-bf03-e0e30e93df1b")}
         </ColorWithIconButton>
         <Text style={styles.terms}>

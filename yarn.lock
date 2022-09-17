@@ -2806,6 +2806,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-google-signin/google-signin@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "@react-native-google-signin/google-signin@npm:8.0.0"
+  peerDependencies:
+    "@expo/config-plugins": ^4.1.0
+    react: "*"
+    react-native: "*"
+  peerDependenciesMeta:
+    "@expo/config-plugins":
+      optional: true
+  checksum: ba619fbc3f1739e844d0773073ec4e10121c40de578f02ef61826468d6df276619bdc3a5eaa71af4ca8e4a8bd29ba3c69a392ab697b420d097b692ee86260a53
+  languageName: node
+  linkType: hard
+
 "@react-native-masked-view/masked-view@npm:0.2.7":
   version: 0.2.7
   resolution: "@react-native-masked-view/masked-view@npm:0.2.7"
@@ -6918,6 +6932,7 @@ __metadata:
     "@react-native-community/netinfo": 9.3.0
     "@react-native-firebase/app": ^15.1.1
     "@react-native-firebase/auth": ^15.1.1
+    "@react-native-google-signin/google-signin": ^8.0.0
     "@react-native-masked-view/masked-view": 0.2.7
     "@react-navigation/bottom-tabs": ^6.3.2
     "@react-navigation/devtools": ^6.0.7

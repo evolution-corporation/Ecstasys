@@ -6,29 +6,13 @@ import * as SplashScreen from "expo-splash-screen";
 
 import { useCustomFonts } from "~core";
 import AccountModule from "~modules/account";
-import {
-  Greeting,
-  InputImageAndBirthday,
-  InputNickname,
-  InputNumberPhone,
-  InputSMSCode,
-  Intro,
-  SelectMethodAuthentication,
-  Main,
-  Profile,
-  EditMainUserData,
-  EditDateUserBirthday,
-  PracticesList,
-  SelectSubscribe,
-  ResultSubscribe,
-  MeditationPracticeList,
-  PlayerMeditationPractices,
-  BackgroundSound,
-  TimerPractices,
-} from "~components/screens";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import { MeditationPracticesRoutes } from "./routes";
+import RootRoutes, {
+  AuthenticationRoutes,
+  MeditationPracticesRoutes,
+  RegistrationRoutes,
+} from "./routes";
 
 if (Platform.OS === "android") {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -50,9 +34,13 @@ const AppCore: FC<Props> = (props) => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <RootSiblingParent>
-        {/*<NavigationContainer>*/}
-        <AccountModule dev_screen={AppPlayer} />
-        {/*</NavigationContainer>*/}
+        <NavigationContainer>
+          <AccountModule
+            root={RootRoutes}
+            authorization={AuthenticationRoutes}
+            registration={RegistrationRoutes}
+          />
+        </NavigationContainer>
       </RootSiblingParent>
     </GestureHandlerRootView>
   );

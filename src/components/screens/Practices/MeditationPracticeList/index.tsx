@@ -16,7 +16,7 @@ import {
   withTiming,
 } from "react-native-reanimated";
 
-const MeditationPracticeListScreen = ({
+const MeditationPracticeList = ({
   route = { params: { typeMeditation: "", description: "" } },
 }) => {
   const [selectedMeditation, setSelectedMeditation] =
@@ -57,7 +57,6 @@ const MeditationPracticeListScreen = ({
             if (!status) {
               setSelectedMeditation(meditation);
             }
-            console.log(meditation, status);
             setDisableButton(status);
           }}
         />
@@ -74,7 +73,7 @@ const MeditationPracticeListScreen = ({
   );
 };
 
-export default MeditationPracticeListScreen;
+export default MeditationPracticeList;
 
 const styles = StyleSheet.create({
   descriptionType: {

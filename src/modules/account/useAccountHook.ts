@@ -1,8 +1,16 @@
 import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 import auth from "@react-native-firebase/auth";
 
-import { Action, State, UpdateUserData, Func, State_v2 } from "./types";
+import {
+  Action,
+  State,
+  UpdateUserData,
+  Func,
+  State_v2,
+  Func_V2,
+} from "./types";
 import { authentication, registration, update } from "./api";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 const useAccountHook_v1 = function () {
   const [state, dispatch] = useReducer(Reducer, {
@@ -186,4 +194,24 @@ const useAccountHook_2 = function (timeOutWithSeconds: number = 60) {
   return { state: newState, func: newFunc };
 };
 
-export default useAccountHook_2;
+// Добавлена авторизация через Google
+
+GoogleSignin.configure({
+  webClientId:
+    "878799007977-cj3549ni87jre2rmg4eq0hiolp08igh2.apps.googleusercontent.com",
+});
+
+const useAccountHook_3 = function () {
+  const { func, state } = useAccountHook_2();
+  const newFunc: Func_V2 = {
+    ...func,
+    authenticationWithGoogle: async () => {
+      const { idToken } = await GoogleSignin.signIn();
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+      auth().signInWithCredential(googleCredential);
+    },
+  };
+  return { func: newFunc, state };
+};
+
+export default useAccountHook_3;
