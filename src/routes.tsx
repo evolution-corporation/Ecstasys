@@ -62,10 +62,10 @@ export const MeditationPracticesRoutes: FC = () => {
   return (
     <Meditation meditation={meditation}>
       <MeditationPractices.Navigator>
-        {/* <MeditationPractices.Screen
+        <MeditationPractices.Screen
           name={"TimerPractices"}
           component={TimerPractices}
-        /> */}
+        />
         <MeditationPractices.Screen
           name={"PlayerScreen"}
           component={PlayerMeditationPractices}

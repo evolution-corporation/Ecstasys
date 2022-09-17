@@ -204,7 +204,13 @@ class Meditation extends MeditationV1 {
   public async editCurrentTime(milliseconds: number) {
     if (this._timerNode) clearInterval(this._timerNode);
     await super.editCurrentTime(milliseconds);
+    if (this.mainAudio === undefined)
+      throw new Error("ERROR not found mainAudio");
+
     this._positionMillis += milliseconds;
+    if (this._positionMillis < 0) this._positionMillis = 0;
+    if (this._positionMillis > this.mainAudio.length)
+      this._positionMillis = this.mainAudio.length;
     if (this._isPlaying)
       this._timerNode = setInterval(() => this.addTimeTimer(), 100);
   }

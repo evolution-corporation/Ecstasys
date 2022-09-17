@@ -151,6 +151,9 @@ const PlayerScreen: MeditationPracticesScreenProps<"PlayerScreen"> = ({
               styleButton={[styles.buttonControllMeditation]}
               styleText={styles.buttonControllText}
               animationStyle={aStyle.leftButtonControll}
+              onPress={() => {
+                meditation.editCurrentTime(-15000);
+              }}
             >
               15
             </ColorButton>
@@ -175,6 +178,9 @@ const PlayerScreen: MeditationPracticesScreenProps<"PlayerScreen"> = ({
               styleButton={[styles.buttonControllMeditation]}
               styleText={styles.buttonControllText}
               animationStyle={aStyle.rightButtonControll}
+              onPress={() => {
+                meditation.editCurrentTime(15000);
+              }}
             >
               15
             </ColorButton>

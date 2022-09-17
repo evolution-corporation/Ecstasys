@@ -208,11 +208,13 @@
   "November": "Ноябрь",
   "December": "Декабрь",
   "second": {
+    "zero": "0 секунд",
     "one": "%{count} секунда",
     "few": "%{count} секунды",
     "many": "%{count} секунд"
   },
   "minute": {
+    "zero": "0 минут",
     "one": "%{count} минута",
     "few": "%{count} минуты",
     "many": "%{count} минут"

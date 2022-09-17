@@ -18,12 +18,17 @@ import { useMeditationContext } from "~modules/meditation";
 
 import { ScrollTime } from "./components";
 
-const TimerPractices = () => {
+import type { MeditationPracticesScreenProps } from "src/routes";
+
+const TimerPractices: MeditationPracticesScreenProps<"TimerPractices"> = ({
+  navigation,
+}) => {
   const { meditation } = useMeditationContext();
-  const [timeMilleseconds, setTimeMilleseconds] = useState<number>(6);
+  const [timeMilleseconds, setTimeMilleseconds] = useState<number>(300000);
 
   const setLength = () => {
     meditation.setLengthMeditation(timeMilleseconds);
+    navigation.navigate("PlayerScreen");
   };
 
   return (
@@ -34,9 +39,14 @@ const TimerPractices = () => {
           colors={["#75348B", "#6A2382"]}
         >
           <Text style={styles.timeMinutes}>
-            {Core.i18n.t("minute", {
-              count: Math.floor(timeMilleseconds / 60000),
-            })}
+            {Math.floor(timeMilleseconds / 60000) > 0
+              ? Core.i18n.t("minute", {
+                  count: Math.floor(timeMilleseconds / 60000),
+                })
+              : Core.i18n.t("second", {
+                  count: Math.floor((timeMilleseconds % 60000) / 1000),
+                })}
+            {}
           </Text>
         </LinearGradient>
       </ImageBackground>
