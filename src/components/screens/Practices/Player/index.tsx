@@ -13,13 +13,7 @@ import {
   useWindowDimensions,
   Pressable,
 } from "react-native";
-import Animated, {
-  interpolate,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  withTiming,
-} from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 
 import Tools from "~core";
 import { ColorButton, TimeLine, FavoriteMeditation } from "~components/dump";
@@ -71,26 +65,6 @@ const PlayerScreen: MeditationPracticesScreenProps<"PlayerScreen"> = ({
         setIsPlaying(isPlaying);
       }
     );
-
-    navigation.setOptions({
-      headerTitle: () => (
-        <View>
-          <Text style={styles.meditationName}>{meditation.name}</Text>
-          <Text style={styles.meditationType}>
-            {Tools.i18n.t(meditation.typeMeditation)}
-          </Text>
-        </View>
-      ),
-      headerRight: () => (
-        <FavoriteMeditation
-          idMeditation={meditation.id}
-          displayWhenNotFavorite
-        />
-      ),
-      headerTransparent: true,
-      headerTitleAlign: "center",
-      headerTintColor: "#FFFFFF",
-    });
   }, [meditation.id]);
 
   useEffect(() => {

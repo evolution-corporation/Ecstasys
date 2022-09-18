@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { API } from "~modules/meditation";
 
-export function useCountMeditation(nameMeditationType: string) {
+export function useCountMeditation(nameMeditationType: TypeMeditation) {
   const [count, setCount] = useState(0);
   let isActivate = false;
   useEffect(() => {

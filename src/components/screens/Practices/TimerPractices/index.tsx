@@ -3,6 +3,7 @@
 
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
+import { useHeaderHeight } from "@react-navigation/elements";
 
 import {
   Dimensions,
@@ -30,10 +31,14 @@ const TimerPractices: MeditationPracticesScreenProps<"TimerPractices"> = ({
     meditation.setLengthMeditation(timeMilleseconds);
     navigation.navigate("PlayerScreen");
   };
+  const heightHeade = useHeaderHeight();
 
   return (
     <View style={styles.background}>
-      <ImageBackground source={{ uri: meditation.image }} style={styles.image}>
+      <ImageBackground
+        source={{ uri: meditation.image }}
+        style={[styles.image, { paddingTop: heightHeade }]}
+      >
         <LinearGradient
           style={styles.timeMinutesBox}
           colors={["#75348B", "#6A2382"]}

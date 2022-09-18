@@ -8,6 +8,7 @@ import {
   Text,
 } from "react-native";
 import { useBackHandler } from "@react-native-community/hooks";
+import { useHeaderHeight } from "@react-navigation/elements";
 
 import { ViewStatisticsMeditation, UserButton } from "~components/dump";
 import account from "~modules/account";
@@ -21,6 +22,7 @@ const Main = () => {
   const [heightGreeting, setHeightGreeting] = React.useState<
     number | undefined
   >(undefined);
+  const heightHeade = useHeaderHeight();
 
   useBackHandler(() => {
     if (isOpenMeditationListInfo) {
@@ -37,7 +39,7 @@ const Main = () => {
   return (
     <ImageBackground
       source={require("./assets/background.png")}
-      style={styles.background}
+      style={[styles.background, { paddingTop: heightHeade }]}
     >
       <View
         style={styles.greeting}
@@ -48,7 +50,6 @@ const Main = () => {
           }
         }}
       >
-        <UserButton style={styles.userProfile} />
         <ProfessorMessage />
       </View>
       <Feed hiddenHeight={heightGreeting}>
@@ -104,8 +105,8 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   greeting: {
-    justifyContent: "center",
-    alignItems: "center",
+    paddingTop: 20,
+    justifyContent: "flex-start",
     width: "100%",
     minHeight: Dimensions.get("window").height / 2,
   },
@@ -127,9 +128,8 @@ const styles = StyleSheet.create({
     marginVertical: 22,
   },
   userProfile: {
-    position: "absolute",
-    left: 20,
-    top: 20,
+    alignSelf: "flex-start",
+    marginLeft: 20,
   },
 });
 

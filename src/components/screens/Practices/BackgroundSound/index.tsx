@@ -59,20 +59,6 @@ const BackgroundSoundSreen: MeditationPracticesScreenProps<
     }
   }, [selectedBackgroundSoung]);
 
-  useEffect(() => {
-    navigation.setOptions({
-      headerTitle: () => (
-        <Text style={styles.title}>
-          {Tools.i18n.t("12ee6d3a-ad58-4c4a-9b87-63645efe9c90")}
-        </Text>
-      ),
-
-      headerTransparent: true,
-      headerTitleAlign: "center",
-      headerTintColor: "#FFFFFF",
-    });
-  }, [setSelectedBackgroundSoung]);
-
   const scalePressable: { [index: string]: SharedValue<number> } = {};
   const aStyle: { [index: string]: any } = {};
 

@@ -4,10 +4,12 @@ import { StyleSheet, ViewProps, View, Text, Image } from "react-native";
 import { useUserContext } from "~modules/account";
 import { TextButton } from "~components/dump";
 import Tools from "~core";
+import { useNavigation } from "@react-navigation/native";
+import type { ProfileCompositeStackNaviatorProps } from "src/routes";
 
 const UserInformation: FC<UserInformationProps> = (props) => {
   const { user } = useUserContext();
-
+  const navigation = useNavigation<ProfileCompositeStackNaviatorProps>();
   if (!user) return null;
 
   return (
@@ -21,7 +23,13 @@ const UserInformation: FC<UserInformationProps> = (props) => {
           })}
         </Text>
         <Text style={styles.timeSubscribe}>{123}</Text>
-        <TextButton>{Tools.i18n.t("edit")}</TextButton>
+        <TextButton
+          onPress={() => {
+            navigation.navigate("SelectSubscribe");
+          }}
+        >
+          {Tools.i18n.t("edit")}
+        </TextButton>
       </View>
     </View>
   );

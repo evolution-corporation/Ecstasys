@@ -17,7 +17,8 @@ export type Practices =
   | "relaxation"
   | "breathingPractices"
   | "directionalVisualizations"
-  | "dancePsychotechnics";
+  | "dancePsychotechnics"
+  | "basic";
 
 export type TypeMeditation = Practices | "DMD";
 

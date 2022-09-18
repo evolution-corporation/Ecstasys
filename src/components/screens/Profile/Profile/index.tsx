@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -14,12 +14,14 @@ import {
 } from "~components/dump";
 import Tools from "~core";
 import { AntDesign } from "@expo/vector-icons";
+import { useUserContext } from "~modules/account";
+import type { ViewStatisticsMeditationType } from "~components/dump/ViewStatisticsMeditation";
 
 import { UserInformation } from "./components";
 
-import type { ViewStatisticsMeditationType } from "~components/dump/ViewStatisticsMeditation";
+import type { TabNavigatorScreenProps } from "src/routes";
 
-const Profile = ({}) => {
+const Profile: TabNavigatorScreenProps<"Profile"> = ({ navigation }) => {
   const _weekOpacity = useSharedValue(0.6);
   const _monthOpacity = useSharedValue(1);
   const _allOpacity = useSharedValue(0.6);
@@ -27,6 +29,7 @@ const Profile = ({}) => {
 
   const [typeStatisticsMeditation, setTypeStatisticsMeditation] =
     useState<ViewStatisticsMeditationType>("month");
+
   const coordinate = useRef<{ week?: number; month?: number; all?: number }>(
     {}
   );
@@ -74,8 +77,21 @@ const Profile = ({}) => {
     []
   );
 
+  const { user } = useUserContext();
+
+  useEffect(() => {
+    if (user !== null && user !== undefined) {
+      navigation.setOptions({
+        title: user.nickName,
+      });
+    }
+  }, [user]);
+
   return (
-    <DoubleColorView style={{ flex: 1, paddingHorizontal: 20 }}>
+    <DoubleColorView
+      style={{ flex: 1, paddingHorizontal: 20 }}
+      heightViewPart={300}
+    >
       <UserInformation />
       <View style={{ marginVertical: 16 }}>
         <View style={styles.selectTimePeriodContainer}>

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   View,
   ScrollView,
+  ImageSourcePropType,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
@@ -13,9 +14,11 @@ import { Feather } from "@expo/vector-icons";
 import { DoubleColorView } from "~components/containers";
 import Tools from "~core";
 import { useCountMeditation } from "./hooks";
+import { PracticesCompositeScreenProps } from "src/routes";
+import { TypeMeditation } from "~modules/meditation/types";
 // import { useCountMeditation } from "./hooks";
 
-const PracticesList = () => {
+const PracticesList: PracticesCompositeScreenProps = ({ navigation }) => {
   const [getPaddingTopFunc, setGetPaddingTopFunc] = useState<{
     f: (width: number) => number;
   } | null>(null);
@@ -52,7 +55,14 @@ const PracticesList = () => {
         <FlatList
           data={CategoryMeditation}
           renderItem={({ item }) => (
-            <TouchableOpacity style={{ width: 92 }}>
+            <TouchableOpacity
+              style={{ width: 92 }}
+              onPress={() => {
+                navigation.navigate("SelectPractices", {
+                  typeMeditation: item.id,
+                });
+              }}
+            >
               <Image source={item.image} style={styles.imageSmall} />
               <Text style={styles.textNameSmall}>
                 {Tools.i18n.t(item.name)}
@@ -82,6 +92,11 @@ const PracticesList = () => {
                 styles.contentVerticalMargin,
               ]}
               key={`${item.id}_normall`}
+              onPress={() =>
+                navigation.navigate("SelectPractices", {
+                  typeMeditation: item.id,
+                })
+              }
             >
               <Image source={item.image} style={styles.imageNormal} />
               <View style={styles.backgroundTextNormal}>
@@ -177,30 +192,35 @@ const styles = StyleSheet.create({
   },
 });
 
-const CategoryMeditation = [
+const CategoryMeditation: {
+  name: string;
+  image: ImageSourcePropType;
+  description: string;
+  id: TypeMeditation;
+}[] = [
   {
     name: "71277706-2f5d-4ce8-bf26-d680176d3fb8",
     image: require("./assets/meditation1.png"),
     description: "ec0c8421-03d1-4755-956d-66a84d81d74a",
-    id: "Relaxation",
+    id: "relaxation",
   },
   {
     name: "8566b563-b307-4943-ab52-d51c7e806a4c",
     image: require("./assets/meditation2.png"),
     description: "bb340c18-2a8b-4b7b-8250-80a865dca9b4",
-    id: "DirectionalVisualizations",
+    id: "directionalVisualizations",
   },
   {
     name: "c15d823e-8dd8-4eb7-b9f5-87c9845ac397",
     image: require("./assets/meditation3.png"),
     description: "c54bff96-21eb-4f10-8ad6-090e06f2eef9",
-    id: "BreathingPractices",
+    id: "breathingPractices",
   },
   {
     name: "0d63a21e-eecc-45cc-9085-86b97c88d713",
     image: require("./assets/meditation4.png"),
     description: "ef09ec88-afda-4fef-b68b-02b433919e50",
-    id: "BasicMeditations",
+    id: "basic",
   },
 ];
 

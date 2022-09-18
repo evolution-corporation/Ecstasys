@@ -1,4 +1,5 @@
 import { HOST_URL } from "~api";
+import { TypeMeditation } from "./types";
 
 export async function getMeditation(paramas: {
   id?: string;
@@ -54,8 +55,24 @@ export async function getMeditation(paramas: {
   }
 }
 
-export async function getCountMeditationInCategory(categoryName: string) {
+export async function getCountMeditationInCategory(
+  categoryName: TypeMeditation
+) {
+  let _categoryName = "BasicMeditations";
+  switch (categoryName) {
+    case "relaxation":
+      _categoryName = "Relaxation";
+      break;
+    case "directionalVisualizations":
+      _categoryName = "DirectionalVisualizations";
+      break;
+    case "breathingPractices":
+      _categoryName = "BreathingPractices";
+      break;
+    case "basic":
+      _categoryName = "BasicMeditations";
+  }
   return await (
-    await getMeditation({ category: categoryName, count: 0 })
+    await getMeditation({ category: _categoryName, count: 0 })
   ).count;
 }

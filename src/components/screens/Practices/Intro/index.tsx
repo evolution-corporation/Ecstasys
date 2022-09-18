@@ -18,6 +18,7 @@ import useAnimation from "./animation";
 import Arrow from "./assets/Arrow.svg";
 import ArrowLeft from "./assets/arrowLeft.svg";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import type { RootScreenProps } from "src/routes";
 
 const swiperContent = [
   {
@@ -52,7 +53,9 @@ const swiperContent = [
   },
 ];
 
-const IntroPracticesScreen = () => {
+const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({
+  navigation,
+}) => {
   const { aStyle, firstPage, twoPage } = useAnimation();
   const [isGreeting, setIsGreeting] = useState<boolean>(true);
   const refSwiper = useRef<ElementRef<typeof Swiper>>(null);
@@ -105,7 +108,13 @@ const IntroPracticesScreen = () => {
       </View>
       <View style={styles.buttonControl}>
         {isGreeting ? (
-          <TextButton>{Core.i18n.t("skip")}</TextButton>
+          <TextButton
+            onPress={() => {
+              navigation.navigate("TabNavigator", { screen: "PracticesList" });
+            }}
+          >
+            {Core.i18n.t("skip")}
+          </TextButton>
         ) : (
           <Pressable
             onPress={() => {
@@ -130,6 +139,10 @@ const IntroPracticesScreen = () => {
             } else {
               if (indexSwiper.current + 1 < swiperContent.length) {
                 refSwiper.current?.scrollBy(1);
+              } else {
+                navigation.navigate("TabNavigator", {
+                  screen: "PracticesList",
+                });
               }
             }
           }}
@@ -150,8 +163,7 @@ const styles = StyleSheet.create({
   },
   birdProffessor: {
     position: "absolute",
-    borderColor: "red",
-    borderWidth: 2,
+
     left: 0,
     bottom: 0,
   },

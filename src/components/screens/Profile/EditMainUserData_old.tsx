@@ -15,8 +15,11 @@ import {
   NicknameInput,
 } from "~components/dump";
 import Tools from "~core";
+import type { RootScreenProps } from "src/routes";
 
-const EditMainUserDataScreen = ({}) => {
+const EditMainUserDataScreen: RootScreenProps<"EditUserData"> = ({
+  navigation,
+}) => {
   const { state, func } = contextHook.account();
   return (
     <View style={styles.background}>
@@ -54,7 +57,12 @@ const EditMainUserDataScreen = ({}) => {
           }}
           styleNicknameInputView={styles.editNickname}
         />
-        <TouchableOpacity style={styles.inputBirthday}>
+        <TouchableOpacity
+          style={styles.inputBirthday}
+          onPress={() => {
+            navigation.navigate("EditUserBirthday");
+          }}
+        >
           <Text style={styles.inputBirthdayText}>
             {Tools.i18n.l(
               "date.formats.short",

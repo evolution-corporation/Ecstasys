@@ -7,6 +7,7 @@ import * as Hooks from "./hook";
 import BackgroundSound, {
   playFragmentMeditationBackground,
 } from "./backgroundSound";
+import DescriptionMeditationCategory from "./meditationDescription";
 
 const e = React.createElement;
 
@@ -36,4 +37,5 @@ export {
   MeditationType,
   BackgroundSound,
   playFragmentMeditationBackground,
+  DescriptionMeditationCategory,
 };
