@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
+import { RegistrationScreenProps } from "~routes/index";
 
 import { ColorButton } from "~components/dump";
 import Tools from "~core";
@@ -7,22 +8,33 @@ import { contextHook } from "~modules/account";
 
 import { NicknameWithVariable } from "./components";
 
-const InputLoginScreen = ({}) => {
+const InputLoginScreen: RegistrationScreenProps<"InputNickName"> = ({
+  navigation,
+}) => {
   const { func } = contextHook.account();
-  const [statusChecked, setStatusChecked] = useState<boolean>(false);
+  const statusChecked = useRef<boolean>(false);
 
   return (
     <View style={styles.background}>
       <NicknameWithVariable
         onEndChange={(nickName, status) => {
-          setStatusChecked(status === "FREE");
+          statusChecked.current = status === "FREE";
           func.editUserData({ nickName });
         }}
       />
       <Text style={styles.subText}>
         {Tools.i18n.t("f0955b62-3ce1-49d6-bf79-aba68266ef8e")}
       </Text>
-      <ColorButton>{Tools.i18n.t("continue")}</ColorButton>
+      <ColorButton
+        onPress={() => {
+          console.log(statusChecked.current);
+          if (statusChecked.current) {
+            navigation.navigate("SelectImageAndInputBirthday");
+          }
+        }}
+      >
+        {Tools.i18n.t("continue")}
+      </ColorButton>
     </View>
   );
 };

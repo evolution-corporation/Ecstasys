@@ -43,16 +43,7 @@ export async function authentication() {
   if (!user) {
     throw new Error(`User not found`);
   }
-  //! For Debug
-  return ConverterUserDataToApplication({
-    id: user.uid,
-    nickName: "testPidr",
-    hasPhoto: false,
-    birthday: "1663482506168",
-    category: "BLOGGER",
-    gender: "MALE",
-    role: "USER",
-  });
+
   const uid = user.uid;
   const request = await fetch(`${serverUrl.usersURL}/${uid}`, {
     method: "GET",

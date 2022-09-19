@@ -19,7 +19,7 @@ import type { ViewStatisticsMeditationType } from "~components/dump/ViewStatisti
 
 import { UserInformation } from "./components";
 
-import type { TabNavigatorScreenProps } from "src/routes";
+import type { TabNavigatorScreenProps } from "~routes/index";
 
 const Profile: TabNavigatorScreenProps<"Profile"> = ({ navigation }) => {
   const _weekOpacity = useSharedValue(0.6);

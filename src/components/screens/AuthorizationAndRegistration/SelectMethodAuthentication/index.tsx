@@ -15,7 +15,7 @@ import Tools from "~core";
 import GoogleLogo from "~assets/icons/GoogleLogo.svg";
 import { ColorButton, ColorWithIconButton } from "~components/dump";
 import { contextHook } from "~modules/account";
-import type { AuthenticationScreenProps } from "src/routes";
+import type { AuthenticationScreenProps } from "~routes/index";
 
 const SelectMethodAuthentication: AuthenticationScreenProps<
   "SelectMethodAuthentication"

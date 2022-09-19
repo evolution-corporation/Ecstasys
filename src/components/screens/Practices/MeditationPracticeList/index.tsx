@@ -17,7 +17,7 @@ import {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { RootScreenProps } from "src/routes";
+import { RootScreenProps } from "~routes/index";
 
 const MeditationPracticeList: RootScreenProps<"SelectPractices"> = ({
   route,

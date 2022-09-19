@@ -4,6 +4,7 @@ import {
   CompositeNavigationProp,
   CompositeScreenProps,
   NavigatorScreenParams,
+  useNavigation,
 } from "@react-navigation/native";
 
 import {
@@ -30,53 +31,82 @@ import { ColorButton, UserButton } from "~components/dump";
 import TreeLine from "~assets/ThreeLine.svg";
 import { TypeMeditation } from "~modules/meditation/types";
 
+import MainIcon from "./assets/HomeIcon";
+import PracticesIcon from "./assets/PracticesIcon";
+import DMDIcon from "./assets/DMDIcon";
+import ProfileIcon from "./assets/ProfileIcon";
+
 // * Авторизированные и зарегестрированые пользователи
 const TabNavigator = createBottomTabNavigator<TabNavigatorList>();
 
-const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => (
-  <TabNavigator.Navigator
-    screenOptions={{
-      headerStyle: {
-        backgroundColor: "#9765A8",
-      },
-      headerTintColor: "#FFFFFF",
-      headerShadowVisible: false,
-    }}
-  >
-    <TabNavigator.Screen
-      name={"Main"}
-      component={Screens.Main}
-      options={{
-        headerTransparent: true,
-        headerTitle: () => null,
-        headerLeft: () => <UserButton style={{ marginLeft: 20 }} />,
+const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
+  return (
+    <TabNavigator.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#9765A8",
+        },
+        headerTintColor: "#FFFFFF",
+        headerShadowVisible: false,
+        tabBarShowLabel: false,
       }}
-    />
-    <TabNavigator.Screen
-      name={"PracticesList"}
-      component={Screens.PracticesList}
-      options={{
-        title: Core.i18n.t("c08bb9d1-1769-498e-acf5-8c37c18bed05"),
-        headerRight: () => <UserButton style={{ marginRight: 20 }} />,
-      }}
-    />
-    <TabNavigator.Screen
-      name={"Profile"}
-      component={Screens.Profile}
-      options={{
-        headerRight: () => (
-          <ColorButton
-            secondItem={<TreeLine />}
-            styleButton={{ backgroundColor: "transparent", marginRight: 17 }}
-            onPress={() => {
-              navigation.navigate("EditUserData");
-            }}
-          />
-        ),
-      }}
-    />
-  </TabNavigator.Navigator>
-);
+    >
+      <TabNavigator.Screen
+        name={"Main"}
+        component={Screens.Main}
+        options={{
+          headerTransparent: true,
+          headerTitle: () => null,
+          headerLeft: () => <UserButton style={{ marginLeft: 20 }} />,
+          tabBarIcon: ({ focused }) => (
+            <MainIcon
+              colorIcon={
+                focused ? "rgba(112, 45, 135, 1)" : "rgba(158, 158, 158, 1)"
+              }
+            />
+          ),
+        }}
+      />
+      <TabNavigator.Screen
+        name={"PracticesList"}
+        component={Screens.PracticesList}
+        options={{
+          title: Core.i18n.t("c08bb9d1-1769-498e-acf5-8c37c18bed05"),
+          headerRight: () => <UserButton style={{ marginRight: 20 }} />,
+          tabBarIcon: ({ focused }) => (
+            <PracticesIcon
+              colorIcon={
+                focused ? "rgba(112, 45, 135, 1)" : "rgba(158, 158, 158, 1)"
+              }
+            />
+          ),
+        }}
+      />
+      <TabNavigator.Screen
+        name={"Profile"}
+        component={Screens.Profile}
+        options={{
+          headerRight: () => (
+            <ColorButton
+              secondItem={<TreeLine />}
+              styleButton={{ backgroundColor: "transparent", marginRight: 17 }}
+              onPress={() => {
+                navigation.navigate("EditUserData");
+              }}
+            />
+          ),
+          tabBarIcon: ({ focused }) => (
+            <ProfileIcon
+              colorIcon={
+                focused ? "rgba(112, 45, 135, 1)" : "rgba(158, 158, 158, 1)"
+              }
+            />
+          ),
+        }}
+      />
+    </TabNavigator.Navigator>
+  );
+};
 
 export type TabNavigatorList = {
   Profile: undefined;
@@ -99,7 +129,9 @@ export const MeditationPracticesRoutes: RootScreenProps<"ListenMeditation"> = ({
   const [meditation, setMeditation] = useState<MeditationModels | null>(null);
   useEffect(() => {
     const init = async () => {
-      const { sound } = await Audio.Sound.createAsync(require("../test.mp3"));
+      const { sound } = await Audio.Sound.createAsync(
+        require("../../test.mp3")
+      );
       let lengthAudio = 60000;
       const audioStatus = await sound.getStatusAsync();
       if (audioStatus.isLoaded) {
@@ -175,73 +207,77 @@ export type MeditationPracticesScreenProps<
 // * root
 const RootNavigation = createNativeStackNavigator<RootStackList>();
 
-const RootRoutes: FC = () => {
-  return (
-    <RootNavigation.Navigator
-      initialRouteName="IntroPractices"
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: "#9765A8",
-        },
-        headerTintColor: "#FFFFFF",
-        headerShadowVisible: false,
+const RootRoutes: FC = () => (
+  <RootNavigation.Navigator
+    screenOptions={{
+      headerStyle: {
+        backgroundColor: "#9765A8",
+      },
+      headerTintColor: "#FFFFFF",
+      headerShadowVisible: false,
+    }}
+  >
+    <RootNavigation.Screen
+      name={"TabNavigator"}
+      component={TabRoutes}
+      options={{ headerShown: false }}
+    />
+    <RootNavigation.Screen
+      name={"EditUserData"}
+      component={Screens.EditMainUserData}
+      options={{
+        title: Core.i18n.t("Profile"),
       }}
-    >
-      <RootNavigation.Screen
-        name={"TabNavigator"}
-        component={TabRoutes}
-        options={{ headerShown: false }}
-      />
-      <RootNavigation.Screen
-        name={"EditUserData"}
-        component={Screens.EditMainUserData}
-        options={{
-          title: Core.i18n.t("Profile"),
-        }}
-      />
-      <RootNavigation.Screen
-        name={"EditUserBirthday"}
-        component={Screens.EditDateUserBirthday}
-        options={{
-          presentation: "transparentModal",
-          headerShown: false,
-          animation: "slide_from_bottom",
-        }}
-      />
-      <RootNavigation.Screen
-        name={"SelectSubscribe"}
-        component={Screens.SelectSubscribe}
-        options={{
-          title: Core.i18n.t("subscribe"),
-        }}
-      />
-      <RootNavigation.Screen
-        name={"SelectPractices"}
-        component={Screens.MeditationPracticeList}
-        options={({ route }) => ({
-          title: Core.i18n.t(
-            DescriptionMeditationCategory[route.params.typeMeditation].title
-          ),
-          headerTitleAlign: "center",
-        })}
-      />
-      <RootNavigation.Screen
-        name={"ListenMeditation"}
-        component={MeditationPracticesRoutes}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <RootNavigation.Screen
-        name={"IntroPractices"}
-        component={Screens.IntroPracticesScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
-    </RootNavigation.Navigator>
-  );
-};
+    />
+    <RootNavigation.Screen
+      name={"EditUserBirthday"}
+      component={Screens.EditDateUserBirthday}
+      options={{
+        presentation: "transparentModal",
+        headerShown: false,
+        animation: "slide_from_bottom",
+      }}
+    />
+    <RootNavigation.Screen
+      name={"SelectSubscribe"}
+      component={Screens.SelectSubscribe}
+      options={{
+        title: Core.i18n.t("subscribe"),
+      }}
+    />
+    <RootNavigation.Screen
+      name={"SelectPractices"}
+      component={Screens.MeditationPracticeList}
+      options={({ route }) => ({
+        title: Core.i18n.t(
+          DescriptionMeditationCategory[route.params.typeMeditation].title
+        ),
+        headerTitleAlign: "center",
+      })}
+    />
+    <RootNavigation.Screen
+      name={"ListenMeditation"}
+      component={MeditationPracticesRoutes}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <RootNavigation.Screen
+      name={"IntroPractices"}
+      component={Screens.IntroPracticesScreen}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <RootNavigation.Screen
+      name={"IntroMainScreen"}
+      component={Screens.Greeting}
+      options={{
+        headerShown: false,
+      }}
+    />
+  </RootNavigation.Navigator>
+);
 
 export type RootStackList = {
   TabNavigator: NavigatorScreenParams<TabNavigatorList>;
@@ -256,12 +292,18 @@ export type RootStackList = {
     typeMeditation: TypeMeditation;
   };
   IntroPractices: undefined;
+  IntroMainScreen: undefined;
 };
 export type RootScreenProps<T extends keyof RootStackList> = FC<
   NativeStackScreenProps<RootStackList, T>
 >;
 
 export default RootRoutes;
+
+type RootCompositeStackNavigatorProps = CompositeNavigationProp<
+  NativeStackNavigationProp<RootStackList, "IntroPractices">,
+  NativeStackNavigationProp<RootStackList, "SelectPractices">
+>;
 
 export type ProfileCompositeStackNaviatorProps = CompositeNavigationProp<
   BottomTabNavigationProp<TabNavigatorList, "Profile">,
@@ -275,6 +317,13 @@ export type PracticesCompositeListScreenProps = CompositeScreenProps<
 
 export type PracticesCompositeScreenProps =
   FC<PracticesCompositeListScreenProps>;
+
+export type MainScreenCompositeScreenProps = FC<
+  CompositeScreenProps<
+    BottomTabScreenProps<TabNavigatorList, "Main">,
+    StackScreenProps<RootStackList, "IntroMainScreen">
+  >
+>;
 
 // * неавторизированные пользователи
 
@@ -338,7 +387,6 @@ const RegistrationNavigation =
   createNativeStackNavigator<RegistrationStackList>();
 
 export const RegistrationRoutes: FC = () => {
-  console.log("Registration");
   return (
     <RegistrationNavigation.Navigator
       screenOptions={{
@@ -347,12 +395,30 @@ export const RegistrationRoutes: FC = () => {
         },
         headerTintColor: "#FFFFFF",
         headerShadowVisible: false,
+        headerTitleAlign: "center",
       }}
-    ></RegistrationNavigation.Navigator>
+    >
+      <RegistrationNavigation.Screen
+        component={Screens.InputNickname}
+        name={"InputNickName"}
+        options={{ title: Core.i18n.t("323361e3-4ef1-4935-b3b2-03494b482a77") }}
+      />
+      <RegistrationNavigation.Screen
+        component={Screens.InputImageAndBirthday}
+        name={"SelectImageAndInputBirthday"}
+        options={{
+          title: Core.i18n.t("599a5dcc-8f8b-4da6-b588-5c260ac67a63"),
+          headerBackVisible: false,
+        }}
+      />
+    </RegistrationNavigation.Navigator>
   );
 };
 
-export type RegistrationStackList = {};
+export type RegistrationStackList = {
+  InputNickName: undefined;
+  SelectImageAndInputBirthday: undefined;
+};
 export type RegistrationScreenProps<T extends keyof RegistrationStackList> = FC<
   NativeStackScreenProps<RegistrationStackList, T>
 >;

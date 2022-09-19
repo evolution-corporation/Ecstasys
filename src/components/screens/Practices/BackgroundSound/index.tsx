@@ -25,7 +25,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useHeaderHeight } from "@react-navigation/elements";
 
-import type { MeditationPracticesScreenProps } from "src/routes";
+import type { MeditationPracticesScreenProps } from "~routes/index";
 
 const BackgroundSoundSreen: MeditationPracticesScreenProps<
   "BackgroundSound"

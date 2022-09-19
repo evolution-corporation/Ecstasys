@@ -14,7 +14,7 @@ import { TextButton } from "~components/dump";
 
 import useAnimation from "./animated";
 import { ArrowButtonMask, ArrowButton } from "./components";
-import type { AuthenticationScreenProps } from "src/routes";
+import type { AuthenticationScreenProps } from "~routes/index";
 import { useFocusEffect } from "@react-navigation/native";
 
 const IntroScreen: AuthenticationScreenProps<"Intro"> = ({ navigation }) => {

@@ -1,3 +1,4 @@
+import { useBackHandler } from "@react-native-community/hooks";
 import React, { useRef } from "react";
 import { View, StyleSheet, Text } from "react-native";
 
@@ -16,6 +17,8 @@ const InputImageAndBirthdayScreen = ({}) => {
   const registration = async () => {
     await func.registration();
   };
+
+  useBackHandler(() => true);
 
   return (
     <View style={styles.background}>

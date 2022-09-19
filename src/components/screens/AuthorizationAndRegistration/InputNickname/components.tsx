@@ -18,7 +18,7 @@ import NicknameBase, {
 import { useGenerateUniqueNickname } from "~modules/account/hook";
 
 export const NicknameWithVariable: FC<NicknameWithVariableProps> = (props) => {
-  const { variableNicknameList } = props;
+  const { variableNicknameList, onEndChange } = props;
   const { nicknameVariableList, setNickname } = useGenerateUniqueNickname();
   const _nickname = useRef<{ nickname: string; permission: boolean } | null>(
     null
@@ -36,6 +36,7 @@ export const NicknameWithVariable: FC<NicknameWithVariableProps> = (props) => {
             nickname: nickname,
             permission: statusCheck === "FREE",
           };
+          if (onEndChange) onEndChange(nickname, statusCheck);
         }}
       />
       {nicknameVariableList.length > 0 && (

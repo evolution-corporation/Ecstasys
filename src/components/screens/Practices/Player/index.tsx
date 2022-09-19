@@ -26,7 +26,7 @@ import ArrowRight from "./assets/arrowRight.svg";
 import ArrowLeft from "./assets/arrowLeft.svg";
 import Pause from "./assets/pause.svg";
 import Play from "./assets/Play.svg";
-import type { MeditationPracticesScreenProps } from "src/routes";
+import type { MeditationPracticesScreenProps } from "~routes/index";
 import { useFocusEffect } from "@react-navigation/native";
 
 const PlayerScreen: MeditationPracticesScreenProps<"PlayerScreen"> = ({

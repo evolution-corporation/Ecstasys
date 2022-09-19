@@ -1,4 +1,4 @@
-import { HOST_URL } from "~api";
+import { HOST_URL, headers } from "~api";
 import { TypeMeditation } from "./types";
 
 export async function getMeditation(paramas: {
@@ -22,8 +22,7 @@ export async function getMeditation(paramas: {
     if (url[url.length - 1] === "&" || url[url.length - 1] == "?") {
       url = url.slice(0, url.length - 1);
     }
-    console.log(url);
-    const request = await fetch(url);
+    const request = await fetch(url, { headers: await headers() });
     if (request.ok) {
       const json = await request.json();
       if (paramas.id) {
@@ -70,7 +69,8 @@ export async function getCountMeditationInCategory(
       _categoryName = "BreathingPractices";
       break;
     case "basic":
-      _categoryName = "BasicMeditations";
+      _categoryName = "DancePsychotechnics"; //"BasicMeditations";
+      break;
   }
   return await (
     await getMeditation({ category: _categoryName, count: 0 })

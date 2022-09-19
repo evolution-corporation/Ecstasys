@@ -15,8 +15,15 @@ import account from "~modules/account";
 import Tools from "~core";
 
 import { ProfessorMessage, Feed, MeditationCard } from "./components";
+import { useShowIntro } from "~routes/hook";
+import type { MainScreenCompositeScreenProps } from "~routes/index";
 
-const Main = () => {
+const Main: MainScreenCompositeScreenProps = ({ navigation }) => {
+  useShowIntro(
+    "@IsFirstShownMain",
+    () => navigation.navigate("IntroMainScreen"),
+    [navigation.isFocused()]
+  );
   const [isOpenMeditationListInfo, setIsOpenMeditationListInfo] =
     React.useState<boolean>(false);
   const [heightGreeting, setHeightGreeting] = React.useState<

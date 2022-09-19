@@ -5,7 +5,7 @@ import { useUserContext } from "~modules/account";
 import { TextButton } from "~components/dump";
 import Tools from "~core";
 import { useNavigation } from "@react-navigation/native";
-import type { ProfileCompositeStackNaviatorProps } from "src/routes";
+import type { ProfileCompositeStackNaviatorProps } from "~routes/index";
 
 const UserInformation: FC<UserInformationProps> = (props) => {
   const { user } = useUserContext();

@@ -19,7 +19,7 @@ import { useMeditationContext } from "~modules/meditation";
 
 import { ScrollTime } from "./components";
 
-import type { MeditationPracticesScreenProps } from "src/routes";
+import type { MeditationPracticesScreenProps } from "~routes/index";
 
 const TimerPractices: MeditationPracticesScreenProps<"TimerPractices"> = ({
   navigation,

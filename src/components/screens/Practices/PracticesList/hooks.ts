@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { API } from "~modules/meditation";
 
 export function useCountMeditation(nameMeditationType: TypeMeditation) {
@@ -7,6 +7,7 @@ export function useCountMeditation(nameMeditationType: TypeMeditation) {
   useEffect(() => {
     const init = async () => {
       const result = await API.getCountMeditationInCategory(nameMeditationType);
+      console.log(result);
       if (isActivate) {
         if (result) setCount(result);
       }

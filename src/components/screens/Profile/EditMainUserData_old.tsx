@@ -15,7 +15,7 @@ import {
   NicknameInput,
 } from "~components/dump";
 import Tools from "~core";
-import type { RootScreenProps } from "src/routes";
+import type { RootScreenProps } from "~routes/index";
 
 const EditMainUserDataScreen: RootScreenProps<"EditUserData"> = ({
   navigation,

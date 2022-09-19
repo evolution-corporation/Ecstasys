@@ -14,11 +14,18 @@ import { Feather } from "@expo/vector-icons";
 import { DoubleColorView } from "~components/containers";
 import Tools from "~core";
 import { useCountMeditation } from "./hooks";
-import { PracticesCompositeScreenProps } from "src/routes";
+import type { PracticesCompositeScreenProps } from "~routes/index";
 import { TypeMeditation } from "~modules/meditation/types";
+import { useShowIntro } from "~routes/hook";
 // import { useCountMeditation } from "./hooks";
 
 const PracticesList: PracticesCompositeScreenProps = ({ navigation }) => {
+  useShowIntro(
+    "@IsFirstShownPractices",
+    () => navigation.navigate("IntroPractices"),
+    [navigation.isFocused()]
+  );
+
   const [getPaddingTopFunc, setGetPaddingTopFunc] = useState<{
     f: (width: number) => number;
   } | null>(null);

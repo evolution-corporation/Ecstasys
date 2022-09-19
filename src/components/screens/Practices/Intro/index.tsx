@@ -18,7 +18,7 @@ import useAnimation from "./animation";
 import Arrow from "./assets/Arrow.svg";
 import ArrowLeft from "./assets/arrowLeft.svg";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import type { RootScreenProps } from "src/routes";
+import type { RootScreenProps } from "~routes/index";
 
 const swiperContent = [
   {
@@ -110,7 +110,9 @@ const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({
         {isGreeting ? (
           <TextButton
             onPress={() => {
-              navigation.navigate("TabNavigator", { screen: "PracticesList" });
+              if (navigation.canGoBack()) {
+                navigation.goBack();
+              }
             }}
           >
             {Core.i18n.t("skip")}
@@ -160,6 +162,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     // paddingHorizontal: 20,
     paddingBottom: 50,
+    backgroundColor: "#FFFFFF",
   },
   birdProffessor: {
     position: "absolute",

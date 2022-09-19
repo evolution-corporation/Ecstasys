@@ -7,7 +7,7 @@ import { contextHook } from "~modules/account";
 import Tools from "~core";
 
 import { NumberInput } from "./components";
-import type { AuthenticationScreenProps } from "src/routes";
+import type { AuthenticationScreenProps } from "~routes/index";
 
 const NumberInputScreen: AuthenticationScreenProps<"InputNumberPhone"> = ({
   navigation,
