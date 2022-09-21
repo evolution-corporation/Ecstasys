@@ -69,7 +69,7 @@ const CarouselMeditation: FC<CarouselMeditationProps> = (props) => {
             listAnimatedStyle[index],
           ]}
         >
-          <ImageBackground source={{ uri: item.image }} style={styles.image}>
+          <ImageBackground source={{ uri: item.image }} style={[styles.image, index !== SelectedIndex ? { transform: [{ translateY: -28 }] } : null]}>
             <View style={styles.imageFooter}>
               <Text style={styles.audioLength}>
                 {Tools.i18n.t("minute", {
@@ -100,6 +100,7 @@ const CarouselMeditation: FC<CarouselMeditationProps> = (props) => {
       contentContainerStyle={{
         paddingHorizontal:
           (Dimensions.get("window").width - widthComponent) / 2,
+          alignSelf: 'center'
       }}
       onScrollEndDrag={() => {
         if (onChange) {
@@ -148,10 +149,11 @@ const styles = StyleSheet.create({
     marginTop: 24,
     marginBottom: 11,
     maxWidth: 200,
+    textAlign: "center",
   },
   description: {
     color: "rgba(64, 64, 64, 0.71)",
-    fontSize: 13,
+    fontSize: 14,
     ...Tools.gStyle.font("400"),
     maxWidth: 200,
     textAlign: "center",

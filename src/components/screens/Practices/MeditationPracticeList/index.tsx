@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
     width: "auto",
     alignSelf: "center",
     paddingHorizontal: 34,
+    height: 30,
   },
   buttonTextInstruction: {
     color: "#FFFFFF",

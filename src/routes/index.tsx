@@ -142,8 +142,8 @@ export const MeditationPracticesRoutes: RootScreenProps<"ListenMeditation"> = ({
         setMeditation(
           new Relax(
             "1",
-            "Test Name",
-            "testDiscription",
+            "Свобода от напряжения",
+            "Вдохни и выдохни - напряжение уйдет и ты даже не заметишь",
             "https://oir.mobi/uploads/posts/2021-06/1623116905_30-oir_mobi-p-nochnaya-doroga-v-lesu-priroda-krasivo-fot-35.jpg",
             {
               length: lengthAudio,
