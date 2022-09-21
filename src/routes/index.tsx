@@ -50,6 +50,13 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
         headerTintColor: "#FFFFFF",
         headerShadowVisible: false,
         tabBarShowLabel: false,
+        headerTitleStyle: {
+          ...Core.gStyle.font('700'),
+          fontSize: 24
+        },
+        tabBarStyle: {
+          height: 75
+        }
       }}
     >
       <TabNavigator.Screen
@@ -130,9 +137,9 @@ export const MeditationPracticesRoutes: RootScreenProps<"ListenMeditation"> = ({
   const [meditation, setMeditation] = useState<MeditationModels | null>(null);
   useEffect(() => {
     const init = async () => {
-      const { sound } = await Audio.Sound.createAsync(
-        require("../../test.mp3")
-      );
+      const { sound } = await Audio.Sound.createAsync({
+        uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/%D0%94%D0%BE%D1%80%D0%BE%D0%B3%D0%B0%20%D0%96%D0%B8%D0%B7%D0%BD%D0%B8_Mp-3.mp3",
+      });
       let lengthAudio = 60000;
       const audioStatus = await sound.getStatusAsync();
       if (audioStatus.isLoaded) {
@@ -144,7 +151,7 @@ export const MeditationPracticesRoutes: RootScreenProps<"ListenMeditation"> = ({
             "1",
             "Свобода от напряжения",
             "Вдохни и выдохни - напряжение уйдет и ты даже не заметишь",
-            "https://oir.mobi/uploads/posts/2021-06/1623116905_30-oir_mobi-p-nochnaya-doroga-v-lesu-priroda-krasivo-fot-35.jpg",
+            "https://psv4.userapi.com/c237331/u288153995/docs/d57/3a1d8477fc22/Svoboda_ot_napryazhenia.jpg?extra=Z_CGho__AcgaknCCvXAJI_2hPh0_pRz4xygz8G8WfQCU_sCNNa91yo4uPpLyIQRODorj-BPoBcSoqLA0tWycsCNXYS3apYGhiMPuHAikfWfADXJh232HSS8TgHvZKvQVVuV8hwF0ncPJVP3llqXrEopRaw",
             {
               length: lengthAudio,
               sound: sound,
@@ -211,6 +218,10 @@ export const MeditationPracticesRoutes: RootScreenProps<"ListenMeditation"> = ({
           headerTransparent: true,
           headerTintColor: "#FFFFFF",
           headerTitleAlign: "center",
+          headerTitleStyle: {
+            ...Core.gStyle.font('700'),
+            fontSize: 24
+          }
         })}
       >
         <MeditationPractices.Screen
@@ -255,6 +266,10 @@ const RootRoutes: FC = () => (
       },
       headerTintColor: "#FFFFFF",
       headerShadowVisible: false,
+      headerTitleStyle: {
+        ...Core.gStyle.font('700'),
+        fontSize: 24
+      }
     }}
   >
     <RootNavigation.Screen

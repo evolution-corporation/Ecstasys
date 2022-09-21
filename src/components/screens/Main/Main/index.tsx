@@ -68,10 +68,10 @@ const Main: MainScreenCompositeScreenProps = ({ navigation }) => {
         <MeditationCard
           name={"Дорога жизни"}
           description={
-            "Представь этот мир который представляет из себя долгую дорогу длинную в жизнь"
+            "Путь, который ты пройдешь вместе с dmd meditation"
           }
           image={
-            "https://oir.mobi/uploads/posts/2021-06/1623116905_30-oir_mobi-p-nochnaya-doroga-v-lesu-priroda-krasivo-fot-35.jpg"
+            "https://psv4.userapi.com/c237331/u288153995/docs/d34/636f1a679325/Doroga_zhizni.jpg?extra=uid67vLmHN8WxqDOCCkIeADZ_QCkn2HaOH3n82T-k2CNYoYqzcinWfK2CaKV_Qoj-xYav5rV6TKtVNAyj6BwXB3ki7QAT2PPB2VpBEObtIdCmdxUYjXbq-lddkW1HosgnqMDM9X6JuQMilm_PVM7vf5BCg"
           }
           time={600000}
         />
@@ -101,6 +101,9 @@ const Main: MainScreenCompositeScreenProps = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  image:{
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
+  },
   background: {
     flex: 1,
     justifyContent: "flex-start",

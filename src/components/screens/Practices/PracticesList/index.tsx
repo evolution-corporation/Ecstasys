@@ -8,6 +8,7 @@ import {
   ScrollView,
   ImageSourcePropType,
   Dimensions,
+  Pressable,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
@@ -64,7 +65,7 @@ const PracticesList: PracticesCompositeScreenProps = ({ navigation }) => {
           data={CategoryMeditation}
           initialScrollIndex={0}
           renderItem={({ item }) => (
-            <TouchableOpacity
+            <Pressable
               style={{ width: 92 }}
               onPress={() => {
                 navigation.navigate("SelectPractices", {
@@ -76,7 +77,7 @@ const PracticesList: PracticesCompositeScreenProps = ({ navigation }) => {
               <Text style={styles.textNameSmall}>
                 {Tools.i18n.t(item.name)}
               </Text>
-            </TouchableOpacity>
+            </Pressable>
           )}
           keyExtractor={(item) => `${item.id}_small`}
           horizontal={true}
@@ -92,7 +93,7 @@ const PracticesList: PracticesCompositeScreenProps = ({ navigation }) => {
         {CategoryMeditation.map((item, index) => {
           const count = useCountMeditation(item.id);
           return (
-            <TouchableOpacity
+            <Pressable
               style={[
                 styles.backgroundNormal,
                 index !== CategoryMeditation.length - 1
@@ -131,7 +132,7 @@ const PracticesList: PracticesCompositeScreenProps = ({ navigation }) => {
                   </View>
                 </View>
               </View>
-            </TouchableOpacity>
+            </Pressable>
           );
         })}
       </ScrollView>
@@ -156,7 +157,7 @@ const styles = StyleSheet.create({
   },
   textNameSmall: {
     color: "rgba(112, 45, 135, 1)",
-    fontSize: 12,
+    fontSize: 13,
     textAlign: "center",
     ...Tools.gStyle.font("400"),
     marginTop: 9,
@@ -188,8 +189,8 @@ const styles = StyleSheet.create({
     marginBottom: -20,
   },
   textDescription: {
-    fontSize: 16,
-    lineHeight: 16,
+    fontSize: 14,
+    lineHeight: 18,
     width: "70%",
     color: "#FFFFFF",
     ...Tools.gStyle.font("400"),

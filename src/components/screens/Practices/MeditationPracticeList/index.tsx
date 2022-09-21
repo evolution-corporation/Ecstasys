@@ -116,7 +116,7 @@ export default MeditationPracticeList;
 
 const styles = StyleSheet.create({
   descriptionType: {
-    fontSize: 14,
+    fontSize: 15,
     ...Tools.gStyle.font("400"),
     textAlign: "center",
     color: "rgba(255, 255, 255, 0.8)",

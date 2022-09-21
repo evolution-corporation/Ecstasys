@@ -14,7 +14,7 @@ const seconds = [
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
   22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
   41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
-  60,
+  
 ];
 
 const ScrollTime: FC<ScrollTimeProps> = (props) => {
@@ -81,7 +81,7 @@ const ScrollTime: FC<ScrollTimeProps> = (props) => {
           style={styles.timeScroll}
           dataSource={minutes}
           selectedIndex={selectedMinutesIndex}
-          itemHeight={50}
+          itemHeight={60}
           highlightColor={"#9765A8"}
           wrapperColor={"transparent"}
           highlightBorderWidth={2}
@@ -109,7 +109,7 @@ const ScrollTime: FC<ScrollTimeProps> = (props) => {
           style={styles.timeScroll}
           dataSource={seconds}
           selectedIndex={selectedSecondsIndex}
-          itemHeight={50}
+          itemHeight={60}
           highlightColor={"#9765A8"}
           wrapperColor={"transparent"}
           highlightBorderWidth={2}
@@ -169,13 +169,13 @@ const styles = StyleSheet.create({
   },
   textItem: {
     ...Core.gStyle.font("400"),
-    fontSize: 40,
+    fontSize: 50,
   },
   timeScroll: {
-    marginHorizontal: 30,
-    width: 60,
+    marginHorizontal: 50,
+    width: 100,
   },
-  wrapperScroll: { width: 50, marginHorizontal: 10, height: 150 },
+  wrapperScroll: { width: 70, marginHorizontal: 15, height: 160 },
   returnDefaultText: {
     color: "#C2A9CE",
     fontSize: 12,

@@ -35,7 +35,7 @@ export const MeditationCard: FC<MeditationCardProps> = (props) => {
           <View style={styles.buttonPlay}>
             <Entypo
               name={"controller-play"}
-              size={40}
+              size={30}
               color={"#702D87"}
               style={{ transform: [{ translateX: 2.5 }] }}
             />
@@ -78,9 +78,9 @@ const styles = StyleSheet.create({
   },
   description: {
     color: "#FFFFFF",
-    fontSize: 13,
-    lineHeight: 15,
-    ...Tools.gStyle.font("500"),
+    fontSize: 15,
+    lineHeight: 20,
+    ...Tools.gStyle.font("400"),
     marginTop: 8,
   },
   bottomInformation: {
@@ -95,7 +95,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#9765A8",
     borderRadius: 15,
     color: "#FFFFFF",
-    fontSize: 13,
+    fontSize: 14,
+    ...Tools.gStyle.font("600"),
     lineHeight: 15,
     textAlign: "center",
     paddingHorizontal: 30,

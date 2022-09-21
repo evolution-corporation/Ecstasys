@@ -11,7 +11,7 @@ export default function (
   length: number,
   config: { initIndex?: number; minScale: number; translatyX: number } = {
     minScale: 0.7,
-    translatyX: 25,
+    translatyX: 20,
   }
 ) {
   if (config.initIndex === undefined) {

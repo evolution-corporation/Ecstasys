@@ -57,9 +57,9 @@ const TimerPractices: MeditationPracticesScreenProps<"TimerPractices"> = ({
       </ImageBackground>
       <Text style={styles.mainText}>
         {Core.i18n.t("e233a33c-3f87-4695-b7ac-29d57ff11ad2")}{" "}
-        <Text style={styles.boldMainText}>
+        {/* <Text style={styles.boldMainText}>
           {Core.i18n.t("399ca325-5376-44e1-8767-f07451e209e8")}
-        </Text>
+        </Text> */}
       </Text>
       <ScrollTime
         onChange={(time) => {
@@ -101,10 +101,10 @@ const styles = StyleSheet.create({
   mainText: {
     marginTop: 18,
     color: "#3D3D3D",
-    fontSize: 14,
+    fontSize: 15,
     ...Core.gStyle.font("400"),
     textAlign: "center",
-    lineHeight: 16.41,
+    lineHeight: 17.58,
     width: 340,
   },
   boldMainText: {
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   },
   timeMinutes: {
     color: "#FFFFFF",
-    fontSize: 13,
+    fontSize: 14,
     ...Core.gStyle.font("600"),
   },
   timeMinutesBox: {
