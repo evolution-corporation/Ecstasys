@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
     transform: [{ translateX: 5 }],
   },
   contentWrapper: {
-    backgroundColor: "rgba(151, 101, 168, 0.5)",
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
     justifyContent: "center",
     alignItems: "center",
   },
