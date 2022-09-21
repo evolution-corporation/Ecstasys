@@ -25,7 +25,6 @@ const CarouselMeditation: FC<CarouselMeditationProps> = (props) => {
     onChange,
   } = props;
   const [SelectedIndex, setSelectedIndex] = useState<number>(0);
-  const isSelects = useRef<boolean>(false);
   const {
     listAnimatedStyle,
     onEndAnimationScrollData,
@@ -48,6 +47,10 @@ const CarouselMeditation: FC<CarouselMeditationProps> = (props) => {
       }
     }
   ).current;
+
+  useEffect(() => {
+    if (onChange) onChange(data[SelectedIndex], false);
+  }, [onChange]);
 
   return (
     <FlatList

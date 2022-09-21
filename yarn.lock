@@ -6990,7 +6990,6 @@ __metadata:
     expo-updates: ~0.14.4
     i18n-js: ^4.0.1
     react: 18.0.0
-    react-devtools-core: ^4.24.7
     react-dom: 18.0.0
     react-native: 0.69.5
     react-native-gesture-handler: ~2.5.0
@@ -14075,16 +14074,6 @@ __metadata:
     shell-quote: ^1.6.1
     ws: ^7
   checksum: c9e21ff2621447a6de51d4a350f3859e8077634f8be327f006d8da73dba349e78432ef910e432f066c615938fed697231ed3daee8f9eae049004c14ebac85625
-  languageName: node
-  linkType: hard
-
-"react-devtools-core@npm:^4.24.7":
-  version: 4.25.0
-  resolution: "react-devtools-core@npm:4.25.0"
-  dependencies:
-    shell-quote: ^1.6.1
-    ws: ^7
-  checksum: 68dae4507c46b875936904f2aba0fe1dda1d7b6fb616ac72e438aec29d7c49aeadaaff264cc148d40795075fdb9c736d1dcf5c50dbe40eaae64c7aa24f313e68
   languageName: node
   linkType: hard
 

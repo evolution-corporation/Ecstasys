@@ -1,23 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Text, StyleSheet, useWindowDimensions } from "react-native";
-
-import Tools from "~core";
-
-import {
-  DescriptionMeditationCategory,
-  MeditationType,
-} from "~modules/meditation";
-import { ColorButton } from "~components/dump";
-import { DoubleColorView } from "~components/containers";
-
-import { useMeditationListForType } from "./hooks";
-import { CarouselMeditation } from "./components";
 import {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { RootScreenProps } from "~routes/index";
+
+import Tools from "~core";
+import type { RootScreenProps } from "~routes/index";
+
+import {
+  DescriptionMeditationCategory,
+  MeditationType,
+} from "~modules/meditation";
+import {
+  relaxationInstruction,
+  DefaultInstruction,
+} from "~modules/meditation/models";
+import { ColorButton } from "~components/dump";
+import { DoubleColorView } from "~components/containers";
+
+import { useMeditationListForType } from "./hooks";
+import { CarouselMeditation } from "./components";
 
 const MeditationPracticeList: RootScreenProps<"SelectPractices"> = ({
   route,
@@ -41,6 +45,13 @@ const MeditationPracticeList: RootScreenProps<"SelectPractices"> = ({
     opacityButton.value = disableButton ? 0.5 : 1;
   }, [disableButton]);
 
+  const showInstruction = useMemo(() => {
+    if (typeMeditation === "relaxation") {
+      return relaxationInstruction;
+    }
+    return DefaultInstruction;
+  }, [typeMeditation]);
+
   return (
     <DoubleColorView
       style={styles.background}
@@ -52,6 +63,14 @@ const MeditationPracticeList: RootScreenProps<"SelectPractices"> = ({
         styleText={styles.buttonTextInstruction}
         disabled={disableButton}
         colors={["#75348B", "#6A2382"]}
+        onPress={() => {
+          if (selectedMeditation !== null) {
+            navigation.navigate("Instruction", {
+              instruction: showInstruction,
+              typeMeditationName: typeMeditation,
+            });
+          }
+        }}
       >
         {Tools.i18n.t("ce174d00-e4df-42f3-bb19-82ed6c987750")}
       </ColorButton>

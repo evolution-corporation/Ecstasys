@@ -53,7 +53,6 @@ const Main: MainScreenCompositeScreenProps = ({ navigation }) => {
         onLayout={({ nativeEvent: { layout } }) => {
           if (!heightGreeting) {
             setHeightGreeting(layout.height);
-            console.log(layout.height);
           }
         }}
       >

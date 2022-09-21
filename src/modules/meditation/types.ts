@@ -45,6 +45,7 @@ export interface Meditation {
   audio?: string;
   audioId?: string;
   permission: boolean;
+  instruction?: Instruction;
 }
 
 export interface MeditationAudio {

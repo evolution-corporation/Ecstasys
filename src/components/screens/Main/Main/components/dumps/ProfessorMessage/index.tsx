@@ -28,7 +28,8 @@ const ProfessorMessage: FC<ProfessorMessageProps> = (props) => {
         if (
           lastDateTime === null ||
           typeof lastDateTime === "string" ||
-          (Date.now() - lastDateTime.getTime()) / (12 * 60 * 60 * 1000)
+          (lastDateTime instanceof Date &&
+            (Date.now() - lastDateTime.getTime()) / (12 * 60 * 60 * 1000))
         ) {
           messageText = Tools.i18n.t("8a5ee5df-a44d-4247-b0cc-fb85c65a9f9e", {
             name: user?.displayName?.split(" ")[0],
@@ -40,7 +41,8 @@ const ProfessorMessage: FC<ProfessorMessageProps> = (props) => {
         messageText =
           lastDateTime === null ||
           typeof lastDateTime === "string" ||
-          Date.now() - lastDateTime.getTime() >= 5 * 60 * 1000
+          (lastDateTime instanceof Date &&
+            Date.now() - lastDateTime.getTime() >= 5 * 60 * 1000)
             ? null
             : Tools.i18n.t("f47e47b2-9424-43a8-8d34-f10c3a2eb05f");
       }

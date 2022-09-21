@@ -49,6 +49,7 @@ export async function authentication() {
     method: "GET",
     headers: await headers(),
   });
+  console.log(`${serverUrl.usersURL}/${uid}`);
   if (request.status === 404) {
     return null;
   }

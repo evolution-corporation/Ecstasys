@@ -61,6 +61,7 @@ const PracticesList: PracticesCompositeScreenProps = ({ navigation }) => {
         </Text>
         <FlatList
           data={CategoryMeditation}
+          initialScrollIndex={0}
           renderItem={({ item }) => (
             <TouchableOpacity
               style={{ width: 92 }}
@@ -84,7 +85,7 @@ const PracticesList: PracticesCompositeScreenProps = ({ navigation }) => {
             marginTop: 18,
             marginBottom: 49,
           }}
-          contentContainerStyle={{ paddingRight: 20 }}
+          contentContainerStyle={{ paddingHorizontal: 20 }}
           showsHorizontalScrollIndicator={false}
         />
         {CategoryMeditation.map((item, index) => {
