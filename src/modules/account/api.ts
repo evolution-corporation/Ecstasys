@@ -43,18 +43,18 @@ export async function authentication() {
   if (!user) {
     throw new Error(`User not found`);
   }
-
   const uid = user.uid;
-  const request = await fetch(`${serverUrl.usersURL}/${uid}`, {
+  const request = await fetch(`${serverUrl.usersURL}?id=${uid}`, {
     method: "GET",
     headers: await headers(),
   });
-  console.log(`${serverUrl.usersURL}/${uid}`);
+  console.log(request.status, `${serverUrl.usersURL}?id=${uid}`);
   if (request.status === 404) {
     return null;
   }
   if (request.ok) {
     const json = await request.json();
+    console.log(json);
     return ConverterUserDataToApplication(json);
   } else {
     throw new Error(`API ERROR. CODE: ${request.status}`);

@@ -27,6 +27,7 @@ const Meditation: FC<Props> = (props) => {
 
 interface Props {
   meditation: MeditationModel;
+  children: JSX.Element;
 }
 export default Meditation;
 
