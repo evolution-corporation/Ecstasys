@@ -1,10 +1,10 @@
-import React, { FC, useEffect, useState } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import React, { FC, useCallback, useEffect, useState } from "react";
+import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import {
   CompositeNavigationProp,
   CompositeScreenProps,
   NavigatorScreenParams,
-  useNavigation,
+  useFocusEffect,
 } from "@react-navigation/native";
 
 import {
@@ -29,12 +29,13 @@ import { Audio } from "expo-av"; //! debug
 import { ColorButton, UserButton } from "~components/dump";
 
 import TreeLine from "~assets/ThreeLine.svg";
-import { TypeMeditation } from "~modules/meditation/types";
+import type { Instruction, TypeMeditation } from "~modules/meditation/types";
 
 import MainIcon from "./assets/HomeIcon";
 import PracticesIcon from "./assets/PracticesIcon";
 import DMDIcon from "./assets/DMDIcon";
 import ProfileIcon from "./assets/ProfileIcon";
+import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 
 // * Авторизированные и зарегестрированые пользователи
 const TabNavigator = createBottomTabNavigator<TabNavigatorList>();
@@ -155,7 +156,46 @@ export const MeditationPracticesRoutes: RootScreenProps<"ListenMeditation"> = ({
     init();
     return () => {};
   }, [setMeditation]);
-  if (meditation == null) return null;
+
+  const { getItem, setItem } = useAsyncStorage("@StatisticsMeditation");
+
+  useFocusEffect(
+    useCallback(() => {
+      const close = async () => {
+        const statisticsAS = await getItem();
+        const statistics: { timeLength: number; time: Date }[] = [];
+        if (meditation) {
+          if (statisticsAS !== null) {
+            const jsnoParse: { timeLength: number; time: Date }[] = JSON.parse(
+              statisticsAS
+            ).map((item: { timeLength: number; time: string }) => ({
+              ...item,
+              time: new Date(item.time),
+            }));
+            statistics.splice(0, 0, ...jsnoParse, {
+              timeLength: meditation.getPosition(),
+              time: new Date(),
+            });
+          } else {
+            statistics.push({
+              timeLength: meditation.getPosition(),
+              time: new Date(),
+            });
+          }
+          setItem(JSON.stringify(statistics));
+        }
+      };
+
+      return () => {};
+    }, [])
+  );
+
+  if (meditation == null)
+    return (
+      <View style={styles.screenLoading}>
+        <ActivityIndicator color={"#FFFFFF"} />
+      </View>
+    );
   return (
     <Meditation meditation={meditation}>
       <MeditationPractices.Navigator
@@ -276,6 +316,26 @@ const RootRoutes: FC = () => (
         headerShown: false,
       }}
     />
+    <RootNavigation.Screen
+      name={"Instruction"}
+      component={Screens.Instruction}
+      options={({ route }) => ({
+        headerTitle: () => (
+          <View>
+            <Text style={styles.meditationName}>
+              {Core.i18n.t("2ca96716-54d7-4cfa-a6fe-d68c8abd4666")}
+            </Text>
+            <Text style={styles.meditationType}>
+              {Core.i18n.t(
+                DescriptionMeditationCategory[route.params.typeMeditationName]
+                  .title
+              )}
+            </Text>
+          </View>
+        ),
+        headerTitleAlign: "center",
+      })}
+    />
   </RootNavigation.Navigator>
 );
 
@@ -293,6 +353,10 @@ export type RootStackList = {
   };
   IntroPractices: undefined;
   IntroMainScreen: undefined;
+  Instruction: {
+    instruction: Instruction;
+    typeMeditationName: string;
+  };
 };
 export type RootScreenProps<T extends keyof RootStackList> = FC<
   NativeStackScreenProps<RootStackList, T>
@@ -435,5 +499,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     ...Core.gStyle.font("400"),
     textAlign: "center",
+  },
+  screenLoading: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#9765A8",
   },
 });

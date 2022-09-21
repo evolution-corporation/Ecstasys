@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     
+    paddingRight: 9,
   },
   image: {
     width: 38,

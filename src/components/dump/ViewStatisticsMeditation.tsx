@@ -42,12 +42,12 @@ const ViewStatisticsMeditation: React.FC<Props> = (props) => {
             timeFilter = null;
             break;
         }
-        if (!timeFilter) {
+        if (timeFilter === null) {
           setCount(statistics.length);
           setTime(statistics.reduce((sum, item) => sum + item.timeLength, 0));
         } else {
-          const flittedMeditation = statistics.filter(
-            (item) => timeFilter >= item.time
+          const flittedMeditation = statistics.filter((item) =>
+            timeFilter !== null ? timeFilter >= item.time : null
           );
           setCount(flittedMeditation.length);
           setTime(
@@ -116,8 +116,8 @@ export type ViewStatisticsMeditationType = "week" | "month" | "all";
 
 interface Props extends ViewProps {
   type: ViewStatisticsMeditationType;
-  colorR: ColorValue;
-  colorL: ColorValue;
+  colorR?: ColorValue;
+  colorL?: ColorValue;
 }
 
 const styles = StyleSheet.create({
