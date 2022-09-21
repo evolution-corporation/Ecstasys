@@ -29,21 +29,24 @@ interface Props extends ViewProps {
 
 const styles = StyleSheet.create({
   background: {
-    borderRadius: 20,
+    borderRadius: 90,
     backgroundColor: "#FFFFFF",
     paddingVertical: 3,
     alignItems: "center",
     flexDirection: "row",
+    
     paddingRight: 9,
   },
   image: {
-    width: 44,
-    height: 44,
+    width: 38,
+    height: 38,
     borderRadius: 22,
-    marginLeft: 3,
+    marginLeft: 4,
+    
+    
   },
   nickname: {
-    marginHorizontal: 3,
+    marginHorizontal: 9,
     color: "#3D3D3D",
     fontSize: 14,
     ...Tools.gStyle.font("500"),

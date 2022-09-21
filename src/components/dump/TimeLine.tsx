@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   line: {
-    height: 8,
+    height: 4,
     borderRadius: 3,
     position: "absolute",
   },
@@ -190,10 +190,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   circle: {
-    width: 28,
-    height: 28,
+    width: 18,
+    height: 18,
     borderRadius: 14,
-    borderWidth: 4,
+    borderWidth: 2,
     position: "absolute",
     right: -14,
   },

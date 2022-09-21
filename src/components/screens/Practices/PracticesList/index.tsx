@@ -7,6 +7,7 @@ import {
   View,
   ScrollView,
   ImageSourcePropType,
+  Dimensions,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
@@ -46,7 +47,7 @@ const PracticesList: PracticesCompositeScreenProps = ({ navigation }) => {
       <ScrollView
         contentContainerStyle={[
           topPaddingContent
-            ? { paddingTop: topPaddingContent, paddingBottom: 120 }
+            ? { paddingTop: topPaddingContent, paddingBottom: 20 }
             : null,
         ]}
         showsVerticalScrollIndicator={false}
@@ -82,8 +83,8 @@ const PracticesList: PracticesCompositeScreenProps = ({ navigation }) => {
           ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
           inverted={true}
           style={{
-            marginTop: 18,
-            marginBottom: 49,
+            marginTop: 20,
+            marginBottom: 20,
           }}
           contentContainerStyle={{ paddingHorizontal: 20 }}
           showsHorizontalScrollIndicator={false}
@@ -106,7 +107,7 @@ const PracticesList: PracticesCompositeScreenProps = ({ navigation }) => {
                 })
               }
             >
-              <Image source={item.image} style={styles.imageNormal} />
+              <Image source={item.image} style={styles.imageNormal} resizeMode={"contain"}/>
               <View style={styles.backgroundTextNormal}>
                 <Text style={styles.textNameNormal}>
                   {Tools.i18n.t(item.name)}
@@ -166,8 +167,8 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   imageNormal: {
-    width: "100%",
-    maxHeight: "100%",
+    width: Dimensions.get('screen').width - 40,
+    height: (Dimensions.get('screen').width - 40) * 290 / 335
   },
   textNameNormal: {
     color: "#FFFFFF",
@@ -183,11 +184,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 19,
     paddingBottom: 9,
-    transform: [{ translateY: -20 }],
+    transform: [{ translateY: -35 }],
     marginBottom: -20,
   },
   textDescription: {
-    fontSize: 13,
+    fontSize: 14,
     lineHeight: 16,
     width: "70%",
     color: "#FFFFFF",
