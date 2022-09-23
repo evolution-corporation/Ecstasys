@@ -53,6 +53,13 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
         headerTintColor: "#FFFFFF",
         headerShadowVisible: false,
         tabBarShowLabel: false,
+        headerTitleStyle: {
+          ...Core.gStyle.font("700"),
+          fontSize: 24,
+        },
+        tabBarStyle: {
+          height: 75,
+        },
       }}
     >
       <TabNavigator.Screen
@@ -241,6 +248,10 @@ export const MeditationPracticesRoutes: RootScreenProps<"ListenMeditation"> = ({
           headerTransparent: true,
           headerTintColor: "#FFFFFF",
           headerTitleAlign: "center",
+          headerTitleStyle: {
+            ...Core.gStyle.font("700"),
+            fontSize: 24,
+          },
         })}
         initialRouteName={
           meditation.typeMeditation === "directionalVisualizations"
@@ -290,6 +301,10 @@ const RootRoutes: FC = () => (
       },
       headerTintColor: "#FFFFFF",
       headerShadowVisible: false,
+      headerTitleStyle: {
+        ...Core.gStyle.font("700"),
+        fontSize: 24,
+      },
     }}
   >
     <RootNavigation.Screen

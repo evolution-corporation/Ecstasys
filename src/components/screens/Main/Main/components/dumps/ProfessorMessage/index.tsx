@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   },
 
   greeting: {
-    fontSize: 24,
+    fontSize: 28,
     color: "#FFFFFF",
     textAlign: "center",
     ...Tools.gStyle.font("700"),
@@ -131,11 +131,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   catchPhrases: {
-    fontSize: 14,
+    fontSize: 16.5,
     textAlign: "center",
     color: "#FFFFFF",
-    lineHeight: 16,
-    maxWidth: "60%",
+    lineHeight: 20,
+    maxWidth: "68%",
     ...Tools.gStyle.font("400"),
   },
 });

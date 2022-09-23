@@ -89,7 +89,7 @@ const ScrollTime: FC<ScrollTimeProps> = (props) => {
           style={styles.timeScroll}
           dataSource={minutes}
           selectedIndex={selectedMinutesIndex}
-          itemHeight={50}
+          itemHeight={60}
           highlightColor={"#9765A8"}
           wrapperColor={"transparent"}
           highlightBorderWidth={2}
@@ -119,7 +119,7 @@ const ScrollTime: FC<ScrollTimeProps> = (props) => {
             selectedMinutesIndex === 0 ? item >= minimalSeconds : true
           )}
           selectedIndex={selectedSecondsIndex}
-          itemHeight={50}
+          itemHeight={60}
           highlightColor={"#9765A8"}
           wrapperColor={"transparent"}
           highlightBorderWidth={2}
@@ -176,13 +176,13 @@ const styles = StyleSheet.create({
   },
   textItem: {
     ...Core.gStyle.font("400"),
-    fontSize: 40,
+    fontSize: 50,
   },
   timeScroll: {
-    marginHorizontal: 30,
-    width: 60,
+    marginHorizontal: 50,
+    width: 100,
   },
-  wrapperScroll: { width: 50, marginHorizontal: 10, height: 150 },
+  wrapperScroll: { width: 70, marginHorizontal: 15, height: 160 },
   returnDefaultText: {
     color: "#C2A9CE",
     fontSize: 12,

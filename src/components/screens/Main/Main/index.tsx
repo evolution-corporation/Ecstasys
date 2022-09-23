@@ -111,6 +111,9 @@ const Main: MainScreenCompositeScreenProps = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  image: {
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
+  },
   background: {
     flex: 1,
     justifyContent: "flex-start",

@@ -225,6 +225,7 @@ export default PlayerScreen;
 
 const styles = StyleSheet.create({
   background: {
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
     flex: 1,
     justifyContent: "space-between",
     paddingHorizontal: 20,

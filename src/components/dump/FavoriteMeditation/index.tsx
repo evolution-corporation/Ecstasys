@@ -108,6 +108,6 @@ export default FavoriteMeditation;
 
 const styles = StyleSheet.create({
   background: {
-    backgroundColor: "#FEEBED",
+    backgroundColor: "#FFFFFF",
   },
 });

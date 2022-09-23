@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
   },
   textNameSmall: {
     color: "rgba(112, 45, 135, 1)",
-    fontSize: 12,
+    fontSize: 13,
     textAlign: "center",
     ...Tools.gStyle.font("400"),
     marginTop: 9,
@@ -242,8 +242,8 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   textDescription: {
-    fontSize: 16,
-    lineHeight: 16,
+    fontSize: 14,
+    lineHeight: 18,
     width: "70%",
     color: "#FFFFFF",
     ...Tools.gStyle.font("400"),
