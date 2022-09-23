@@ -67,4 +67,6 @@ export interface Func {
 
 export interface Func_V2 extends Func {
   authenticationWithGoogle: () => Promise<void>;
+  signOut: () => Promise<void>;
+  authWithTestAccount: () => Promise<void>;
 }

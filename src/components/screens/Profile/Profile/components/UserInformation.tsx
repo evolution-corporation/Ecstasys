@@ -14,7 +14,14 @@ const UserInformation: FC<UserInformationProps> = (props) => {
 
   return (
     <View style={styles.background}>
-      <Image source={styles.image} style={styles.image} />
+      <Image
+        source={{
+          uri: "https://storage.yandexcloud.net/dmdmeditationimage/users/TestUser.jpg",
+        }}
+        style={styles.image}
+        resizeMethod={"resize"}
+        resizeMode={"contain"}
+      />
       <View style={styles.backgroundInfo}>
         <Text style={styles.displayName}>{user.displayName}</Text>
         <Text style={styles.nameSubscribe}>

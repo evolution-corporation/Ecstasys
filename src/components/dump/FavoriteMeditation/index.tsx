@@ -13,7 +13,7 @@ import NoLike from "./assets/NoLike.svg";
 
 const FavoriteMeditation: FC<FavoriteMeditationProps> = (props) => {
   const { idMeditation, displayWhenNotFavorite = false } = props;
-  const { getItem, setItem } = useAsyncStorage("@FavoriteMeditation");
+  const { getItem, setItem } = useAsyncStorage("@FavoriteMeditationList");
   const [IsLoading, setIsLoading] = useState<boolean>(false);
   const [IsFavorite, setIsFavorite] = useState<boolean>(false);
 

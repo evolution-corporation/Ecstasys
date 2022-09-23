@@ -16,7 +16,8 @@ export const memoryKey = {
 export function ConverterUserDataToApplication(
   data: UserDataServer
 ): UserDataApplication {
-  let image: string = `https://firebasestorage.googleapis.com/v0/b/plants-336217.appspot.com/o/avatars%2FGroup%20638.png?alt=media&token=130ffa3d-5672-447c-b156-222382e612bf`;
+  let image: string =
+    "https://storage.yandexcloud.net/dmdmeditationimage/users/NoUserImage.png";
 
   if (data.hasPhoto) {
     image = `${serverUrl.userImageURL}/${data.id}`;

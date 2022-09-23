@@ -1,8 +1,9 @@
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { Dimensions, Pressable, StyleSheet, ViewProps } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   interpolate,
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -52,22 +53,29 @@ const Feed: FC<Props> = (props) => {
       } else {
         _translateYBackground.value = withTiming(hiddenHeight);
       }
+      runOnJS(setIsFullScreen)(event.translationY < 0);
     });
+
+  useEffect(() => {
+    gestureFeed.enabled(!isFullScreen);
+
+    return () => {};
+  }, [isFullScreen]);
 
   return (
     <GestureDetector gesture={gestureFeed}>
       <Animated.View style={[styles.feedContainer, aStyle.scrollView]}>
-        {/* <Animated.View style={[styles.crossButton, aStyle.scrollView]}>
+        <Animated.View style={[styles.crossButton, aStyle.scrollView]}>
           <Pressable
             onPress={() => {
               _translateYBackground.value = withTiming(hiddenHeight);
               _opacityCrossButton.value = 0;
+              setIsFullScreen(false);
             }}
-            style={{ flex: 1, backgroundColor: "red" }}
           >
             <Entypo name="cross" size={24} color="black" />
           </Pressable>
-        </Animated.View> */}
+        </Animated.View>
         {children}
       </Animated.View>
     </GestureDetector>
@@ -87,11 +95,13 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 20,
     right: 20,
+    zIndex: 2,
   },
 });
 
 interface Props extends ViewProps {
   hiddenHeight?: number;
+  onFullShow?: () => void;
 }
 
 export default Feed;

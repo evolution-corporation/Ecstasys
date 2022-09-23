@@ -25,7 +25,9 @@ const TimerPractices: MeditationPracticesScreenProps<"TimerPractices"> = ({
   navigation,
 }) => {
   const { meditation } = useMeditationContext();
-  const [timeMilleseconds, setTimeMilleseconds] = useState<number>(300000);
+  const [timeMilleseconds, setTimeMilleseconds] = useState<number>(
+    Number(meditation.getLengthTime("milliseconds"))
+  );
 
   const setLength = () => {
     meditation.setLengthMeditation(timeMilleseconds);
@@ -65,6 +67,7 @@ const TimerPractices: MeditationPracticesScreenProps<"TimerPractices"> = ({
         onChange={(time) => {
           setTimeMilleseconds((time.minutes * 60 + time.seconds) * 1000);
         }}
+        minimalTime={Number(meditation.getLengthTime("milliseconds"))}
       />
       <View style={{ width: "100%" }}>
         <ColorButton

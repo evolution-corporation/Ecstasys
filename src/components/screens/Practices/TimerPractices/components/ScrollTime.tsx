@@ -1,20 +1,21 @@
-import React, { ElementRef, FC, useEffect, useRef, useState } from "react";
+import React, {
+  ElementRef,
+  FC,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { StyleSheet, Text, View, ViewProps } from "react-native";
 import ScrollPicker from "react-native-wheel-scrollview-picker";
 import { TextButton } from "~components/dump";
 
 import Core from "~core";
 
-const minutes = [
-  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-  22, 23, 24, 25,
-];
-
 const seconds = [
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
   22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
   41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
-  60,
 ];
 
 const ScrollTime: FC<ScrollTimeProps> = (props) => {
@@ -57,19 +58,26 @@ const ScrollTime: FC<ScrollTimeProps> = (props) => {
   //     snapToInterval={56}
   //   />
   // );
-  const { initTime = { minutes: 5, seconds: 0 }, onChange, style } = props;
-  const [selectedMinutesIndex, setSelectedMinutesIndex] = useState<number>(
-    initTime.minutes
-  );
-  const [selectedSecondsIndex, setSelectedSecondsIndex] = useState<number>(
-    initTime.seconds
-  );
+  const { onChange, style, minimalTime = 300000 } = props;
+  const [minutes, minimalSeconds] = useMemo(() => {
+    const _minutes = [];
+    for (let i = Math.floor(minimalTime / 60000); i <= 30; i++) {
+      _minutes.push(i);
+    }
+    const _minimalSeconds = (minimalTime % 60000) / 1000;
+
+    return [_minutes, _minimalSeconds];
+  }, [minimalTime]);
+  const [selectedMinutesIndex, setSelectedMinutesIndex] = useState<number>(0);
+  const [selectedSecondsIndex, setSelectedSecondsIndex] = useState<number>(0);
 
   useEffect(() => {
     if (onChange)
       onChange({
-        minutes: selectedMinutesIndex,
-        seconds: selectedSecondsIndex,
+        minutes: minutes[selectedMinutesIndex],
+        seconds: seconds.filter((item) =>
+          selectedMinutesIndex === 0 ? item >= minimalSeconds : true
+        )[selectedSecondsIndex],
       });
   }, [selectedMinutesIndex, selectedSecondsIndex]);
 
@@ -94,7 +102,7 @@ const ScrollTime: FC<ScrollTimeProps> = (props) => {
                   { color: isSelected ? "#9765A8" : "#D3D3D3" },
                 ]}
               >
-                {index < 10 ? `0${index.toString()}` : `${index.toString()}`}
+                {data < 10 ? `0${data.toString()}` : `${data.toString()}`}
               </Text>
             );
           }}
@@ -107,7 +115,9 @@ const ScrollTime: FC<ScrollTimeProps> = (props) => {
         <ScrollPicker
           key={"seconds"}
           style={styles.timeScroll}
-          dataSource={seconds}
+          dataSource={seconds.filter((item) =>
+            selectedMinutesIndex === 0 ? item >= minimalSeconds : true
+          )}
           selectedIndex={selectedSecondsIndex}
           itemHeight={50}
           highlightColor={"#9765A8"}
@@ -122,7 +132,7 @@ const ScrollTime: FC<ScrollTimeProps> = (props) => {
                   { color: isSelected ? "#9765A8" : "#D3D3D3" },
                 ]}
               >
-                {index < 10 ? `0${index}` : `${index}`}
+                {data < 10 ? `0${data}` : `${data}`}
               </Text>
             );
           }}
@@ -136,10 +146,7 @@ const ScrollTime: FC<ScrollTimeProps> = (props) => {
 };
 
 export interface ScrollTimeProps extends ViewProps {
-  initTime?: {
-    minutes: number;
-    seconds: number;
-  };
+  minimalTime?: number;
   onChange?: (time: { minutes: number; seconds: number }) => void;
 }
 

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import {
   Text,
   TouchableOpacity,
@@ -8,9 +8,18 @@ import {
   ScrollView,
   ImageSourcePropType,
   Dimensions,
+  Pressable,
+  ImageBackground,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withTiming,
+} from "react-native-reanimated";
 
 import { DoubleColorView } from "~components/containers";
 import Tools from "~core";
@@ -37,6 +46,8 @@ const PracticesList: PracticesCompositeScreenProps = ({ navigation }) => {
     return getPaddingTopFunc.f(widthTitle);
   }, [getPaddingTopFunc, widthTitle]);
 
+  const refFlatlist = useRef<FlatList>(null);
+
   return (
     <DoubleColorView
       onFunctionGetPaddingTop={(getPaddingTop) => {
@@ -61,21 +72,24 @@ const PracticesList: PracticesCompositeScreenProps = ({ navigation }) => {
           {Tools.i18n.t("db8e7216-be7c-4ecc-8ddd-0cf9ff83f419")}
         </Text>
         <FlatList
+          ref={refFlatlist}
+          onLayout={() => {
+            refFlatlist.current?.scrollToIndex({
+              index: 0,
+              viewOffset: -40,
+              animated: false,
+            });
+          }}
           data={CategoryMeditation}
           initialScrollIndex={0}
           renderItem={({ item }) => (
-            <TouchableOpacity
-              style={{ width: 92 }}
-              onPress={() => {
-                navigation.navigate("SelectPractices", {
-                  typeMeditation: item.id,
-                });
-              }}
-            >
-              <Image source={item.image} style={styles.imageSmall} />
-              <Text style={styles.textNameSmall}>
-                {Tools.i18n.t(item.name)}
-              </Text>
+            <TouchableOpacity>
+              <Animated.View style={{ width: 92 }}>
+                <Image source={item.image} style={styles.imageSmall} />
+                <Text style={styles.textNameSmall}>
+                  {Tools.i18n.t(item.name)}
+                </Text>
+              </Animated.View>
             </TouchableOpacity>
           )}
           keyExtractor={(item) => `${item.id}_small`}
@@ -91,47 +105,86 @@ const PracticesList: PracticesCompositeScreenProps = ({ navigation }) => {
         />
         {CategoryMeditation.map((item, index) => {
           const count = useCountMeditation(item.id);
+          const opacity = useSharedValue(1);
+
+          const animatedStyleText = useAnimatedStyle(() => ({
+            transform: [
+              { translateY: interpolate(opacity.value, [0.3, 1], [0, 35]) },
+              { scaleY: interpolate(opacity.value, [0.3, 1], [1.5, 1]) },
+            ],
+          }));
+          const offSetY = useRef<number | null>(null);
+          if (count === 0) return null;
           return (
-            <TouchableOpacity
-              style={[
-                styles.backgroundNormal,
-                index !== CategoryMeditation.length - 1
-                  ? { marginBottom: 20 }
-                  : null,
-                styles.contentVerticalMargin,
-              ]}
+            <Pressable
               key={`${item.id}_normall`}
-              onPress={() =>
+              onPress={() => {
                 navigation.navigate("SelectPractices", {
                   typeMeditation: item.id,
-                })
-              }
+                });
+              }}
+              onPressIn={() => {
+                opacity.value = withTiming(0.3);
+              }}
+              onPressOut={() => {
+                opacity.value = withTiming(1);
+              }}
+              onLayout={({ nativeEvent: { layout } }) => {
+                if (offSetY.current === null) {
+                  offSetY.current = layout.y;
+                }
+              }}
             >
-              <Image source={item.image} style={styles.imageNormal} resizeMode={"contain"}/>
-              <View style={styles.backgroundTextNormal}>
-                <Text style={styles.textNameNormal}>
-                  {Tools.i18n.t(item.name)}
-                </Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
+              <Animated.View
+                style={[
+                  styles.backgroundNormal,
+                  index !== CategoryMeditation.length - 1
+                    ? { marginBottom: 20 }
+                    : null,
+                  styles.contentVerticalMargin,
+                ]}
+              >
+                <ImageBackground
+                  source={item.image}
+                  style={styles.imageNormal}
+                  resizeMode={"contain"}
+                  imageStyle={{ marginBottom: 78 }}
                 >
-                  <Text style={styles.textDescription}>
-                    {Tools.i18n.t(item.description)}
-                  </Text>
-                  <View style={{ alignItems: "center" }}>
-                    <Feather name={"headphones"} size={25} color={"#FFFFFF"} />
-                    <Text style={styles.countMeditation}>
-                      {Tools.i18n.t("9790bd12-4b66-419f-a3e0-705134494734", {
-                        count,
-                      })}
+                  <Animated.View
+                    style={[styles.backgroundTextNormal, animatedStyleText]}
+                  >
+                    <Text style={styles.textNameNormal}>
+                      {Tools.i18n.t(item.name)}
                     </Text>
-                  </View>
-                </View>
-              </View>
-            </TouchableOpacity>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Text style={styles.textDescription}>
+                        {Tools.i18n.t(item.description)}
+                      </Text>
+                      <View style={{ alignItems: "center" }}>
+                        <Feather
+                          name={"headphones"}
+                          size={25}
+                          color={"#FFFFFF"}
+                        />
+                        <Text style={styles.countMeditation}>
+                          {Tools.i18n.t(
+                            "9790bd12-4b66-419f-a3e0-705134494734",
+                            {
+                              count,
+                            }
+                          )}
+                        </Text>
+                      </View>
+                    </View>
+                  </Animated.View>
+                </ImageBackground>
+              </Animated.View>
+            </Pressable>
           );
         })}
       </ScrollView>
@@ -162,13 +215,15 @@ const styles = StyleSheet.create({
     marginTop: 9,
   },
   backgroundNormal: {
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderRadius: 20,
     overflow: "hidden",
+    height: ((Dimensions.get("screen").width - 40) * 290) / 335 + 30,
+    backgroundColor: "#9765A8",
   },
   imageNormal: {
-    width: Dimensions.get('screen').width - 40,
-    height: (Dimensions.get('screen').width - 40) * 290 / 335
+    width: Dimensions.get("screen").width - 40,
+    height: ((Dimensions.get("screen").width - 40) * 290) / 335,
+    justifyContent: "flex-end",
   },
   textNameNormal: {
     color: "#FFFFFF",
@@ -176,6 +231,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     ...Tools.gStyle.font("600"),
     marginBottom: 5,
+    backgroundColor: "#9765A8",
   },
   backgroundTextNormal: {
     backgroundColor: "#9765A8",
@@ -183,9 +239,7 @@ const styles = StyleSheet.create({
     minHeight: 119,
     paddingHorizontal: 20,
     paddingTop: 19,
-    paddingBottom: 9,
-    transform: [{ translateY: -35 }],
-    marginBottom: -20,
+    zIndex: 1,
   },
   textDescription: {
     fontSize: 16,

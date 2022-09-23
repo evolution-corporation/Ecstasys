@@ -11,6 +11,7 @@ import {
 } from "./types";
 import { authentication, registration, update } from "./api";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const useAccountHook_v1 = function () {
   const [state, dispatch] = useReducer(Reducer, {
@@ -209,6 +210,22 @@ const useAccountHook_3 = function () {
       const { idToken } = await GoogleSignin.signIn();
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
       auth().signInWithCredential(googleCredential);
+    },
+    signOut: async () => {
+      auth().signOut();
+      //TODO Сделать есдиную библиотеку, чтобы хранить мульти ключи
+      AsyncStorage.multiRemove([
+        "@StatisticsMeditation",
+        "@FavoriteMeditation",
+        "@ToDayCatchPhrases",
+        "@LastDateOpenApp",
+        "MeditationPreferences",
+      ]);
+    },
+    authWithTestAccount: async () => {
+      await func.authenticationWithPhone("+70000000000");
+      console.log(state.confirmResultByPhone);
+      await func.checkSMSCode("000000");
     },
   };
   return { func: newFunc, state };

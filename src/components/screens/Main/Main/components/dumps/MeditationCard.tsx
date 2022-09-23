@@ -8,13 +8,24 @@ import {
   StyleSheet,
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 import Tools from "~core";
+import type { MainCompositeStackNaviatorProps } from "~routes/index";
+import { TypeMeditation } from "~modules/meditation/types";
 
 export const MeditationCard: FC<MeditationCardProps> = (props) => {
-  const { name, description, image, isCustomTime = false, time } = props;
+  const { name, description, image, isCustomTime = false, time, id } = props;
+  const navigation = useNavigation<MainCompositeStackNaviatorProps>();
   return (
-    <TouchableOpacity style={styles.background}>
+    <TouchableOpacity
+      style={styles.background}
+      onPress={() => {
+        navigation.navigate("ListenMeditation", {
+          meditationId: id,
+        });
+      }}
+    >
       <ImageBackground
         source={{ uri: image }}
         style={styles.backgroundContainer}
@@ -52,6 +63,7 @@ export interface MeditationCardProps extends ViewProps {
   image: string;
   isCustomTime?: boolean;
   time: number;
+  id: string;
 }
 
 const styles = StyleSheet.create({

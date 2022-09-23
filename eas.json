@@ -11,21 +11,27 @@
         "buildType": "apk"
       },
       "env": {
-        "YARN_ENABLE_IMMUTABLE_INSTALLS": "false"
+        "YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
+        "APP_VARIANT": "development"
       }
     },
     "preview": {
       "distribution": "internal",
-      "channel": "dev",
+      "channel": "demo",
       "env": {
-        "YARN_ENABLE_IMMUTABLE_INSTALLS": "false"
+        "YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
+        "APP_VARIANT": "preview"
+      },
+      "android": {
+        "buildType": "apk"
       }
     },
     "production": {
       "channel": "main",
       "env": {
         "YARN_ENABLE_IMMUTABLE_INSTALLS": "false"
-      }
+      },
+      "android": {}
     }
   },
   "submit": {

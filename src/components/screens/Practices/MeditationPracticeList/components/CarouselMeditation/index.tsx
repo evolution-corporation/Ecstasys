@@ -1,4 +1,11 @@
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, {
+  FC,
+  LegacyRef,
+  RefObject,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   View,
   Text,
@@ -23,18 +30,27 @@ const CarouselMeditation: FC<CarouselMeditationProps> = (props) => {
     widthComponent = Dimensions.get("screen").width,
     style,
     onChange,
+    initialIndex = 0,
   } = props;
   const [SelectedIndex, setSelectedIndex] = useState<number>(0);
   const {
     listAnimatedStyle,
     onEndAnimationScrollData,
     onStartAnimationScrollData,
-  } = useAnimation(data.length);
+    onMiddleAnimationScrollData,
+  } = useAnimation(data.length, {
+    initIndex: initialIndex,
+    imageHeigth: styles.image.height,
+
+    translatyX: 25,
+  });
 
   const _viewabilityConfig = useRef<ViewabilityConfig>({
-    itemVisiblePercentThreshold: 70,
-    waitForInteraction: true,
+    itemVisiblePercentThreshold: 90,
+    waitForInteraction: false,
   }).current;
+
+  const refFlatlist = useRef<FlatList>(null);
 
   const _onViewableItemsChanged = useRef(
     ({ viewableItems }: { viewableItems: ViewToken[] }) => {
@@ -44,6 +60,8 @@ const CarouselMeditation: FC<CarouselMeditationProps> = (props) => {
           onEndAnimationScrollData(viewableItems[mediumIndex].index ?? 0);
           setSelectedIndex(viewableItems[mediumIndex].index ?? 0);
         }
+      } else {
+        onMiddleAnimationScrollData();
       }
     }
   ).current;
@@ -55,21 +73,29 @@ const CarouselMeditation: FC<CarouselMeditationProps> = (props) => {
   return (
     <FlatList
       data={data}
+      ref={refFlatlist}
       horizontal={true}
       keyExtractor={(item) => item.id}
-      initialScrollIndex={SelectedIndex}
+      initialScrollIndex={
+        initialIndex > 0 && data.length > 2 ? initialIndex : 0
+      }
+      onLayout={() => {
+        refFlatlist.current?.scrollToIndex({
+          index: initialIndex > 0 && data.length > 2 ? initialIndex : 0,
+          viewOffset: (Dimensions.get("window").width - widthComponent) / 2,
+        });
+      }}
       renderItem={({ item, index }) => (
         <Animated.View
           style={[
             styles.backgroundCard,
             {
               width: widthComponent,
-              // backgroundColor: index % 2 === 1 ? "red" : "blue",
             },
             listAnimatedStyle[index],
           ]}
         >
-          <ImageBackground source={{ uri: item.image }} style={[styles.image, index !== SelectedIndex ? { transform: [{ translateY: -28 }] } : null]}>
+          <ImageBackground source={{ uri: item.image }} style={[styles.image]}>
             <View style={styles.imageFooter}>
               <Text style={styles.audioLength}>
                 {Tools.i18n.t("minute", {
@@ -88,7 +114,7 @@ const CarouselMeditation: FC<CarouselMeditationProps> = (props) => {
       )}
       viewabilityConfig={_viewabilityConfig}
       onViewableItemsChanged={_onViewableItemsChanged}
-      disableIntervalMomentum={true}
+      disableIntervalMomentum={false}
       snapToInterval={widthComponent}
       style={style}
       onScrollBeginDrag={() => {
@@ -100,7 +126,6 @@ const CarouselMeditation: FC<CarouselMeditationProps> = (props) => {
       contentContainerStyle={{
         paddingHorizontal:
           (Dimensions.get("window").width - widthComponent) / 2,
-          alignSelf: 'center'
       }}
       onScrollEndDrag={() => {
         if (onChange) {
@@ -117,6 +142,7 @@ interface CarouselMeditationProps extends ViewProps {
   data: MeditationType[];
   widthComponent?: number;
   onChange?: (meditation: MeditationType | null, isSelects: boolean) => void;
+  initialIndex?: number;
 }
 
 const styles = StyleSheet.create({
@@ -148,12 +174,12 @@ const styles = StyleSheet.create({
     ...Tools.gStyle.font("700"),
     marginTop: 24,
     marginBottom: 11,
-    maxWidth: 200,
+    maxWidth: 223,
     textAlign: "center",
   },
   description: {
     color: "rgba(64, 64, 64, 0.71)",
-    fontSize: 14,
+    fontSize: 13,
     ...Tools.gStyle.font("400"),
     maxWidth: 200,
     textAlign: "center",

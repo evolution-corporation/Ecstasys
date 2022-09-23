@@ -21,11 +21,14 @@ import {
 } from "@react-navigation/bottom-tabs";
 
 import Core from "~core";
-import Meditation, { DescriptionMeditationCategory } from "~modules/meditation";
-import MeditationModels, { Relax } from "~modules/meditation/models"; //! debug
+import Meditation, {
+  API,
+  DescriptionMeditationCategory,
+} from "~modules/meditation";
+import MeditationModels, { Relax, Vision } from "~modules/meditation/models"; //! debug
 import * as Screens from "~components/screens";
 
-import { Audio } from "expo-av"; //! debug
+import { Audio } from "expo-av";
 import { ColorButton, UserButton } from "~components/dump";
 
 import TreeLine from "~assets/ThreeLine.svg";
@@ -57,8 +60,7 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
         component={Screens.Main}
         options={{
           headerTransparent: true,
-          headerTitle: () => null,
-          headerLeft: () => <UserButton style={{ marginLeft: 20 }} />,
+          headerShown: false,
           tabBarIcon: ({ focused }) => (
             <MainIcon
               colorIcon={
@@ -92,7 +94,7 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
               secondItem={<TreeLine />}
               styleButton={{ backgroundColor: "transparent", marginRight: 17 }}
               onPress={() => {
-                navigation.navigate("EditUserData");
+                navigation.navigate("OptionsProfile");
               }}
             />
           ),
@@ -126,35 +128,58 @@ const MeditationPractices =
 export const MeditationPracticesRoutes: RootScreenProps<"ListenMeditation"> = ({
   route,
 }) => {
-  const { meditationId, typeMeditation } = route.params;
+  const { meditationId } = route.params;
   const [meditation, setMeditation] = useState<MeditationModels | null>(null);
   useEffect(() => {
     const init = async () => {
-      const { sound } = await Audio.Sound.createAsync(
-        require("../../test.mp3")
-      );
-      let lengthAudio = 60000;
-      const audioStatus = await sound.getStatusAsync();
-      if (audioStatus.isLoaded) {
-        lengthAudio = audioStatus.durationMillis ?? 6000;
+      const meditation = await API.getMeditationById(meditationId);
+      let _meditation: MeditationModels | undefined;
+      switch (meditation.type) {
+        case "relaxation":
+          if (meditation.audio !== undefined) {
+            _meditation = new Relax(
+              meditation.id,
+              meditation.name,
+              meditation.description,
+              meditation.image,
+              {
+                length: meditation.lengthAudio,
+                sound: (
+                  await Audio.Sound.createAsync(
+                    { uri: meditation.audio },
+                    { isLooping: true }
+                  )
+                ).sound,
+              }
+            );
+          }
+          break;
+        case "directionalVisualizations":
+          if (meditation.audio !== undefined) {
+            _meditation = new Vision(
+              meditation.id,
+              meditation.name,
+              meditation.description,
+              meditation.image,
+              {
+                length: meditation.lengthAudio,
+                sound: (
+                  await Audio.Sound.createAsync(
+                    { uri: meditation.audio },
+                    { isLooping: true }
+                  )
+                ).sound,
+              }
+            );
+          }
+
+          break;
+        default:
+          break;
       }
-      if (typeMeditation === "relaxation") {
-        setMeditation(
-          new Relax(
-            "1",
-            "Свобода от напряжения",
-            "Вдохни и выдохни - напряжение уйдет и ты даже не заметишь",
-            "https://oir.mobi/uploads/posts/2021-06/1623116905_30-oir_mobi-p-nochnaya-doroga-v-lesu-priroda-krasivo-fot-35.jpg",
-            {
-              length: lengthAudio,
-              sound: sound,
-            }
-          )
-        );
-      }
+      if (_meditation) setMeditation(_meditation);
     };
     init();
-    return () => {};
   }, [setMeditation]);
 
   const { getItem, setItem } = useAsyncStorage("@StatisticsMeditation");
@@ -196,6 +221,11 @@ export const MeditationPracticesRoutes: RootScreenProps<"ListenMeditation"> = ({
         <ActivityIndicator color={"#FFFFFF"} />
       </View>
     );
+  console.log(
+    meditation.typeMeditation === "directionalVisualizations"
+      ? "PlayerScreen"
+      : "TimerPractices"
+  );
   return (
     <Meditation meditation={meditation}>
       <MeditationPractices.Navigator
@@ -212,6 +242,11 @@ export const MeditationPracticesRoutes: RootScreenProps<"ListenMeditation"> = ({
           headerTintColor: "#FFFFFF",
           headerTitleAlign: "center",
         })}
+        initialRouteName={
+          meditation.typeMeditation === "directionalVisualizations"
+            ? "PlayerScreen"
+            : "TimerPractices"
+        }
       >
         <MeditationPractices.Screen
           name={"TimerPractices"}
@@ -336,6 +371,29 @@ const RootRoutes: FC = () => (
         headerTitleAlign: "center",
       })}
     />
+    <RootNavigation.Screen
+      name={"FavoriteMeditation"}
+      component={Screens.FavoriteMeditation}
+      options={{
+        title: Core.i18n.t("6a85652b-a14f-4545-8058-9cdad43f3de1"),
+        headerTitleAlign: "center",
+      }}
+    />
+    <RootNavigation.Screen
+      name={"OptionsProfile"}
+      component={Screens.OptionsProfile}
+      options={{
+        title: Core.i18n.t("options"),
+        headerTitleAlign: "center",
+      }}
+    />
+    <RootNavigation.Screen
+      name="devSetting"
+      component={Screens.DevSettings}
+      options={{
+        title: Core.i18n.t("f56183f9-c95c-4e3c-965d-2eee5791d1d6"),
+      }}
+    />
   </RootNavigation.Navigator>
 );
 
@@ -349,7 +407,6 @@ export type RootStackList = {
   };
   ListenMeditation: {
     meditationId: string;
-    typeMeditation: TypeMeditation;
   };
   IntroPractices: undefined;
   IntroMainScreen: undefined;
@@ -357,6 +414,9 @@ export type RootStackList = {
     instruction: Instruction;
     typeMeditationName: string;
   };
+  FavoriteMeditation: undefined;
+  OptionsProfile: undefined;
+  devSetting: undefined;
 };
 export type RootScreenProps<T extends keyof RootStackList> = FC<
   NativeStackScreenProps<RootStackList, T>
@@ -372,6 +432,18 @@ type RootCompositeStackNavigatorProps = CompositeNavigationProp<
 export type ProfileCompositeStackNaviatorProps = CompositeNavigationProp<
   BottomTabNavigationProp<TabNavigatorList, "Profile">,
   NativeStackNavigationProp<RootStackList, "SelectSubscribe">
+>;
+
+export type MainCompositeStackNaviatorProps = CompositeNavigationProp<
+  BottomTabNavigationProp<TabNavigatorList, "Main">,
+  NativeStackNavigationProp<RootStackList, "ListenMeditation">
+>;
+
+export type ProfileCompositeScreenProps = FC<
+  CompositeScreenProps<
+    BottomTabScreenProps<TabNavigatorList, "Profile">,
+    StackScreenProps<RootStackList, "FavoriteMeditation">
+  >
 >;
 
 export type PracticesCompositeListScreenProps = CompositeScreenProps<
@@ -433,6 +505,13 @@ export const AuthenticationRoutes: FC = () => {
           title: "",
         }}
       />
+      <AuthenticationNavigation.Screen
+        name="devSetting"
+        component={Screens.DevSettings}
+        options={{
+          title: Core.i18n.t("f56183f9-c95c-4e3c-965d-2eee5791d1d6"),
+        }}
+      />
     </AuthenticationNavigation.Navigator>
   );
 };
@@ -442,6 +521,7 @@ export type AuthenticationStackList = {
   SelectMethodAuthentication: undefined;
   InputNumberPhone: undefined;
   InputSMSCode: undefined;
+  devSetting: undefined;
 };
 export type AuthenticationScreenProps<T extends keyof AuthenticationStackList> =
   FC<NativeStackScreenProps<AuthenticationStackList, T>>;

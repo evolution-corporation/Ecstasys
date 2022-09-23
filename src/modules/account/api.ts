@@ -3,6 +3,7 @@ import { isDevice, productName } from "expo-device";
 import { getExpoPushTokenAsync } from "expo-notifications";
 import { Platform } from "react-native";
 import { headers } from "~api";
+import { getApiOff, customUserData } from "~core";
 
 import { ConverterUserDataToApplication, serverUrl } from "./tools";
 import { UpdateUserData } from "./types";
@@ -15,26 +16,34 @@ export async function registration(
   birthday: Date,
   image?: string
 ) {
-  const request = await fetch(serverUrl.usersURL, {
-    method: "POST",
-    headers: await headers(),
-    body: JSON.stringify({
-      nickName: nickname,
-      birthday: birthday.toISOString(),
-      Image: image,
-      expoToken: isEmulator
-        ? "test token"
-        : (
-            await getExpoPushTokenAsync()
-          ).data,
-    }),
-  });
-  if (request.ok) {
-    const json = await request.json();
-    console.log(json);
-    return ConverterUserDataToApplication(json);
+  if ((await getApiOff()) && (await customUserData.getIsCustomDataUser())) {
+    return await customUserData.createCustomerDatatUser(
+      nickname,
+      birthday,
+      image
+    );
   } else {
-    throw new Error(`API ERROR. CODE: ${request.status}`);
+    const request = await fetch(serverUrl.usersURL, {
+      method: "POST",
+      headers: await headers(),
+      body: JSON.stringify({
+        nickName: nickname,
+        birthday: birthday.toISOString(),
+        Image: image,
+        expoToken: isEmulator
+          ? "test token"
+          : (
+              await getExpoPushTokenAsync()
+            ).data,
+      }),
+    });
+    if (request.ok) {
+      const json = await request.json();
+      console.log(json);
+      return ConverterUserDataToApplication(json);
+    } else {
+      throw new Error(`API ERROR. CODE: ${request.status}`);
+    }
   }
 }
 
@@ -44,57 +53,68 @@ export async function authentication() {
     throw new Error(`User not found`);
   }
   const uid = user.uid;
-  const request = await fetch(`${serverUrl.usersURL}?id=${uid}`, {
-    method: "GET",
-    headers: await headers(),
-  });
-  console.log(request.status, `${serverUrl.usersURL}?id=${uid}`);
-  if (request.status === 404) {
-    return null;
-  }
-  if (request.ok) {
-    const json = await request.json();
-    console.log(json);
-    return ConverterUserDataToApplication(json);
+  if (await getApiOff()) {
+    return await customUserData.getDevUserData();
   } else {
-    throw new Error(`API ERROR. CODE: ${request.status}`);
+    const request = await fetch(`${serverUrl.usersURL}?id=${uid}`, {
+      method: "GET",
+      headers: await headers(),
+    });
+    console.log(request.status, `${serverUrl.usersURL}?id=${uid}`);
+    if (request.status === 404) {
+      return null;
+    }
+    if (request.ok) {
+      const json = await request.json();
+      return ConverterUserDataToApplication(json);
+    } else {
+      throw new Error(`API ERROR. CODE: ${request.status}`);
+    }
   }
 }
 
 export async function update(data: UpdateUserData) {
-  const request = await fetch(serverUrl.usersURL, {
-    method: "PATCH",
-    headers: await headers(),
-    body: JSON.stringify({
-      Image: data.image,
-      birthday: data.birthday,
-      nickName: data.nickName,
-      DisplayName: data.display_name,
-    }),
-  });
-  if (request.ok) {
-    const json = await request.json();
-    return ConverterUserDataToApplication(json.result);
+  if (await getApiOff()) {
+    return await customUserData.setCustomDataUser(data);
   } else {
-    throw new Error(`API ERROR. CODE: ${request.status}`);
+    const request = await fetch(serverUrl.usersURL, {
+      method: "PATCH",
+      headers: await headers(),
+      body: JSON.stringify({
+        Image: data.image,
+        birthday: data.birthday,
+        nickName: data.nickName,
+        DisplayName: data.display_name,
+      }),
+    });
+    if (request.ok) {
+      const json = await request.json();
+      return ConverterUserDataToApplication(json.result);
+    } else {
+      throw new Error(`API ERROR. CODE: ${request.status}`);
+    }
   }
 }
 
 export async function checkNickname(nickname: string): Promise<boolean> {
-  try {
-    const url = `${serverUrl.nickname}?nickname=${nickname}`;
-    const request = await fetch(url);
-    if (request.status == 404) {
-      return true;
+  if (await getApiOff()) {
+    return nickname !== "bad.nick";
+  } else {
+    try {
+      const url = `${serverUrl.nickname}?nickname=${nickname}`;
+      const request = await fetch(url);
+      if (request.status == 404) {
+        return true;
+      }
+      if (request.ok) {
+        return false;
+      } else {
+        throw new Error(`API ERROR. CODE: ${request.status}`);
+      }
+    } catch (error) {
+      console.error(error);
+      throw new Error(`Function Error`);
     }
-    if (request.ok) {
-      return false;
-    } else {
-      throw new Error(`API ERROR. CODE: ${request.status}`);
-    }
-  } catch (error) {
-    console.error(error);
-    throw new Error(`Function Error`);
   }
 }
 

@@ -90,6 +90,7 @@ const MeditationPracticeList: RootScreenProps<"SelectPractices"> = ({
             }
             setDisableButton(status);
           }}
+          initialIndex={1}
         />
       )}
       <ColorButton
@@ -116,7 +117,7 @@ export default MeditationPracticeList;
 
 const styles = StyleSheet.create({
   descriptionType: {
-    fontSize: 14,
+    fontSize: 13,
     ...Tools.gStyle.font("400"),
     textAlign: "center",
     color: "rgba(255, 255, 255, 0.8)",
@@ -125,11 +126,12 @@ const styles = StyleSheet.create({
   },
   background: {
     paddingHorizontal: 20,
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
     flex: 1,
   },
   carouselMeditation: {
     marginHorizontal: -20,
+    marginTop: 10,
   },
 
   buttonStyle: {},
@@ -142,7 +144,8 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     width: "100%",
     height: 45,
-    marginBottom: 80,
+    marginTop: 20,
+    marginBottom: 40,
   },
   buttonText: {
     color: "#FFFFFF",

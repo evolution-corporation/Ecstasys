@@ -6,10 +6,35 @@ import gStyle, {
   styleText,
   setColorOpacity,
 } from "./styles";
+import {
+  useApiOFF,
+  getApiOff,
+  getDevUserData,
+  getIsCustomDataUser,
+  setCustomDataUser,
+  useCustomDataUser,
+  createCustomerDatatUser,
+} from "./dev";
 
 export default {
   i18n,
   gStyle,
 };
+const customUserData = {
+  getDevUserData,
+  getIsCustomDataUser,
+  setCustomDataUser,
+  createCustomerDatatUser,
+};
 
-export { useCustomFonts, toastOptions, styleImage, styleText, setColorOpacity };
+export {
+  useCustomFonts,
+  toastOptions,
+  styleImage,
+  styleText,
+  setColorOpacity,
+  useApiOFF,
+  useCustomDataUser,
+  getApiOff,
+  customUserData,
+};

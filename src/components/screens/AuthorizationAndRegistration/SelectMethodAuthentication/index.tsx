@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   ImageBackground,
   StyleSheet,
@@ -7,20 +7,37 @@ import {
   Image,
   Platform,
   BackHandler,
+  ActivityIndicator,
 } from "react-native";
 import Swiper from "react-native-swiper";
 import { useBackHandler } from "@react-native-community/hooks";
 
-import Tools from "~core";
+import { FontAwesome5 } from "@expo/vector-icons";
+
+import Tools, { getApiOff } from "~core";
 import GoogleLogo from "~assets/icons/GoogleLogo.svg";
 import { ColorButton, ColorWithIconButton } from "~components/dump";
 import { contextHook } from "~modules/account";
 import type { AuthenticationScreenProps } from "~routes/index";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { useFocusEffect } from "@react-navigation/native";
 
 const SelectMethodAuthentication: AuthenticationScreenProps<
   "SelectMethodAuthentication"
 > = ({ navigation }) => {
   const { func } = contextHook.account();
+  const [isApiOff, setIsApiOff] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [heightBottomBox, setHeightBottomBox] = useState<number | null>(null);
+  useFocusEffect(
+    useCallback(() => {
+      const init = async () => {
+        const result = await getApiOff();
+        if (setIsApiOff !== undefined) setIsApiOff(result);
+      };
+      init().catch(console.error);
+    }, [])
+  );
 
   useBackHandler(() => {
     if (Platform.OS === "android") {
@@ -33,6 +50,14 @@ const SelectMethodAuthentication: AuthenticationScreenProps<
       style={styles.background}
       source={require("~assets/rockDrugs.png")}
     >
+      <View style={styles.devOptions}>
+        {__DEV__ ? (
+          <TouchableOpacity onPress={() => navigation.navigate("devSetting")}>
+            <FontAwesome5 name="dev" size={24} color="#FFFFFF" />
+          </TouchableOpacity>
+        ) : null}
+      </View>
+
       <View style={styles.logoBox}>
         <Image source={require("./assets/bird.png")} resizeMode={"contain"} />
       </View>
@@ -63,32 +88,67 @@ const SelectMethodAuthentication: AuthenticationScreenProps<
           </Swiper>
         </View>
       </View>
-      <View style={styles.selectMethodBox}>
-        <ColorButton
-          styleButton={styles.button}
-          onPress={() => {
-            navigation.navigate("InputNumberPhone");
+      {isLoading ? (
+        <View
+          style={{
+            height: heightBottomBox ?? "auto",
+            width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          {Tools.i18n.t("526fba9f-2b69-4fe6-aefd-d491e86e59da")}
-        </ColorButton>
-        <ColorWithIconButton
-          icon={<GoogleLogo />}
-          styleButton={styles.button}
-          onPress={() => {
-            func.authenticationWithGoogle();
+          <ActivityIndicator color={"#FFFFFF"} size={"large"} />
+        </View>
+      ) : (
+        <View
+          style={styles.selectMethodBox}
+          onLayout={({ nativeEvent: { layout } }) => {
+            if (heightBottomBox === null) setHeightBottomBox(layout.height);
           }}
         >
-          {Tools.i18n.t("235a94d8-5deb-460a-bf03-e0e30e93df1b")}
-        </ColorWithIconButton>
-        <Text style={styles.terms}>
-          {Tools.i18n.t("4e5aa2a6-29db-44bc-8cf3-96e1ce338442")}{" "}
-          <Text style={styles.document}>{Tools.i18n.t("userAgreement")}</Text>{" "}
-          {Tools.i18n.t("and")}{" "}
-          <Text style={styles.document}>{Tools.i18n.t("userAgreement")}</Text>{" "}
-          ecstasys
-        </Text>
-      </View>
+          {__DEV__ && isApiOff ? (
+            <ColorButton
+              styleButton={styles.button}
+              onPress={() => {
+                setIsLoading(true);
+                func.authWithTestAccount().catch((error) => {
+                  setIsLoading(false);
+                  console.error(error);
+                });
+              }}
+            >
+              {Tools.i18n.t("efa30007-ef38-408f-b2ca-68c727c1bbc3")}
+            </ColorButton>
+          ) : null}
+          <ColorButton
+            styleButton={styles.button}
+            onPress={() => {
+              navigation.navigate("InputNumberPhone");
+            }}
+          >
+            {Tools.i18n.t("526fba9f-2b69-4fe6-aefd-d491e86e59da")}
+          </ColorButton>
+          <ColorWithIconButton
+            icon={<GoogleLogo />}
+            styleButton={styles.button}
+            onPress={() => {
+              setIsLoading(true);
+              func.authenticationWithGoogle().catch(() => {
+                if (setIsLoading !== undefined) setIsLoading(false);
+              });
+            }}
+          >
+            {Tools.i18n.t("235a94d8-5deb-460a-bf03-e0e30e93df1b")}
+          </ColorWithIconButton>
+          <Text style={styles.terms}>
+            {Tools.i18n.t("4e5aa2a6-29db-44bc-8cf3-96e1ce338442")}{" "}
+            <Text style={styles.document}>{Tools.i18n.t("userAgreement")}</Text>{" "}
+            {Tools.i18n.t("and")}{" "}
+            <Text style={styles.document}>{Tools.i18n.t("userAgreement")}</Text>{" "}
+            ecstasys
+          </Text>
+        </View>
+      )}
     </ImageBackground>
   );
 };
@@ -137,6 +197,10 @@ const styles = StyleSheet.create({
   },
   document: {
     ...Tools.gStyle.font("700"),
+  },
+  devOptions: {
+    position: "absolute",
+    alignSelf: "flex-end",
   },
 });
 

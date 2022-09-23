@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   Text,
+  ActivityIndicator,
 } from "react-native";
 import { useBackHandler } from "@react-native-community/hooks";
 import { useHeaderHeight } from "@react-navigation/elements";
@@ -17,6 +18,7 @@ import Tools from "~core";
 import { ProfessorMessage, Feed, MeditationCard } from "./components";
 import { useShowIntro } from "~routes/hook";
 import type { MainScreenCompositeScreenProps } from "~routes/index";
+import { useMeditationRecomendation, useMeditationToDay } from "./hooks";
 
 const Main: MainScreenCompositeScreenProps = ({ navigation }) => {
   useShowIntro(
@@ -29,6 +31,8 @@ const Main: MainScreenCompositeScreenProps = ({ navigation }) => {
   const [heightGreeting, setHeightGreeting] = React.useState<
     number | undefined
   >(undefined);
+  const toDayPopularMeditation = useMeditationToDay();
+  const recomendationMeditation = useMeditationRecomendation();
   const heightHeade = useHeaderHeight();
 
   useBackHandler(() => {
@@ -48,6 +52,7 @@ const Main: MainScreenCompositeScreenProps = ({ navigation }) => {
       source={require("./assets/background.png")}
       style={[styles.background, { paddingTop: heightHeade }]}
     >
+      <UserButton style={styles.userButton} />
       <View
         style={styles.greeting}
         onLayout={({ nativeEvent: { layout } }) => {
@@ -65,16 +70,19 @@ const Main: MainScreenCompositeScreenProps = ({ navigation }) => {
         <Text style={styles.description}>
           {Tools.i18n.t("f292b17c-2295-471e-80cf-f99f6a618701")}
         </Text>
-        <MeditationCard
-          name={"Дорога жизни"}
-          description={
-            "Представь этот мир который представляет из себя долгую дорогу длинную в жизнь"
-          }
-          image={
-            "https://oir.mobi/uploads/posts/2021-06/1623116905_30-oir_mobi-p-nochnaya-doroga-v-lesu-priroda-krasivo-fot-35.jpg"
-          }
-          time={600000}
-        />
+        {recomendationMeditation !== null ? (
+          <MeditationCard
+            name={recomendationMeditation.name}
+            description={recomendationMeditation.description}
+            image={recomendationMeditation.image}
+            time={recomendationMeditation.lengthAudio}
+            isCustomTime={recomendationMeditation.isCustomTime}
+            id={recomendationMeditation.id}
+          />
+        ) : (
+          <ActivityIndicator color={"#9765A8"} size={"large"} />
+        )}
+
         <ViewStatisticsMeditation
           style={styles.statisticsMeditation}
           type={"week"}
@@ -85,16 +93,18 @@ const Main: MainScreenCompositeScreenProps = ({ navigation }) => {
         <Text style={styles.description}>
           {Tools.i18n.t("f292b17c-2295-471e-80cf-f99f6a618701")}
         </Text>
-        <MeditationCard
-          name={"Древо жизни"}
-          description={
-            "Представь этот мир который представляет из себя долгую дорогу длинную в жизнь"
-          }
-          image={
-            "https://miro.medium.com/max/1400/1*WmDm9M326xfYEnRYn9GmxA.jpeg"
-          }
-          time={600000}
-        />
+        {toDayPopularMeditation !== null ? (
+          <MeditationCard
+            name={toDayPopularMeditation.name}
+            description={toDayPopularMeditation.description}
+            image={toDayPopularMeditation.image}
+            time={toDayPopularMeditation.lengthAudio}
+            isCustomTime={toDayPopularMeditation.isCustomTime}
+            id={toDayPopularMeditation.id}
+          />
+        ) : (
+          <ActivityIndicator color={"#9765A8"} size={"large"} />
+        )}
       </Feed>
     </ImageBackground>
   );
@@ -110,6 +120,12 @@ const styles = StyleSheet.create({
     height: 147,
     alignSelf: "center",
   },
+  userButton: {
+    marginLeft: 20,
+    marginTop: 20,
+    alignSelf: "flex-start",
+  },
+
   greeting: {
     paddingTop: 20,
     justifyContent: "flex-start",

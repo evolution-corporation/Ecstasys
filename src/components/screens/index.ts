@@ -19,3 +19,6 @@ export { default as TimerPractices } from "./Practices/TimerPractices";
 export { default as IntroPracticesScreen } from "./Practices/Intro";
 export { default as DMDIntro } from "./Practices/IntroDMD";
 export { default as Instruction } from "./Practices/Instruction";
+export { default as FavoriteMeditation } from "./Profile/FavoriteMeditation_old";
+export { default as OptionsProfile } from "./Profile/OptionsProfile";
+export { default as DevSettings } from "./DevSetting";

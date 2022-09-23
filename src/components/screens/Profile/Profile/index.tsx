@@ -19,9 +19,9 @@ import type { ViewStatisticsMeditationType } from "~components/dump/ViewStatisti
 
 import { UserInformation } from "./components";
 
-import type { TabNavigatorScreenProps } from "~routes/index";
+import type { ProfileCompositeScreenProps } from "~routes/index";
 
-const Profile: TabNavigatorScreenProps<"Profile"> = ({ navigation }) => {
+const Profile: ProfileCompositeScreenProps = ({ navigation }) => {
   const _weekOpacity = useSharedValue(0.6);
   const _monthOpacity = useSharedValue(1);
   const _allOpacity = useSharedValue(0.6);
@@ -152,6 +152,9 @@ const Profile: TabNavigatorScreenProps<"Profile"> = ({ navigation }) => {
         }
         styleButton={[styles.button, { marginTop: 18 }]}
         styleText={styles.buttonText}
+        onPress={() => {
+          navigation.navigate("FavoriteMeditation");
+        }}
       >
         {Tools.i18n.t("6a85652b-a14f-4545-8058-9cdad43f3de1")}
       </ColorWithIconButton>
@@ -166,6 +169,9 @@ const Profile: TabNavigatorScreenProps<"Profile"> = ({ navigation }) => {
         }
         styleButton={styles.button}
         styleText={styles.buttonText}
+        onPress={() => {
+          navigation.navigate("SelectSubscribe");
+        }}
       >
         {Tools.i18n.t("b2f016a6-b60e-4b5f-9cd9-ead2bddaa9d5")}
       </ColorWithIconButton>

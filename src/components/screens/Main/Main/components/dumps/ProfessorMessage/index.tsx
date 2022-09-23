@@ -120,12 +120,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
     ...Tools.gStyle.font("700"),
   },
-  greetingView: {},
+  greetingView: {
+    alignSelf: "center",
+    alignItems: "center",
+  },
   lineBR: {
-    width: "25%",
+    width: "20%",
     height: 1,
     backgroundColor: "#FFFFFF",
-    marginHorizontal: 2,
+    marginHorizontal: 5,
   },
   catchPhrases: {
     fontSize: 14,

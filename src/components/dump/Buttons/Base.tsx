@@ -32,6 +32,8 @@ const Base: FC<Props> = (props) => {
     disabled,
     colors,
     onLayout,
+    onPressIn,
+    onPressOut,
   } = props;
   const _opacityButton = useSharedValue(1);
 
@@ -48,7 +50,6 @@ const Base: FC<Props> = (props) => {
   };
 
   const _onPress = () => {
-    animationPress();
     onPress();
   };
 
@@ -80,6 +81,14 @@ const Base: FC<Props> = (props) => {
       onPress={() => _onPress()}
       disabled={disabled}
       onLayout={onLayout}
+      onPressIn={(event) => {
+        if (onPressIn) onPressIn(event);
+        _opacityButton.value = withTiming(0.8);
+      }}
+      onPressOut={(event) => {
+        if (onPressOut) onPressOut(event);
+        _opacityButton.value = withTiming(1);
+      }}
     >
       <WrapperComponent>
         {secondItem}

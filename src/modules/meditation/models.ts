@@ -489,7 +489,16 @@ export class Vision extends Meditation {
     image: string,
     audio: MeditationAudio
   ) {
-    super(id, name, description, image, true, DefaultInstruction, audio);
+    super(
+      id,
+      name,
+      description,
+      image,
+      true,
+      DefaultInstruction,
+      audio,
+      "directionalVisualizations"
+    );
   }
 }
 export class Breath extends Meditation {

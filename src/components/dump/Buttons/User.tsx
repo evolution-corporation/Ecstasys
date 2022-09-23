@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     alignItems: "center",
     flexDirection: "row",
-    
+
     paddingRight: 9,
   },
   image: {
@@ -42,8 +42,7 @@ const styles = StyleSheet.create({
     height: 38,
     borderRadius: 22,
     marginLeft: 4,
-    
-    
+    resizeMode: "center",
   },
   nickname: {
     marginHorizontal: 9,

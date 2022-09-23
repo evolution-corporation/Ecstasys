@@ -7,6 +7,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useCustomFonts } from "~core";
 import AccountModule from "~modules/account";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import Constants from "expo-constants";
 
 import RootRoutes, {
   AuthenticationRoutes,
@@ -43,14 +44,6 @@ const AppCore: FC<Props> = (props) => {
         </NavigationContainer>
       </RootSiblingParent>
     </GestureHandlerRootView>
-  );
-};
-
-const AppPlayer = () => {
-  return (
-    <NavigationContainer>
-      <MeditationPracticesRoutes />
-    </NavigationContainer>
   );
 };
 

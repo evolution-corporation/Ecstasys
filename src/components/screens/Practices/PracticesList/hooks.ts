@@ -7,7 +7,6 @@ export function useCountMeditation(nameMeditationType: TypeMeditation) {
   useEffect(() => {
     const init = async () => {
       const result = await API.getCountMeditationInCategory(nameMeditationType);
-      console.log(result);
       if (isActivate) {
         if (result) setCount(result);
       }

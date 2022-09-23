@@ -15,9 +15,9 @@ export function useFavoriteMeditation() {
       if (result) {
         const listIdFavoriteMeditation = JSON.parse(result);
         const _listFavoriteMeditation = [];
-        const _typesMeditation = [];
+        const _typesMeditation: string[] = [];
         for (let idMeditation of listIdFavoriteMeditation) {
-          const meditationData = await getMeditation(idMeditation);
+          const meditationData = await getMeditation({ id: idMeditation });
           _listFavoriteMeditation.push({
             name: meditationData.name,
             category: meditationData.type,
