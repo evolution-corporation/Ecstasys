@@ -6,7 +6,7 @@ export default {
     jsEngine: "hermes",
     name: `DMD Meditation${IS_DEV ? ' dev' : ''}`,
     slug: "dmd_meditation",
-    version: "0.0.12",
+    version: "0.0.13",
     orientation: "portrait",
     githubUrl: "https://github.com/HardKot/ecstasys",
     icon: "./assets/icon.png",
