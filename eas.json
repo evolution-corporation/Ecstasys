@@ -17,7 +17,7 @@
     },
     "preview": {
       "distribution": "internal",
-      "channel": "demo",
+      "channel": "dev",
       "env": {
         "YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
         "APP_VARIANT": "preview"
@@ -28,6 +28,7 @@
     },
     "production": {
       "channel": "main",
+      "distribution": "store",
       "env": {
         "YARN_ENABLE_IMMUTABLE_INSTALLS": "false"
       },
