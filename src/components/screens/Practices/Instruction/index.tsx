@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   },
   lineDescription: {
     width: 60,
-    height: 4,
+    height: 2,
     backgroundColor: "#555555",
     alignSelf: "center",
     marginTop: 20,
@@ -55,5 +55,5 @@ const styles = StyleSheet.create({
     ...core.gStyle.font("600"),
     marginVertical: 10,
   },
-  indexKey: { color: "#9765A8" },
+  indexKey: { color: "#9765A8", ...core.gStyle.font("700") },
 });

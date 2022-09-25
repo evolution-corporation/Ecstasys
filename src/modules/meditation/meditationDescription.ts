@@ -5,7 +5,7 @@ const MeditationDescription: {
     title: "relaxation",
     text: "7b205d68-98a8-4f07-8a4c-347fe65a0961",
   },
-  visualizations: {
+  directionalVisualizations: {
     title: "directionalVisualizations",
     text: "0808c3b7-8eda-403a-8b7d-515aa50c7723",
   },

@@ -8,8 +8,6 @@ import {
   Text,
   ActivityIndicator,
 } from "react-native";
-import { useBackHandler } from "@react-native-community/hooks";
-import { useHeaderHeight } from "@react-navigation/elements";
 
 import { ViewStatisticsMeditation, UserButton } from "~components/dump";
 import account from "~modules/account";
@@ -26,22 +24,11 @@ const Main: MainScreenCompositeScreenProps = ({ navigation }) => {
     () => navigation.navigate("IntroMainScreen"),
     [navigation.isFocused()]
   );
-  const [isOpenMeditationListInfo, setIsOpenMeditationListInfo] =
-    React.useState<boolean>(false);
   const [heightGreeting, setHeightGreeting] = React.useState<
     number | undefined
   >(undefined);
   const toDayPopularMeditation = useMeditationToDay();
   const recomendationMeditation = useMeditationRecomendation();
-  const heightHeade = useHeaderHeight();
-
-  useBackHandler(() => {
-    if (isOpenMeditationListInfo) {
-      return true;
-    } else {
-      return false;
-    }
-  });
 
   if (account === undefined) {
     return null;
@@ -50,14 +37,14 @@ const Main: MainScreenCompositeScreenProps = ({ navigation }) => {
   return (
     <ImageBackground
       source={require("./assets/background.png")}
-      style={[styles.background, { paddingTop: heightHeade }]}
+      style={[styles.background]}
     >
       <UserButton style={styles.userButton} />
       <View
         style={styles.greeting}
         onLayout={({ nativeEvent: { layout } }) => {
           if (!heightGreeting) {
-            setHeightGreeting(layout.height);
+            setHeightGreeting(layout.height + 20);
           }
         }}
       >

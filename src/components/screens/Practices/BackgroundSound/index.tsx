@@ -48,7 +48,6 @@ const BackgroundSoundSreen: MeditationPracticesScreenProps<
   }, [meditation.backgroundSoundVolume]);
 
   useEffect(() => {
-    console.log(selectedBackgroundSoung, meditation.nameMeditationBackground);
     if (
       selectedBackgroundSoung &&
       selectedBackgroundSoung !== meditation.nameMeditationBackground

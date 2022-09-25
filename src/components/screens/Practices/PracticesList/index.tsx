@@ -84,9 +84,9 @@ const PracticesList: PracticesCompositeScreenProps = ({ navigation }) => {
           initialScrollIndex={0}
           renderItem={({ item }) => (
             <TouchableOpacity>
-              <Animated.View style={{ width: 92 }}>
+              <Animated.View style={{ width: 92, height: 140 }}>
                 <Image source={item.image} style={styles.imageSmall} />
-                <Text style={styles.textNameSmall}>
+                <Text style={styles.textNameSmall} adjustsFontSizeToFit>
                   {Tools.i18n.t(item.name)}
                 </Text>
               </Animated.View>
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     textAlign: "center",
     ...Tools.gStyle.font("400"),
-    marginTop: 9,
+    width: "100%",
   },
   backgroundNormal: {
     borderRadius: 20,

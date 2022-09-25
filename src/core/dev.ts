@@ -168,3 +168,37 @@ export async function createCustomerDatatUser(
       : "https://storage.yandexcloud.net/dmdmeditationimage/users/NoUserImage.png",
   };
 }
+
+export function useShowIntroScreen(
+  key: string
+): [boolean, (value: boolean) => void] {
+  const [isShow, setIsShow] = useState<boolean>(false);
+  const { getItem, setItem } = useAsyncStorage(key);
+  let isActivate = false;
+  useEffect(() => {
+    isActivate = true;
+    const init = async () => {
+      const result = await getItem();
+      let value: boolean = false;
+      if (result !== null) {
+        value = !!JSON.parse(result);
+      }
+      if (isActivate) setIsShow(value);
+    };
+
+    init().catch(console.error);
+    return () => {
+      isActivate = false;
+    };
+  }, [setIsShow]);
+
+  return [
+    isShow,
+    (value: boolean) => {
+      if (isActivate) {
+        setIsShow(value);
+        setItem(JSON.stringify(value));
+      }
+    },
+  ];
+}

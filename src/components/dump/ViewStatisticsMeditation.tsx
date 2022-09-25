@@ -30,12 +30,13 @@ const ViewStatisticsMeditation: React.FC<Props> = (props) => {
         switch (type) {
           case "week":
             timeFilter = new Date();
-            timeFilter.setHours(0, 0, 0, 0);
+            timeFilter.setHours(23, 59, 59, 999);
             timeFilter.setDate(timeFilter.getDate() - timeFilter.getDay());
             break;
           case "month":
             timeFilter = new Date();
-            timeFilter.setHours(0, 0, 0, 0);
+            timeFilter.setHours(23, 59, 59, 999);
+            timeFilter.setMonth(timeFilter.getMonth() + 1);
             timeFilter.setDate(0);
             break;
           case "all":
@@ -47,11 +48,18 @@ const ViewStatisticsMeditation: React.FC<Props> = (props) => {
           setTime(statistics.reduce((sum, item) => sum + item.timeLength, 0));
         } else {
           const flittedMeditation = statistics.filter((item) =>
-            timeFilter !== null ? timeFilter >= item.time : null
+            timeFilter !== null
+              ? timeFilter.getTime() >= item.time.getTime()
+              : false
           );
           setCount(flittedMeditation.length);
           setTime(
-            flittedMeditation.reduce((sum, item) => sum + item.timeLength, 0)
+            Math.floor(
+              flittedMeditation.reduce(
+                (sum, item) => sum + item.timeLength,
+                0
+              ) / 60000
+            )
           );
         }
       } else {

@@ -32,7 +32,9 @@ const CarouselMeditation: FC<CarouselMeditationProps> = (props) => {
     onChange,
     initialIndex = 0,
   } = props;
-  const [SelectedIndex, setSelectedIndex] = useState<number>(0);
+  // const [SelectedIndex, setSelectedIndex] = useState<number>(0);
+  const selectedIndex = useRef<number>(initialIndex);
+  const isSelected = useRef<boolean>(false);
   const {
     listAnimatedStyle,
     onEndAnimationScrollData,
@@ -58,7 +60,10 @@ const CarouselMeditation: FC<CarouselMeditationProps> = (props) => {
         const mediumIndex = Math.floor(viewableItems.length / 2);
         if (viewableItems[mediumIndex].index !== null) {
           onEndAnimationScrollData(viewableItems[mediumIndex].index ?? 0);
-          setSelectedIndex(viewableItems[mediumIndex].index ?? 0);
+
+          selectedIndex.current = viewableItems[mediumIndex].index ?? 0;
+          setInitIndex();
+          // setSelectedIndex(viewableItems[mediumIndex].index ?? 0);
         }
       } else {
         onMiddleAnimationScrollData();
@@ -66,8 +71,14 @@ const CarouselMeditation: FC<CarouselMeditationProps> = (props) => {
     }
   ).current;
 
+  const setInitIndex = () => {
+    if (!isSelected.current && onChange) {
+      onChange(data[selectedIndex.current], false);
+    }
+  };
+
   useEffect(() => {
-    if (onChange) onChange(data[SelectedIndex], false);
+    if (onChange) onChange(data[selectedIndex.current], false);
   }, [onChange]);
 
   return (
@@ -121,6 +132,7 @@ const CarouselMeditation: FC<CarouselMeditationProps> = (props) => {
         if (onChange) {
           onChange(null, true);
         }
+        isSelected.current = true;
         onStartAnimationScrollData();
       }}
       contentContainerStyle={{
@@ -128,9 +140,8 @@ const CarouselMeditation: FC<CarouselMeditationProps> = (props) => {
           (Dimensions.get("window").width - widthComponent) / 2,
       }}
       onScrollEndDrag={() => {
-        if (onChange) {
-          onChange(data[SelectedIndex], false);
-        }
+        isSelected.current = false;
+        setInitIndex();
       }}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}

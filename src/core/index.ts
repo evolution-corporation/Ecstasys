@@ -14,6 +14,7 @@ import {
   setCustomDataUser,
   useCustomDataUser,
   createCustomerDatatUser,
+  useShowIntroScreen,
 } from "./dev";
 
 export default {
@@ -37,4 +38,5 @@ export {
   useCustomDataUser,
   getApiOff,
   customUserData,
+  useShowIntroScreen,
 };

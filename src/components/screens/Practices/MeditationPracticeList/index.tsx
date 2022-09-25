@@ -16,6 +16,7 @@ import {
 import {
   relaxationInstruction,
   DefaultInstruction,
+  InstructionDirectionalVisualization,
 } from "~modules/meditation/models";
 import { ColorButton } from "~components/dump";
 import { DoubleColorView } from "~components/containers";
@@ -46,10 +47,14 @@ const MeditationPracticeList: RootScreenProps<"SelectPractices"> = ({
   }, [disableButton]);
 
   const showInstruction = useMemo(() => {
-    if (typeMeditation === "relaxation") {
-      return relaxationInstruction;
+    switch (typeMeditation) {
+      case "relaxation":
+        return relaxationInstruction;
+      case "directionalVisualizations":
+        return InstructionDirectionalVisualization;
+      default:
+        return DefaultInstruction;
     }
-    return DefaultInstruction;
   }, [typeMeditation]);
 
   return (
@@ -99,10 +104,10 @@ const MeditationPracticeList: RootScreenProps<"SelectPractices"> = ({
         styleText={styles.buttonText}
         disabled={disableButton}
         onPress={() => {
+          console.log(selectedMeditation?.id);
           if (selectedMeditation !== null) {
             navigation.navigate("ListenMeditation", {
               meditationId: selectedMeditation.id,
-              typeMeditation,
             });
           }
         }}

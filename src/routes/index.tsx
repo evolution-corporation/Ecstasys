@@ -1,5 +1,12 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
-import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  ActivityIndicator,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import {
   CompositeNavigationProp,
   CompositeScreenProps,
@@ -19,6 +26,14 @@ import {
   BottomTabScreenProps,
   BottomTabNavigationProp,
 } from "@react-navigation/bottom-tabs";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { Audio } from "expo-av";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 
 import Core from "~core";
 import Meditation, {
@@ -28,8 +43,7 @@ import Meditation, {
 import MeditationModels, { Relax, Vision } from "~modules/meditation/models"; //! debug
 import * as Screens from "~components/screens";
 
-import { Audio } from "expo-av";
-import { ColorButton, UserButton } from "~components/dump";
+import { ColorButton, FavoriteMeditation, UserButton } from "~components/dump";
 
 import TreeLine from "~assets/ThreeLine.svg";
 import type { Instruction, TypeMeditation } from "~modules/meditation/types";
@@ -38,12 +52,15 @@ import MainIcon from "./assets/HomeIcon";
 import PracticesIcon from "./assets/PracticesIcon";
 import DMDIcon from "./assets/DMDIcon";
 import ProfileIcon from "./assets/ProfileIcon";
-import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 
 // * Авторизированные и зарегестрированые пользователи
 const TabNavigator = createBottomTabNavigator<TabNavigatorList>();
 
 const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
+  const translateYTabNavigator = useSharedValue(0);
+  const animationStyleTabNavigator = useAnimatedStyle(() => ({
+    transform: [{ translateY: translateYTabNavigator.value }],
+  }));
   return (
     <TabNavigator.Navigator
       screenOptions={{
@@ -68,13 +85,7 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
         options={{
           headerTransparent: true,
           headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <MainIcon
-              colorIcon={
-                focused ? "rgba(112, 45, 135, 1)" : "rgba(158, 158, 158, 1)"
-              }
-            />
-          ),
+          tabBarIcon: ({ focused, color }) => <MainIcon colorIcon={color} />,
         }}
       />
       <TabNavigator.Screen
@@ -99,7 +110,10 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
           headerRight: () => (
             <ColorButton
               secondItem={<TreeLine />}
-              styleButton={{ backgroundColor: "transparent", marginRight: 17 }}
+              styleButton={{
+                backgroundColor: "transparent",
+                marginRight: 17,
+              }}
               onPress={() => {
                 navigation.navigate("OptionsProfile");
               }}
@@ -128,6 +142,11 @@ export type TabNavigatorScreenProps<T extends keyof TabNavigatorList> = FC<
   BottomTabScreenProps<TabNavigatorList, T>
 >;
 
+export type TabCompositeStackNavigatorProps = CompositeNavigationProp<
+  BottomTabNavigationProp<TabNavigatorList, "Main">,
+  BottomTabNavigationProp<TabNavigatorList, "PracticesList">
+>;
+
 // * meditation
 const MeditationPractices =
   createNativeStackNavigator<MeditationPracticesList>();
@@ -137,6 +156,7 @@ export const MeditationPracticesRoutes: RootScreenProps<"ListenMeditation"> = ({
 }) => {
   const { meditationId } = route.params;
   const [meditation, setMeditation] = useState<MeditationModels | null>(null);
+
   useEffect(() => {
     const init = async () => {
       const meditation = await API.getMeditationById(meditationId);
@@ -187,16 +207,17 @@ export const MeditationPracticesRoutes: RootScreenProps<"ListenMeditation"> = ({
       if (_meditation) setMeditation(_meditation);
     };
     init();
-  }, [setMeditation]);
+  }, [meditationId]);
 
   const { getItem, setItem } = useAsyncStorage("@StatisticsMeditation");
 
   useFocusEffect(
     useCallback(() => {
-      const close = async () => {
+      const close = async (_meditation: MeditationModels) => {
+        console.log("close");
         const statisticsAS = await getItem();
         const statistics: { timeLength: number; time: Date }[] = [];
-        if (meditation) {
+        if (_meditation) {
           if (statisticsAS !== null) {
             const jsnoParse: { timeLength: number; time: Date }[] = JSON.parse(
               statisticsAS
@@ -205,21 +226,25 @@ export const MeditationPracticesRoutes: RootScreenProps<"ListenMeditation"> = ({
               time: new Date(item.time),
             }));
             statistics.splice(0, 0, ...jsnoParse, {
-              timeLength: meditation.getPosition(),
+              timeLength: _meditation.getPosition(),
               time: new Date(),
             });
           } else {
             statistics.push({
-              timeLength: meditation.getPosition(),
+              timeLength: _meditation.getPosition(),
               time: new Date(),
             });
           }
           setItem(JSON.stringify(statistics));
+          await _meditation.stop();
         }
       };
-
-      return () => {};
-    }, [])
+      return () => {
+        if (meditation !== null) {
+          close(meditation).catch(console.error);
+        }
+      };
+    }, [meditation])
   );
 
   if (meditation == null)
@@ -228,23 +253,21 @@ export const MeditationPracticesRoutes: RootScreenProps<"ListenMeditation"> = ({
         <ActivityIndicator color={"#FFFFFF"} />
       </View>
     );
-  console.log(
-    meditation.typeMeditation === "directionalVisualizations"
-      ? "PlayerScreen"
-      : "TimerPractices"
-  );
   return (
     <Meditation meditation={meditation}>
       <MeditationPractices.Navigator
-        screenOptions={() => ({
+        screenOptions={{
           headerTitle: () => (
             <View>
-              <Text style={styles.meditationName}>{meditation.name}</Text>
+              <Text style={styles.meditationName} adjustsFontSizeToFit>
+                {meditation.name}
+              </Text>
               <Text style={styles.meditationType}>
                 {Core.i18n.t(meditation.typeMeditation)}
               </Text>
             </View>
           ),
+          headerRight: () => null,
           headerTransparent: true,
           headerTintColor: "#FFFFFF",
           headerTitleAlign: "center",
@@ -252,7 +275,7 @@ export const MeditationPracticesRoutes: RootScreenProps<"ListenMeditation"> = ({
             ...Core.gStyle.font("700"),
             fontSize: 24,
           },
-        })}
+        }}
         initialRouteName={
           meditation.typeMeditation === "directionalVisualizations"
             ? "PlayerScreen"
@@ -266,6 +289,14 @@ export const MeditationPracticesRoutes: RootScreenProps<"ListenMeditation"> = ({
         <MeditationPractices.Screen
           name={"PlayerScreen"}
           component={Screens.PlayerMeditationPractices}
+          options={{
+            headerRight: () => (
+              <FavoriteMeditation
+                idMeditation={meditationId}
+                displayWhenNotFavorite
+              />
+            ),
+          }}
         />
         <MeditationPractices.Screen
           name={"BackgroundSound"}
@@ -372,7 +403,7 @@ const RootRoutes: FC = () => (
       options={({ route }) => ({
         headerTitle: () => (
           <View>
-            <Text style={styles.meditationName}>
+            <Text style={styles.meditationName} adjustsFontSizeToFit>
               {Core.i18n.t("2ca96716-54d7-4cfa-a6fe-d68c8abd4666")}
             </Text>
             <Text style={styles.meditationType}>
@@ -588,6 +619,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     ...Core.gStyle.font("700"),
     textAlign: "center",
+    width: "100%",
+    height: 20,
   },
   meditationType: {
     color: "#FFFFFF",
@@ -600,5 +633,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#9765A8",
+  },
+  tabBarBackground: {
+    flexDirection: "row",
+    height: 74,
+    backgroundColor: "#FFFFFF",
+    position: "absolute",
+    width: "100%",
+    bottom: 0,
   },
 });

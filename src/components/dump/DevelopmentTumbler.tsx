@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Switch, Text, View } from "react-native";
 import { MaterialCommunityIcons, FontAwesome5 } from "@expo/vector-icons";
 
-import core, { useApiOFF, useCustomDataUser } from "~core";
+import core, { useApiOFF, useCustomDataUser, useShowIntroScreen } from "~core";
 import Animated, {
   interpolate,
   useAnimatedStyle,
@@ -22,7 +22,11 @@ const DevelopmentTumblers = () => {
     transform: [{ translateY: withTiming(heigthCustomUser.value) }],
   }));
   const [isShowCustomUserData, setIsShowCustomUserData] = useState(isApiOff);
-
+  const [showScreenPractices, setShowScreenPractices] = useShowIntroScreen(
+    "IsFirstShownPractices"
+  );
+  const [showScreenMain, setShowScreenMain] =
+    useShowIntroScreen("IsFirstShownMain");
   useEffect(() => {
     if (isApiOff) {
       setIsShowCustomUserData(true);
@@ -92,6 +96,52 @@ const DevelopmentTumblers = () => {
             ) : null}
           </Animated.View>
         ) : null}
+        <View
+          style={[
+            styles.button,
+            { justifyContent: "space-between", height: "auto" },
+          ]}
+          key={"isApiOff"}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <MaterialCommunityIcons
+              name="human-greeting"
+              size={24}
+              color="#FFFFFF"
+            />
+            <Text style={styles.buttonText}>
+              {core.i18n.t("cfb4eeac-9511-4dc7-a331-ca8024bc5926")}
+            </Text>
+          </View>
+          <Switch
+            value={showScreenMain}
+            onValueChange={(value) => setShowScreenMain(value)}
+            thumbColor={"#FFFFFF"}
+            trackColor={{
+              true: "#FBBC05",
+              false: "rgba(0, 0, 0, 0.4)",
+            }}
+          />
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <MaterialCommunityIcons
+              name="human-greeting"
+              size={24}
+              color="#FFFFFF"
+            />
+            <Text style={styles.buttonText}>
+              {core.i18n.t("ed220977-2875-482c-94f7-8e6fc89bfc47")}
+            </Text>
+          </View>
+          <Switch
+            value={showScreenPractices}
+            onValueChange={(value) => setShowScreenPractices(value)}
+            thumbColor={"#FFFFFF"}
+            trackColor={{
+              true: "#FBBC05",
+              false: "rgba(0, 0, 0, 0.4)",
+            }}
+          />
+        </View>
       </View>
     );
   } else {

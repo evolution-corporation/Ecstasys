@@ -9,6 +9,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { Entypo } from "@expo/vector-icons";
+import { useBackHandler } from "@react-native-community/hooks";
 
 const Feed: FC<Props> = (props) => {
   const { hiddenHeight = 400, children } = props;
@@ -62,15 +63,28 @@ const Feed: FC<Props> = (props) => {
     return () => {};
   }, [isFullScreen]);
 
+  const close = () => {
+    _translateYBackground.value = withTiming(hiddenHeight);
+    _opacityCrossButton.value = 0;
+    setIsFullScreen(false);
+  };
+
+  useBackHandler(() => {
+    if (isFullScreen) {
+      close();
+      return true;
+    } else {
+      return false;
+    }
+  });
+
   return (
     <GestureDetector gesture={gestureFeed}>
       <Animated.View style={[styles.feedContainer, aStyle.scrollView]}>
         <Animated.View style={[styles.crossButton, aStyle.scrollView]}>
           <Pressable
             onPress={() => {
-              _translateYBackground.value = withTiming(hiddenHeight);
-              _opacityCrossButton.value = 0;
-              setIsFullScreen(false);
+              close();
             }}
           >
             <Entypo name="cross" size={24} color="black" />

@@ -1,5 +1,5 @@
 import { HOST_URL, headers } from "~api";
-import { TypeMeditation } from "./types";
+import { Meditation, TypeMeditation } from "./types";
 import { getApiOff } from "~core";
 
 export async function getMeditation(paramas: {
@@ -155,14 +155,7 @@ export async function getPopularToDayMeditation(): Promise<{
   }
 }
 
-export async function getRecomendationMeditation(): Promise<{
-  id: string;
-  name: string;
-  description: string;
-  lengthAudio: number;
-  image: string;
-  type: TypeMeditation;
-}> {
+export async function getRecomendationMeditation(): Promise<Meditation> {
   let meditation;
   if (await getApiOff()) {
     meditation = meditations[Math.floor(Math.random() * meditations.length)];
@@ -177,13 +170,27 @@ export async function getRecomendationMeditation(): Promise<{
       lengthAudio: meditation.lengthAudio,
       image: meditation.image,
       type: meditation.type,
+      permission: false,
     };
   } else {
     throw new Error("Not found Meditation");
   }
 }
 
-const relaxationList = [
+export async function getMeditationByCategory(
+  categoryName: TypeMeditation
+): Promise<Meditation[]> {
+  if (await getApiOff()) {
+    return meditations
+      .filter((item) => item.type === categoryName)
+      .map((item) => ({ ...item, permission: true }));
+  } else {
+    return (await getMeditation({ category: categoryName, count: 50 }))
+      .listMeditation;
+  }
+}
+
+const relaxationList: Meditation[] = [
   {
     description:
       "Прекрасная техника для того, чтобы максимально погрузиться в диалог разума и тела",
@@ -224,7 +231,7 @@ const relaxationList = [
   },
 ];
 
-const directionalVisualizationsList = [
+const directionalVisualizationsList: Meditation[] = [
   {
     description:
       "Почувствуй глубокое расслабление от пальцев ног до волос на голове",
@@ -280,4 +287,7 @@ const breathingPracticesList = [
   },
 ];
 
-const meditations = [...relaxationList, ...directionalVisualizationsList];
+const meditations: Meditation[] = [
+  ...relaxationList,
+  ...directionalVisualizationsList,
+];

@@ -27,7 +27,6 @@ const InputLoginScreen: RegistrationScreenProps<"InputNickName"> = ({
       </Text>
       <ColorButton
         onPress={() => {
-          console.log(statusChecked.current);
           if (statusChecked.current) {
             navigation.navigate("SelectImageAndInputBirthday");
           }

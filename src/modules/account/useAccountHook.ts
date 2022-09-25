@@ -224,7 +224,6 @@ const useAccountHook_3 = function () {
     },
     authWithTestAccount: async () => {
       await func.authenticationWithPhone("+70000000000");
-      console.log(state.confirmResultByPhone);
       await func.checkSMSCode("000000");
     },
   };

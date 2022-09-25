@@ -39,7 +39,6 @@ export async function registration(
     });
     if (request.ok) {
       const json = await request.json();
-      console.log(json);
       return ConverterUserDataToApplication(json);
     } else {
       throw new Error(`API ERROR. CODE: ${request.status}`);
@@ -60,7 +59,6 @@ export async function authentication() {
       method: "GET",
       headers: await headers(),
     });
-    console.log(request.status, `${serverUrl.usersURL}?id=${uid}`);
     if (request.status === 404) {
       return null;
     }

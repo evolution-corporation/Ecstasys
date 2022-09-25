@@ -114,12 +114,7 @@ const PlayerScreen: MeditationPracticesScreenProps<"PlayerScreen"> = ({
         </Animated.View>
         <Animated.View style={[styles.background, aStyle.player]}>
           <View />
-          <Animated.View
-            style={styles.panelControl}
-            onLayout={({ nativeEvent: { layout } }) => {
-              console.log(layout.x);
-            }}
-          >
+          <Animated.View style={styles.panelControl}>
             <ColorButton
               secondItem={<ArrowLeft style={styles.arrowControll} />}
               styleButton={[styles.buttonControllMeditation]}

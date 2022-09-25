@@ -99,7 +99,6 @@ export async function authentication() {
       if (request.ok) {
         const json = await request.json();
         const result = json.result;
-        console.log(result);
         if (result) {
           AsyncStorage.setItem(
             AsyncStorageKey.AccountData,
@@ -128,7 +127,6 @@ export async function authentication() {
   }
   throw new Error(`Function Error`);
 }
-
 
 export async function getMood(): Promise<{
   mood: UserMood | undefined;

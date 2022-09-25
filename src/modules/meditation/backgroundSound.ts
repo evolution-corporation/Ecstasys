@@ -16,8 +16,11 @@ const BackgroundSound = {
 export async function playFragmentMeditationBackground(
   name: keyof typeof BackgroundSound
 ) {
-  const sound = (await Audio.Sound.createAsync(BackgroundSound[name].audio))
-    .sound;
+  const sound = (
+    await Audio.Sound.createAsync(BackgroundSound[name].audio, {
+      isLooping: true,
+    })
+  ).sound;
   await sound.playAsync();
   const off = async () => {
     await sound.stopAsync();
