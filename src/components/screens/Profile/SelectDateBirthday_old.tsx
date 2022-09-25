@@ -12,10 +12,11 @@ import {
 import { contextHook } from "~modules/account";
 import { ColorButton, SelectBirthday } from "~components/dump";
 import Tools from "~core";
+import type { RootScreenProps } from "~routes/index";
 
-const SelectDateBirthdayModal: FC<
-  EditUserDataScreenProps<"SelectBirthday">
-> = ({ navigation }) => {
+const SelectDateBirthdayModal: RootScreenProps<"EditUserBirthday"> = ({
+  navigation,
+}) => {
   const { height, width } = useWindowDimensions();
   const position = useRef<Animated.Value>(new Animated.Value(0)).current;
 
@@ -82,7 +83,9 @@ const SelectDateBirthdayModal: FC<
       }),
     [contentSize]
   );
-
+  if (state.userData === undefined) {
+    return null;
+  }
   return (
     <View style={{ flex: 1 }}>
       <Pressable style={{ flexGrow: 1 }} onPress={() => navigation.goBack()} />
@@ -124,6 +127,7 @@ const SelectDateBirthdayModal: FC<
                 right: width - padding,
               };
             }}
+            init={state.editUserData?.birthday}
           />
           <ColorButton
             styleButton={styles.button}
@@ -132,6 +136,7 @@ const SelectDateBirthdayModal: FC<
                 func.editUserData({
                   birthday: new Date(nextBirthday.current),
                 });
+                navigation.goBack();
               }
             }}
           >

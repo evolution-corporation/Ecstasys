@@ -45,7 +45,11 @@ const ViewStatisticsMeditation: React.FC<Props> = (props) => {
         }
         if (timeFilter === null) {
           setCount(statistics.length);
-          setTime(statistics.reduce((sum, item) => sum + item.timeLength, 0));
+          setTime(
+            Math.floor(
+              statistics.reduce((sum, item) => sum + item.timeLength, 0) / 60000
+            )
+          );
         } else {
           const flittedMeditation = statistics.filter((item) =>
             timeFilter !== null

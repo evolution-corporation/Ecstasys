@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useMemo } from "react";
 import { StyleSheet, ViewProps, View, Text, Image } from "react-native";
 
 import { useUserContext } from "~modules/account";
@@ -6,10 +6,13 @@ import { TextButton } from "~components/dump";
 import Tools from "~core";
 import { useNavigation } from "@react-navigation/native";
 import type { ProfileCompositeStackNaviatorProps } from "~routes/index";
+import { useSubscribe } from "~modules/subscribe";
 
 const UserInformation: FC<UserInformationProps> = (props) => {
   const { user } = useUserContext();
   const navigation = useNavigation<ProfileCompositeStackNaviatorProps>();
+  const subscribeInformation = useSubscribe();
+
   if (!user) return null;
 
   return (
@@ -26,13 +29,22 @@ const UserInformation: FC<UserInformationProps> = (props) => {
         <Text style={styles.displayName}>{user.displayName}</Text>
         <Text style={styles.nameSubscribe}>
           {Tools.i18n.t("d275f2aa-4a42-47cd-86a5-0ae9cbc3ab30", {
-            name: "base",
+            name: subscribeInformation?.name ?? "Base",
           })}
         </Text>
-        <Text style={styles.timeSubscribe}>{123}</Text>
+        <Text style={styles.timeSubscribe}>
+          {subscribeInformation?.info?.nextPayment
+            ? Tools.i18n.t("f4e15f0c-688a-42c5-99a9-b1ac13209641", {
+                datemtime: Tools.i18n.strftime(
+                  subscribeInformation?.info?.nextPayment,
+                  "%d.%m.%Y"
+                ),
+              })
+            : Tools.i18n.t("indefinitely")}
+        </Text>
         <TextButton
           onPress={() => {
-            navigation.navigate("SelectSubscribe");
+            navigation.navigate("EditUserData");
           }}
         >
           {Tools.i18n.t("edit")}

@@ -10,6 +10,7 @@ import {
   UpdateUserData,
 } from "~modules/account/types";
 import { ConverterUserDataToApplication } from "~modules/account/tools";
+import { typeSubscribe } from "~modules/subscribe/types";
 
 export function useApiOFF(): [boolean, (value: boolean) => void] {
   const [isApiOff, setIsApiOff] = useState<boolean>(false);
@@ -201,4 +202,35 @@ export function useShowIntroScreen(
       }
     },
   ];
+}
+
+export async function getSubscribe(): Promise<
+  [Date | null, typeSubscribe, boolean]
+> {
+  const result = {
+    date: await AsyncStorage.getItem("@SubscribeInformation"),
+    type: await AsyncStorage.getItem("@SubscribeInformationType"),
+    autoPayment: await AsyncStorage.getItem("@SubscribeInformationTypeAuto"),
+  };
+  if (result.date === null || result.type === null) {
+    return [null, null, false];
+  }
+  const date = JSON.parse(result.date);
+  return [
+    date ? new Date(date) : null,
+    result.type as typeSubscribe,
+    result.autoPayment ? JSON.parse(result.autoPayment) : false,
+  ];
+}
+
+export async function setSubscribe(
+  date: Date,
+  type: typeSubscribe,
+  autoPayment: boolean
+) {
+  await AsyncStorage.multiSet([
+    ["@SubscribeInformation", JSON.stringify(date)],
+    ["@SubscribeInformationType", type ?? JSON.stringify(null)],
+    ["@SubscribeInformationTypeAuto", JSON.stringify(autoPayment)],
+  ]);
 }

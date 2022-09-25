@@ -52,6 +52,7 @@ import MainIcon from "./assets/HomeIcon";
 import PracticesIcon from "./assets/PracticesIcon";
 import DMDIcon from "./assets/DMDIcon";
 import ProfileIcon from "./assets/ProfileIcon";
+import SubscribeProvider from "~modules/subscribe";
 
 // * Авторизированные и зарегестрированые пользователи
 const TabNavigator = createBottomTabNavigator<TabNavigatorList>();
@@ -214,7 +215,6 @@ export const MeditationPracticesRoutes: RootScreenProps<"ListenMeditation"> = ({
   useFocusEffect(
     useCallback(() => {
       const close = async (_meditation: MeditationModels) => {
-        console.log("close");
         const statisticsAS = await getItem();
         const statistics: { timeLength: number; time: Date }[] = [];
         if (_meditation) {
@@ -325,122 +325,124 @@ export type MeditationPracticesScreenProps<
 const RootNavigation = createNativeStackNavigator<RootStackList>();
 
 const RootRoutes: FC = () => (
-  <RootNavigation.Navigator
-    screenOptions={{
-      headerStyle: {
-        backgroundColor: "#9765A8",
-      },
-      headerTintColor: "#FFFFFF",
-      headerShadowVisible: false,
-      headerTitleStyle: {
-        ...Core.gStyle.font("700"),
-        fontSize: 24,
-      },
-    }}
-  >
-    <RootNavigation.Screen
-      name={"TabNavigator"}
-      component={TabRoutes}
-      options={{ headerShown: false }}
-    />
-    <RootNavigation.Screen
-      name={"EditUserData"}
-      component={Screens.EditMainUserData}
-      options={{
-        title: Core.i18n.t("Profile"),
+  <SubscribeProvider>
+    <RootNavigation.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#9765A8",
+        },
+        headerTintColor: "#FFFFFF",
+        headerShadowVisible: false,
+        headerTitleStyle: {
+          ...Core.gStyle.font("700"),
+          fontSize: 24,
+        },
       }}
-    />
-    <RootNavigation.Screen
-      name={"EditUserBirthday"}
-      component={Screens.EditDateUserBirthday}
-      options={{
-        presentation: "transparentModal",
-        headerShown: false,
-        animation: "slide_from_bottom",
-      }}
-    />
-    <RootNavigation.Screen
-      name={"SelectSubscribe"}
-      component={Screens.SelectSubscribe}
-      options={{
-        title: Core.i18n.t("subscribe"),
-      }}
-    />
-    <RootNavigation.Screen
-      name={"SelectPractices"}
-      component={Screens.MeditationPracticeList}
-      options={({ route }) => ({
-        title: Core.i18n.t(
-          DescriptionMeditationCategory[route.params.typeMeditation].title
-        ),
-        headerTitleAlign: "center",
-      })}
-    />
-    <RootNavigation.Screen
-      name={"ListenMeditation"}
-      component={MeditationPracticesRoutes}
-      options={{
-        headerShown: false,
-      }}
-    />
-    <RootNavigation.Screen
-      name={"IntroPractices"}
-      component={Screens.IntroPracticesScreen}
-      options={{
-        headerShown: false,
-      }}
-    />
-    <RootNavigation.Screen
-      name={"IntroMainScreen"}
-      component={Screens.Greeting}
-      options={{
-        headerShown: false,
-      }}
-    />
-    <RootNavigation.Screen
-      name={"Instruction"}
-      component={Screens.Instruction}
-      options={({ route }) => ({
-        headerTitle: () => (
-          <View>
-            <Text style={styles.meditationName} adjustsFontSizeToFit>
-              {Core.i18n.t("2ca96716-54d7-4cfa-a6fe-d68c8abd4666")}
-            </Text>
-            <Text style={styles.meditationType}>
-              {Core.i18n.t(
-                DescriptionMeditationCategory[route.params.typeMeditationName]
-                  .title
-              )}
-            </Text>
-          </View>
-        ),
-        headerTitleAlign: "center",
-      })}
-    />
-    <RootNavigation.Screen
-      name={"FavoriteMeditation"}
-      component={Screens.FavoriteMeditation}
-      options={{
-        title: Core.i18n.t("6a85652b-a14f-4545-8058-9cdad43f3de1"),
-        headerTitleAlign: "center",
-      }}
-    />
-    <RootNavigation.Screen
-      name={"OptionsProfile"}
-      component={Screens.OptionsProfile}
-      options={{
-        title: Core.i18n.t("options"),
-        headerTitleAlign: "center",
-      }}
-    />
-    <RootNavigation.Screen
-      name="devSetting"
-      component={Screens.DevSettings}
-      options={{
-        title: Core.i18n.t("f56183f9-c95c-4e3c-965d-2eee5791d1d6"),
-      }}
-    />
-  </RootNavigation.Navigator>
+    >
+      <RootNavigation.Screen
+        name={"TabNavigator"}
+        component={TabRoutes}
+        options={{ headerShown: false }}
+      />
+      <RootNavigation.Screen
+        name={"EditUserData"}
+        component={Screens.EditMainUserData}
+        options={{
+          title: Core.i18n.t("Profile"),
+        }}
+      />
+      <RootNavigation.Screen
+        name={"EditUserBirthday"}
+        component={Screens.EditDateUserBirthday}
+        options={{
+          presentation: "transparentModal",
+          headerShown: false,
+          animation: "slide_from_bottom",
+        }}
+      />
+      <RootNavigation.Screen
+        name={"SelectSubscribe"}
+        component={Screens.SelectSubscribe}
+        options={{
+          title: Core.i18n.t("subscribe"),
+        }}
+      />
+      <RootNavigation.Screen
+        name={"SelectPractices"}
+        component={Screens.MeditationPracticeList}
+        options={({ route }) => ({
+          title: Core.i18n.t(
+            DescriptionMeditationCategory[route.params.typeMeditation].title
+          ),
+          headerTitleAlign: "center",
+        })}
+      />
+      <RootNavigation.Screen
+        name={"ListenMeditation"}
+        component={MeditationPracticesRoutes}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <RootNavigation.Screen
+        name={"IntroPractices"}
+        component={Screens.IntroPracticesScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <RootNavigation.Screen
+        name={"IntroMainScreen"}
+        component={Screens.Greeting}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <RootNavigation.Screen
+        name={"Instruction"}
+        component={Screens.Instruction}
+        options={({ route }) => ({
+          headerTitle: () => (
+            <View>
+              <Text style={styles.meditationName} adjustsFontSizeToFit>
+                {Core.i18n.t("2ca96716-54d7-4cfa-a6fe-d68c8abd4666")}
+              </Text>
+              <Text style={styles.meditationType}>
+                {Core.i18n.t(
+                  DescriptionMeditationCategory[route.params.typeMeditationName]
+                    .title
+                )}
+              </Text>
+            </View>
+          ),
+          headerTitleAlign: "center",
+        })}
+      />
+      <RootNavigation.Screen
+        name={"FavoriteMeditation"}
+        component={Screens.FavoriteMeditation}
+        options={{
+          title: Core.i18n.t("6a85652b-a14f-4545-8058-9cdad43f3de1"),
+          headerTitleAlign: "center",
+        }}
+      />
+      <RootNavigation.Screen
+        name={"OptionsProfile"}
+        component={Screens.OptionsProfile}
+        options={{
+          title: Core.i18n.t("options"),
+          headerTitleAlign: "center",
+        }}
+      />
+      <RootNavigation.Screen
+        name="devSetting"
+        component={Screens.DevSettings}
+        options={{
+          title: Core.i18n.t("f56183f9-c95c-4e3c-965d-2eee5791d1d6"),
+        }}
+      />
+    </RootNavigation.Navigator>
+  </SubscribeProvider>
 );
 
 export type RootStackList = {

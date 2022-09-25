@@ -12,8 +12,9 @@ import { ColorButton } from "~components/dump";
 import Tools from "~core";
 
 import { typeSubscribe } from "./types";
-import Bird from "./assets/bird";
-import { CircleCheck, SubscribeCard } from "./components";
+import { SubscribeCard } from "./components";
+import { useSubscribe } from "~modules/subscribe";
+import { SubscribeInfoNew } from "~modules/subscribe/types";
 
 const price = {
   month_1: 279,
@@ -21,15 +22,12 @@ const price = {
 };
 
 const SelectSubscribeScreen = () => {
-  const [subscribeInformation, setSubscribeInformation] = useState<{
-    autoPayment: boolean;
-    lastDatePayment?: Date;
-    type: typeSubscribe;
-  }>({
-    autoPayment: true,
-    lastDatePayment: new Date(2022, 9, 1),
-    type: "6 month",
-  });
+  const subscribeInformation = useSubscribe();
+  let info: SubscribeInfoNew | undefined;
+  if (subscribeInformation) {
+    info = subscribeInformation.info;
+  }
+  console.log(info);
   const [selectedSubscribe, setSelectedSubscribe] =
     useState<typeSubscribe>(null);
 
@@ -47,18 +45,13 @@ const SelectSubscribeScreen = () => {
   };
 
   useEffect(() => {
-    if (
-      selectedSubscribe !== null &&
-      selectedSubscribe !== subscribeInformation.type
-    ) {
+    if (selectedSubscribe !== null && selectedSubscribe !== info?.type) {
       _transpareteYButton.value = 0;
     }
   }, [selectedSubscribe]);
 
   const isActiveSubs =
-    (subscribeInformation.lastDatePayment &&
-      subscribeInformation.lastDatePayment.getTime() >= Date.now()) ??
-    false;
+    (info && info.nextPayment.getTime() >= Date.now()) ?? false;
 
   return (
     <DoubleColorView heightViewPart={229} style={styles.background}>
@@ -71,16 +64,15 @@ const SelectSubscribeScreen = () => {
         <AntDesign name="star" size={24} color={"#FBBC05"} />
         <Text style={styles.TitlePremium}>Premium</Text>
         <Text style={styles.currentMeditationInfo}>
-          {subscribeInformation.lastDatePayment &&
-          subscribeInformation.lastDatePayment.getTime() >= Date.now()
+          {info && info.nextPayment.getTime() >= Date.now()
             ? Tools.i18n.t(
-                subscribeInformation.autoPayment
+                info.autoPayment
                   ? "392fd6e3-9b0c-4673-b1c2-45deeaadd7b1"
                   : "048d71cd-03e2-4c8f-9f29-d2e5e9576a07",
                 {
-                  datemtime: `${subscribeInformation.lastDatePayment.getDate()}.${
-                    subscribeInformation.lastDatePayment.getMonth() + 1
-                  }.${subscribeInformation.lastDatePayment.getFullYear()}`,
+                  datemtime: `${info.nextPayment.getDate()}.${
+                    info.nextPayment.getMonth() + 1
+                  }.${info.nextPayment.getFullYear()}`,
                 }
               )
             : Tools.i18n.t("636763b2-80fc-4bd3-84ac-63c21cd34d77")}
@@ -88,7 +80,7 @@ const SelectSubscribeScreen = () => {
         <SubscribeCard
           image={require("./assets/pillow.png")}
           isSelected={selectedSubscribe === "1 month"}
-          isUsed={isActiveSubs && subscribeInformation.type === "1 month"}
+          isUsed={isActiveSubs && info?.type === "1 month"}
           onPress={() => setSelectedSubscribe("1 month")}
           price={price.month_1}
           stylesContent={{
@@ -104,9 +96,9 @@ const SelectSubscribeScreen = () => {
             bottom: Tools.i18n.t("4415fe5e-bd86-41b1-91ca-5b20c685172b"),
           }}
           onCancelSubscribe={() => {}}
-          isShowCancelButton={subscribeInformation.autoPayment}
+          isShowCancelButton={info?.autoPayment ?? false}
         />
-        {isActiveSubs && subscribeInformation.type === "1 month" && (
+        {isActiveSubs && info?.type === "1 month" && (
           <Text style={styles.offerToChangeSubscribeType}>
             {Tools.i18n.t("b6f80560-6ba6-4646-821a-a03ca72acb74")}
           </Text>
@@ -114,7 +106,7 @@ const SelectSubscribeScreen = () => {
         <SubscribeCard
           image={require("./assets/armchair.png")}
           isSelected={selectedSubscribe === "6 month"}
-          isUsed={isActiveSubs && subscribeInformation.type === "6 month"}
+          isUsed={isActiveSubs && info?.type === "6 month"}
           onPress={() => setSelectedSubscribe("6 month")}
           price={price.month_6}
           stylesContent={{
@@ -140,7 +132,7 @@ const SelectSubscribeScreen = () => {
           }}
           onCancelSubscribe={() => {}}
           // TODO: Navigation
-          isShowCancelButton={subscribeInformation.autoPayment}
+          isShowCancelButton={info?.autoPayment ?? false}
         />
       </View>
       <ColorButton

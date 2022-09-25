@@ -1,6 +1,6 @@
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
-import { getMeditation } from "~modules/meditation/api";
+import { getMeditationById } from "~modules/meditation/api";
 
 export function useFavoriteMeditation() {
   const [listFavoriteMeditation, setListFavoriteMeditation] = useState<
@@ -17,7 +17,7 @@ export function useFavoriteMeditation() {
         const _listFavoriteMeditation = [];
         const _typesMeditation: string[] = [];
         for (let idMeditation of listIdFavoriteMeditation) {
-          const meditationData = await getMeditation({ id: idMeditation });
+          const meditationData = await getMeditationById(idMeditation);
           _listFavoriteMeditation.push({
             name: meditationData.name,
             category: meditationData.type,

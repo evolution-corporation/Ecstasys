@@ -21,6 +21,9 @@ const EditMainUserDataScreen: RootScreenProps<"EditUserData"> = ({
   navigation,
 }) => {
   const { state, func } = contextHook.account();
+  if (state.userData === undefined) {
+    return null;
+  }
   return (
     <View style={styles.background}>
       <View style={{ width: "100%", alignItems: "center" }}>
@@ -33,6 +36,7 @@ const EditMainUserDataScreen: RootScreenProps<"EditUserData"> = ({
               });
             }
           }}
+          initImage={state.userData.image}
         />
         <TextInput
           style={styles.TextInputTransparent}
@@ -45,13 +49,11 @@ const EditMainUserDataScreen: RootScreenProps<"EditUserData"> = ({
             });
           }}
           defaultValue={
-            state.editUserData?.display_name ?? state.userData?.displayName
+            state.editUserData?.display_name ?? state.userData.displayName
           }
         />
         <NicknameInput
-          defaultValue={
-            state.editUserData?.nickName ?? state.userData?.nickName
-          }
+          defaultValue={state.editUserData?.nickName ?? state.userData.nickName}
           onEndChange={(nickName, status) => {
             func.editUserData({ nickName });
           }}
@@ -64,9 +66,9 @@ const EditMainUserDataScreen: RootScreenProps<"EditUserData"> = ({
           }}
         >
           <Text style={styles.inputBirthdayText}>
-            {Tools.i18n.l(
-              "date.formats.short",
-              state.editUserData?.birthday ?? state.userData?.birthday
+            {Tools.i18n.strftime(
+              state.editUserData?.birthday ?? state.userData.birthday,
+              "%d.%m.%Y"
             )}
           </Text>
           <EvilIcons name="pencil" size={24} color="#FFFFFF" />
@@ -107,7 +109,7 @@ const styles = StyleSheet.create({
     marginVertical: 7.5,
   },
   editNickname: {
-    marginVertical: 7.5,
+    marginTop: 7.5,
   },
   inputDateBirthDay: {
     marginVertical: 7.5,
@@ -117,7 +119,6 @@ const styles = StyleSheet.create({
     borderColor: "#C2A9CE",
     borderWidth: 1,
     borderRadius: 15,
-    marginTop: 7.5,
     width: "100%",
     flexDirection: "row",
     height: 45,
@@ -140,12 +141,13 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
   },
   selectImage: {
-    height: 124,
-    width: 124,
-    borderRadius: 30,
-    borderColor: "#C2A9CE",
+    height: 92,
+    width: 92,
+    borderRadius: 46,
+    borderColor: "#FFFFFF",
     borderWidth: 3,
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    backgroundColor: "#E7DDEC",
+    marginVertical: 28,
   },
   inputBirthdayText: {
     color: "#FFFFFF",

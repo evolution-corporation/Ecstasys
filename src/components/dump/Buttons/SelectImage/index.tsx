@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
-import { Entypo } from "@expo/vector-icons";
+import PhotoIcon from "./assets/PhotoIcon.svg";
 
 interface SelectImageButtonProps extends TouchableOpacityProps {
   onChangeImage?: { (image: string): void };
@@ -17,9 +17,9 @@ interface SelectImageButtonProps extends TouchableOpacityProps {
 }
 
 export const SelectImageButton: FC<SelectImageButtonProps> = (props) => {
-  const { onChangeImage } = props;
+  const { onChangeImage, initImage } = props;
   const [isLoading, setIsLoading] = useState<boolean>();
-  const [image, setImage] = useState<string | null>();
+  const [image, setImage] = useState<string | null>(initImage ?? null);
 
   const [statusPermission, requestPermission] =
     ImagePicker.useMediaLibraryPermissions();
@@ -74,7 +74,7 @@ export const SelectImageButton: FC<SelectImageButtonProps> = (props) => {
       {isLoading ? (
         <ActivityIndicator size={"large"} color={"#FFFFFF"} />
       ) : image == undefined ? (
-        <Entypo name="camera" size={48} color="white" />
+        <PhotoIcon />
       ) : (
         <Image
           source={{ uri: image }}

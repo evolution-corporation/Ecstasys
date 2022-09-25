@@ -15,6 +15,8 @@ import {
   useCustomDataUser,
   createCustomerDatatUser,
   useShowIntroScreen,
+  getSubscribe,
+  setSubscribe,
 } from "./dev";
 
 export default {
@@ -28,6 +30,11 @@ const customUserData = {
   createCustomerDatatUser,
 };
 
+const subscribe = {
+  getSubscribe,
+  setSubscribe,
+};
+
 export {
   useCustomFonts,
   toastOptions,
@@ -39,4 +46,5 @@ export {
   getApiOff,
   customUserData,
   useShowIntroScreen,
+  subscribe,
 };

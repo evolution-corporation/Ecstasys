@@ -10,11 +10,13 @@ import {
 } from "react-native";
 import { DoubleColorView } from "~components/containers";
 import core from "~core";
+import { RootScreenProps } from "~routes/index";
 
-import Tools from "~core";
 import { useFavoriteMeditation } from "./hooks";
 
-const FavoriteMeditationScreen = () => {
+const FavoriteMeditationScreen: RootScreenProps<"FavoriteMeditation"> = ({
+  navigation,
+}) => {
   const { listFavoriteMeditation, typesMeditation } = useFavoriteMeditation();
 
   return (
@@ -28,7 +30,7 @@ const FavoriteMeditationScreen = () => {
                 { color: index === 0 ? "#FFFFFF" : "#3D3D3D" },
               ]}
             >
-              {Tools.i18n.t(typeMeditation)}
+              {core.i18n.t(typeMeditation)}
             </Text>
             <FlatList
               data={listFavoriteMeditation.filter(
@@ -36,15 +38,25 @@ const FavoriteMeditationScreen = () => {
               )}
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
-                <TouchableOpacity>
-                  <Image source={{ uri: item.image }} />
+                <TouchableOpacity
+                  style={{ width: 140 }}
+                  onPress={() => {
+                    navigation.navigate("ListenMeditation", {
+                      meditationId: item.id,
+                    });
+                  }}
+                >
+                  <Image
+                    source={{ uri: item.image }}
+                    style={styles.imageMeditation}
+                  />
                   <Text style={styles.nameMeditation}>{item.name}</Text>
                 </TouchableOpacity>
               )}
               horizontal={true}
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{
-                paddingHorizontal: -styles.meditationCard.marginHorizontal,
+                paddingHorizontal: 20,
               }}
             />
           </View>
@@ -74,10 +86,13 @@ const styles = StyleSheet.create({
   nameMeditation: {
     color: "rgba(61, 61, 61, 1)",
     fontSize: 16,
-    ...Tools.gStyle.font("600"),
+    ...core.gStyle.font("600"),
   },
-  imageMeditation: {},
+  imageMeditation: {
+    width: 140,
+    height: 183,
+    borderRadius: 20,
+  },
 });
 
-interface Props {}
 export default FavoriteMeditationScreen;
