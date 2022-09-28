@@ -8,6 +8,7 @@ import {
   Platform,
   BackHandler,
   ActivityIndicator,
+  Dimensions,
 } from "react-native";
 import Swiper from "react-native-swiper";
 import { useBackHandler } from "@react-native-community/hooks";
@@ -21,6 +22,8 @@ import { contextHook } from "~modules/account";
 import type { AuthenticationScreenProps } from "~routes/index";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useFocusEffect } from "@react-navigation/native";
+
+var height = Dimensions.get('window').height;
 
 const SelectMethodAuthentication: AuthenticationScreenProps<
   "SelectMethodAuthentication"
@@ -48,7 +51,7 @@ const SelectMethodAuthentication: AuthenticationScreenProps<
   return (
     <ImageBackground
       style={styles.background}
-      source={require("~assets/rockDrugs.png")}
+      source={require("~assets/rockDrugs.jpg")}
     >
       <View style={styles.devOptions}>
         {__DEV__ ? (
@@ -59,7 +62,7 @@ const SelectMethodAuthentication: AuthenticationScreenProps<
       </View>
 
       <View style={styles.logoBox}>
-        <Image source={require("./assets/bird.png")} resizeMode={"contain"} />
+        <Image style={[styles.bird]} source={require("./assets/bird.png")} resizeMode={"contain"} />
       </View>
       <View style={styles.greetingBox}>
         <Text style={styles.title}>
@@ -159,11 +162,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 10,
   },
+  bird:{
+    height: height*0.19
+  },
   logoBox: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-  },
+   },
   greetingBox: {
     height: 200,
   },

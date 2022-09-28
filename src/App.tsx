@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { Platform, UIManager } from "react-native";
+import { Dimensions, Platform, UIManager } from "react-native";
 import { RootSiblingParent } from "react-native-root-siblings";
 import * as SplashScreen from "expo-splash-screen";
 
@@ -26,7 +26,7 @@ const AppCore: FC<Props> = (props) => {
   useEffect(() => {
     if (loaded) {
       console.log(`Hermes ${!!global.HermesInternal ? "" : "не "}используется`);
-      SplashScreen.hideAsync().catch(console.error);
+            SplashScreen.hideAsync().catch(console.error);
     } else {
       SplashScreen.preventAutoHideAsync().catch(console.error);
     }
