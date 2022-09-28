@@ -17,6 +17,8 @@ import { ArrowButtonMask, ArrowButton } from "./components";
 import type { AuthenticationScreenProps } from "~routes/index";
 import { useFocusEffect } from "@react-navigation/native";
 
+var height = Dimensions.get('window').height;
+
 const IntroScreen: AuthenticationScreenProps<"Intro"> = ({ navigation }) => {
   const { aStyles, setNextValue, setPrevValue } = useAnimation();
   const [text, setText] = useState<{ title: string; description: string }>({
@@ -64,7 +66,7 @@ const IntroScreen: AuthenticationScreenProps<"Intro"> = ({ navigation }) => {
         <Image
           source={require("./assets/professor.png")}
           resizeMode={"contain"}
-          style={{ height: 450, width: 450 }}
+          style={{ height: height*0.57}}
         />
       </Animated.View>
       <Animated.View style={[aStyles.bird, styles.bird]}>
@@ -72,7 +74,7 @@ const IntroScreen: AuthenticationScreenProps<"Intro"> = ({ navigation }) => {
           source={require("./assets/bird.png")}
           resizeMethod={"resize"}
           resizeMode={"contain"}
-          style={{ maxWidth: Dimensions.get("window").width - 120 }}
+          style={{ maxWidth: Dimensions.get("window").width - 100 }}
         />
       </Animated.View>
       <View style={styles.text}>
@@ -80,33 +82,14 @@ const IntroScreen: AuthenticationScreenProps<"Intro"> = ({ navigation }) => {
           style={[
             aStyles.title,
             styles.title,
-            { fontSize: Platform.OS === "android" ? fontSizeTitle ?? 32 : 32 },
+            
           ]}
-          adjustsFontSizeToFit={Platform.OS !== "android"}
-          onLayout={({ nativeEvent: { layout } }) => {
-            const { width } = layout;
-            if (!fontSizeTitle) {
-              let fontSize: number | undefined;
-              if (width >= 300) {
-                fontSize = 28;
-              }
-              if (width >= 350) {
-                fontSize = 30;
-              }
-              if (width >= 380) {
-                fontSize = 40;
-              }
-              if (fontSize === undefined) {
-                fontSize = 32;
-              }
-              setFontSizeTitle(fontSize);
-            }
-          }}
+          adjustsFontSizeToFit
         >
           {text.title}
           {isShowNameApp && (
             <Text style={{ color: "#9765A8", fontFamily: "Inter_700Bold" }}>
-              dmd meditation!
+              {"\n"}dmd meditation!
             </Text>
           )}
         </Animated.Text>
@@ -114,34 +97,17 @@ const IntroScreen: AuthenticationScreenProps<"Intro"> = ({ navigation }) => {
           style={[
             aStyles.description,
             styles.description,
-            {
-              fontSize:
-                Platform.OS === "android" ? fontSizeDescription ?? 32 : 32,
-            },
           ]}
-          adjustsFontSizeToFit={Platform.OS !== "android"}
+          adjustsFontSizeToFit
           onLayout={({ nativeEvent: { layout } }) => {
-            const { width } = layout;
-            if (!fontSizeDescription) {
-              let fontSize: number | undefined;
-              if (width >= 300) {
-                fontSize = 16;
-              }
-              if (width >= 350) {
-                fontSize = 16;
-              }
-              if (fontSize === undefined) {
-                fontSize = 20;
-              }
-              setFontSizeDescription(fontSize);
-            }
+            
           }}
         >
           {text.description}
         </Animated.Text>
         <View style={styles.menuButton}>
           {isShowSkipButton ? (
-            <TextButton
+            <TextButton styleText={styles.skipButton}
               onPress={() => {
                 navigation.navigate("SelectMethodAuthentication");
               }}
@@ -186,15 +152,16 @@ const styles = StyleSheet.create({
     textAlign: "left",
     fontFamily: "Inter_700Bold",
     fontWeight: "700",
+    fontSize: height*0.041,
     // lineHeight: 35.4,
     width: "100%",
   },
   description: {
-    //fontSize: 20,
+    fontSize: height*0.021,
     ...Tools.gStyle.font("400"),
     color: "#404040",
     opacity: 0.71,
-    lineHeight: 25.4,
+    lineHeight: height*0.032,
     marginVertical: 26,
     height: 130,
   },
@@ -203,6 +170,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 25,
     fontFamily: "Inter_700Bold",
+  },
+  skipButton:{
+    fontSize: height*0.018,
   },
   menuButton: {
     flexDirection: "row",

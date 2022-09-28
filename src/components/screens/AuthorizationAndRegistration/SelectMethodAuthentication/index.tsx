@@ -157,6 +157,7 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
     paddingHorizontal: 20,
+    paddingBottom: 10,
   },
   logoBox: {
     flex: 1,
