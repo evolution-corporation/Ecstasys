@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Text, StyleSheet, useWindowDimensions } from "react-native";
+import { Text, StyleSheet, useWindowDimensions,Dimensions, } from "react-native";
 import {
   useAnimatedStyle,
   useSharedValue,
@@ -8,7 +8,7 @@ import {
 
 import Tools from "~core";
 import type { RootScreenProps } from "~routes/index";
-
+var height = Dimensions.get('window').height;
 import {
   DescriptionMeditationCategory,
   MeditationType,
@@ -122,12 +122,12 @@ export default MeditationPracticeList;
 
 const styles = StyleSheet.create({
   descriptionType: {
-    fontSize: 13,
+    fontSize: height*0.018,
     ...Tools.gStyle.font("400"),
     textAlign: "center",
     color: "rgba(255, 255, 255, 0.8)",
     marginBottom: 17,
-    marginTop: 30,
+    marginTop: height*0.0256,
   },
   background: {
     paddingHorizontal: 20,
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   },
   carouselMeditation: {
     marginHorizontal: -20,
-    marginTop: 10,
+    marginTop: height*0.004,
   },
 
   buttonStyle: {},
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 45,
     marginTop: 20,
-    marginBottom: 40,
+    marginBottom: 30,
   },
   buttonText: {
     color: "#FFFFFF",

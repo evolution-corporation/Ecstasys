@@ -22,6 +22,9 @@ import { MeditationType } from "~modules/meditation";
 import { FavoriteMeditation } from "~components/dump";
 import Tools from "~core";
 
+var height = Dimensions.get('window').height;
+var height = Dimensions.get('window').height;
+
 import useAnimation from "./animated";
 
 const CarouselMeditation: FC<CarouselMeditationProps> = (props) => {
@@ -163,7 +166,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 254,
-    height: 277,
+    height: height*0.355,
     borderRadius: 28,
     ...Tools.gStyle.shadows(2, 3),
     overflow: "hidden",
@@ -181,20 +184,20 @@ const styles = StyleSheet.create({
   },
   name: {
     color: "#3D3D3D",
-    fontSize: 24,
+    fontSize: height*0.031,
     ...Tools.gStyle.font("700"),
     marginTop: 24,
     marginBottom: 11,
-    maxWidth: 223,
+    maxWidth: 250,
     textAlign: "center",
   },
   description: {
     color: "rgba(64, 64, 64, 0.71)",
-    fontSize: 13,
+    fontSize: height*0.02,
     ...Tools.gStyle.font("400"),
     maxWidth: 200,
     textAlign: "center",
-    lineHeight: 16,
+    lineHeight: height*0.024,
   },
 });
 
