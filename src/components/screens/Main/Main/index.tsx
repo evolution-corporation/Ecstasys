@@ -37,7 +37,7 @@ const Main: MainScreenCompositeScreenProps = ({ navigation }) => {
   return (
     <ImageBackground
       source={require("./assets/background.png")}
-      style={[styles.background]}
+      style={styles.background}
     >
       <UserButton style={styles.userButton} />
       <View
