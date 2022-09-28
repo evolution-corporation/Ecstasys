@@ -441,6 +441,7 @@ const RootRoutes: FC = () => (
           title: Core.i18n.t("f56183f9-c95c-4e3c-965d-2eee5791d1d6"),
         }}
       />
+      <RootNavigation.Screen name={"Payment"} component={Screens.PaymentWeb} />
     </RootNavigation.Navigator>
   </SubscribeProvider>
 );
@@ -465,6 +466,7 @@ export type RootStackList = {
   FavoriteMeditation: undefined;
   OptionsProfile: undefined;
   devSetting: undefined;
+  Payment: undefined;
 };
 export type RootScreenProps<T extends keyof RootStackList> = FC<
   NativeStackScreenProps<RootStackList, T>

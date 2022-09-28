@@ -22,3 +22,4 @@ export { default as Instruction } from "./Practices/Instruction";
 export { default as FavoriteMeditation } from "./Profile/FavoriteMeditation_old";
 export { default as OptionsProfile } from "./Profile/OptionsProfile";
 export { default as DevSettings } from "./DevSetting";
+export { default as PaymentWeb } from "./Subscribe/PaymentWeb";
