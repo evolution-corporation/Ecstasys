@@ -7,6 +7,7 @@ import {
   View,
   StyleSheet,
   Pressable,
+  Dimensions,
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -14,6 +15,8 @@ import { useNavigation } from "@react-navigation/native";
 import Tools from "~core";
 import type { MainCompositeStackNaviatorProps } from "~routes/index";
 import { TypeMeditation } from "~modules/meditation/types";
+
+var height = Dimensions.get('window').height;
 
 export const MeditationCard: FC<MeditationCardProps> = (props) => {
   const { name, description, image, isCustomTime = false, time, id } = props;
@@ -30,8 +33,9 @@ export const MeditationCard: FC<MeditationCardProps> = (props) => {
       <ImageBackground
         source={{ uri: image }}
         style={styles.backgroundContainer}
-        resizeMode={"stretch"}
+        resizeMode={"cover"}
       >
+        <View style={{ backgroundColor: 'rgba(0,0,0, 0.2)', flex: 1, justifyContent: "space-between", }}>
         <View style={styles.textInformation}>
           <Text style={styles.title}>{name}</Text>
           <Text style={styles.description}>{description}</Text>
@@ -53,6 +57,7 @@ export const MeditationCard: FC<MeditationCardProps> = (props) => {
             />
           </View>
         </View>
+        </View>
       </ImageBackground>
     </Pressable>
   );
@@ -72,26 +77,27 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: 20,
     overflow: "hidden",
-    height: 200,
-  },
+    height: height*0.256,
+    },
   backgroundContainer: {
-    justifyContent: "space-between",
+    
     width: "100%",
     height: "100%",
-  },
+    
+    },
   textInformation: {
     paddingHorizontal: 20,
     paddingTop: 22,
   },
   title: {
     color: "#FFFFFF",
-    fontSize: 20,
+    fontSize: height*0.026,
     lineHeight: 23,
     ...Tools.gStyle.font("600"),
   },
   description: {
     color: "#FFFFFF",
-    fontSize: 15,
+    fontSize: height*0.02,
     lineHeight: 20,
     ...Tools.gStyle.font("400"),
     marginTop: 8,
@@ -108,7 +114,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#9765A8",
     borderRadius: 15,
     color: "#FFFFFF",
-    fontSize: 14,
+    fontSize: height*0.018,
     ...Tools.gStyle.font("600"),
     lineHeight: 15,
     textAlign: "center",

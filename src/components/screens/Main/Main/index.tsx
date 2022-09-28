@@ -18,6 +18,8 @@ import { useShowIntro } from "~routes/hook";
 import type { MainScreenCompositeScreenProps } from "~routes/index";
 import { useMeditationRecomendation, useMeditationToDay } from "./hooks";
 
+var height = Dimensions.get('window').height;
+
 const Main: MainScreenCompositeScreenProps = ({ navigation }) => {
   useShowIntro(
     "@IsFirstShownMain",
@@ -104,6 +106,7 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
     justifyContent: "flex-start",
+    height: height*0.6,
   },
   professor: {
     width: 147,
@@ -117,21 +120,21 @@ const styles = StyleSheet.create({
   },
 
   greeting: {
-    paddingTop: 20,
+    paddingTop: 5,
     justifyContent: "flex-start",
     width: "100%",
     minHeight: Dimensions.get("window").height / 2,
   },
   title: {
     color: "#555555",
-    fontSize: 20,
+    fontSize: height*0.026,
     lineHeight: 23,
     ...Tools.gStyle.font("400"),
     marginBottom: 7,
   },
   description: {
     color: "#A0A0A0",
-    fontSize: 14,
+    fontSize: height*0.018,
     lineHeight: 16,
     ...Tools.gStyle.font("400"),
     marginBottom: 12,

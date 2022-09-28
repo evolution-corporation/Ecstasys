@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { View, Text, ViewProps, Image, StyleSheet } from "react-native";
+import { View, Text, ViewProps, Image, StyleSheet,Dimensions } from "react-native";
 import { BlurView } from "@react-native-community/blur";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 
@@ -8,6 +8,8 @@ import { contextHook } from "~modules/account";
 
 import useCatchPhrases from "./hook";
 import Quote from "./assets/quote.svg";
+
+var height = Dimensions.get('window').height;
 
 const ProfessorMessage: FC<ProfessorMessageProps> = (props) => {
   const {} = props;
@@ -115,7 +117,7 @@ const styles = StyleSheet.create({
   },
 
   greeting: {
-    fontSize: 28,
+    fontSize: height*0.035,
     color: "#FFFFFF",
     textAlign: "center",
     ...Tools.gStyle.font("700"),
@@ -131,7 +133,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   catchPhrases: {
-    fontSize: 16.5,
+    fontSize: height*0.018,
     textAlign: "center",
     color: "#FFFFFF",
     lineHeight: 20,
