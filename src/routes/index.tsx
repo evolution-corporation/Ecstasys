@@ -86,7 +86,7 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
         options={{
           headerTransparent: true,
           headerShown: false,
-          tabBarIcon: ({ focused, color }) => <MainIcon colorIcon={color} />,
+          tabBarIcon: ({ focused, color }) => <MainIcon colorIcon={focused ? "rgba(112, 45, 135, 1)" : "rgba(158, 158, 158, 1)"} />,
         }}
       />
       <TabNavigator.Screen
