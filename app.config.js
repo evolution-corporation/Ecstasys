@@ -6,7 +6,7 @@ export default {
     jsEngine: "hermes",
     name: `DMD Meditation${IS_DEV ? ' dev' : ''}`,
     slug: "dmd_meditation",
-    version: "0.0.13",
+    version: "0.0.14",
     orientation: "portrait",
     githubUrl: "https://github.com/HardKot/ecstasys",
     icon: "./assets/icon.png",
@@ -41,7 +41,6 @@ export default {
       "@react-native-firebase/app",
       "expo-av",
       "expo-updates",
-      "expo-notifications"
     ],
     extra: {
       eas: {

@@ -1,6 +1,5 @@
 import auth from "@react-native-firebase/auth";
 import { isDevice, productName } from "expo-device";
-import { getExpoPushTokenAsync } from "expo-notifications";
 import { Platform } from "react-native";
 import { headers } from "~api";
 import { getApiOff, customUserData } from "~core";
@@ -27,14 +26,10 @@ export async function registration(
       method: "POST",
       headers: await headers(),
       body: JSON.stringify({
-        nickName: nickname,
-        birthday: birthday.toISOString(),
-        Image: image,
-        expoToken: isEmulator
-          ? "test token"
-          : (
-              await getExpoPushTokenAsync()
-            ).data,
+        NickName: nickname,
+        Birthday: birthday.toISOString(),
+        Photo: image,
+        expoToken: "test token",
       }),
     });
     if (request.ok) {
@@ -79,9 +74,9 @@ export async function update(data: UpdateUserData) {
       method: "PATCH",
       headers: await headers(),
       body: JSON.stringify({
-        Image: data.image,
-        birthday: data.birthday,
-        nickName: data.nickName,
+        Photo: data.image,
+        Birthday: data.birthday,
+        NickName: data.nickName,
         DisplayName: data.display_name,
       }),
     });
