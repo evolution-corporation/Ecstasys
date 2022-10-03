@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#FFFFFF",
-    fontSize: 14,
+    fontSize: height*0.018,
   },
   buttonInstruction: {
     width: "auto",
