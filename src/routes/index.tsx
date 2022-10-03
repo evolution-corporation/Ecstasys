@@ -34,6 +34,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
+import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 
 import Core from "~core";
 import Meditation, {
@@ -86,7 +87,13 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
         options={{
           headerTransparent: true,
           headerShown: false,
-          tabBarIcon: ({ focused, color }) => <MainIcon colorIcon={focused ? "rgba(112, 45, 135, 1)" : "rgba(158, 158, 158, 1)"} />,
+          tabBarIcon: ({ focused, color }) => (
+            <MainIcon
+              colorIcon={
+                focused ? "rgba(112, 45, 135, 1)" : "rgba(158, 158, 158, 1)"
+              }
+            />
+          ),
         }}
       />
       <TabNavigator.Screen
