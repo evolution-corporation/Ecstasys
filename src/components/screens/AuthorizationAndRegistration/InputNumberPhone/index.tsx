@@ -3,35 +3,34 @@ import { StyleSheet, View } from "react-native";
 import { useHeaderHeight } from "@react-navigation/elements";
 
 import { ColorButton } from "~components/dump";
-import { contextHook } from "~modules/account";
 import Tools from "~core";
 
 import { NumberInput } from "./components";
-import type { AuthenticationScreenProps } from "~routes/index";
+import type { RootScreenProps } from "~types";
 
-const NumberInputScreen: AuthenticationScreenProps<"InputNumberPhone"> = ({
+const NumberInputScreen: RootScreenProps<"InputNumberPhone"> = ({
   navigation,
 }) => {
   const NumberPhone = useRef<{ numberPhone: string; isValidate: boolean }>({
     numberPhone: "",
     isValidate: false,
   });
-  const headerHeigth = useHeaderHeight();
-  const { func } = contextHook.account();
+  const headerHeight = useHeaderHeight();
 
-  const requestSMSCode = useCallback(async () => {
+  const requestSMSCode = async () => {
     if (NumberPhone.current.isValidate && !!NumberPhone.current.numberPhone) {
-      await func.authenticationWithPhone(NumberPhone.current.numberPhone);
-      navigation.navigate("InputSMSCode");
+      navigation.navigate("InputSMSCode", {
+        phoneNumber: NumberPhone.current.numberPhone,
+      });
     }
-  }, []);
+  };
   return (
     <View style={styles.background}>
       <NumberInput
         onChange={(numberPhone: string, isValidate: boolean) => {
           NumberPhone.current = { numberPhone, isValidate };
         }}
-        fixHeigth={headerHeigth}
+        fixHeigth={headerHeight}
       />
       <ColorButton styleButton={styles.colorButton} onPress={requestSMSCode}>
         {Tools.i18n.t("continue")}

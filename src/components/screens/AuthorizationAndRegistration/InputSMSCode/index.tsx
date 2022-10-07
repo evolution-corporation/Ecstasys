@@ -1,35 +1,54 @@
-import React, { ElementRef, useCallback, useRef, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import React, {
+  ElementRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Text, StyleSheet, View } from "react-native";
-import { contextHook } from "~modules/account";
 
 import Tools from "~core";
+import type { RootScreenProps } from "~types";
 
 import {
   SMSCodeInput,
   SMSCodeInputInfo,
   SMSCodeInputInfoShow,
 } from "./components";
+import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 
-const SMSCodeInputScreen = () => {
+const SMSCodeInputScreen: RootScreenProps<"InputSMSCode"> = ({ route }) => {
+  const { phoneNumber } = route.params;
   const refSMSCodeInput = useRef<ElementRef<typeof SMSCodeInput>>(null);
   const [status, setStatus] = useState<SMSCodeInputInfoShow>(
     SMSCodeInputInfoShow.requestSMS
   );
-  const { func } = contextHook.account();
+  const [confirm, setConfirm] =
+    useState<FirebaseAuthTypes.ConfirmationResult | null>(null);
 
   const checkSMSCode = useCallback(
     async (code: string) => {
       setStatus(SMSCodeInputInfoShow.loadingIndicator);
-      await func.checkSMSCode(code).catch(console.error);
+      if (confirm !== null) {
+        confirm.confirm(code);
+      }
     },
-    [refSMSCodeInput]
+    [confirm]
   );
 
-  const reRequestSMSCode = useCallback(async () => {
+  const requestSMSCode = useCallback(async () => {
     setStatus(SMSCodeInputInfoShow.loadingIndicator);
-    await func.requestSMSCode().catch(console.error);
+    const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+    setConfirm(confirmation);
     setStatus(SMSCodeInputInfoShow.requestSMS);
-  }, [refSMSCodeInput]);
+  }, [phoneNumber]);
+
+  useFocusEffect(
+    useCallback(() => {
+      requestSMSCode();
+    }, [phoneNumber])
+  );
 
   return (
     <View style={styles.background}>
@@ -40,8 +59,8 @@ const SMSCodeInputScreen = () => {
       <SMSCodeInputInfo
         status={status}
         style={styles.SMSCodeInputInfoStyle}
-        onPress={reRequestSMSCode}
-        seconds={10}
+        onPress={requestSMSCode}
+        seconds={160}
       />
     </View>
   );

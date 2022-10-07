@@ -1,18 +1,12 @@
 import { headers } from "~api";
 
 import { getApiOff, subscribe } from "~core";
-import { typeSubscribe } from "./types";
+import { Subscribe } from "./types";
 
-export async function getSubscribeInformatio(): Promise<{
-  nextPayment: Date;
-  type: typeSubscribe;
-  auto: boolean;
-} | null> {
+export async function getSubscribeInformation(): Promise<Subscribe | null> {
   if (await getApiOff()) {
     const [dateNextPayment, type, autoPayment] = await subscribe.getSubscribe();
-    return dateNextPayment
-      ? { nextPayment: dateNextPayment, type, auto: autoPayment }
-      : null;
+    return dateNextPayment ? { dateNextPayment, type, autoPayment } : null;
   }
   return null;
 }

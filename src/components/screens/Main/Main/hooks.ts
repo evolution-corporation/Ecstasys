@@ -42,5 +42,5 @@ export function useMeditationRecomendation() {
     init().catch(console.error);
   }, [setMeditation]);
 
-  return meditation;
+  return [meditation, meditation === null];
 }

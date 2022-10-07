@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { checkNickname, generateNickname } from "./api";
+import { generateNickname } from "src/api/middleware";
 
 export type StatusCheck = null | "FREE" | "USED" | "INCORRECT";
 
@@ -31,7 +31,7 @@ export function useCheckUniqueNickname(defaultValue?: string) {
       } else {
         timerID.current = setTimeout(
           async (_nickname) => {
-            const result = await checkNickname(_nickname);
+            const result = true; //await checkNickname(_nickname);
             if (isActivate.current) {
               if (result) {
                 setStatusCheck("FREE");
@@ -59,8 +59,10 @@ export function useGenerateUniqueNickname() {
   const [nicknameVariableList, setNicknameVariableList] = useState<string[]>(
     []
   );
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   const setNickname = useCallback(async (nickname: string | null) => {
+    setIsLoaded(false);
     if (nickname === null || nickname.length === 0) {
       setNicknameVariableList([]);
     } else {
@@ -69,10 +71,12 @@ export function useGenerateUniqueNickname() {
         setNicknameVariableList([...listNickname]);
       }
     }
+    setIsLoaded(true);
   }, []);
 
   return {
     nicknameVariableList,
     setNickname,
+    isLoaded,
   };
 }

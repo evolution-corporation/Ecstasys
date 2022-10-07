@@ -3,4 +3,4 @@ import {
 } from 'expo';
 import AppCore from './src/App'
 
-registerRootComponent(AppCore);
+registerRootComponent( AppCore )

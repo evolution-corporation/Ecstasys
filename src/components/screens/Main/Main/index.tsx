@@ -35,7 +35,7 @@ const Main: MainScreenCompositeScreenProps = ({ navigation }) => {
   );
   const [heightGreeting, setHeightGreeting] = useState<number | null>(null);
   const toDayPopularMeditation = useMeditationToDay();
-  const recomendationMeditation = useMeditationRecomendation();
+  const [recomendationMeditation, isLoaded] = useMeditationRecomendation();
 
   const translateGreeting = useSharedValue(0);
   const greetingStyle = useAnimatedStyle(() => ({

@@ -11,21 +11,15 @@
       "~assets/*": ["./assets/*"],
       "~api": ["./src/api"],
       "~components/*": ["./src/components/*"],
-      "~firebase": ["./src/Firebase"],
       "~constants": ["./src/constants"],
-      "~store/*": ["./src/store/*"],
-      "~store": ["./src/store/index"],
-      "~hooks/*": ["./src/hooks/*"],
+      "~store": ["./src/store"],
+      "~hooks": ["./src/hooks"],
       "~contexts/*": ["./src/contexts/*"],
       "~modules/*": ["./src/modules/*"],
-      "~tools": ["./src/tools"]
+      "~tools": ["./src/tools"],
+      "~types": ["./src/types"]
     },
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/store/store",
-      "./src/routes/routes",
-      "./src/modules/account"
-    ],
+    "typeRoots": ["./node_modules/@types", "./src"],
     "experimentalDecorators": true
   }
 }

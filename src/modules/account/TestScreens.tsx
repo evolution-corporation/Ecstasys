@@ -13,7 +13,7 @@ import DateTimePicker, {
   DateTimePickerAndroid,
 } from "@react-native-community/datetimepicker";
 
-import { useAccountContext, useTimerSMSRequestContext } from "./AccountContext";
+import { useAccountContext, useTimerSMSRequestContext } from "./context";
 
 const AccountAuthentication = () => {
   const { func } = useAccountContext();

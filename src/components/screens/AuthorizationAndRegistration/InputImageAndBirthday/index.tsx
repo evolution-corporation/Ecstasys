@@ -8,15 +8,11 @@ import {
   SelectBirthday,
 } from "~components/dump";
 import Tools from "~core";
-import {} from "~modules/account";
-import { useAccountContext } from "~modules/account/AccountContext";
+import { actions, useAppDispatch } from "~store";
 
 const InputImageAndBirthdayScreen = ({}) => {
-  const { func, state } = useAccountContext();
-
-  const registration = async () => {
-    await func.registration();
-  };
+  const appDispatch = useAppDispatch();
+  const registration = async () => {};
 
   useBackHandler(() => true);
 
@@ -30,17 +26,13 @@ const InputImageAndBirthdayScreen = ({}) => {
           style={styles.selectImage}
           onChangeImage={(base64) => {
             if (base64) {
-              func.editUserData({
-                image: base64,
-              });
+              appDispatch(actions.setChangedAccountData({ image: base64 }));
             }
           }}
         />
         <SelectBirthday
           onChange={(date) => {
-            func.editUserData({
-              birthday: new Date(date),
-            });
+            appDispatch(actions.setChangedAccountData({ birthday: date }));
           }}
         />
       </View>

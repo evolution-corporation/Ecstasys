@@ -40,9 +40,10 @@ function createAppConfig(){
         "expo-dev-client",
         "expo-splash-screen",
         "expo-image-picker",
-        "@react-native-firebase/app",
         "expo-av",
         "expo-updates",
+        "@react-native-firebase/app",
+        "@react-native-google-signin/google-signin"
       ],
       extra: {
         eas: {
@@ -56,9 +57,7 @@ function createAppConfig(){
     }
   }
 
-  if (IS_DEV) {
-    appConfig.expo.plugins.push('expo-community-flipper')
-  }
+
   return appConfig
 }
 export default createAppConfig()

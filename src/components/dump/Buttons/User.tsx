@@ -1,15 +1,16 @@
 import React, { FC } from "react";
 import { Image, ViewProps, StyleSheet } from "react-native";
 
-import { useUserContext } from "~modules/account/AccountContext";
 import Base from "./Base";
 import Tools from "~core";
 
 const UserButton: FC<Props> = (props) => {
   const { style, onPress } = props;
-  const { user } = useUserContext();
-
-  if (!user) return null;
+  const user = {
+    image:
+      "https://storage.yandexcloud.net/dmdmeditationimage/users/TestUser.jpg",
+    nickName: "123",
+  };
 
   return (
     <Base

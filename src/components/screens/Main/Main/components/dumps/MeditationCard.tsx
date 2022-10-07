@@ -1,7 +1,6 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import {
-  ImageBackground,
-  TouchableOpacity,
+  Image,
   ViewProps,
   Text,
   View,
@@ -16,11 +15,13 @@ import Tools from "~core";
 import type { MainCompositeStackNaviatorProps } from "~routes/index";
 import { TypeMeditation } from "~modules/meditation/types";
 
-var height = Dimensions.get('window').height;
+var height = Dimensions.get("window").height;
 
 export const MeditationCard: FC<MeditationCardProps> = (props) => {
   const { name, description, image, isCustomTime = false, time, id } = props;
   const navigation = useNavigation<MainCompositeStackNaviatorProps>();
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+
   return (
     <Pressable
       style={styles.background}
@@ -30,12 +31,18 @@ export const MeditationCard: FC<MeditationCardProps> = (props) => {
         });
       }}
     >
-      <ImageBackground
+      <Image
         source={{ uri: image }}
         style={styles.backgroundContainer}
         resizeMode={"cover"}
+      />
+      <View
+        style={{
+          backgroundColor: "rgba(0,0,0, 0.2)",
+          flex: 1,
+          justifyContent: "space-between",
+        }}
       >
-        <View style={{ backgroundColor: 'rgba(0,0,0, 0.2)', flex: 1, justifyContent: "space-between", }}>
         <View style={styles.textInformation}>
           <Text style={styles.title}>{name}</Text>
           <Text style={styles.description}>{description}</Text>
@@ -57,19 +64,20 @@ export const MeditationCard: FC<MeditationCardProps> = (props) => {
             />
           </View>
         </View>
-        </View>
-      </ImageBackground>
+      </View>
     </Pressable>
   );
 };
 
 export interface MeditationCardProps extends ViewProps {
-  name: string;
-  description: string;
-  image: string;
-  isCustomTime?: boolean;
-  time: number;
-  id: string;
+  meditation: {
+    id: string;
+    name: string;
+    description: string;
+    lengthAudio: number;
+    image: string;
+    isCustomTime: boolean;
+  } | null;
 }
 
 const styles = StyleSheet.create({
@@ -77,27 +85,26 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: 20,
     overflow: "hidden",
-    height: height*0.256,
-    },
+    height: height * 0.256,
+  },
   backgroundContainer: {
-    
     width: "100%",
     height: "100%",
-    
-    },
+    position: "absolute",
+  },
   textInformation: {
     paddingHorizontal: 20,
     paddingTop: 22,
   },
   title: {
     color: "#FFFFFF",
-    fontSize: height*0.026,
+    fontSize: height * 0.026,
     lineHeight: 23,
     ...Tools.gStyle.font("600"),
   },
   description: {
     color: "#FFFFFF",
-    fontSize: height*0.02,
+    fontSize: height * 0.02,
     lineHeight: 20,
     ...Tools.gStyle.font("400"),
     marginTop: 8,
@@ -114,7 +121,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#9765A8",
     borderRadius: 15,
     color: "#FFFFFF",
-    fontSize: height*0.018,
+    fontSize: height * 0.018,
     ...Tools.gStyle.font("600"),
     lineHeight: 15,
     textAlign: "center",

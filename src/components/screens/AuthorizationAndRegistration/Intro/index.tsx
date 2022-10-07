@@ -14,12 +14,10 @@ import { TextButton } from "~components/dump";
 
 import useAnimation from "./animated";
 import { ArrowButtonMask, ArrowButton } from "./components";
-import type { AuthenticationScreenProps } from "~routes/index";
-import { useFocusEffect } from "@react-navigation/native";
+import { RootScreenProps } from "~types";
+var height = Dimensions.get("window").height;
 
-var height = Dimensions.get('window').height;
-
-const IntroScreen: AuthenticationScreenProps<"Intro"> = ({ navigation }) => {
+const IntroScreen: RootScreenProps<"Intro"> = ({ navigation }) => {
   const { aStyles, setNextValue, setPrevValue } = useAnimation();
   const [text, setText] = useState<{ title: string; description: string }>({
     title: Tools.i18n.t("ff867b49-717d-4611-a2b2-22349439f76f"),
@@ -27,10 +25,6 @@ const IntroScreen: AuthenticationScreenProps<"Intro"> = ({ navigation }) => {
   });
   const [isShowNameApp, setIsShowNameApp] = useState<boolean>(true);
   const [isShowSkipButton, setIsShowSkipButton] = useState<boolean>(true);
-  const [fontSizeTitle, setFontSizeTitle] = useState<number | null>(null); //! Это фикс adjustsFontSizeToFit
-  const [fontSizeDescription, setFontSizeDescription] = useState<number | null>(
-    null
-  ); //! Это фикс adjustsFontSizeToFit
 
   const indexPage = useRef<number>(0);
 
@@ -66,7 +60,7 @@ const IntroScreen: AuthenticationScreenProps<"Intro"> = ({ navigation }) => {
         <Image
           source={require("./assets/professor.png")}
           resizeMode={"contain"}
-          style={{ height: height*0.57}}
+          style={{ height: height * 0.57 }}
         />
       </Animated.View>
       <Animated.View style={[aStyles.bird, styles.bird]}>
@@ -79,11 +73,7 @@ const IntroScreen: AuthenticationScreenProps<"Intro"> = ({ navigation }) => {
       </Animated.View>
       <View style={styles.text}>
         <Animated.Text
-          style={[
-            aStyles.title,
-            styles.title,
-            
-          ]}
+          style={[aStyles.title, styles.title]}
           adjustsFontSizeToFit
         >
           {text.title}
@@ -94,20 +84,16 @@ const IntroScreen: AuthenticationScreenProps<"Intro"> = ({ navigation }) => {
           )}
         </Animated.Text>
         <Animated.Text
-          style={[
-            aStyles.description,
-            styles.description,
-          ]}
+          style={[aStyles.description, styles.description]}
           adjustsFontSizeToFit
-          onLayout={({ nativeEvent: { layout } }) => {
-            
-          }}
+          onLayout={({ nativeEvent: { layout } }) => {}}
         >
           {text.description}
         </Animated.Text>
         <View style={styles.menuButton}>
           {isShowSkipButton ? (
-            <TextButton styleText={styles.skipButton}
+            <TextButton
+              styleText={styles.skipButton}
               onPress={() => {
                 navigation.navigate("SelectMethodAuthentication");
               }}
@@ -152,16 +138,16 @@ const styles = StyleSheet.create({
     textAlign: "left",
     fontFamily: "Inter_700Bold",
     fontWeight: "700",
-    fontSize: height*0.041,
+    fontSize: height * 0.041,
     // lineHeight: 35.4,
     width: "100%",
   },
   description: {
-    fontSize: height*0.021,
+    fontSize: height * 0.021,
     ...Tools.gStyle.font("400"),
     color: "#404040",
     opacity: 0.71,
-    lineHeight: height*0.032,
+    lineHeight: height * 0.032,
     marginVertical: 26,
     height: 130,
   },
@@ -171,8 +157,8 @@ const styles = StyleSheet.create({
     marginBottom: 25,
     fontFamily: "Inter_700Bold",
   },
-  skipButton:{
-    fontSize: height*0.018,
+  skipButton: {
+    fontSize: height * 0.018,
   },
   menuButton: {
     flexDirection: "row",

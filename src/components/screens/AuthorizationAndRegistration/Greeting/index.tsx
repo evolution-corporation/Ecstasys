@@ -7,7 +7,8 @@ import { TextButton } from "~components/dump";
 
 import useAnimation from "./animated";
 import { ArrowButtonMask, ArrowButton, Bird } from "./components";
-import { RootScreenProps } from "~routes/index";
+
+import type { RootScreenProps } from "~types";
 
 const GreetingScreen: RootScreenProps<"IntroMainScreen"> = ({ navigation }) => {
   const { aStyles, setNextValue, setPrevValue } = useAnimation();
@@ -57,7 +58,7 @@ const GreetingScreen: RootScreenProps<"IntroMainScreen"> = ({ navigation }) => {
         </Animated.Text>
         <View style={styles.menuButton}>
           {isShowSkipButton ? (
-            <TextButton text={Tools.i18n.t("skip")} />
+            <TextButton>{Tools.i18n.t("skip")}</TextButton>
           ) : (
             <ArrowButton onPress={() => prevPage()} color={"#9765A8"} />
           )}

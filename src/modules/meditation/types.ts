@@ -22,19 +22,6 @@ export type Practices =
 
 export type TypeMeditation = Practices | "DMD";
 
-export type LengthMeditation =
-  | "lessThan15minutes"
-  | "moreThan15AndLessThan60Minutes"
-  | "moreThan60Minutes";
-
-export type CountMeditationInWee = "2-3days" | "4-5days" | "6-7days";
-
-export type MeditationPreferences = {
-  countInWeek: CountMeditationInWee;
-  length: LengthMeditation;
-  type: TypeMeditation[];
-};
-
 export interface Meditation {
   id: string;
   lengthAudio: number;

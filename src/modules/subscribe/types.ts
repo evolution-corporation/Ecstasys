@@ -1,9 +1,16 @@
-export interface Subscribe {
-  nextPayment: Date;
-  type: typeSubscribe;
+export type Subscribe = ActivePaymentSubscribe | NoActivePaymentSubscribe;
+
+export type TypeSubscribe = "1 month" | "6 month" | null;
+
+export interface ActivePaymentSubscribe {
+  dateNextPayment: Date;
+  type: TypeSubscribe;
   autoPayment: boolean;
 }
 
-export type SubscribeInfoNew = Subscribe | null;
+export interface NoActivePaymentSubscribe {
+  dateEndSubscribe: Date;
+}
 
-export type typeSubscribe = "1 month" | "6 month" | null;
+
+export interface ApiSubscribeInformation 

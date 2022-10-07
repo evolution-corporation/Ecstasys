@@ -1,8 +1,8 @@
-import { getSubscribeInformatio } from "./api";
+import { getSubscribeInformation } from "./api";
 import { useSubscribe, SubscribeProvider } from "./context";
 
 const API = {
-  getSubscribeInformatio,
+  getSubscribeInformatio: getSubscribeInformation,
 };
 
 export default SubscribeProvider;

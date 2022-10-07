@@ -1,25 +1,21 @@
 import React, { useRef, useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
-import { RegistrationScreenProps } from "~routes/index";
 
 import { ColorButton } from "~components/dump";
 import Tools from "~core";
-import { contextHook } from "~modules/account";
-
 import { NicknameWithVariable } from "./components";
+import { RootScreenProps } from "~types";
+import { actions, useAppDispatch } from "~store";
 
-const InputLoginScreen: RegistrationScreenProps<"InputNickName"> = ({
-  navigation,
-}) => {
-  const { func } = contextHook.account();
+const InputLoginScreen: RootScreenProps<"InputNickName"> = ({ navigation }) => {
   const statusChecked = useRef<boolean>(false);
-
+  const appDispatch = useAppDispatch();
   return (
     <View style={styles.background}>
       <NicknameWithVariable
         onEndChange={(nickName, status) => {
           statusChecked.current = status === "FREE";
-          func.editUserData({ nickName });
+          appDispatch(actions.setChangedAccountData({ nickname: nickName }));
         }}
       />
       <Text style={styles.subText}>

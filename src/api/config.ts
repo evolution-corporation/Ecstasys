@@ -1,67 +1,10 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import auth from "@react-native-firebase/auth";
 import NetInfo from "@react-native-community/netinfo";
-import { LoadingStatus } from "~constants";
 
 export const HOST_URL = new URL("http://62.84.125.238:8000");
-export const URL_API = HOST_URL; //new URL("api", HOST_URL);
-export const URL_IMAGE = new URL("image", HOST_URL);
-export type ApiError = { codeError: number; name: string };
-
-export async function getToken(): Promise<string> {
-  const user = auth().currentUser;
-  if (user == null) throw new Error("User not found");
-  return await user.getIdToken();
-}
-
-export type MethodSendingData = "json" | "form-data";
-
-export async function getHeader(options?: {
-  json?: boolean;
-  token?: boolean;
-}): Promise<Headers> {
-  const header = new Headers();
-  header.set("appName", "Ecstasys");
-  header.set("Accept-Language", "ru");
-  if (options?.token ?? true) {
-    header.set("authorization", await getToken());
-  }
-  if (options?.json ?? true) {
-    header.set("Content-Type", "application/json");
-  }
-  return header;
-}
-
-export const enum AsyncStorageKey {
-  MentalState = "@UserMentalState",
-  ParamsMeditation = "@MeditationParameters",
-  WeekStatistic = "@MeditationWeekStatistic",
-  FavoriteMeditations = "@FavoriteMeditations",
-  MonthStatistic = "@MeditationMonthStatistic",
-  AllTimeStatistic = "@MeditationAllTimeStatistic",
-  AccountData = "@AccountData",
-  LazyUserData = "@LazyUserData",
-}
-
-export function serverRequest(request: Function) {
-  try {
-    request();
-  } catch (error) {
-    console.error(error);
-    throw new Error(`Function Error`);
-  }
-}
-
-export function removeUserData() {
-  AsyncStorage.multiRemove([
-    AsyncStorageKey.MentalState,
-    AsyncStorageKey.ParamsMeditation,
-    AsyncStorageKey.WeekStatistic,
-  ]);
-}
-
+export const url204 = `${HOST_URL}/api/204`;
 export async function checkServerAccess(
-  forceCheckConnect: boolean = false
+  forceCheckConnect: boolean = true
 ): Promise<boolean> {
   if (forceCheckConnect) {
     const netInformation = await NetInfo.fetch();
@@ -69,11 +12,41 @@ export async function checkServerAccess(
       return false;
     }
   }
-  const testUrl = new URL("api/204", URL_API);
   try {
-    const request = await fetch(testUrl.toString());
+    const request = await fetch(url204);
     return request.ok;
   } catch (error) {
     return false;
   }
 }
+export async function headers() {
+  const user = auth().currentUser;
+  if (user === null) throw new Error("User not found");
+  return {
+    appName: "DMD Meditation",
+    "Accept-Language": "ru",
+    authorization: await user.getIdToken(),
+    "Content-Type": "application/json",
+  };
+}
+
+export async function jsonRequest(
+  url: string,
+  parameters: string | null = null,
+  method: RequestMethod = "GET",
+  body?: string
+) {
+  let _url = `${HOST_URL}/${url}`;
+  if (parameters !== null) {
+    _url += `?${parameters}`;
+  }
+  const request = await fetch(_url, {
+    method,
+    headers: await headers(),
+    body,
+  });
+  const json = await request.json();
+  return json.reqsult;
+}
+
+type RequestMethod = "GET" | "PUT" | "UPDATE" | "POST" | "DELETE";

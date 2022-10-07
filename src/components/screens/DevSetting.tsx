@@ -6,12 +6,7 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons";
 
-import core, {
-  subscribe,
-  useApiOFF,
-  useCustomDataUser,
-  useShowIntroScreen,
-} from "~core";
+import core from "~core";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -23,36 +18,36 @@ import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 
 import { ColorButton } from "~components/dump";
 import { useSubscribe } from "~modules/subscribe";
-import { typeSubscribe } from "~modules/subscribe/types";
+// import { typeSubscribe } from "~modules/subscribe/types";
 
 const DevelopmentTumblers = () => {
-  const [isApiOff, setIsApiOff] = useApiOFF();
-  const [isCustomUserData, setIsCustomUserData] = useCustomDataUser();
+  // const [isApiOff, setIsApiOff] = useApiOFF();
+  // const [isCustomUserData, setIsCustomUserData] = useCustomDataUser();
 
-  const heigthCustomUser = useSharedValue(isApiOff ? 0 : -100);
-  const styleCustomUserData = useAnimatedStyle(() => ({
-    transform: [{ translateY: withTiming(heigthCustomUser.value) }],
-  }));
-  const [isShowCustomUserData, setIsShowCustomUserData] = useState(isApiOff);
+  // const heigthCustomUser = useSharedValue(isApiOff ? 0 : -100);
+  // const styleCustomUserData = useAnimatedStyle(() => ({
+  //   transform: [{ translateY: withTiming(heigthCustomUser.value) }],
+  // }));
+  // const [isShowCustomUserData, setIsShowCustomUserData] = useState(isApiOff);
 
-  const [showScreenPractices, setShowScreenPractices] = useShowIntroScreen(
-    "IsFirstShownPractices"
-  );
-  const [showScreenMain, setShowScreenMain] =
-    useShowIntroScreen("IsFirstShownMain");
+  // const [showScreenPractices, setShowScreenPractices] = useShowIntroScreen(
+  //   "IsFirstShownPractices"
+  // );
+  // const [showScreenMain, setShowScreenMain] =
+  //   useShowIntroScreen("IsFirstShownMain");
   const subscribeInformation = useSubscribe();
 
-  const [subscribeType, setSubscribeType] = useState<typeSubscribe>("1 month");
+  // const [subscribeType, setSubscribeType] = useState<typeSubscribe>("1 month");
   const [autoPayment, setAutoPayment] = useState<boolean>(false);
-  useEffect(() => {
-    if (isApiOff) {
-      setIsShowCustomUserData(true);
-      heigthCustomUser.value = 0;
-    } else {
-      heigthCustomUser.value = -100;
-      setIsShowCustomUserData(false);
-    }
-  }, [isApiOff]);
+  // useEffect(() => {
+  //   if (isApiOff) {
+  //     setIsShowCustomUserData(true);
+  //     heigthCustomUser.value = 0;
+  //   } else {
+  //     heigthCustomUser.value = -100;
+  //     setIsShowCustomUserData(false);
+  //   }
+  // }, [isApiOff]);
 
   if (__DEV__) {
     return (
@@ -71,8 +66,8 @@ const DevelopmentTumblers = () => {
             </Text>
           </View>
           <Switch
-            value={isApiOff}
-            onValueChange={(value) => setIsApiOff(value)}
+            // value={isApiOff}
+            // onValueChange={(value) => setIsApiOff(value)}
             thumbColor={"#FFFFFF"}
             trackColor={{
               true: "#FBBC05",
@@ -80,7 +75,7 @@ const DevelopmentTumblers = () => {
             }}
           />
         </View>
-        {isShowCustomUserData ? (
+        {/* {isShowCustomUserData ? (
           <Animated.View style={styleCustomUserData} key={"customUserData"}>
             <View style={styles.button}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -90,8 +85,8 @@ const DevelopmentTumblers = () => {
                 </Text>
               </View>
               <Switch
-                value={isCustomUserData}
-                onValueChange={(value) => setIsCustomUserData(value)}
+                // value={isCustomUserData}
+                // onValueChange={(value) => setIsCustomUserData(value)}
                 thumbColor={"#FFFFFF"}
                 trackColor={{
                   true: "#FBBC05",
@@ -112,7 +107,8 @@ const DevelopmentTumblers = () => {
               </ColorButton>
             ) : null}
           </Animated.View>
-        ) : null}
+        ) : null} 
+      */}
         <View
           style={[
             styles.button,
@@ -131,8 +127,8 @@ const DevelopmentTumblers = () => {
             </Text>
           </View>
           <Switch
-            value={showScreenMain}
-            onValueChange={(value) => setShowScreenMain(value)}
+            // value={showScreenMain}
+            // onValueChange={(value) => setShowScreenMain(value)}
             thumbColor={"#FFFFFF"}
             trackColor={{
               true: "#FBBC05",
@@ -158,8 +154,8 @@ const DevelopmentTumblers = () => {
             </Text>
           </View>
           <Switch
-            value={showScreenPractices}
-            onValueChange={(value) => setShowScreenPractices(value)}
+            // value={showScreenPractices}
+            // onValueChange={(value) => setShowScreenPractices(value)}
             thumbColor={"#FFFFFF"}
             trackColor={{
               true: "#FBBC05",
@@ -167,7 +163,7 @@ const DevelopmentTumblers = () => {
             }}
           />
         </View>
-        {isShowCustomUserData ? (
+        {/* {isShowCustomUserData ? (
           <Animated.View style={styleCustomUserData} key={"customDatePayment"}>
             <View
               style={[
@@ -225,30 +221,30 @@ const DevelopmentTumblers = () => {
             <ColorButton
               styleButton={styles.colorButoon}
               styleText={styles.colorButtonText}
-              onPress={async () => {
-                DateTimePickerAndroid.open({
-                  value: new Date(),
-                  onChange: (_, selectDate) => {
-                    if (selectDate) {
-                      subscribe.setSubscribe(
-                        selectDate,
-                        subscribeType,
-                        autoPayment
-                      );
-                      subscribeInformation?.setSubscribe(
-                        selectDate,
-                        subscribeType,
-                        autoPayment
-                      );
-                    }
-                  },
-                });
-              }}
+              // onPress={async () => {
+              //   DateTimePickerAndroid.open({
+              //     value: new Date(),
+              //     onChange: (_, selectDate) => {
+              //       if (selectDate) {
+              //         subscribe.setSubscribe(
+              //           selectDate,
+              //           subscribeType,
+              //           autoPayment
+              //         );
+              //         subscribeInformation?.setSubscribe(
+              //           selectDate,
+              //           subscribeType,
+              //           autoPayment
+              //         );
+              //       }
+              //     },
+              //   });
+              // }}
             >
               {core.i18n.t("f5f817df-bb6a-4d5c-992f-8fb72c40f081")}
             </ColorButton>
           </Animated.View>
-        ) : null}
+        ) : null} */}
       </View>
     );
   } else {

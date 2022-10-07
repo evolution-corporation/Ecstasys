@@ -15,32 +15,26 @@ import { useBackHandler } from "@react-native-community/hooks";
 
 import { FontAwesome5 } from "@expo/vector-icons";
 
-import Tools, { getApiOff } from "~core";
+import Tools from "~core";
 import GoogleLogo from "~assets/icons/GoogleLogo.svg";
 import { ColorButton, ColorWithIconButton } from "~components/dump";
-import { contextHook } from "~modules/account";
-import type { AuthenticationScreenProps } from "~routes/index";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { useFocusEffect } from "@react-navigation/native";
+import { RootScreenProps } from "~types";
 
-var height = Dimensions.get('window').height;
+import auth from "@react-native-firebase/auth";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
-const SelectMethodAuthentication: AuthenticationScreenProps<
+GoogleSignin.configure({
+  webClientId:
+    "878799007977-cj3549ni87jre2rmg4eq0hiolp08igh2.apps.googleusercontent.com",
+});
+var height = Dimensions.get("window").height;
+
+const SelectMethodAuthentication: RootScreenProps<
   "SelectMethodAuthentication"
 > = ({ navigation }) => {
-  const { func } = contextHook.account();
-  const [isApiOff, setIsApiOff] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [heightBottomBox, setHeightBottomBox] = useState<number | null>(null);
-  useFocusEffect(
-    useCallback(() => {
-      const init = async () => {
-        const result = await getApiOff();
-        if (setIsApiOff !== undefined) setIsApiOff(result);
-      };
-      init().catch(console.error);
-    }, [])
-  );
 
   useBackHandler(() => {
     if (Platform.OS === "android") {
@@ -53,16 +47,12 @@ const SelectMethodAuthentication: AuthenticationScreenProps<
       style={styles.background}
       source={require("~assets/rockDrugs.jpg")}
     >
-      <View style={styles.devOptions}>
-        {__DEV__ ? (
-          <TouchableOpacity onPress={() => navigation.navigate("devSetting")}>
-            <FontAwesome5 name="dev" size={24} color="#FFFFFF" />
-          </TouchableOpacity>
-        ) : null}
-      </View>
-
       <View style={styles.logoBox}>
-        <Image style={[styles.bird]} source={require("./assets/bird.png")} resizeMode={"contain"} />
+        <Image
+          style={[styles.bird]}
+          source={require("./assets/bird.png")}
+          resizeMode={"contain"}
+        />
       </View>
       <View style={styles.greetingBox}>
         <Text style={styles.title}>
@@ -109,20 +99,6 @@ const SelectMethodAuthentication: AuthenticationScreenProps<
             if (heightBottomBox === null) setHeightBottomBox(layout.height);
           }}
         >
-          {__DEV__ && isApiOff ? (
-            <ColorButton
-              styleButton={styles.button}
-              onPress={() => {
-                setIsLoading(true);
-                func.authWithTestAccount().catch((error) => {
-                  setIsLoading(false);
-                  console.error(error);
-                });
-              }}
-            >
-              {Tools.i18n.t("efa30007-ef38-408f-b2ca-68c727c1bbc3")}
-            </ColorButton>
-          ) : null}
           <ColorButton
             styleButton={styles.button}
             onPress={() => {
@@ -134,11 +110,12 @@ const SelectMethodAuthentication: AuthenticationScreenProps<
           <ColorWithIconButton
             icon={<GoogleLogo />}
             styleButton={styles.button}
-            onPress={() => {
+            onPress={async () => {
               setIsLoading(true);
-              func.authenticationWithGoogle().catch(() => {
-                if (setIsLoading !== undefined) setIsLoading(false);
-              });
+              const { idToken } = await GoogleSignin.signIn();
+              const googleCredential =
+                auth.GoogleAuthProvider.credential(idToken);
+              return auth().signInWithCredential(googleCredential);
             }}
           >
             {Tools.i18n.t("235a94d8-5deb-460a-bf03-e0e30e93df1b")}
@@ -162,14 +139,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 10,
   },
-  bird:{
-    height: height*0.19
+  bird: {
+    height: height * 0.19,
   },
   logoBox: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-   },
+  },
   greetingBox: {
     height: 200,
   },

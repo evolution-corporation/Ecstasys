@@ -7,12 +7,11 @@ import {
   useCallback,
   useEffect,
 } from "react";
-import { getSubscribeInformatio } from "./api";
-import { SubscribeInfoNew, typeSubscribe } from "./types";
+import { getSubscribeInformation } from "./api";
 const e = createElement;
 
 export const subscribeContext = createContext<{
-  info: SubscribeInfoNew;
+  info: SubscribeInfo;
   setSubscribe: (
     date: Date,
     type: typeSubscribe,
@@ -43,7 +42,7 @@ export const SubscribeProvider: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     const init = async () => {
-      const subscribeInformation = await getSubscribeInformatio();
+      const subscribeInformation = await getSubscribeInformation();
       let name = "Base";
       let information: SubscribeInfoNew = null;
       if (
