@@ -9,10 +9,9 @@ import {
   PanResponder,
   Easing,
 } from "react-native";
-import { contextHook } from "~modules/account";
 import { ColorButton, SelectBirthday } from "~components/dump";
 import Tools from "~core";
-import type { RootScreenProps } from "~routes/index";
+import { RootScreenProps } from "~types";
 
 const SelectDateBirthdayModal: RootScreenProps<"EditUserBirthday"> = ({
   navigation,

@@ -11,7 +11,7 @@ import ScrollPicker from "react-native-wheel-scrollview-picker";
 import type { FC } from "react";
 import type { ViewProps } from "react-native";
 import Tools from "~core";
-import { createArrayLength, DatePlus } from "~tools";
+import { createArrayLength } from "~tools";
 
 const toDay = new Date();
 toDay.setFullYear(toDay.getFullYear());

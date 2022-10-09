@@ -19,7 +19,7 @@
       "~tools": ["./src/tools"],
       "~types": ["./src/types"]
     },
-    "typeRoots": ["./node_modules/@types", "./src"],
+    "typeRoots": ["./node_modules/@types"],
     "experimentalDecorators": true
   }
 }

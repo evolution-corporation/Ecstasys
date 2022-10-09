@@ -18,7 +18,7 @@ import useAnimation from "./animation";
 import Arrow from "./assets/Arrow.svg";
 import ArrowLeft from "./assets/arrowLeft.svg";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import type { RootScreenProps } from "~routes/index";
+import type { RootScreenProps } from "~types";
 
 const swiperContent = [
   {

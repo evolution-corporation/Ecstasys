@@ -13,7 +13,7 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
-
+test/logic/temp
 .idea
 .vscode/
 .cspell/

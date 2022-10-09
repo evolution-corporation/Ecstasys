@@ -8,16 +8,15 @@ import {
 } from "react-native";
 import { EvilIcons } from "@expo/vector-icons";
 
-import { contextHook } from "~modules/account";
 import {
   ColorButton,
   SelectImageButton,
   NicknameInput,
 } from "~components/dump";
 import Tools from "~core";
-import type { RootScreenProps } from "~routes/index";
+import { RootScreenProps } from "~types";
 
-const EditMainUserDataScreen: RootScreenProps<"EditUserData"> = ({
+const EditMainUserDataScreen: RootScreenProps<"EditMainUserData"> = ({
   navigation,
 }) => {
   const { state, func } = contextHook.account();

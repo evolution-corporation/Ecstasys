@@ -10,7 +10,7 @@ import { ArrowButtonMask, ArrowButton, Bird } from "./components";
 
 import type { RootScreenProps } from "~types";
 
-const GreetingScreen: RootScreenProps<"IntroMainScreen"> = ({ navigation }) => {
+const GreetingScreen: RootScreenProps<"Greeting"> = ({ navigation }) => {
   const { aStyles, setNextValue, setPrevValue } = useAnimation();
   const [text, setText] = useState<{ title: string; description: string }>({
     title: Tools.i18n.t("b5bc86ea-4af9-49ac-bb9f-319069df78ee"),

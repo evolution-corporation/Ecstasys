@@ -1,155 +1,160 @@
-import React, {
-  useEffect,
-  useState,
-  forwardRef,
-  useImperativeHandle,
-} from "react";
-import {
-  View,
-  TextInput,
-  TextInputProps,
-  StyleSheet,
-  ActivityIndicator,
-  TouchableOpacity,
-  TextStyle,
-  ViewStyle,
-  Text,
-} from "react-native";
-import { Entypo } from "@expo/vector-icons";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+/** @format */
 
+import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from "react";
+import {
+	ActivityIndicator,
+	Pressable,
+	StyleSheet,
+	Text,
+	TextInput,
+	TextInputProps,
+	TextStyle,
+	View,
+	ViewStyle,
+} from "react-native";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+
+import API from "~api";
+
+import CheckMarkerGreen from "assets/icons/CheckMarkerGreen.svg";
+import CheckMarkerWhite from "assets/icons/CheckMarkerWhite.svg";
+import { isNicknameValidate } from "src/validators";
 import Tools from "~core";
-import { useCheckUniqueNickname, StatusCheck } from "~modules/account/hook";
+
+export enum StatusCheck {
+	"FREE",
+	"USED",
+	"INCORRECT",
+	"LOADING",
+	"AWAIT",
+}
 
 const NicknameInput = forwardRef<Ref, Props>((props, ref) => {
-  const {
-    styleNicknameInputView,
-    styleNicknameInputText,
-    defaultValue,
-    onEndChange,
-  } = props;
-  const [_nickname, _setNickname] = useState<string>(`${""}`);
-  const { isLoading, setNickname, statusCheck } =
-    useCheckUniqueNickname(defaultValue);
+	const { styleNicknameInputView, styleNicknameInputText, defaultValue = "", onEndChange } = props;
+	const [statusCheck, setStatusCheck] = useState<StatusCheck>(StatusCheck.AWAIT);
+	const [nickname, setNickname] = useState<string>(defaultValue);
 
-  const _colorBorderView = useSharedValue("#FF5C00");
+	const _colorBorderView = useSharedValue("#FF5C00");
 
-  const animatedView = useAnimatedStyle(() => ({
-    borderColor: withTiming(_colorBorderView.value),
-  }));
+	const animatedView = useAnimatedStyle(() => ({
+		borderColor: withTiming(_colorBorderView.value),
+	}));
 
-  const editNickname = (text: string) => {
-    setNickname(text);
-    _setNickname(text);
-  };
+	const editNickname = async (inputNickname: string) => {
+		setNickname(inputNickname);
+		if (inputNickname === defaultValue || inputNickname.length === 0) {
+			setStatusCheck(StatusCheck.AWAIT);
+			return;
+		}
+		setStatusCheck(StatusCheck.LOADING);
+		if (isNicknameValidate(inputNickname)) {
+			const result = await API.checkNickname(inputNickname);
+			setStatusCheck(result ? StatusCheck.FREE : StatusCheck.USED);
+		} else {
+			setStatusCheck(StatusCheck.INCORRECT);
+			return;
+		}
+	};
 
-  useEffect(() => {
-    if (statusCheck === "INCORRECT" || statusCheck === "USED") {
-      _colorBorderView.value = "#FF5C00";
-    } else {
-      _colorBorderView.value = "#C2A9CE";
-    }
-    if (!!onEndChange && !isLoading) {
-      onEndChange(_nickname, statusCheck);
-    }
-  }, [statusCheck, isLoading]);
+	useEffect(() => {
+		if ([StatusCheck.INCORRECT, StatusCheck.USED].includes(statusCheck)) {
+			_colorBorderView.value = "#FF5C00";
+		} else {
+			_colorBorderView.value = "#C2A9CE";
+		}
+		if (!!onEndChange && statusCheck === StatusCheck.LOADING) {
+			onEndChange(nickname, statusCheck);
+		}
+	}, [statusCheck]);
 
-  useImperativeHandle(ref, () => ({
-    editNickname,
-  }));
+	useImperativeHandle(ref, () => ({
+		editNickname,
+	}));
 
-  useEffect(() => {
-    if (_nickname.length === 0 && defaultValue) {
-      _setNickname(defaultValue);
-    }
-  }, [defaultValue]);
+	let [StatusCheckView, StatusCheckText] = useMemo(() => {
+		switch (statusCheck) {
+			case StatusCheck.AWAIT:
+				return [<ActivityIndicator color={"#FFFFFFFF"} size={"small"} />, null];
+			case StatusCheck.USED:
+			case StatusCheck.INCORRECT:
+				return [
+					<Pressable
+						onPress={() => {
+							editNickname("");
+						}}
+					>
+						<CheckMarkerWhite />
+					</Pressable>,
+					StatusCheck.INCORRECT
+						? Tools.i18n.t("d6a4f1c4-4344-4712-ac61-0c81292d0994")
+						: Tools.i18n.t("564efb95-c192-4406-830f-13b3612bae0e"),
+				];
+			case StatusCheck.FREE:
+				return [<CheckMarkerGreen />, null];
+			default:
+				return [null, null];
+		}
+	}, [statusCheck]);
 
-  return (
-    <>
-      <Animated.View
-        style={[
-          styles.backgroundTextInput,
-          styleNicknameInputView,
-          animatedView,
-        ]}
-      >
-        <TextInput
-          onChangeText={(text) => editNickname(text)}
-          style={[styles.textInputView, styleNicknameInputText]}
-          value={_nickname}
-          placeholderTextColor={"#C2A9CE"}
-          maxLength={16}
-          placeholder={Tools.i18n.t("f212a1ac-9688-4671-bbd1-6cbe20662ad7")}
-        />
-        <View style={styles.indicatorImage}>
-          {isLoading ? (
-            <ActivityIndicator color={"#FFFFFFFF"} size={"small"} />
-          ) : statusCheck === "INCORRECT" || statusCheck === "USED" ? (
-            <TouchableOpacity onPress={() => editNickname("")}>
-              <Entypo name="cross" size={24} color="white" />
-            </TouchableOpacity>
-          ) : statusCheck === "FREE" ? (
-            <Entypo name="check" size={24} color="white" />
-          ) : null}
-        </View>
-      </Animated.View>
-      <Text style={styles.errorMessage}>
-        {statusCheck === "INCORRECT"
-          ? Tools.i18n.t("d6a4f1c4-4344-4712-ac61-0c81292d0994")
-          : statusCheck === "USED"
-          ? Tools.i18n.t("564efb95-c192-4406-830f-13b3612bae0e")
-          : null}
-      </Text>
-    </>
-  );
+	return (
+		<>
+			<Animated.View style={[styles.backgroundTextInput, styleNicknameInputView, animatedView]}>
+				<TextInput
+					onChangeText={text => editNickname(text)}
+					style={[styles.textInputView, styleNicknameInputText]}
+					value={nickname}
+					placeholderTextColor={"#C2A9CE"}
+					maxLength={16}
+					placeholder={Tools.i18n.t("f212a1ac-9688-4671-bbd1-6cbe20662ad7")}
+					autoCapitalize={"none"}
+				/>
+				<View style={styles.indicatorImage}>{StatusCheckView}</View>
+			</Animated.View>
+			<Text style={styles.errorMessage}>{StatusCheckText}</Text>
+		</>
+	);
 });
 
 export interface Props extends TextInputProps {
-  styleNicknameInputText?: TextStyle;
-  styleNicknameInputView?: ViewStyle;
-  onEndChange?: (nickname: string, statusCheck: StatusCheck) => void;
+	styleNicknameInputText?: TextStyle;
+	styleNicknameInputView?: ViewStyle;
+	onEndChange?: (nickname: string, statusCheck: StatusCheck) => void;
 }
 
 export interface Ref {
-  editNickname: (nickname: string) => void;
+	editNickname: (nickname: string) => void;
 }
 
-export { StatusCheck };
-
 const styles = StyleSheet.create({
-  textInputView: {
-    color: "#FFFFFF",
-    fontSize: 14,
-    ...Tools.gStyle.font("400"),
-    flex: 1,
-    paddingRight: 44,
-  },
-  backgroundTextInput: {
-    width: "100%",
-    height: 45,
-    flexDirection: "row",
-    borderWidth: 1,
-    borderRadius: 15,
-    backgroundColor: "rgba(240, 242, 238, 0.19)",
-    paddingHorizontal: 15,
-  },
-  indicatorImage: {
-    minWidth: 20,
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  errorMessage: {
-    fontSize: 13,
-    lineHeight: 16,
-    ...Tools.gStyle.font("400"),
-    textAlign: "center",
-    color: "#E7DDEC",
-  },
+	textInputView: {
+		color: "#FFFFFF",
+		fontSize: 14,
+		...Tools.gStyle.font("400"),
+		flex: 1,
+		paddingRight: 44,
+	},
+	backgroundTextInput: {
+		width: "100%",
+		height: 45,
+		flexDirection: "row",
+		borderWidth: 1,
+		borderRadius: 15,
+		backgroundColor: "rgba(240, 242, 238, 0.19)",
+		paddingHorizontal: 15,
+	},
+	indicatorImage: {
+		minWidth: 20,
+		height: "100%",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	errorMessage: {
+		fontSize: 13,
+		lineHeight: 16,
+		...Tools.gStyle.font("400"),
+		textAlign: "center",
+		color: "#E7DDEC",
+	},
 });
 
 export default NicknameInput;
