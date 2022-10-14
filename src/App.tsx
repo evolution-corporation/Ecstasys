@@ -2,16 +2,15 @@
 
 import React, { FC, useEffect, useRef, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { Platform, UIManager } from "react-native";
+import { Platform, UIManager, View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { Provider } from "react-redux";
 
-import { useCustomFonts } from "~core";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import auth from "@react-native-firebase/auth";
 
 import RootRoutes from "./routes";
-import Store, { actions } from "./store";
+import Store, { actions, useAppSelector } from "./store";
+import { MessageProfessor } from "./models";
 
 if (Platform.OS === "android") {
 	if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -19,43 +18,39 @@ if (Platform.OS === "android") {
 	}
 }
 const AppCore: FC<Props> = props => {
-	// Загрузка кастомных шрифтов
-	const subscribeReduxState = useRef<null | { (): void }>(null);
-	// Авторизация через Firebase
-	// TODO Разработать свою систему авторизации
+	const moduleIsLoaded = useAppSelector(
+		store => store.account.isLoaded && store.style.loaded && store.favoritePractices.loaded && store.statistic.loaded
+	);
 
 	useEffect(() => {
 		console.log("reRender");
 		(async () => {
-			console.log(auth().currentUser?.uid);
-			auth().currentUser?.getIdToken().then(console.log);
 			await SplashScreen.preventAutoHideAsync();
-			subscribeReduxState.current = Store.subscribe(() => {
-				const { account, style } = Store.getState();
-				if (account.isLoaded && style.loaded) {
-					if (subscribeReduxState.current) subscribeReduxState.current();
-					SplashScreen.hideAsync();
-				}
-			});
-			Store.dispatch(actions.initializationAccount());
-			Store.dispatch(actions.initializationStyle());
+			await Store.dispatch(actions.initialization()).unwrap();
 		})();
-		return () => {
-			if (subscribeReduxState.current) subscribeReduxState.current();
-		};
-	}, [12]);
+	});
+
+	useEffect(() => {
+		if (moduleIsLoaded) {
+			SplashScreen.hideAsync();
+		} else {
+			SplashScreen.preventAutoHideAsync();
+		}
+	}, [moduleIsLoaded]);
 
 	return (
-		<Provider store={Store}>
-			<GestureHandlerRootView style={{ flex: 1 }}>
-				{/* <NavigationContainer>
-					<RootRoutes />
-				</NavigationContainer> */}
-			</GestureHandlerRootView>
-		</Provider>
+		<GestureHandlerRootView style={{ flex: 1 }}>
+			<NavigationContainer>
+				<RootRoutes />
+			</NavigationContainer>
+		</GestureHandlerRootView>
 	);
 };
 
 interface Props {}
 
-export default AppCore;
+export default () => (
+	<Provider store={Store}>
+		<AppCore />
+	</Provider>
+);

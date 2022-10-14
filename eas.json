@@ -1,41 +1,41 @@
 {
-  "cli": {
-    "version": "2.1.0"
-  },
-  "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal",
-      "channel": "dev",
-      "android": {
-        "buildType": "apk"
-      },
-      "env": {
-        "YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
-        "APP_VARIANT": "development"
-      }
-    },
-    "preview": {
-      "distribution": "internal",
-      "channel": "dev",
-      "env": {
-        "YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
-        "APP_VARIANT": "preview"
-      },
-      "android": {
-        "buildType": "apk"
-      }
-    },
-    "production": {
-      "channel": "main",
-      "distribution": "store",
-      "env": {
-        "YARN_ENABLE_IMMUTABLE_INSTALLS": "false"
-      },
-      "android": {}
-    }
-  },
-  "submit": {
-    "production": {}
-  }
+	"cli": {
+		"version": ">=2.1.0"
+	},
+	"build": {
+		"development": {
+			"developmentClient": true,
+			"distribution": "internal",
+			"channel": "dev",
+			"android": {
+				"buildType": "apk"
+			},
+			"env": {
+				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
+				"APP_VARIANT": "development"
+			}
+		},
+		"preview": {
+			"distribution": "internal",
+			"channel": "dev",
+			"env": {
+				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
+				"APP_VARIANT": "preview"
+			},
+			"android": {
+				"buildType": "apk"
+			}
+		},
+		"production": {
+			"channel": "main",
+			"distribution": "store",
+			"env": {
+				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false"
+			},
+			"android": {}
+		}
+	},
+	"submit": {
+		"production": {}
+	}
 }

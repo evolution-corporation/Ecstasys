@@ -1,8 +1,28 @@
+/** @format */
+
 declare module "*.svg" {
-  import React from "react";
-  import { SvgProps } from "react-native-svg";
-  const content: React.FC<SvgProps>;
-  export default content;
+	import React from "react";
+	import { SvgProps } from "react-native-svg";
+	const content: React.FC<SvgProps>;
+	export default content;
+}
+
+/**
+ * Интерфейс модели аккаунта который используется в Redux
+ */
+declare interface AccountRedux {
+	/** Уникальный идентификатор пользователя в Firebase */
+	readonly uid: string;
+	/**	Отображаемое имя пользователя */
+	displayName?: string;
+	/** Ссылка на изображения пользователя */
+	image: string;
+	/** Дата рождения пользователя */
+	birthday: SupportType.DateISOString;
+	/** Уникальное имя пользователя */
+	nickName: string;
+	/** Пол пользователя */
+	gender?: Gender;
 }
 
 // declare type ActionReducerWithPayload<T, P> = { type: T; payload: P };

@@ -1,7 +1,10 @@
-/** @format */
+/**
+ * @format
+ * Файл содержит в себе функции которые выполняют запрос к серверу
+ */
 
 import auth from "@react-native-firebase/auth";
-import { ServerEntities, SubscribeType, TypeMeditation } from "~types";
+import { ServerEntities, SupportType } from "./types";
 
 const URL = "http://62.84.125.238:8000/";
 
@@ -19,7 +22,7 @@ async function getFirebaseToken(firebaseToken: string | undefined) {
 	return firebaseToken;
 }
 
-/** Function getUserById
+/**
  *	Возвращает пользователя по ID
  *	@param userId id пользователя данне которого необходимо получить
  *	@param firebaseTokenToken FirebaseToken пользователя от имени которого происходит запрос
@@ -38,11 +41,10 @@ export async function getUserById(userId: string, firebaseTokenToken?: string): 
 		return null;
 	}
 	const json = await requestServer.json();
-	console.log(json);
 	return json as ServerEntities.User;
 }
 
-/** Function createUser
+/**
  *	Отправляет запрос на создание пользователя серверу
  *	@param obj параметры функции
  *	@param obj.nickName уникальное имя пользователя
@@ -51,7 +53,7 @@ export async function getUserById(userId: string, firebaseTokenToken?: string): 
  *	@param firebaseTokenToken FirebaseToken пользователя от имени которого происходит запрос
  *	@return данные об новом пользователе
  */
-export async function createUser({ birthday, nickName, image }: CreateUserParams, firebaseTokenToken?: string) {
+export async function createUser({ birthday, nickname, image }: CreateUserParams, firebaseTokenToken?: string) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
 	const requestServer = await fetch(URL + "users", {
 		method: "POST",
@@ -60,7 +62,7 @@ export async function createUser({ birthday, nickName, image }: CreateUserParams
 			"Content-Type": "application/json",
 		},
 		body: JSON.stringify({
-			NickName: nickName,
+			NickName: nickname,
 			Birthday: birthday.toISOString(),
 			Image: image,
 		}),
@@ -69,12 +71,12 @@ export async function createUser({ birthday, nickName, image }: CreateUserParams
 	return json as ServerEntities.User;
 }
 interface CreateUserParams {
-	readonly nickName: string;
+	readonly nickname: string;
 	readonly birthday: Date;
 	readonly image?: string;
 }
 
-/** Function updateUser
+/**
 		Отправляет запрос на обновление данных пользователя серверу
 		@param obj параметры функции
 		@param obj.nickname обновленный уникальное имя пользователя
@@ -112,7 +114,7 @@ interface UpdateUserParams {
 	birthday?: Date;
 }
 
-/** Function getPopularToDayMeditation
+/**
  * Возвращает популярную медитацию за сутки
  * @param firebaseTokenToken FirebaseToken пользователя от имени которого происходит запрос
  * @return Популярная медитация за сутки
@@ -129,7 +131,7 @@ export async function getPopularToDayMeditation(firebaseTokenToken?: string) {
 	return json as ServerEntities.Meditation;
 }
 
-/** Function getMeditationById
+/**
  * Возвращает данные об запрошенной медитации по Id
  * @param meditationId id запрошенной медитации
  * @param firebaseTokenToken FirebaseToken пользователя от имени которого происходит запрос
@@ -150,13 +152,13 @@ export async function getMeditationById(meditationId: string, firebaseTokenToken
 	return json as ServerEntities.Meditation;
 }
 
-/** Function getMeditationsByType
+/**
  * Возвращает список медитаций отфильтрованных по определенном типу
  * @param meditationType тип запрашиваемых медитаций
  * @param firebaseTokenToken FirebaseToken пользователя от имени которого происходит запрос
  * @return Запрошенная медитация
  */
-export async function getMeditationsByType(meditationType: TypeMeditation, firebaseTokenToken?: string) {
+export async function getMeditationsByType(meditationType: SupportType.TypeMeditation, firebaseTokenToken?: string) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
 	const requestServer = await fetch(URL + "meditation?type=" + meditationType, {
 		headers: {
@@ -168,13 +170,16 @@ export async function getMeditationsByType(meditationType: TypeMeditation, fireb
 	return json as ServerEntities.Meditation[];
 }
 
-/** Function getCountMeditationsByType
+/**
  * Возвращает количество медитаций в определенном определенном типу
  * @param meditationType тип запрашиваемых медитаций
  * @param firebaseTokenToken FirebaseToken пользователя от имени которого происходит запрос
  * @return количество медитаций
  */
-export async function getCountMeditationsByType(meditationType: TypeMeditation, firebaseTokenToken?: string) {
+export async function getCountMeditationsByType(
+	meditationType: SupportType.TypeMeditation,
+	firebaseTokenToken?: string
+) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
 	const requestServer = await fetch(URL + "meditation?type=" + meditationType + "&count=0", {
 		headers: {
@@ -186,7 +191,7 @@ export async function getCountMeditationsByType(meditationType: TypeMeditation, 
 	return json.length as number;
 }
 
-/** Function getSubscribeUserInformation
+/**
  * Возвращает информацию об подписке пользователя
  * @param firebaseTokenToken FirebaseToken пользователя от имени которого происходит запрос
  * @return Данные об подписке пользователя
@@ -203,12 +208,13 @@ export async function getSubscribeUserInformation(firebaseTokenToken?: string) {
 	return json.length as ServerEntities.Subscribe;
 }
 
-/** Function getPaymentURL
+/**
  * Получает ссылку для проведения оплаты подписки
  * @param subscribeType тип подписки для которой происходит оплата
+ * @param firebaseTokenToken FirebaseToken пользователя от имени которого происходит запрос
  * @return Ссылка для проведения оплаты
  */
-export async function getPaymentURL(subscribeType: SubscribeType, firebaseTokenToken?: string) {
+export async function getPaymentURL(subscribeType: SupportType.SubscribeType, firebaseTokenToken?: string) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
 	const requestServer = await fetch(
 		URL + "payment?type=" + subscribeType + "&needRecurrent=" + subscribeType === "Week" ? "false" : "true",
@@ -221,4 +227,22 @@ export async function getPaymentURL(subscribeType: SubscribeType, firebaseTokenT
 	);
 	const json = await requestServer.json();
 	return json.length as string;
+}
+
+/**
+ * Получает информацию об пользователе по его nickname
+ * @param nickname nickname пользователя информацию об котором необходимо найти
+ * @param firebaseTokenToken FirebaseToken пользователя от имени которого происходит запрос
+ * @return Информация об пользователе или null если пользователь с таким nickname не найден
+ */
+export async function getUserByNickname(nickname: string, firebaseTokenToken?: string) {
+	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
+	const requestServer = await fetch(URL + "nickname?nickname=" + nickname, {
+		headers: {
+			Authorization: firebaseTokenToken,
+			"Content-Type": "application/json",
+		},
+	});
+	const json = await requestServer.json();
+	return json.length as ServerEntities.User;
 }

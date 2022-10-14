@@ -7582,6 +7582,7 @@ __metadata:
     expo-av: ~12.0.4
     expo-blur: ~11.2.0
     expo-cli: ^6.0.6
+    expo-crypto: ~11.0.0
     expo-dev-client: ~1.2.1
     expo-device: ~4.3.0
     expo-file-system: ~14.1.0
@@ -8235,6 +8236,15 @@ __metadata:
   peerDependencies:
     expo: "*"
   checksum: c0a1e330f252b39cf901e24dcd17cfab09f9f6dba15f52a50e1ac6d4236c27ccef2a288d99a23ee0d365e98f36cb7e6a1b6acf89209dd74996aeb7133478207c
+  languageName: node
+  linkType: hard
+
+"expo-crypto@npm:~11.0.0":
+  version: 11.0.0
+  resolution: "expo-crypto@npm:11.0.0"
+  peerDependencies:
+    expo: "*"
+  checksum: c8f578dab412417b08acda2caac745288924015c3a94f68d20eb690ab81943d9d4aa559c6a6f4e0768d3d44951931f7cafcbacd89edecb3f86732f28dd267b8c
   languageName: node
   linkType: hard
 

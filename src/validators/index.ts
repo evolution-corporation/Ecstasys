@@ -1,1 +1,3 @@
-export { default as isNicknameValidate } from "./nickname";
+/** @format */
+
+export { default as isNicknameValidate, NicknameNotValidate } from "./nickname";

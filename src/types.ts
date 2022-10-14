@@ -5,100 +5,142 @@ import { CompositeNavigationProp, NavigatorScreenParams } from "@react-navigatio
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { FC } from "react";
 import type { useAppSelector, useAppDispatch } from "./store";
-// redux
 
-export interface AccountGeneral<birthday> {
-	readonly uid: string;
-	displayName?: string;
-	image: string;
-	birthday: (SupportType.DateISOString | Date) & birthday;
-	nickName: string;
+/** Пол пользователя */
+export enum Gender {
+	/** Мужской */
+	MALE = "MALE",
+	/** Женский */
+	FEMALE = "FEMALE",
+	/** Другой/неопределенно */
+	OTHER = "OTHER",
 }
 
-export type AccountJSON = AccountGeneral<SupportType.DateISOString>;
-export type Account = AccountGeneral<Date>;
+/** Тип подписки пользователя строковой формат */
+export enum SubscribeType {
+	/** Пробная подписка в длинною 7 дней */
+	Week = "Week",
+	/** Подписка при которой будет происходить ежемесячное списание средств */
+	Month = "Month",
+	/** Подписка при которой будет происходить списание средств раз в 6 месяцев */
+	Month6 = "Month6",
+}
 
+/** Практики медитаций поддерживаемы приложением */
+export enum PracticesMeditation {
+	/** Релаксации */
+	RELAXATION = "relaxation",
+	/** Дыхательные практики */
+	BREATHING_PRACTICES = "breathingPractices",
+	/** Практики направленной визуализации */
+	DIRECTIONAL_VISUALIZATIONS = "directionalVisualizations",
+	/** Танцевальные практики */
+	DANCE_PSYCHOTECHNICS = "dancePsychotechnics",
+	/** Практики базовой медитации */
+	BASIC = "basic",
+}
+/** Список экранов с приветствием */
+export enum GreetingScreen {
+	INTRO = "Intro",
+	GREETING = "Greeting",
+	DESCRIPTION_PRACTICES = "DescriptionPractices",
+	DESCRIPTION_DMD = "DescriptionDMD",
+}
+
+/** Статус авторизации аккаунта в приложении */
 export enum AccountStatus {
+	/** Данные пользователя найдены в системе Evolution и в Firebase */
 	REGISTRATION,
+	/** Данные пользователя не найдены в системе Evolution, но его данные найдены в Firebase */
 	NO_REGISTRATION,
+	/** Данные пользователя не найдены в системе Evolution и в Firebase */
 	NO_AUTHENTICATION,
 }
 
-// TODO найти лучшее решение
-export interface ChangedAccountDataGeneral<birthday> {
-	nickname?: string;
-	image?: string;
-	displayName?: string;
-
-	birthday?: (SupportType.DateISOString | Date) & birthday;
+// !
+export enum StatisticPeriod {
+	WEEK = "WEEK",
+	MONTH = "MONTH",
+	ALL = "ALL",
 }
 
-export type ChangedAccountDataJSON = ChangedAccountDataGeneral<SupportType.DateISOString>;
-export type ChangedAccountData = ChangedAccountDataGeneral<Date>;
-
-export namespace SupportType {
-	export type DateISOString = string;
-	export type Guid = string | null;
-}
-
-type Role = "ADMIN" | "USER";
-type Gender = "MALE" | "FEMALE" | "OTHER";
-type Category =
-	| "NULL"
-	| "BLOGGER"
-	| "COMMUNITY"
-	| "ORGANIZATION"
-	| "EDITOR"
-	| "WRITER"
-	| "GARDENER"
-	| "FLOWER_MAN"
-	| "PHOTOGRAPHER";
-export type SubscribeType = "Week" | "Month" | "Month6";
-type TimeMeditation = "LessThan15Minutes" | "MoreThan15AndLessThan60Minutes" | "MoreThan60Minutes";
-// server
-
-export namespace ServerEntities {
+// состояния
+export namespace State {
+	export type Gender = "MALE" | "FEMALE" | "OTHER";
+	export type AccountStatus = "REGISTRATION" | "NO_REGISTRATION" | "NO_AUTHENTICATION";
+	export type PracticesMeditation =
+		| "BASIC"
+		| "BREATHING_PRACTICES"
+		| "DANCE_PSYCHOTECHNICS"
+		| "DIRECTIONAL_VISUALIZATIONS"
+		| "RELAXATION";
 	export interface User {
-		readonly Id: string;
-		readonly NickName: string;
-		readonly Birthday: string;
-		readonly DisplayName?: string;
-		readonly Status?: string;
-		readonly UserRole: Role;
-		readonly UserGender: Gender;
-		readonly UserCategory: Category;
-		readonly DateTimeRegistration: string;
-		readonly HasPhoto: boolean;
-		readonly IsSubscribe: boolean;
+		/** Уникальный идентификатор пользователя в Firebase */
+		readonly uid: string;
+		/**	Отображаемое имя пользователя */
+		readonly displayName?: string;
+		/** Ссылка на изображения пользователя */
+		readonly image: string;
+		/** Дата рождения пользователя */
+		readonly birthday: string;
+		/** Уникальное имя пользователя */
+		readonly nickName: string;
+		/** Пол пользователя */
+		readonly gender: Gender;
+	}
+	export interface Account {
+		/** Уникальный идентификатор пользователя в системе */
+		readonly uid?: string;
+		/** Статус авторизации пользователя */
+		readonly status: AccountStatus;
+		/** Пользовательские данные аккаунта */
+		readonly userData?: User;
+		/** Измененные, но не сохраненные пользователем данные */
+		readonly changeUserData: ChangedUserData;
+	}
+	export interface Instruction {
+		readonly id: string;
+		readonly title: string;
+		readonly description: string;
+		readonly body: { text: string }[];
+	}
+	export interface ChangedUserData {
+		/** Обновленное уникальное имя пользователя */
+		readonly nickname?: string;
+		/** Новое изображения пользователя в Base64 */
+		readonly image?: string;
+		/** Новое отображаемое имя пользователя */
+		readonly displayName?: string;
+		/** Обновленная дата рождения пользователя */
+		readonly birthday?: string;
+		/** Когда был проверка вернула успешный результат nickname на валидность */
+		readonly lastSuccessCheckNickname?: [string, boolean];
+	}
+	export interface Practice {
+		id: string;
+		description: string;
+		name: string;
+		instruction: Instruction;
+		image: string;
+		type: State.PracticesMeditation;
+		audio?: string;
+		isNeedSubscribe: boolean;
+	}
+	export interface StatisticUnit {
+		id: string;
+		dateListen: string;
+		timeListen: number;
+		meditation: Practice;
+	}
+	export interface Statistic {
+		[index: string]: State.StatisticUnit;
 	}
 
-	export interface Meditation {
-		readonly id: SupportType.Guid;
-		readonly Language?: string;
-		readonly Name?: string;
-		readonly Description?: string;
-		readonly TypeMeditation: TypeMeditation;
-		readonly Time: TimeMeditation;
-		readonly IsSubscribed: boolean;
-		readonly HasAudio: boolean;
-		readonly AudioLength: number;
-	}
+	export type FavoritePractices = Practice[];
 
-	export interface Subscribe {
-		readonly UserId: string;
-		readonly WhenSubscribe: SupportType.DateISOString;
-		readonly RemainingTime: number;
-		readonly Type: SubscribeType;
-		readonly RebillId: number;
-	}
-
-	export interface Payment {
-		readonly Id: string;
-		readonly UserId: string;
-		readonly Amount: number;
-		readonly PaymentDateTime: SupportType.DateISOString;
-		readonly RecurrentPayment: boolean;
-		readonly Confirm: boolean;
+	export interface MessageProfessor {
+		idMessage: string;
+		dateTimeLastUpdate: string;
 	}
 }
 
@@ -170,23 +212,14 @@ export type RootScreenProps<T extends keyof RootStackList> = FC<
 	}
 >;
 
-export type TypeMeditation =
-	| "relaxation"
-	| "breathingPractices"
-	| "directionalVisualizations"
-	| "dancePsychotechnics"
-	| "basic"
-	| "DMD";
-
 export interface Meditation {
 	id: string;
 	lengthAudio: number;
-	name: string;
+	name?: string;
 	type: TypeMeditation;
 	image: string;
-	description: string;
+	description?: string;
 	audio?: string;
-	audioId?: string;
 	permission: boolean;
 	instruction?: Instruction;
 }

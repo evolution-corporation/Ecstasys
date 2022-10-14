@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { FC, memo } from "react";
 import { StyleSheet } from "react-native";
 
@@ -17,91 +19,75 @@ import MainIcon from "./assets/HomeIcon";
 import PracticesIcon from "./assets/PracticesIcon";
 import ProfileIcon from "./assets/ProfileIcon";
 import { useAppDispatch, useAppSelector } from "~store";
-import {
-  AccountStatus,
-  RootScreenProps,
-  RootStackList,
-  TabNavigatorList,
-} from "~types";
+import { AccountStatus, RootScreenProps, RootStackList, TabNavigatorList } from "~types";
+import { Account } from "src/models";
 
 const TabNavigator = createBottomTabNavigator<TabNavigatorList>();
 
 const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
-  return (
-    <TabNavigator.Navigator
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: "#9765A8",
-        },
-        headerTintColor: "#FFFFFF",
-        headerShadowVisible: false,
-        tabBarShowLabel: false,
-        headerTitleStyle: {
-          ...Core.gStyle.font("700"),
-          fontSize: 24,
-        },
-        tabBarStyle: {
-          height: 75,
-        },
-      }}
-    >
-      <TabNavigator.Screen
-        name={"Main"}
-        component={Screens.TabsScreen.Main}
-        options={{
-          headerTransparent: true,
-          headerShown: false,
-          tabBarIcon: ({ focused, color }) => (
-            <MainIcon
-              colorIcon={
-                focused ? "rgba(112, 45, 135, 1)" : "rgba(158, 158, 158, 1)"
-              }
-            />
-          ),
-        }}
-      />
-      <TabNavigator.Screen
-        name={"PracticesList"}
-        component={Screens.TabsScreen.PracticesList}
-        options={{
-          title: Core.i18n.t("c08bb9d1-1769-498e-acf5-8c37c18bed05"),
-          headerRight: () => <UserButton style={{ marginRight: 20 }} />,
-          tabBarIcon: ({ focused }) => (
-            <PracticesIcon
-              colorIcon={
-                focused ? "rgba(112, 45, 135, 1)" : "rgba(158, 158, 158, 1)"
-              }
-            />
-          ),
-        }}
-      />
-      <TabNavigator.Screen
-        name={"Profile"}
-        component={Screens.TabsScreen.Profile}
-        options={{
-          headerRight: () => (
-            <ColorButton
-              secondItem={<TreeLine />}
-              styleButton={{
-                backgroundColor: "transparent",
-                marginRight: 17,
-              }}
-              onPress={() => {
-                navigation.navigate("OptionsProfile");
-              }}
-            />
-          ),
-          tabBarIcon: ({ focused }) => (
-            <ProfileIcon
-              colorIcon={
-                focused ? "rgba(112, 45, 135, 1)" : "rgba(158, 158, 158, 1)"
-              }
-            />
-          ),
-        }}
-      />
-    </TabNavigator.Navigator>
-  );
+	return (
+		<TabNavigator.Navigator
+			screenOptions={{
+				headerStyle: {
+					backgroundColor: "#9765A8",
+				},
+				headerTintColor: "#FFFFFF",
+				headerShadowVisible: false,
+				tabBarShowLabel: false,
+				headerTitleStyle: {
+					...Core.gStyle.font("700"),
+					fontSize: 24,
+				},
+				tabBarStyle: {
+					height: 75,
+				},
+			}}
+		>
+			<TabNavigator.Screen
+				name={"Main"}
+				component={Screens.TabsScreen.Main}
+				options={{
+					headerTransparent: true,
+					headerShown: false,
+					tabBarIcon: ({ focused, color }) => (
+						<MainIcon colorIcon={focused ? "rgba(112, 45, 135, 1)" : "rgba(158, 158, 158, 1)"} />
+					),
+				}}
+			/>
+			<TabNavigator.Screen
+				name={"PracticesList"}
+				component={Screens.TabsScreen.PracticesList}
+				options={{
+					title: Core.i18n.t("c08bb9d1-1769-498e-acf5-8c37c18bed05"),
+					headerRight: () => <UserButton style={{ marginRight: 20 }} />,
+					tabBarIcon: ({ focused }) => (
+						<PracticesIcon colorIcon={focused ? "rgba(112, 45, 135, 1)" : "rgba(158, 158, 158, 1)"} />
+					),
+				}}
+			/>
+			<TabNavigator.Screen
+				name={"Profile"}
+				component={Screens.TabsScreen.Profile}
+				options={{
+					headerRight: () => (
+						<ColorButton
+							secondItem={<TreeLine />}
+							styleButton={{
+								backgroundColor: "transparent",
+								marginRight: 17,
+							}}
+							onPress={() => {
+								navigation.navigate("OptionsProfile");
+							}}
+						/>
+					),
+					tabBarIcon: ({ focused }) => (
+						<ProfileIcon colorIcon={focused ? "rgba(112, 45, 135, 1)" : "rgba(158, 158, 158, 1)"} />
+					),
+				}}
+			/>
+		</TabNavigator.Navigator>
+	);
 };
 
 // const MeditationPractices =
@@ -269,79 +255,76 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
 const RootNavigation = createNativeStackNavigator<RootStackList>();
 
 const RootRoutes: FC = () => {
-  const accountStatus = useAppSelector((state) => state.account.accountStatus);
-  const appDispatch = useAppDispatch();
-  if (accountStatus === undefined) return null;
-  console.log(
-    Object.entries(Screens.StackScreen)
-      .filter(
-        ([_, [__, needAccountStatus]]) => accountStatus === needAccountStatus
-      )
-      .map((item) => item[0])
-  );
-  return (
-    <RootNavigation.Navigator
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: "#9765A8",
-        },
-        headerTintColor: "#FFFFFF",
-        headerShadowVisible: false,
-        headerTitleStyle: {
-          ...Core.gStyle.font("700"),
-          fontSize: 24,
-        },
-      }}
-    >
-      {accountStatus === AccountStatus.REGISTRATION && (
-        <RootNavigation.Screen name={"TabNavigator"} component={TabRoutes} />
-      )}
-      {Object.entries(Screens.StackScreen)
-        .filter(
-          ([_, [__, needAccountStatus]]) => accountStatus === needAccountStatus
-        )
-        .map(([key, value]) => {
-          const nameScreen = key as keyof RootStackList;
-          const Screen = memo(value[0] as RootScreenProps<keyof RootStackList>);
-          return (
-            <RootNavigation.Screen name={nameScreen} key={nameScreen}>
-              {(props) => <Screen {...props} appDispatch={appDispatch} />}
-            </RootNavigation.Screen>
-          );
-        })}
-    </RootNavigation.Navigator>
-  );
+	const accountStatus = useAppSelector(state => Account.createByState(state.account).status);
+	const appDispatch = useAppDispatch();
+	if (accountStatus === undefined) return null;
+	console.log(
+		"renderScree",
+		Object.entries(Screens.StackScreen)
+			.filter(([_, [__, needAccountStatus]]) => accountStatus === needAccountStatus)
+			.map(item => item[0])
+	);
+	return (
+		<RootNavigation.Navigator
+			screenOptions={{
+				headerStyle: {
+					backgroundColor: "#9765A8",
+				},
+				headerTintColor: "#FFFFFF",
+				headerShadowVisible: false,
+				headerTitleStyle: {
+					...Core.gStyle.font("700"),
+					fontSize: 24,
+				},
+			}}
+		>
+			{accountStatus === AccountStatus.REGISTRATION && (
+				<RootNavigation.Screen name={"TabNavigator"} component={TabRoutes} />
+			)}
+			{Object.entries(Screens.StackScreen)
+				.filter(([_, [__, needAccountStatus]]) => accountStatus === needAccountStatus)
+				.map(([key, value]) => {
+					const nameScreen = key as keyof RootStackList;
+					const Screen = memo(value[0] as RootScreenProps<keyof RootStackList>);
+					return (
+						<RootNavigation.Screen name={nameScreen} key={nameScreen}>
+							{props => <Screen {...props} appDispatch={appDispatch} />}
+						</RootNavigation.Screen>
+					);
+				})}
+		</RootNavigation.Navigator>
+	);
 };
 
 const styles = StyleSheet.create({
-  meditationName: {
-    color: "#FFFFFF",
-    fontSize: 20,
-    ...Core.gStyle.font("700"),
-    textAlign: "center",
-    width: "100%",
-    height: 20,
-  },
-  meditationType: {
-    color: "#FFFFFF",
-    fontSize: 14,
-    ...Core.gStyle.font("400"),
-    textAlign: "center",
-  },
-  screenLoading: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#9765A8",
-  },
-  tabBarBackground: {
-    flexDirection: "row",
-    height: 74,
-    backgroundColor: "#FFFFFF",
-    position: "absolute",
-    width: "100%",
-    bottom: 0,
-  },
+	meditationName: {
+		color: "#FFFFFF",
+		fontSize: 20,
+		...Core.gStyle.font("700"),
+		textAlign: "center",
+		width: "100%",
+		height: 20,
+	},
+	meditationType: {
+		color: "#FFFFFF",
+		fontSize: 14,
+		...Core.gStyle.font("400"),
+		textAlign: "center",
+	},
+	screenLoading: {
+		flex: 1,
+		alignItems: "center",
+		justifyContent: "center",
+		backgroundColor: "#9765A8",
+	},
+	tabBarBackground: {
+		flexDirection: "row",
+		height: 74,
+		backgroundColor: "#FFFFFF",
+		position: "absolute",
+		width: "100%",
+		bottom: 0,
+	},
 });
 
 export default memo(RootRoutes);
