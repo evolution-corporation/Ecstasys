@@ -104,7 +104,7 @@ export namespace ServerEntities {
 		readonly RemainingTime: number;
 		/** Тип оформляемой подписки */
 		readonly Type: SupportType.SubscribeType;
-
+		/** Id автоплатежа */
 		readonly RebillId: number;
 	}
 	/** Сущность платежа которая возвращается с сервера */

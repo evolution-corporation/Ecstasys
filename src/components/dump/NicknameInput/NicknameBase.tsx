@@ -14,11 +14,9 @@ import {
 } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
-import API from "~api";
-
-import CheckMarkerGreen from "assets/icons/CheckMarkerGreen.svg";
 import CheckMarkerWhite from "assets/icons/CheckMarkerWhite.svg";
 import { isNicknameValidate } from "src/validators";
+import { Users } from "src/models";
 import Tools from "~core";
 
 export enum StatusCheck {
@@ -30,7 +28,13 @@ export enum StatusCheck {
 }
 
 const NicknameInput = forwardRef<Ref, Props>((props, ref) => {
-	const { styleNicknameInputView, styleNicknameInputText, defaultValue = "", onEndChange } = props;
+	const {
+		styleNicknameInputView,
+		styleNicknameInputText,
+		defaultValue = "",
+		onEndChange,
+		checkValidateNickname,
+	} = props;
 	const [statusCheck, setStatusCheck] = useState<StatusCheck>(StatusCheck.AWAIT);
 	const [nickname, setNickname] = useState<string>(defaultValue);
 
@@ -48,8 +52,8 @@ const NicknameInput = forwardRef<Ref, Props>((props, ref) => {
 		}
 		setStatusCheck(StatusCheck.LOADING);
 		if (isNicknameValidate(inputNickname)) {
-			const result = await API.checkNickname(inputNickname);
-			setStatusCheck(result ? StatusCheck.FREE : StatusCheck.USED);
+			const result = await checkValidateNickname(inputNickname);
+			setStatusCheck(result);
 		} else {
 			setStatusCheck(StatusCheck.INCORRECT);
 			return;
@@ -62,7 +66,7 @@ const NicknameInput = forwardRef<Ref, Props>((props, ref) => {
 		} else {
 			_colorBorderView.value = "#C2A9CE";
 		}
-		if (!!onEndChange && statusCheck === StatusCheck.LOADING) {
+		if (!!onEndChange) {
 			onEndChange(nickname, statusCheck);
 		}
 	}, [statusCheck]);
@@ -71,7 +75,7 @@ const NicknameInput = forwardRef<Ref, Props>((props, ref) => {
 		editNickname,
 	}));
 
-	let [StatusCheckView, StatusCheckText] = useMemo(() => {
+	let [StatusCheckView, StatusCheckText] = (() => {
 		switch (statusCheck) {
 			case StatusCheck.AWAIT:
 				return [<ActivityIndicator color={"#FFFFFFFF"} size={"small"} />, null];
@@ -90,11 +94,11 @@ const NicknameInput = forwardRef<Ref, Props>((props, ref) => {
 						: Tools.i18n.t("564efb95-c192-4406-830f-13b3612bae0e"),
 				];
 			case StatusCheck.FREE:
-				return [<CheckMarkerGreen />, null];
+				return [<CheckMarkerWhite />, null];
 			default:
 				return [null, null];
 		}
-	}, [statusCheck]);
+	})();
 
 	return (
 		<>
@@ -119,6 +123,7 @@ export interface Props extends TextInputProps {
 	styleNicknameInputText?: TextStyle;
 	styleNicknameInputView?: ViewStyle;
 	onEndChange?: (nickname: string, statusCheck: StatusCheck) => void;
+	checkValidateNickname: (nickname: string) => Promise<StatusCheck>;
 }
 
 export interface Ref {

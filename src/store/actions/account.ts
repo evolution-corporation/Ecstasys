@@ -57,6 +57,7 @@ export const registrationAccountData = createAsyncThunk<State.Account, undefined
 	async (_, { getState }) => {
 		const account = Account.createByState(getState().account);
 		const { birthday, nickname, image } = await account.changeUserData.getChangeData();
+		console.log(nickname);
 		if (nickname === undefined || birthday === undefined) {
 			throw new Error("Need nickname and birthday");
 		}

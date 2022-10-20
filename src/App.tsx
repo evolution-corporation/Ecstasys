@@ -8,9 +8,13 @@ import { Provider } from "react-redux";
 
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
+import Player from "~components/screens/Player";
+
 import RootRoutes from "./routes";
 import Store, { actions, useAppSelector } from "./store";
 import { MessageProfessor } from "./models";
+import { CarouselPractices, CarouselPracticesElement } from "~components/dump";
+import "./TaskManager";
 
 if (Platform.OS === "android") {
 	if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -23,20 +27,12 @@ const AppCore: FC<Props> = props => {
 	);
 
 	useEffect(() => {
-		console.log("reRender");
 		(async () => {
 			await SplashScreen.preventAutoHideAsync();
-			await Store.dispatch(actions.initialization()).unwrap();
-		})();
-	});
-
-	useEffect(() => {
-		if (moduleIsLoaded) {
+			// await Store.dispatch(actions.initialization()).unwrap();
 			SplashScreen.hideAsync();
-		} else {
-			SplashScreen.preventAutoHideAsync();
-		}
-	}, [moduleIsLoaded]);
+		})();
+	}, []);
 
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>

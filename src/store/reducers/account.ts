@@ -7,6 +7,7 @@ import Actions from "../actions";
 
 export interface AccountState extends State.Account {
 	isLoaded: boolean;
+	errorMessage?: string;
 }
 
 export default createReducer<AccountState>(
@@ -14,6 +15,7 @@ export default createReducer<AccountState>(
 		changeUserData: {},
 		status: "NO_AUTHENTICATION",
 		isLoaded: false,
+		subscribe: null,
 	},
 	builder => {
 		builder.addCase(Actions.setChangedAccountData.fulfilled, (state, { payload }) => ({ ...state, ...payload }));
@@ -28,5 +30,8 @@ export default createReducer<AccountState>(
 			...payload.account,
 			isLoaded: true,
 		}));
+		builder.addCase(Actions.initialization.rejected, (state, { payload }) => {
+			return { ...state, isLoaded: true, errorMessage: payload.message };
+		});
 	}
 );

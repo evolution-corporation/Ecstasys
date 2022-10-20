@@ -1,8 +1,10 @@
 /** @format */
 
+import { SupportType } from "src/api/types";
 import { Request } from "~api";
 import { PracticesMeditation, State } from "~types";
 import Instructions from "./instruction";
+import { Audio, AVPlaybackStatus } from "expo-av";
 
 /** Хранит в себе информацию об практике */
 export default class Practices {
@@ -23,12 +25,15 @@ export default class Practices {
 	/** Инструкция к данной медитации */
 	public readonly instruction: Instructions;
 
+	//!
+	public readonly length: number;
 	constructor(
 		id: string,
 		name: string,
 		type: PracticesMeditation,
 		image: string,
 		description: string,
+		length: number,
 		isNeedSubscribe: boolean = true,
 		audio?: string,
 		instruction?: Instructions
@@ -40,6 +45,7 @@ export default class Practices {
 		this.isNeedSubscribe = isNeedSubscribe;
 		this.audio = audio;
 		this.type = type;
+		this.length = length;
 		switch (type) {
 			case PracticesMeditation.BREATHING_PRACTICES:
 				this.instruction = Instructions.getForRelaxation(); // ! Исправить когда разберемся с инструкциями
@@ -88,6 +94,7 @@ export default class Practices {
 			type,
 			audio: this.audio,
 			isNeedSubscribe: this.isNeedSubscribe ?? true,
+			length: this.length,
 		};
 	}
 
@@ -118,6 +125,7 @@ export default class Practices {
 			type,
 			state.image,
 			state.description,
+			state.length,
 			state.isNeedSubscribe,
 			state.audio,
 			Instructions.createByState(state.instruction)
@@ -160,10 +168,206 @@ export default class Practices {
 				typePractices,
 				image,
 				practice.Description,
+				practice.AudioLength,
 				practice.IsSubscribed,
 				audio
 				// ! инструкции
 			);
 		}
 	}
+
+	public static async getCountPractice(practiceType: PracticesMeditation): Promise<number> {
+		let type: SupportType.TypeMeditation;
+		switch (practiceType) {
+			case PracticesMeditation.BASIC:
+				return 0;
+				break;
+			case PracticesMeditation.BREATHING_PRACTICES:
+				type = "breathingPractices";
+				break;
+			case PracticesMeditation.DANCE_PSYCHOTECHNICS:
+				type = "dancePsychotechnics";
+				break;
+			case PracticesMeditation.DIRECTIONAL_VISUALIZATIONS:
+				type = "directionalVisualizations";
+				break;
+			case PracticesMeditation.RELAXATION:
+				type = "relaxation";
+				break;
+		}
+		//dev
+		return 10; // await Request.getCountMeditationsByType(type);
+	}
+
+	public static convertCount(countPractice: { [key in State.PracticesMeditation]: number }): {
+		[key in PracticesMeditation]: number;
+	} {
+		return {
+			basic: countPractice.BASIC,
+			breathingPractices: countPractice.BREATHING_PRACTICES,
+			dancePsychotechnics: countPractice.DANCE_PSYCHOTECHNICS,
+			directionalVisualizations: countPractice.DIRECTIONAL_VISUALIZATIONS,
+			relaxation: countPractice.RELAXATION,
+		};
+	}
+
+	public static async getByType(type: PracticesMeditation) {
+		return [
+			{
+				id: "94413433-13bf-4569-846b-974f428bc673",
+				Description: "test",
+				Name: "rest",
+				TypeMeditation: "relaxation",
+				instruction: { id: "123", body: [], title: "123312", description: "asdasd" },
+				IsSubscribed: true,
+				AudioLength: 212000,
+				HasAudio: true,
+			},
+			{
+				id: "11233122",
+				Description:
+					"asadaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaasa",
+				image:
+					"https://storage.yandexcloud.net/dmdmeditationimage/meditations/d76cb078-7cdd-43d2-bfda-6eaa3be04fde.png",
+				Name: "ressadadst",
+				TypeMeditation: "relaxation",
+				instruction: { id: "123", body: [], title: "123312", description: "asdasd" },
+				IsSubscribed: false,
+				AudioLength: 300000,
+				HasAudio: true,
+			},
+			{
+				id: "1122",
+				Description: "tesasdast",
+				image:
+					"https://storage.yandexcloud.net/dmdmeditationimage/meditations/f5d9af34-08f2-446c-b9f5-f57f7acaae2d.png",
+				Name: "resvcxvzt",
+				TypeMeditation: "relaxation",
+				instruction: { id: "123", body: [], title: "123312", description: "asdasd" },
+				HasAudio: true,
+				IsSubscribed: true,
+				AudioLength: 600000,
+			},
+			{
+				id: "1121322",
+				Description: "tesaaadaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaasdast",
+				image:
+					"https://storage.yandexcloud.net/dmdmeditationimage/meditations/f5d9af34-08f2-446c-b9f5-f57f7acaae2d.png",
+				Name: "asadaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaasa",
+				TypeMeditation: "relaxation",
+				instruction: { id: "123", body: [], title: "123312", description: "asdasd" },
+				HasAudio: true,
+				IsSubscribed: true,
+				AudioLength: 6000000,
+			},
+		].map(
+			practiceData =>
+				new Practices(
+					practiceData.id,
+					practiceData.Name,
+					(() => {
+						switch (practiceData.TypeMeditation) {
+							case "relaxation":
+								return PracticesMeditation.RELAXATION;
+							case "directionalVisualizations":
+								return PracticesMeditation.DIRECTIONAL_VISUALIZATIONS;
+							case "dancePsychotechnics":
+								return PracticesMeditation.DANCE_PSYCHOTECHNICS;
+							case "breathingPractices":
+								return PracticesMeditation.BREATHING_PRACTICES;
+							default:
+								throw new Error("NotFoundNeed Type");
+						}
+					})(),
+					`https://storage.yandexcloud.net/dmdmeditationimage/meditations/${practiceData.id}.png`,
+					practiceData.Description === undefined
+						? (() => {
+								throw new Error("not Found Description");
+						  })()
+						: practiceData.Description,
+					practiceData.AudioLength,
+					practiceData.IsSubscribed,
+					practiceData.HasAudio ? `https://storage.yandexcloud.net/dmdmeditatonaudio/${practiceData.id}.mp3` : undefined
+				)
+		);
+
+		if (type === PracticesMeditation.BASIC) {
+			return [];
+		} else {
+			return (
+				await Request.getMeditationsByType(
+					(() => {
+						switch (type) {
+							case PracticesMeditation.BREATHING_PRACTICES:
+								return "breathingPractices";
+							case PracticesMeditation.DANCE_PSYCHOTECHNICS:
+								return "dancePsychotechnics";
+							case PracticesMeditation.DIRECTIONAL_VISUALIZATIONS:
+								return "directionalVisualizations";
+							case PracticesMeditation.RELAXATION:
+								return "relaxation";
+						}
+					})()
+				)
+			).map(
+				practiceData =>
+					new Practices(
+						practiceData.id,
+						practiceData.Name,
+						(() => {
+							switch (practiceData.TypeMeditation) {
+								case "relaxation":
+									return PracticesMeditation.RELAXATION;
+								case "directionalVisualizations":
+									return PracticesMeditation.DIRECTIONAL_VISUALIZATIONS;
+								case "dancePsychotechnics":
+									return PracticesMeditation.DANCE_PSYCHOTECHNICS;
+								case "breathingPractices":
+									return PracticesMeditation.BREATHING_PRACTICES;
+								default:
+									throw new Error("NotFoundNeed Type");
+							}
+						})(),
+						`https://storage.yandexcloud.net/dmdmeditationimage/meditations/${practiceData.id}.png`,
+						practiceData.Description === undefined
+							? (() => {
+									throw new Error("not Found Description");
+							  })()
+							: practiceData.Description,
+						practiceData.AudioLength,
+						practiceData.IsSubscribed,
+						practiceData.HasAudio
+							? `https://storage.yandexcloud.net/dmdmeditatonaudio/${practiceData.id}.mp3`
+							: undefined
+					)
+			);
+		}
+	}
+}
+
+export const BackgroundSound = {
+	thunderstorm: {
+		image: require("assets/backgroundMusic/image/thunderstorm.png"),
+		audio: require("assets/backgroundMusic/sound/thunderstorm.mp3"),
+		translate: "10196d40-2dcd-48c9-a070-3b8f9b264df6",
+	},
+	waterfall: {
+		image: require("assets/backgroundMusic/image/waterfall.png"),
+		audio: require("assets/backgroundMusic/sound/waterfall.mp3"),
+		translate: "cd529b21-208b-4103-94ab-ee84b9845cd0",
+	},
+};
+
+export async function playFragmentMeditationBackground(name: keyof typeof BackgroundSound) {
+	const sound = (
+		await Audio.Sound.createAsync(BackgroundSound[name].audio, {
+			isLooping: true,
+		})
+	).sound;
+	await sound.playAsync();
+	const off = async () => {
+		await sound.stopAsync();
+	};
+	setTimeout(() => off(), 15000);
+	return off;
 }

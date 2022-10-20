@@ -101,4 +101,14 @@ export default class Users {
 			return Users.createByServerEntity(userData);
 		}
 	}
+
+	//!
+	public static async getByNickName(nickname: string): Promise<Users | null> {
+		const userData = await Request.getUserByNickname(nickname);
+		if (userData === null) {
+			return null;
+		} else {
+			return Users.createByServerEntity(userData);
+		}
+	}
 }

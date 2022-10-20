@@ -9,11 +9,13 @@ import { Request } from "~api";
 // * Импорт рядом лежащих файлов
 import Users from "./users";
 import ChangeUserData from "./changeUserData";
+import Subscribe from "./subscribe";
 
 /** Класс управление аккаунтом в приложении */
 export default class Account {
 	public userData?: Users;
 	public changeUserData: ChangeUserData;
+	public subscribe: Subscribe | null;
 
 	public get status(): AccountStatus {
 		const firebaseUser = auth().currentUser;
@@ -35,11 +37,16 @@ export default class Account {
 		}
 	}
 
-	constructor(userData?: Users, changeUserData: ChangeUserData = new ChangeUserData({})) {
+	constructor(
+		userData?: Users,
+		changeUserData: ChangeUserData = new ChangeUserData({}),
+		subscribe: Subscribe | null = null
+	) {
 		if (userData !== null) {
 			this.userData = userData;
 		}
 		this.changeUserData = changeUserData;
+		this.subscribe = subscribe;
 	}
 	/** состояние аккаунта */
 	public getState(): State.Account {
@@ -60,15 +67,20 @@ export default class Account {
 			status: status,
 			userData: this.userData?.getState(),
 			changeUserData: this.changeUserData.getState(),
+			subscribe: this.subscribe === null ? null : this.subscribe.getState(),
 		};
 	}
 	/** создать аккаунт из состояния */
 	public static createByState(state: State.Account): Account {
 		let user: Users | undefined;
+		let subscribe: Subscribe | null = null;
 		if (state.userData) {
 			user = Users.createByState(state.userData);
 		}
-		return new Account(user, ChangeUserData.createByState(state.changeUserData));
+		if (state.subscribe !== null) {
+			subscribe = Subscribe.createByState(state.subscribe);
+		}
+		return new Account(user, ChangeUserData.createByState(state.changeUserData), subscribe);
 	}
 
 	/** Пересборка аккаунта */
@@ -91,6 +103,7 @@ export default class Account {
 		} else {
 			this.userData = userData;
 		}
+		this.subscribe = await Subscribe.getSubscribe();
 		return this;
 	}
 
@@ -162,5 +175,10 @@ export default class Account {
 		} else {
 			return await this.signOut();
 		}
+	}
+
+	public getUserData() {
+		if (this.userData === undefined) throw new Error("Not found User Data");
+		return this.userData;
 	}
 }

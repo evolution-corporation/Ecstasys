@@ -3,7 +3,7 @@
 import React, { FC, memo } from "react";
 import { StyleSheet } from "react-native";
 
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
@@ -21,6 +21,8 @@ import ProfileIcon from "./assets/ProfileIcon";
 import { useAppDispatch, useAppSelector } from "~store";
 import { AccountStatus, RootScreenProps, RootStackList, TabNavigatorList } from "~types";
 import { Account } from "src/models";
+
+import Player from "~components/screens/Player";
 
 const TabNavigator = createBottomTabNavigator<TabNavigatorList>();
 
@@ -45,7 +47,7 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
 		>
 			<TabNavigator.Screen
 				name={"Main"}
-				component={Screens.TabsScreen.Main}
+				component={Screens.Main}
 				options={{
 					headerTransparent: true,
 					headerShown: false,
@@ -56,7 +58,7 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
 			/>
 			<TabNavigator.Screen
 				name={"PracticesList"}
-				component={Screens.TabsScreen.PracticesList}
+				component={Screens.PracticesList}
 				options={{
 					title: Core.i18n.t("c08bb9d1-1769-498e-acf5-8c37c18bed05"),
 					headerRight: () => <UserButton style={{ marginRight: 20 }} />,
@@ -67,7 +69,7 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
 			/>
 			<TabNavigator.Screen
 				name={"Profile"}
-				component={Screens.TabsScreen.Profile}
+				component={Screens.Profile}
 				options={{
 					headerRight: () => (
 						<ColorButton
@@ -252,18 +254,11 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
 //   );
 // };
 
-const RootNavigation = createNativeStackNavigator<RootStackList>();
+const RootNavigation = createSharedElementStackNavigator<RootStackList>();
 
 const RootRoutes: FC = () => {
 	const accountStatus = useAppSelector(state => Account.createByState(state.account).status);
-	const appDispatch = useAppDispatch();
 	if (accountStatus === undefined) return null;
-	console.log(
-		"renderScree",
-		Object.entries(Screens.StackScreen)
-			.filter(([_, [__, needAccountStatus]]) => accountStatus === needAccountStatus)
-			.map(item => item[0])
-	);
 	return (
 		<RootNavigation.Navigator
 			screenOptions={{
@@ -278,20 +273,50 @@ const RootRoutes: FC = () => {
 				},
 			}}
 		>
-			{accountStatus === AccountStatus.REGISTRATION && (
-				<RootNavigation.Screen name={"TabNavigator"} component={TabRoutes} />
+			<RootNavigation.Screen
+				name={"Player"}
+				component={Screens.Player}
+				initialParams={{
+					practiceState: {
+						id: "6387521c-adb7-49b7-8a0f-5882eacc35af",
+						description: "test",
+						image:
+							"https://storage.yandexcloud.net/dmdmeditationimage/meditations/00bcbd42-038b-4ef7-95b5-9b8e3a592ef9.png",
+						audio: "https://storage.yandexcloud.net/dmdmeditatonaudio/6387521c-adb7-49b7-8a0f-5882eacc35af.mp3",
+						instruction: { body: [{ text: "rest" }], description: "te", id: "asd", title: "aseasae" },
+						isNeedSubscribe: false,
+						length: 100000,
+						name: "test practive",
+						type: "RELAXATION",
+					},
+				}}
+			/>
+			<RootNavigation.Screen name={"SelectBackgroundSound"} component={Screens.SelectBackgroundSound} />
+			{/* {accountStatus === AccountStatus.NO_AUTHENTICATION && (
+				<>
+					<RootNavigation.Screen name={"Greeting"} component={Screens.Greeting} />
+					<RootNavigation.Screen name={"SelectMethodAuthentication"} component={Screens.SelectMethodAuthentication} />
+				</>
 			)}
-			{Object.entries(Screens.StackScreen)
-				.filter(([_, [__, needAccountStatus]]) => accountStatus === needAccountStatus)
-				.map(([key, value]) => {
-					const nameScreen = key as keyof RootStackList;
-					const Screen = memo(value[0] as RootScreenProps<keyof RootStackList>);
-					return (
-						<RootNavigation.Screen name={nameScreen} key={nameScreen}>
-							{props => <Screen {...props} appDispatch={appDispatch} />}
-						</RootNavigation.Screen>
-					);
-				})}
+
+			{accountStatus === AccountStatus.NO_REGISTRATION && (
+				<>
+					<RootNavigation.Screen name={"InputNickname"} component={Screens.InputNickname} />
+					<RootNavigation.Screen name={"InputImageAndBirthday"} component={Screens.InputImageAndBirthday} />
+				</>
+			)}
+
+			{accountStatus === AccountStatus.REGISTRATION && (
+				<>
+					<RootNavigation.Screen name={"TabNavigator"} component={TabRoutes} options={{ headerShown: false }} />
+					<RootNavigation.Screen name={"PracticeListByType"} component={Screens.PracticeListByType} />
+					<RootNavigation.Screen name={"OptionsProfile"} component={Screens.OptionsProfile} />
+					<RootNavigation.Screen name={"FavoriteMeditation"} component={Screens.FavoriteMeditation} />
+					<RootNavigation.Screen name={"EditMainUserData"} component={Screens.EditMainUserData} />
+					<RootNavigation.Screen name={"EditUserBirthday"} component={Screens.EditUserBirthday} />
+					<RootNavigation.Screen name={"Player"} component={Screens.Player} />
+				</>
+			)} */}
 		</RootNavigation.Navigator>
 	);
 };

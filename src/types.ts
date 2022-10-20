@@ -1,10 +1,14 @@
 /** @format */
 
 import { BottomTabNavigationProp, BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import { CompositeNavigationProp, NavigatorScreenParams } from "@react-navigation/native";
+import { CompositeNavigationProp, CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { AVPlaybackSource } from "expo-av";
 import { FC } from "react";
+import { TypeMeditation } from "~modules/meditation/types";
 import type { useAppSelector, useAppDispatch } from "./store";
+import type { BackgroundSound } from "src/models/practices";
+import { ImageSourcePropType } from "react-native";
 
 /** Пол пользователя */
 export enum Gender {
@@ -19,11 +23,11 @@ export enum Gender {
 /** Тип подписки пользователя строковой формат */
 export enum SubscribeType {
 	/** Пробная подписка в длинною 7 дней */
-	Week = "Week",
+	WEEK = "WEEK",
 	/** Подписка при которой будет происходить ежемесячное списание средств */
-	Month = "Month",
+	MONTH = "MONTH",
 	/** Подписка при которой будет происходить списание средств раз в 6 месяцев */
-	Month6 = "Month6",
+	HALF_YEAR = "HALF_YEAR",
 }
 
 /** Практики медитаций поддерживаемы приложением */
@@ -74,6 +78,7 @@ export namespace State {
 		| "DANCE_PSYCHOTECHNICS"
 		| "DIRECTIONAL_VISUALIZATIONS"
 		| "RELAXATION";
+	export type SubscribeType = "WEEK" | "MONTH" | "HALF_YEAR";
 	export interface User {
 		/** Уникальный идентификатор пользователя в Firebase */
 		readonly uid: string;
@@ -97,6 +102,8 @@ export namespace State {
 		readonly userData?: User;
 		/** Измененные, но не сохраненные пользователем данные */
 		readonly changeUserData: ChangedUserData;
+		//!
+		readonly subscribe: State.Subscribe | null;
 	}
 	export interface Instruction {
 		readonly id: string;
@@ -125,6 +132,7 @@ export namespace State {
 		type: State.PracticesMeditation;
 		audio?: string;
 		isNeedSubscribe: boolean;
+		length: number;
 	}
 	export interface StatisticUnit {
 		id: string;
@@ -142,6 +150,12 @@ export namespace State {
 		idMessage: string;
 		dateTimeLastUpdate: string;
 	}
+
+	export interface Subscribe {
+		type: State.SubscribeType;
+		whenSubscribe: string;
+		autoPayment: boolean;
+	}
 }
 
 // routing
@@ -152,15 +166,10 @@ export type TabNavigatorList = {
 	PracticesList: undefined;
 };
 
-export type TabNavigatorScreenProps<T extends keyof TabNavigatorList> = FC<
-	BottomTabScreenProps<TabNavigatorList, T> & {
-		appDispatch?: ReturnType<typeof useAppDispatch>;
-	}
->;
+export type TabNavigatorScreenProps<T extends keyof TabNavigatorList> = FC<BottomTabScreenProps<TabNavigatorList, T>>;
 
-export type TabCompositeStackNavigatorProps = CompositeNavigationProp<
-	BottomTabNavigationProp<TabNavigatorList, "Main">,
-	BottomTabNavigationProp<TabNavigatorList, "PracticesList">
+export type GeneralCompositeScreenProps = FC<
+	CompositeScreenProps<BottomTabScreenProps<TabNavigatorList>, BottomTabScreenProps<RootStackList>>
 >;
 
 export type MeditationPracticesList = {
@@ -170,9 +179,7 @@ export type MeditationPracticesList = {
 };
 
 export type MeditationPracticesScreenProps<T extends keyof MeditationPracticesList> = FC<
-	NativeStackScreenProps<MeditationPracticesList, T> & {
-		appDispatch?: ReturnType<typeof useAppDispatch>;
-	}
+	NativeStackScreenProps<MeditationPracticesList, T>
 >;
 
 export type RootStackList = {
@@ -180,11 +187,8 @@ export type RootStackList = {
 	EditMainUserData: undefined;
 	EditUserBirthday: undefined;
 	SelectSubscribe: undefined;
-	MeditationPracticeList: {
-		typeMeditation: TypeMeditation;
-	};
-	ListenMeditation: {
-		meditationId: string;
+	PracticeListByType: {
+		typePractices: PracticesMeditation;
 	};
 	IntroPractices: undefined;
 	Greeting: undefined;
@@ -204,13 +208,18 @@ export type RootStackList = {
 	};
 	InputNickname: undefined;
 	InputImageAndBirthday: undefined;
+	Player: {
+		practiceState: State.Practice;
+	};
+	SelectBackgroundSound: {
+		backgroundImage?: ImageSourcePropType;
+	};
+	Error: {
+		message: string;
+	};
 };
 
-export type RootScreenProps<T extends keyof RootStackList> = FC<
-	NativeStackScreenProps<RootStackList, T> & {
-		appDispatch?: ReturnType<typeof useAppDispatch>;
-	}
->;
+export type RootScreenProps<T extends keyof RootStackList> = FC<NativeStackScreenProps<RootStackList, T>>;
 
 export interface Meditation {
 	id: string;

@@ -5,10 +5,6 @@
  * @format
  */
 
-import * as Functions from "./functions";
-export default Functions;
-
 export * as Types from "./types";
 export * as Request from "./requests";
-export * as Instruction from "./instructionMeditation";
-export * as Storage from "./asyncStorge";
+export * as Storage from "./asyncStorage";

@@ -57,7 +57,7 @@ export default class ChangeUserData {
 		if (this.lastSuccessCheckNickname !== undefined) {
 			lastSuccessCheckNickname = [this.lastSuccessCheckNickname[0].toISOString(), this.lastSuccessCheckNickname[1]];
 		}
-
+		console.log("getState", lastSuccessCheckNickname);
 		return {
 			birthday: this.birthday?.toISOString(),
 			displayName: this.displayName,
@@ -92,7 +92,7 @@ export default class ChangeUserData {
 		if (nickname === undefined) {
 			throw new Error("Nickname not found");
 		}
-		if (Validators.isNicknameValidate(nickname) && (await Request.getUserByNickname(nickname))) {
+		if (Validators.isNicknameValidate(nickname) && (await Request.getUserByNickname(nickname)) === null) {
 			this.lastSuccessCheckNickname = [new Date(), true];
 			return true;
 		}
@@ -119,6 +119,10 @@ export default class ChangeUserData {
 			displayName: this.displayName,
 			birthday: this.birthday,
 		};
+	}
+
+	public async reservationNickname() {
+		if (this.nickname !== undefined) await Request.reservationNickname(this.nickname);
 	}
 }
 function getDeltaTime(minute: number): Date {

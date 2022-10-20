@@ -2,6 +2,7 @@
 
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { FavoritePractices, Practice, Statistic } from "src/models";
+import { BackgroundSound } from "src/models/practices";
 import { State } from "~types";
 import type { AsyncThunkConfig } from "../index";
 
@@ -9,6 +10,8 @@ enum PracticeAction {
 	addFavorite = "practice/addFavorite",
 	removeFavorite = "practice/removeFavorite",
 	addStatistic = "practice/addStatistic",
+	editBackgroundMusic = "practice/editBackgroundMusic",
+	editBackgroundVolume = "practice/editBackgroundVolume",
 }
 
 export const addFavoritePractice = createAsyncThunk<State.FavoritePractices, State.Practice, AsyncThunkConfig>(
@@ -44,3 +47,9 @@ export const addStatisticPractice = createAsyncThunk<State.Statistic, [State.Pra
 		).getState();
 	}
 );
+
+export const editBackgroundMusic = createAction<keyof typeof BackgroundSound | null>(
+	PracticeAction.editBackgroundMusic
+);
+
+export const editBackgroundVolume = createAction<number>(PracticeAction.editBackgroundVolume);

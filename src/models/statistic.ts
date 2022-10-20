@@ -126,4 +126,8 @@ export default class Statistic {
 			statisticsUnit.reduce((value, statisticUnit) => statisticUnit.timeListen + value, 0),
 		];
 	}
+
+	public getHistory(): Practices[] {
+		return this.list.map(item => item.meditation);
+	}
 }
