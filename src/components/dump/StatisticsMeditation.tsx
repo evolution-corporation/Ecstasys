@@ -3,6 +3,7 @@
 import React from "react";
 import { ColorValue, View, Text, StyleSheet, ViewProps } from "react-native";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
+import i18n from "~i18n";
 
 import Tools from "~core";
 
@@ -15,7 +16,7 @@ const StatisticsMeditation: React.FC<Props> = props => {
 				<View style={{ flex: 1, alignItems: "center" }}>
 					<Feather name={"headphones"} size={40} color={colorL} />
 					<Text style={[styles.staticCardText, { color: colorL }]}>
-						{Tools.i18n.t("8f6752b0-6ada-4344-a0b9-dd471eee1297", {
+						{i18n.t("8f6752b0-6ada-4344-a0b9-dd471eee1297", {
 							count: count,
 						})}
 					</Text>
@@ -27,7 +28,7 @@ const StatisticsMeditation: React.FC<Props> = props => {
 				<View style={{ flex: 1, alignItems: "center" }}>
 					<MaterialIcons name={"timer"} size={40} color={"#FFFFFF"} />
 					<Text style={[styles.staticCardText, { color: "#FFFFFF" }]}>
-						{Tools.i18n.t("dc1fa27d-9146-4a08-a241-7c10997eb654", {
+						{i18n.t("dc1fa27d-9146-4a08-a241-7c10997eb654", {
 							count: time,
 						})}
 					</Text>

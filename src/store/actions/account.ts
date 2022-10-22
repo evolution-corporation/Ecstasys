@@ -1,7 +1,9 @@
 /** @format */
+import auth from "@react-native-firebase/auth";
 
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { Account } from "src/models";
+import { Converter, Request, Storage } from "~api";
 import { State } from "~types";
 import type { AsyncThunkConfig } from "../index";
 
@@ -23,58 +25,107 @@ interface SetChangedAccountDataParams {
 	birthday?: Date;
 }
 
-export const setChangedAccountData = createAsyncThunk<State.Account, SetChangedAccountDataParams, AsyncThunkConfig>(
-	AccountAction.setChangedData,
-	async ({ birthday, displayName, image, nickname }, { getState }) => {
-		const account = Account.createByState(getState().account);
-		if (birthday !== undefined) {
-			await account.changeUserData.setBirthday(birthday);
-		}
-		if (displayName !== undefined) {
-			await account.changeUserData.setDisplayName(displayName);
-		}
-		if (image !== undefined) {
-			await account.changeUserData.setImage(image);
-		}
-		if (nickname !== undefined) {
-			await account.changeUserData.setNickname(nickname);
-		}
-		return account.getState();
+export const addChangedInformationUser = createAsyncThunk<
+	State.ChangedUserData,
+	SetChangedAccountDataParams,
+	AsyncThunkConfig
+>(AccountAction.setChangedData, async ({ birthday, displayName, image, nickname }) => {
+	let lastSuccessCheckNickname: undefined | [Date, boolean];
+	if (nickname !== undefined) {
+		lastSuccessCheckNickname = [new Date(), Request.getUserByNickname(nickname) === null];
 	}
-);
+	return {
+		birthday: birthday !== undefined ? birthday.toISOString() : undefined,
+		displayName,
+		image,
+		nickname: lastSuccessCheckNickname !== undefined ? nickname : undefined,
+		lastSuccessCheckNickname:
+			lastSuccessCheckNickname !== undefined
+				? [lastSuccessCheckNickname[0].toISOString(), lastSuccessCheckNickname[1]]
+				: undefined,
+	};
+});
 
-export const removeChangedAccountData = createAction(AccountAction.removeChangedData);
+export const removeChangedInformationUser = createAction(AccountAction.removeChangedData);
 
-export const saveChangeAccountData = createAsyncThunk<State.Account, undefined, AsyncThunkConfig>(
+export const updateAccount = createAsyncThunk<State.User, undefined, AsyncThunkConfig>(
 	AccountAction.saveChangeData,
 	async (_, { getState }) => {
-		return (await Account.createByState(getState().account).update()).getState();
+		let { birthday, displayName, gender, image, lastCheckNicknameAndResult, nickname } = getState().account.changeData;
+		if (nickname !== undefined) {
+			if (
+				lastCheckNicknameAndResult === undefined ||
+				Date.now() - new Date(lastCheckNicknameAndResult[0]).getTime() > 300000
+			) {
+				const isFree = (await Request.getUserByNickname(nickname)) === null;
+				lastCheckNicknameAndResult = [new Date().toISOString(), isFree];
+			}
+		}
+		const user = Converter.composeUser(
+			await Request.updateUser({
+				birthday: birthday !== undefined ? new Date(birthday) : undefined,
+				displayName,
+				image,
+				nickname:
+					nickname !== undefined && lastCheckNicknameAndResult !== undefined && lastCheckNicknameAndResult[1]
+						? nickname
+						: undefined,
+			})
+		);
+		if (user === null) {
+			throw new Error("Not Return UserInformation");
+		}
+		return user;
 	}
 );
 
-export const registrationAccountData = createAsyncThunk<State.Account, undefined, AsyncThunkConfig>(
+export const registrationAccount = createAsyncThunk<State.User, undefined, AsyncThunkConfig>(
 	AccountAction.registration,
 	async (_, { getState }) => {
-		const account = Account.createByState(getState().account);
-		const { birthday, nickname, image } = await account.changeUserData.getChangeData();
-		console.log(nickname);
+		let { birthday, nickname, image, lastCheckNicknameAndResult } = getState().account.changeData;
 		if (nickname === undefined || birthday === undefined) {
 			throw new Error("Need nickname and birthday");
 		}
-		return (await account.registration(nickname, birthday, image)).getState();
+		if (lastCheckNicknameAndResult === undefined) {
+			throw new Error("Nickname not checked");
+		}
+		if (Date.now() - new Date(lastCheckNicknameAndResult[0]).getTime() > 300000) {
+			const isFree = (await Request.getUserByNickname(nickname)) === null;
+			lastCheckNicknameAndResult = [new Date().toISOString(), isFree];
+		}
+		if (lastCheckNicknameAndResult[1]) {
+			const user = Converter.composeUser(await Request.createUser({ birthday: new Date(birthday), nickname, image }));
+			if (user === null) {
+				throw new Error("User Not Create");
+			}
+			return user;
+		} else {
+			throw new Error("nickname is use");
+		}
 	}
 );
 
-export const signOut = createAsyncThunk<State.Account, undefined, AsyncThunkConfig>(
-	AccountAction.signOut,
-	async (_, { getState }) => {
-		return (await Account.createByState(getState().account).signOut()).getState();
-	}
-);
+export const signOutAccount = createAsyncThunk(AccountAction.signOut, async () => {
+	await auth().signOut();
+	//! Сделать функцию по очистке AsyncStorage
+});
 
-export const signIn = createAsyncThunk<State.Account, undefined, AsyncThunkConfig>(
-	AccountAction.signIn,
-	async (_, { getState }) => {
-		return (await Account.createByState(getState().account).authentication()).getState();
+export const signInAccount = createAsyncThunk<
+	{ user: State.User | null; subscribe: State.Subscribe | null; id: string },
+	undefined,
+	AsyncThunkConfig
+>(AccountAction.signIn, async () => {
+	const userFirebase = auth().currentUser;
+	if (userFirebase === null) throw new Error("");
+	let user: State.User | null;
+	let subscribe: State.Subscribe | null;
+	const [userServer, subscribeServer] = await Request.getInformationUser();
+	[user, subscribe] = [
+		userServer !== null ? Converter.composeUser(userServer) : null,
+		userServer !== null && subscribeServer !== null ? Converter.composeSubscribe(subscribeServer) : null,
+	];
+	if (user !== null) {
+		Storage.setProfile(user.uid, user.nickName, new Date(user.birthday), user.gender, user.image, user.displayName);
 	}
-);
+	return { user, subscribe, id: userFirebase.uid };
+});

@@ -1,25 +1,26 @@
 {
-  "extends": "expo/tsconfig.base",
-  "compilerOptions": {
-    "target": "ES5",
-    "jsx": "react",
-    "strict": true,
-    "baseUrl": "./",
-    "paths": {
-      "~core": ["./src/core"],
-      "~routes/*": ["./src/routes/*"],
-      "~assets/*": ["./assets/*"],
-      "~api": ["./src/api"],
-      "~components/*": ["./src/components/*"],
-      "~constants": ["./src/constants"],
-      "~store": ["./src/store"],
-      "~hooks": ["./src/hooks"],
-      "~contexts/*": ["./src/contexts/*"],
-      "~modules/*": ["./src/modules/*"],
-      "~tools": ["./src/tools"],
-      "~types": ["./src/types"]
-    },
-    "typeRoots": ["./node_modules/@types"],
-    "experimentalDecorators": true
-  }
+	"extends": "expo/tsconfig.base",
+	"compilerOptions": {
+		"target": "ES5",
+		"jsx": "react",
+		"strict": true,
+		"baseUrl": "./",
+		"paths": {
+			"~core": ["./src/core"],
+			"~routes/*": ["./src/routes/*"],
+			"~assets/*": ["./assets/*"],
+			"~api": ["./src/api"],
+			"~components/*": ["./src/components/*"],
+			"~constants": ["./src/constants"],
+			"~store": ["./src/store"],
+			"~hooks": ["./src/hooks"],
+			"~contexts/*": ["./src/contexts/*"],
+			"~modules/*": ["./src/modules/*"],
+			"~tools": ["./src/tools"],
+			"~types": ["./src/types"],
+			"~i18n": ["./src/i18n"]
+		},
+		"typeRoots": ["./node_modules/@types"],
+		"experimentalDecorators": true
+	}
 }

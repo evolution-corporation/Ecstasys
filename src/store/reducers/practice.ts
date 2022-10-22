@@ -7,36 +7,55 @@ import { State } from "~types";
 
 import Actions from "../actions";
 
-export interface StatisticState {
+export interface PracticeState {
 	currentPractice?: State.Practice;
-	countPractice: { [key in State.PracticesMeditation]: number };
-	selectBackgroundMusicName: null | keyof typeof BackgroundSound;
-	backgroundMusicVolume: number;
+	paramsPractice: {
+		currentNameBackgroundSound: null | keyof typeof BackgroundSound;
+		currentVolumeBackgroundSound: number;
+	};
+	listPracticesListened: { dateListen: string; msListened: number; practice: State.Practice }[];
+	listPracticesFavorite: State.Practice[];
+	recommendationPracticeToDay?: State.Practice;
 }
 
-export default createReducer<StatisticState>(
+export default createReducer<PracticeState>(
 	{
-		countPractice: {
-			BASIC: 0,
-			BREATHING_PRACTICES: 0,
-			DANCE_PSYCHOTECHNICS: 0,
-			DIRECTIONAL_VISUALIZATIONS: 0,
-			RELAXATION: 0,
+		paramsPractice: {
+			currentNameBackgroundSound: null,
+			currentVolumeBackgroundSound: 0.5,
 		},
-		selectBackgroundMusicName: null,
-		backgroundMusicVolume: 0.5,
+		listPracticesListened: [],
+		listPracticesFavorite: [],
 	},
 	builder => {
 		builder.addCase(Actions.initialization.fulfilled, (state, { payload }) => {
-			state.countPractice = payload.countPractices;
+			const { listPracticesFavorite, listPracticesListened, recommendationPracticeToDay } = payload.practice;
+			for (let practiceFavorite of listPracticesFavorite) {
+				if (practiceFavorite === null) {
+					continue;
+				}
+				state.listPracticesFavorite = [...state.listPracticesFavorite, practiceFavorite];
+			}
+			for (let practiceListen of listPracticesListened) {
+				if (practiceListen === null) {
+					continue;
+				}
+				state.listPracticesListened = [
+					...state.listPracticesListened,
+					{
+						practice: practiceListen.practice,
+						dateListen: practiceListen.dateListen,
+						msListened: practiceListen.msListened,
+					},
+				];
+			}
+			if (recommendationPracticeToDay !== null) state.recommendationPracticeToDay = recommendationPracticeToDay;
 		});
-		builder.addCase(Actions.editBackgroundMusic, (state, { payload }) => {
-			state.selectBackgroundMusicName = payload;
-		});
+
 		builder.addCase(Actions.editBackgroundVolume, (state, { payload }) => {
 			if (payload < 0) payload = 0;
 			if (payload > 1) payload = 1;
-			state.backgroundMusicVolume = payload;
+			state.paramsPractice.currentVolumeBackgroundSound = payload;
 		});
 	}
 );

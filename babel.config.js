@@ -25,10 +25,10 @@ module.exports = function(api) {
             '~api': './src/api',
             '~components': './src/components',
             '~store': './src/store',
-            '~modules': './src/modules',
             '~tools': './src/tools',
             '~types': './src/types',
-            '~hooks': './src/hooks'
+            '~hooks': './src/hooks',
+            '~i18n': './src/i18n'
           },
         },
         "@babel/plugin-transform-typescript",

@@ -11,6 +11,7 @@ import Animated, {
 } from "react-native-reanimated";
 import Arrow from "assets/icons/Chevron_Down.svg";
 import Tools from "~core";
+import i18n from "~i18n";
 
 import { StatisticPeriod } from "~types";
 import core from "~core";
@@ -79,9 +80,9 @@ const SelectTimePeriodStatistic: React.FC<Props> = props => {
 		>
 			<RN.View style={[styles.selectTimePeriodContainer, { borderColor: "blue", borderWidth: 2 }]}>
 				{[
-					{ index: StatisticPeriod.WEEK, text: Tools.i18n.t("9e9fa745-7048-4a16-b227-7e3393a0e760") },
-					{ index: StatisticPeriod.MONTH, text: Tools.i18n.t("39f791d7-75c7-4c2a-9ea2-cbdd0d4fac17") },
-					{ index: StatisticPeriod.ALL, text: Tools.i18n.t("3bbe4d69-a6c5-4da0-8dad-0a67fd10cc61") },
+					{ index: StatisticPeriod.WEEK, text: i18n.t("9e9fa745-7048-4a16-b227-7e3393a0e760") },
+					{ index: StatisticPeriod.MONTH, text: i18n.t("39f791d7-75c7-4c2a-9ea2-cbdd0d4fac17") },
+					{ index: StatisticPeriod.ALL, text: i18n.t("3bbe4d69-a6c5-4da0-8dad-0a67fd10cc61") },
 				].map(({ index, text }) => (
 					<RN.Pressable
 						key={index}

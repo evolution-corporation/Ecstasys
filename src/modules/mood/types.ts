@@ -1,9 +1,0 @@
-export type UserMood =
-	| "IRRITATION"
-	| "ANXIETY"
-	| "CONCENTRATION"
-	| "HAPPINESS"
-	| "FATIGUE"
-	| "PACIFICATION"
-	| "SADNESS"
-	| "ABSENTMINDEDNESS";

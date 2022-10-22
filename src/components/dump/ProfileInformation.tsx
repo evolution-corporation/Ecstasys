@@ -6,6 +6,7 @@ import RN, { StyleSheet } from "react-native";
 import Tools from "~core";
 import TextButton from "./Buttons/Text";
 import * as UIText from "../UIText";
+import i18n from "~i18n";
 
 interface Props extends RN.ViewProps {
 	displayName?: string;
@@ -33,7 +34,7 @@ const ProfileInformation: React.FC<Props> = props => {
 			<RN.View style={styles.backgroundInfo}>
 				{displayName && <RN.Text style={styles.displayName}>{displayName}</RN.Text>}
 				<RN.Text style={styles.nameSubscribe}>
-					{Tools.i18n.t("d275f2aa-4a42-47cd-86a5-0ae9cbc3ab30", {
+					{i18n.t("d275f2aa-4a42-47cd-86a5-0ae9cbc3ab30", {
 						name: isActivateSubscribe ? "Premium" : "Base",
 					})}
 				</RN.Text>
@@ -41,9 +42,9 @@ const ProfileInformation: React.FC<Props> = props => {
 				<RN.Text style={styles.timeSubscribe}>
 					{isActivateSubscribe
 						? UIText.getSubscribeInformation(subscribeInformation.endSubscribe, subscribeInformation.isAutoPayment)
-						: Tools.i18n.t("indefinitely")}
+						: i18n.t("indefinitely")}
 				</RN.Text>
-				{onPress && <TextButton onPress={onPress}>{Tools.i18n.t("edit")}</TextButton>}
+				{onPress && <TextButton onPress={onPress}>{i18n.t("edit")}</TextButton>}
 			</RN.View>
 		</RN.View>
 	);

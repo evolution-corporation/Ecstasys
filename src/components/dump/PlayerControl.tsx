@@ -8,6 +8,8 @@ import ArrowLeft from "assets/icons/ControlButton_Left.svg";
 import PauseIcon from "assets/icons/ControlButton_Pause.svg";
 import PlayIcon from "assets/icons/ControlButton_Play.svg";
 import core from "~core";
+import i18n from "~i18n";
+
 import { useDimensions } from "@react-native-community/hooks";
 
 interface Props extends ViewProps {
@@ -46,7 +48,7 @@ const PlayerControl: React.FC<Props> = props => {
 	}));
 
 	const textRewindMillisecond = React.useMemo(
-		() => core.i18n.strftime(new Date(rewindMillisecond), "%S"),
+		() => i18n.strftime(new Date(rewindMillisecond), "%S"),
 		[rewindMillisecond]
 	);
 

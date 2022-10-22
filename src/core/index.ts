@@ -1,11 +1,6 @@
-import i18n, { getCountryName, getCountryList } from "./i18n";
-import gStyle, {
-  useCustomFonts,
-  toastOptions,
-  styleImage,
-  styleText,
-  setColorOpacity,
-} from "./styles";
+/** @format */
+
+import gStyle, { useCustomFonts, toastOptions, styleImage, styleText, setColorOpacity } from "./styles";
 // import {
 //   useApiOFF,
 //   getApiOff,
@@ -20,8 +15,7 @@ import gStyle, {
 // } from "./dev";
 
 export default {
-  i18n,
-  gStyle,
+	gStyle,
 };
 // const customUserData = {
 //   getDevUserData,
@@ -36,15 +30,15 @@ export default {
 // };
 
 export {
-  useCustomFonts,
-  toastOptions,
-  styleImage,
-  styleText,
-  setColorOpacity,
-  // useApiOFF,
-  // useCustomDataUser,
-  // getApiOff,
-  // customUserData,
-  // useShowIntroScreen,
-  // subscribe,
+	useCustomFonts,
+	toastOptions,
+	styleImage,
+	styleText,
+	setColorOpacity,
+	// useApiOFF,
+	// useCustomDataUser,
+	// getApiOff,
+	// customUserData,
+	// useShowIntroScreen,
+	// subscribe,
 };

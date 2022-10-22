@@ -7591,6 +7591,7 @@ __metadata:
     expo-localization: ~13.1.0
     expo-mail-composer: ~11.3.0
     expo-notifications: ~0.16.1
+    expo-secure-store: ~11.3.0
     expo-splash-screen: ~0.16.2
     expo-status-bar: ~1.4.0
     expo-task-manager: ~10.3.0
@@ -8502,6 +8503,15 @@ __metadata:
   bin:
     expo-pwa: build/cli.js
   checksum: 9c60383685030417e6d8274b7f396741f6cd26b664f653267d3c69a96322c19389374339ac9dbd1efa8e8899352e60df19a76cd7e34f6e90359d73504ea36cbe
+  languageName: node
+  linkType: hard
+
+"expo-secure-store@npm:~11.3.0":
+  version: 11.3.0
+  resolution: "expo-secure-store@npm:11.3.0"
+  peerDependencies:
+    expo: "*"
+  checksum: ac3973ff3f9aa18e7c55a73ee50abe15c76aa8d1c7ca882058161c170b08e9d184ead1b73341f01af8a5fcdbf96becc9f237e0bc26c9b6c4452aab4be8ed078a
   languageName: node
   linkType: hard
 

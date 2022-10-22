@@ -39,6 +39,7 @@
 		"expo-localization": "~13.1.0",
 		"expo-mail-composer": "~11.3.0",
 		"expo-notifications": "~0.16.1",
+		"expo-secure-store": "~11.3.0",
 		"expo-splash-screen": "~0.16.2",
 		"expo-status-bar": "~1.4.0",
 		"expo-task-manager": "~10.3.0",

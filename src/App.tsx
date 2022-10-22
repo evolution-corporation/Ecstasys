@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { Platform, UIManager, View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
@@ -8,31 +8,26 @@ import { Provider } from "react-redux";
 
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import Player from "~components/screens/PlayerForPractice";
-
 import RootRoutes from "./routes";
-import Store, { actions, useAppSelector } from "./store";
-import { MessageProfessor } from "./models";
-import { CarouselPractices, CarouselPracticesElement } from "~components/dump";
+import Store, { actions } from "./store";
 import "./TaskManager";
-import auth from "@react-native-firebase/auth";
 
 if (Platform.OS === "android") {
 	if (UIManager.setLayoutAnimationEnabledExperimental) {
 		UIManager.setLayoutAnimationEnabledExperimental(true);
 	}
 }
-const AppCore: FC<Props> = props => {
-	const moduleIsLoaded = useAppSelector(
-		store => store.account.isLoaded && store.style.loaded && store.favoritePractices.loaded && store.statistic.loaded
-	);
-
-	useEffect(() => {
-		(async () => {
-			await SplashScreen.preventAutoHideAsync();
-			await Store.dispatch(actions.initialization()).unwrap();
-			SplashScreen.hideAsync();
-		})();
+const AppCore = () => {
+	const isLoaded = React.useRef<boolean>(false);
+	React.useEffect(() => {
+		if (!isLoaded.current) {
+			(async () => {
+				await SplashScreen.preventAutoHideAsync();
+				await Store.dispatch(actions.initialization()).unwrap();
+				isLoaded.current = true;
+				await SplashScreen.hideAsync();
+			})();
+		}
 	}, []);
 
 	return (
@@ -43,8 +38,6 @@ const AppCore: FC<Props> = props => {
 		</GestureHandlerRootView>
 	);
 };
-
-interface Props {}
 
 export default () => (
 	<Provider store={Store}>

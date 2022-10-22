@@ -13,6 +13,7 @@ import {
 	ViewStyle,
 } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import i18n from "~i18n";
 
 import CheckMarkerWhite from "assets/icons/CheckMarkerWhite.svg";
 import { isNicknameValidate } from "src/validators";
@@ -90,8 +91,8 @@ const NicknameInput = forwardRef<Ref, Props>((props, ref) => {
 						<CheckMarkerWhite />
 					</Pressable>,
 					StatusCheck.INCORRECT
-						? Tools.i18n.t("d6a4f1c4-4344-4712-ac61-0c81292d0994")
-						: Tools.i18n.t("564efb95-c192-4406-830f-13b3612bae0e"),
+						? i18n.t("d6a4f1c4-4344-4712-ac61-0c81292d0994")
+						: i18n.t("564efb95-c192-4406-830f-13b3612bae0e"),
 				];
 			case StatusCheck.FREE:
 				return [<CheckMarkerWhite />, null];
@@ -109,7 +110,7 @@ const NicknameInput = forwardRef<Ref, Props>((props, ref) => {
 					value={nickname}
 					placeholderTextColor={"#C2A9CE"}
 					maxLength={16}
-					placeholder={Tools.i18n.t("f212a1ac-9688-4671-bbd1-6cbe20662ad7")}
+					placeholder={i18n.t("f212a1ac-9688-4671-bbd1-6cbe20662ad7")}
 					autoCapitalize={"none"}
 				/>
 				<View style={styles.indicatorImage}>{StatusCheckView}</View>

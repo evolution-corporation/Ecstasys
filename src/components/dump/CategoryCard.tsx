@@ -3,6 +3,7 @@
 import React from "react";
 import { View, Text, StyleSheet, Pressable, Dimensions, Image, ImageSourcePropType } from "react-native";
 import Tools from "~core";
+import i18n from "~i18n";
 
 import Headphones from "assets/icons/Headphones_white.svg";
 
@@ -49,7 +50,7 @@ const CategoryCard: React.FC<Props> = props => {
 						<View style={{ alignItems: "center" }}>
 							<Headphones />
 							<Text style={styles.countMeditation}>
-								{Tools.i18n.t("9790bd12-4b66-419f-a3e0-705134494734", {
+								{i18n.t("9790bd12-4b66-419f-a3e0-705134494734", {
 									count,
 								})}
 							</Text>

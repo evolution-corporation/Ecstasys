@@ -160,17 +160,3 @@ const styles = StyleSheet.create({
 });
 
 export default CarouselMeditation;
-{
-	/* <View style={styles.informationMeditation}>
-              <Text style={styles.name}>{meditationData.name}</Text>
-              <Text style={styles.description}>
-                {meditationData.description}
-              </Text>
-            </View>
-            <ColorButton
-              styleButton={styles.buttonStyle}
-              styleText={styles.buttonStyleText}
-            >
-              {Tools.i18n.t("38554780-274e-4802-9d07-fd4332c7a29d")}
-            </ColorButton> */
-}

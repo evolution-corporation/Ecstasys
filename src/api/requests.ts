@@ -14,12 +14,15 @@ const URL = "http://62.84.125.238:8000/";
  * @returns FirebaseToken пользователя
  */
 async function getFirebaseToken(firebaseToken: string | undefined) {
+	const start = Date.now();
 	if (firebaseToken === undefined) {
 		firebaseToken = await auth().currentUser?.getIdToken();
 	}
 	if (firebaseToken === undefined) {
 		throw new Error("User token not found");
 	}
+	const end = Date.now();
+	if (end - start > 200) console.log("getFirebaseToken", end - start);
 	return firebaseToken;
 }
 
@@ -322,7 +325,7 @@ export async function getUserByNickname(nickname: string, firebaseTokenToken?: s
 export async function checkAccess() {
 	try {
 		const request = await fetch(URL + "api/204");
-		return request.status === 204;
+		return request.ok;
 	} catch (error) {
 		return false;
 	}
@@ -347,4 +350,34 @@ export async function reservationNickname(nickname: string, firebaseTokenToken?:
 		throw new RequestError(`getUserByNickname: ${await requestServer.text()}`, url, undefined, "GET", "50x");
 	}
 	return requestServer.status === 200;
+}
+
+//!
+export async function getInformationUser(
+	firebaseTokenToken?: string
+): Promise<[ServerEntities.User | null, ServerEntities.Subscribe | null]> {
+	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
+	const uid = auth().currentUser?.uid;
+	if (uid === undefined) throw new Error("Not found uid");
+	let user: ServerEntities.User | null = null;
+	let subscribe: ServerEntities.Subscribe | null = null;
+	[user, subscribe] = await Promise.all([getUserById(uid), getSubscribeUserInformation()]);
+	return [user, subscribe];
+}
+
+//!
+export async function getRecommendationMeditation(firebaseTokenToken?: string) {
+	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
+	const url = URL + "meditation?getIsNotListened=true";
+	const requestServer = await fetch(url, {
+		headers: {
+			Authorization: firebaseTokenToken,
+			"Content-Type": "application/json",
+		},
+	});
+	if (requestServer.status >= 500) {
+		throw new RequestError(`getMeditationsByType: ${await requestServer.text()}`, url, undefined, "GET", "50x");
+	}
+	const json = await requestServer.json();
+	return json as ServerEntities.Meditation;
 }

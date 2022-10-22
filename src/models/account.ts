@@ -97,10 +97,7 @@ export default class Account {
 			throw new Error(
 				"An authorized user was not found. Check the user's authorization status in React Native Firebase"
 			);
-		const start = new Date();
-		console.info("authentication start");
 		const userData = await Users.getById(this.uid);
-		console.info("authentication end", userData, Date.now() - start.getTime());
 
 		if (userData === null) {
 			this.userData = undefined;

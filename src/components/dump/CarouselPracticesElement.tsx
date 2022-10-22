@@ -8,6 +8,8 @@ import Heart from "assets/icons/Heart_Red.svg";
 import core from "~core";
 import { PracticesMeditation } from "~types";
 
+import i18n from "~i18n";
+
 interface Props extends ViewProps {
 	isFavorite: boolean;
 	description: string;
@@ -46,7 +48,7 @@ const CarouselPracticesElement: React.FC<Props> = props => {
 						{isPermission ? (
 							<View style={styles.imageFooter}>
 								<Text style={styles.audioLength}>
-									{core.i18n.t("minute", {
+									{i18n.t("minute", {
 										count: Math.floor(lengthAudio / 60000),
 									})}
 								</Text>
