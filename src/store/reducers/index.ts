@@ -6,6 +6,7 @@ import { default as FavoritePracticesReducer } from "./favoritePractices";
 import { default as StyleReducer } from "./styles";
 import { default as StatisticReducer } from "./statistic";
 import { default as PracticeReducer } from "./practice";
+import { default as DMDReduce } from "./DMD";
 
 export default combineReducers({
 	account: AccountReducer,
@@ -13,4 +14,5 @@ export default combineReducers({
 	statistic: StatisticReducer,
 	style: StyleReducer,
 	practice: PracticeReducer,
+	DMD: DMDReduce,
 });

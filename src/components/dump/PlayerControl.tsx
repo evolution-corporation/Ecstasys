@@ -16,10 +16,11 @@ interface Props extends ViewProps {
 	stepForward: () => Promise<void>;
 	stepBack: () => Promise<void>;
 	isPlay: boolean;
+	rewindMillisecond: number;
 }
 
 const PlayerControl: React.FC<Props> = props => {
-	const { pause, play, stepBack, stepForward, isPlay, style } = props;
+	const { pause, play, stepBack, stepForward, isPlay, style, rewindMillisecond } = props;
 	const {
 		window: { width },
 	} = useDimensions();
@@ -44,13 +45,18 @@ const PlayerControl: React.FC<Props> = props => {
 		transform: [{ translateX: withTiming(rightValueTranslateX.value) }],
 	}));
 
+	const textRewindMillisecond = React.useMemo(
+		() => core.i18n.strftime(new Date(rewindMillisecond), "%S"),
+		[rewindMillisecond]
+	);
+
 	return (
 		<View {...props} style={[styles.background, style]}>
 			{stepBack !== undefined && (
 				<Animated.View style={leftButtonStyle}>
 					<Pressable style={[styles.buttonControl, styles.buttonSmall]} onPress={() => stepBack()}>
 						<ArrowLeft style={styles.arrowControl} />
-						<Text style={styles.textJumpTime}>15</Text>
+						<Text style={styles.textJumpTime}>{textRewindMillisecond}</Text>
 					</Pressable>
 				</Animated.View>
 			)}
@@ -64,7 +70,7 @@ const PlayerControl: React.FC<Props> = props => {
 				<Animated.View style={rightButtonStyle}>
 					<Pressable style={[styles.buttonControl, styles.buttonSmall]} onPress={() => stepForward()}>
 						<ArrowRight style={styles.arrowControl} />
-						<Text style={styles.textJumpTime}>15</Text>
+						<Text style={styles.textJumpTime}>{textRewindMillisecond}</Text>
 					</Pressable>
 				</Animated.View>
 			)}

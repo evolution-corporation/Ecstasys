@@ -94,7 +94,10 @@ export default class Users {
 	 * @params userId Идентификатор пользователя Модуль которого необходимо получить
 	 */
 	public static async getById(userId: string): Promise<Users | null> {
+		const start = new Date();
+		console.info("getById");
 		const userData = await Request.getUserById(userId);
+		console.info("getById", userData, Date.now() - start.getTime());
 		if (userData === null) {
 			return null;
 		} else {

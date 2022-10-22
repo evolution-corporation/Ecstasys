@@ -30,9 +30,7 @@ const TimeLine = forwardRef<Ref, TimeLineProps>((props, ref) => {
 	useImperativeHandle(ref, () => ({
 		setValue: currentValue => {
 			if (maxWidth) _frontLineWidth.value = withTiming(currentValue * maxWidth);
-			console.log(1);
 			_value = currentValue;
-			console.log(11);
 		},
 	}));
 
@@ -112,7 +110,7 @@ interface TimeLineProps extends ViewProps {
 	initValue?: number;
 }
 
-export default React.memo(TimeLine);
+export default TimeLine;
 
 const styles = StyleSheet.create({
 	background: {

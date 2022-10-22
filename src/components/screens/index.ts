@@ -12,7 +12,7 @@ export { default as EditUserBirthday } from "./Profile/SelectDateBirthday_old";
 export { default as SelectSubscribe } from "./Subscribe/SelectSubscribe";
 export { default as ResultSubscribe } from "./Subscribe/ResultSubscribe";
 export { default as PracticeListByType } from "./PracticeListByType";
-export { default as PlayerMeditationPractices } from "./Player";
+export { default as PlayerMeditationPractices } from "./PlayerForPractice";
 export { default as TimerPractices } from "./Practices/TimerPractices";
 export { default as IntroPractices } from "./Practices/Intro";
 export { default as DMDIntro } from "./Practices/IntroDMD";
@@ -25,8 +25,11 @@ export { default as PaymentWeb } from "./Subscribe/PaymentWeb";
 export { default as Main } from "./Main";
 export { default as Profile } from "./Profile";
 export { default as PracticesList } from "./PracticesMeditationList";
-export { default as Player } from "./Player";
+export { default as PlayerForPractice } from "./PlayerForPractice";
 export { default as SelectBackgroundSound } from "./SelectBackgroundSound";
+export { default as PlayerForDMD } from "./PlayerForDMD";
+export { default as DMDSettingNotification } from "./DMDSettingNotification";
+export { default as DMDSelectTimeBright } from "./DMDSelectTimeBright";
 // export const TabsScreen = {
 // 	Main,
 // 	Profile,

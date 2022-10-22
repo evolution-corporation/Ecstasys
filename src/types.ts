@@ -156,6 +156,13 @@ export namespace State {
 		whenSubscribe: string;
 		autoPayment: boolean;
 	}
+
+	export interface Set {
+		id: string;
+		name: string;
+		audio: string;
+		length: number;
+	}
 }
 
 // routing
@@ -208,14 +215,20 @@ export type RootStackList = {
 	};
 	InputNickname: undefined;
 	InputImageAndBirthday: undefined;
-	Player: {
+	PlayerForPractice: {
 		practiceState: State.Practice;
+		practiceLength: number;
 	};
+	PlayerForDMD: {};
+	DMDSettingNotification: {};
 	SelectBackgroundSound: {
 		backgroundImage?: ImageSourcePropType;
 	};
 	Error: {
 		message: string;
+	};
+	DMDSelectTimeBright: {
+		type: "activate" | "random";
 	};
 };
 

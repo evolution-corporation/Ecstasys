@@ -21,3 +21,4 @@ export { default as CarouselPracticesElement } from "./CarouselPracticesElement"
 export { default as CarouselPractices } from "./CarouselPractices";
 export { default as CategoryCard } from "./CategoryCard";
 export { default as PlayerControl } from "./PlayerControl";
+export { default as SelectTime } from "./SelectTime";

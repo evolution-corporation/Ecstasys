@@ -23,7 +23,7 @@ enum StatusPractice {
 	Change,
 }
 
-const Player: RootScreenProps<"Player"> = ({ navigation, route }) => {
+const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, route }) => {
 	const { practiceState } = route.params;
 	const selectBackgroundSound = useAppSelector(store => store.practice.selectBackgroundMusicName);
 
@@ -210,6 +210,7 @@ const Player: RootScreenProps<"Player"> = ({ navigation, route }) => {
 							stepForward={async () => {
 								update(currentTime + 15000);
 							}}
+							rewindMillisecond={15000}
 						/>
 					)}
 				</View>
@@ -275,7 +276,7 @@ const Player: RootScreenProps<"Player"> = ({ navigation, route }) => {
 	);
 };
 
-export default Player;
+export default PlayerForPractice;
 
 const styles = StyleSheet.create({
 	background: {

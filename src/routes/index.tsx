@@ -22,8 +22,6 @@ import { useAppDispatch, useAppSelector } from "~store";
 import { AccountStatus, RootScreenProps, RootStackList, TabNavigatorList } from "~types";
 import { Account } from "src/models";
 
-import Player from "~components/screens/Player";
-
 const TabNavigator = createBottomTabNavigator<TabNavigatorList>();
 
 const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
@@ -273,26 +271,7 @@ const RootRoutes: FC = () => {
 				},
 			}}
 		>
-			<RootNavigation.Screen
-				name={"Player"}
-				component={Screens.Player}
-				initialParams={{
-					practiceState: {
-						id: "6387521c-adb7-49b7-8a0f-5882eacc35af",
-						description: "test",
-						image:
-							"https://storage.yandexcloud.net/dmdmeditationimage/meditations/00bcbd42-038b-4ef7-95b5-9b8e3a592ef9.png",
-						audio: "https://storage.yandexcloud.net/dmdmeditatonaudio/6387521c-adb7-49b7-8a0f-5882eacc35af.mp3",
-						instruction: { body: [{ text: "rest" }], description: "te", id: "asd", title: "aseasae" },
-						isNeedSubscribe: false,
-						length: 100000,
-						name: "test practive",
-						type: "RELAXATION",
-					},
-				}}
-			/>
-			<RootNavigation.Screen name={"SelectBackgroundSound"} component={Screens.SelectBackgroundSound} />
-			{/* {accountStatus === AccountStatus.NO_AUTHENTICATION && (
+			{accountStatus === AccountStatus.NO_AUTHENTICATION && (
 				<>
 					<RootNavigation.Screen name={"Greeting"} component={Screens.Greeting} />
 					<RootNavigation.Screen name={"SelectMethodAuthentication"} component={Screens.SelectMethodAuthentication} />
@@ -314,9 +293,59 @@ const RootRoutes: FC = () => {
 					<RootNavigation.Screen name={"FavoriteMeditation"} component={Screens.FavoriteMeditation} />
 					<RootNavigation.Screen name={"EditMainUserData"} component={Screens.EditMainUserData} />
 					<RootNavigation.Screen name={"EditUserBirthday"} component={Screens.EditUserBirthday} />
-					<RootNavigation.Screen name={"Player"} component={Screens.Player} />
+					<RootNavigation.Screen
+						name={"DMDSettingNotification"}
+						component={Screens.DMDSettingNotification}
+						initialParams={{
+							optionState: {
+								id: "6387521c-adb7-49b7-8a0f-5882eacc35af",
+								description: "test",
+								image:
+									"https://storage.yandexcloud.net/dmdmeditationimage/meditations/00bcbd42-038b-4ef7-95b5-9b8e3a592ef9.png",
+								audio: "https://storage.yandexcloud.net/dmdmeditatonaudio/6387521c-adb7-49b7-8a0f-5882eacc35af.mp3",
+								instruction: { body: [{ text: "rest" }], description: "te", id: "asd", title: "aseasae" },
+								isNeedSubscribe: false,
+								length: 1059000,
+								name: "test practive",
+								type: "RELAXATION",
+							},
+							setState: {
+								audio:
+									"https://storage.yandexcloud.net/dmdmeditatonaudio/01.%20%D0%94%D0%9C%D0%94-01-%20%D1%85%D0%BE%D1%80..mp3",
+								id: "106e64db-5e50-4326-822a-beb77d6dcdf7",
+								length: 4593000,
+								name: "TestSet",
+							},
+						}}
+					/>
+					<RootNavigation.Screen
+						name={"DMDSelectTimeBright"}
+						component={Screens.DMDSelectTimeBright}
+						options={{ presentation: "transparentModal" }}
+					/>
+					<RootNavigation.Screen name={"PlayerForDMD"} component={Screens.PlayerForDMD} />
+
+					<RootNavigation.Screen
+						name={"PlayerForPractice"}
+						component={Screens.PlayerForPractice}
+						initialParams={{
+							practiceState: {
+								id: "6387521c-adb7-49b7-8a0f-5882eacc35af",
+								description: "test",
+								image:
+									"https://storage.yandexcloud.net/dmdmeditationimage/meditations/00bcbd42-038b-4ef7-95b5-9b8e3a592ef9.png",
+								audio: "https://storage.yandexcloud.net/dmdmeditatonaudio/6387521c-adb7-49b7-8a0f-5882eacc35af.mp3",
+								instruction: { body: [{ text: "rest" }], description: "te", id: "asd", title: "aseasae" },
+								isNeedSubscribe: false,
+								length: 100000,
+								name: "test practive",
+								type: "RELAXATION",
+							},
+						}}
+					/>
+					<RootNavigation.Screen name={"SelectBackgroundSound"} component={Screens.SelectBackgroundSound} />
 				</>
-			)} */}
+			)}
 		</RootNavigation.Navigator>
 	);
 };
