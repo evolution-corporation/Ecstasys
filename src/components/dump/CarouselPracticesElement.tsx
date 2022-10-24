@@ -9,6 +9,7 @@ import core from "~core";
 import { PracticesMeditation } from "~types";
 
 import i18n from "~i18n";
+import { SharedElement } from "react-navigation-shared-element";
 
 interface Props extends ViewProps {
 	isFavorite: boolean;
@@ -19,10 +20,12 @@ interface Props extends ViewProps {
 	lengthAudio: number;
 	onPress: () => void;
 	isSelected: boolean;
+	sharedID?: string;
 }
 
 const CarouselPracticesElement: React.FC<Props> = props => {
-	const { isSelected, description, image, isPermission, name, onPress, lengthAudio, isFavorite, style } = props;
+	const { isSelected, description, image, isPermission, name, onPress, lengthAudio, isFavorite, style, sharedID } =
+		props;
 	const width = AnimatedTools.useSharedValue(182);
 
 	const animatedShared = AnimatedTools.useAnimatedStyle(() => ({
@@ -43,7 +46,14 @@ const CarouselPracticesElement: React.FC<Props> = props => {
 		<View style={[styles.backgroundCard, style]}>
 			<Pressable onPress={onPress}>
 				<Animated.View style={[styles.sharedImage, animatedShared]}>
-					<Image source={{ uri: image }} style={styles.image} />
+					{sharedID ? (
+						<SharedElement id={sharedID} style={styles.image}>
+							<Image source={{ uri: image }} style={{ width: "100%", height: "100%" }} />
+						</SharedElement>
+					) : (
+						<Image source={{ uri: image }} style={styles.image} />
+					)}
+
 					<View style={[styles.backgroundImage, { justifyContent: isPermission ? "flex-end" : "center" }]}>
 						{isPermission ? (
 							<View style={styles.imageFooter}>

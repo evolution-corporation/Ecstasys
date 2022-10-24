@@ -6,14 +6,11 @@ import { StyleSheet, Text, View, TouchableOpacity, Switch } from "react-native";
 import * as MailComposer from "expo-mail-composer";
 import { FontAwesome5 } from "@expo/vector-icons";
 
-import core, { useApiOFF } from "~core";
-import type { RootScreenProps } from "src/routes";
-import { useUserContext } from "~modules/account";
+import core from "~core";
 
 import User from "./assets/User.svg";
 import Mail from "./assets/Mail.svg";
 import LogOut from "./assets/Log_Out.svg";
-import { DevelopmentThumbler } from "~components/dump";
 
 const OptionsProfile: RootScreenProps<"OptionsProfile"> = ({ navigation }) => {
 	const { func } = useUserContext();

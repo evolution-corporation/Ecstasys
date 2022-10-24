@@ -20,6 +20,7 @@ if (Platform.OS === "android") {
 const AppCore = () => {
 	const isLoaded = React.useRef<boolean>(false);
 	React.useEffect(() => {
+		console.info(isLoaded.current, "isLoadedApp");
 		if (!isLoaded.current) {
 			(async () => {
 				await SplashScreen.preventAutoHideAsync();

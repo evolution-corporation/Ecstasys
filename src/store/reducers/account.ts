@@ -108,8 +108,8 @@ export default createReducer<AccountState>(
 		});
 		builder.addCase(Actions.addChangedInformationUser.fulfilled, (state, { payload }) => {
 			state.changeData = {
-				...state.changeData,
-				...payload,
+				...Object.fromEntries(Object.entries(state.changeData).filter(([key, value]) => value !== undefined)),
+				...Object.fromEntries(Object.entries(payload).filter(([key, value]) => value !== undefined)),
 			};
 		});
 	}

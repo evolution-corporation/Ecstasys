@@ -171,15 +171,28 @@ export const initialization = createAsyncThunk(GeneralAction.initialization, asy
 					idMessage: MessageId[Math.floor(Math.random() * MessageId.length)],
 					dateTimeLastUpdate: new Date().toISOString(),
 				};
+				await Storage.addUsingMessage(message.idMessage);
 			} else {
 				const toDay = new Date();
 				toDay.setHours(0, 0, 0, 0);
 				const lastMessage = listUsedMessage[listUsedMessage.length - 1];
 				if (new Date(lastMessage.dateLastUpdate).getTime() >= toDay.getTime()) {
+					const hoursCurrentTime = new Date().getHours();
+					const hoursLastTimeUpdate = new Date(lastMessage.dateLastUpdate).getHours();
+					let updateDateLastUpdate: Date | undefined = undefined;
+					if (
+						(hoursLastTimeUpdate >= 0 && hoursLastTimeUpdate < 6 && hoursCurrentTime > 6) ||
+						(hoursLastTimeUpdate >= 6 && hoursLastTimeUpdate < 12 && hoursCurrentTime > 12) ||
+						(hoursLastTimeUpdate >= 12 && hoursLastTimeUpdate < 18 && hoursCurrentTime > 18)
+					) {
+						updateDateLastUpdate = new Date();
+					}
 					message = {
-						idMessage: lastMessage.id,
-						dateTimeLastUpdate: lastMessage.dateLastUpdate,
+						idMessage: lastMessage.messageId,
+						dateTimeLastUpdate:
+							updateDateLastUpdate === undefined ? lastMessage.dateLastUpdate : updateDateLastUpdate.toISOString(),
 					};
+					await Storage.updateMessage(lastMessage.id);
 				} else {
 					const toStartMonth = new Date();
 					toStartMonth.setHours(23, 59, 59, 999);
@@ -192,9 +205,9 @@ export const initialization = createAsyncThunk(GeneralAction.initialization, asy
 						idMessage: whiteListMessageId[Math.floor(Math.random() * whiteListMessageId.length)],
 						dateTimeLastUpdate: new Date().toISOString(),
 					};
+					await Storage.addUsingMessage(message.idMessage);
 				}
 			}
-
 			return message;
 		})(),
 	]);

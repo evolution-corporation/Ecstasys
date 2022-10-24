@@ -15,37 +15,48 @@ import {
 import Swiper from "react-native-swiper";
 import { useBackHandler } from "@react-native-community/hooks";
 
-import { FontAwesome5 } from "@expo/vector-icons";
+import * as Application from "expo-application";
 
 import Tools from "~core";
 import GoogleLogo from "~assets/icons/GoogleLogo.svg";
 import { ColorButton, ColorWithIconButton } from "~components/dump";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { RootScreenProps } from "~types";
 import i18n from "~i18n";
 
+import Bird from "assets/icons/BirdWhite.svg";
+
 import auth from "@react-native-firebase/auth";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { actions, useAppDispatch } from "~store";
 
-GoogleSignin.configure({
-	webClientId: "878799007977-cj3549ni87jre2rmg4eq0hiolp08igh2.apps.googleusercontent.com",
-});
 var height = Dimensions.get("window").height;
 
 const SelectMethodAuthentication: RootScreenProps<"SelectMethodAuthentication"> = ({ navigation }) => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [heightBottomBox, setHeightBottomBox] = useState<number | null>(null);
-
+	const appDispatch = useAppDispatch();
 	useBackHandler(() => {
 		if (Platform.OS === "android") {
 			BackHandler.exitApp();
 		}
 		return true;
 	});
+
+	React.useEffect(() => {
+		const appId = Application.applicationId;
+		GoogleSignin.configure({
+			webClientId:
+				appId !== null && appId.includes("dev")
+					? "878799007977-1joirrt9o7a07t8lajm32ddqu2ff314g.apps.googleusercontent.com"
+					: "878799007977-cj3549ni87jre2rmg4eq0hiolp08igh2.apps.googleusercontent.com",
+		});
+	}, []);
+
 	return (
 		<ImageBackground style={styles.background} source={require("~assets/rockDrugs.jpg")}>
 			<View style={styles.logoBox}>
-				<Image style={[styles.bird]} source={require("./assets/bird.png")} resizeMode={"contain"} />
+				<Bird />
+				{/* <Image style={[styles.bird]} source={require("./assets/bird.png")} resizeMode={"contain"} /> */}
 			</View>
 			<View style={styles.greetingBox}>
 				<Text style={styles.title}>
@@ -103,7 +114,8 @@ const SelectMethodAuthentication: RootScreenProps<"SelectMethodAuthentication"> 
 							setIsLoading(true);
 							const { idToken } = await GoogleSignin.signIn();
 							const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-							return auth().signInWithCredential(googleCredential);
+							await auth().signInWithCredential(googleCredential);
+							await appDispatch(actions.signInAccount()).unwrap();
 						}}
 					>
 						{i18n.t("235a94d8-5deb-460a-bf03-e0e30e93df1b")}

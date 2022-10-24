@@ -26,7 +26,7 @@ import ProfileIconNoSelected from "assets/icons/ProfileNoSelectedIcon.svg";
 import DMDIconNoSelected from "assets/icons/DMDNoSelectedIcon.svg";
 
 import { useAppSelector } from "~store";
-import { RootScreenProps, RootStackList, TabNavigatorList } from "~types";
+import { RootScreenProps, RootStackList, State, TabNavigatorList } from "~types";
 
 const TabNavigator = createBottomTabNavigator<TabNavigatorList>();
 
@@ -111,7 +111,6 @@ const RootRoutes: FC = () => {
 		>
 			{accountStatus === "NO_AUTHENTICATION" && (
 				<>
-					<RootNavigation.Screen name={"Greeting"} component={Screens.Greeting} />
 					<RootNavigation.Screen name={"SelectMethodAuthentication"} component={Screens.SelectMethodAuthentication} />
 				</>
 			)}
@@ -120,13 +119,13 @@ const RootRoutes: FC = () => {
 				<>
 					<RootNavigation.Screen name={"InputNickname"} component={Screens.InputNickname} />
 					<RootNavigation.Screen name={"InputImageAndBirthday"} component={Screens.InputImageAndBirthday} />
+					<RootNavigation.Screen name={"Greeting"} component={Screens.Greeting} />
 				</>
 			)}
 
 			{accountStatus === "REGISTRATION" && (
 				<>
 					<RootNavigation.Screen name={"TabNavigator"} component={TabRoutes} options={{ headerShown: false }} />
-					<RootNavigation.Screen name={"PracticeListByType"} component={Screens.PracticeListByType} />
 					<RootNavigation.Screen name={"OptionsProfile"} component={Screens.OptionsProfile} />
 					<RootNavigation.Screen name={"FavoriteMeditation"} component={Screens.FavoriteMeditation} />
 					<RootNavigation.Screen name={"EditMainUserData"} component={Screens.EditMainUserData} />
@@ -163,22 +162,21 @@ const RootRoutes: FC = () => {
 					/>
 					<RootNavigation.Screen name={"PlayerForDMD"} component={Screens.PlayerForDMD} />
 
+					<RootNavigation.Screen name={"PracticeListByType"} component={Screens.PracticeListByType} />
+					<RootNavigation.Screen
+						name={"SelectTimeForRelax"}
+						component={Screens.SelectTimeForRelax}
+						sharedElements={({ params }) => {
+							const { id } = params.selectedPractice as State.Practice;
+							return [`practice.item.${id}`];
+						}}
+					/>
 					<RootNavigation.Screen
 						name={"PlayerForPractice"}
 						component={Screens.PlayerForPractice}
-						initialParams={{
-							practiceState: {
-								id: "6387521c-adb7-49b7-8a0f-5882eacc35af",
-								description: "test",
-								image:
-									"https://storage.yandexcloud.net/dmdmeditationimage/meditations/00bcbd42-038b-4ef7-95b5-9b8e3a592ef9.png",
-								audio: "https://storage.yandexcloud.net/dmdmeditatonaudio/6387521c-adb7-49b7-8a0f-5882eacc35af.mp3",
-								instruction: { body: [{ text: "rest" }], description: "te", id: "asd", title: "aseasae" },
-								isNeedSubscribe: false,
-								length: 100000,
-								name: "test practive",
-								type: "RELAXATION",
-							},
+						sharedElements={route => {
+							const { imageId } = route.params;
+							return [{ id: `item.${imageId}`, animation: "move" }];
 						}}
 					/>
 					<RootNavigation.Screen name={"SelectBackgroundSound"} component={Screens.SelectBackgroundSound} />

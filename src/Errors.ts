@@ -19,7 +19,6 @@ export class RequestError extends Error {
 		this.body = body;
 		this.url = url;
 		this.method = method;
-		console.log(body);
 	}
 
 	getMessageForUser() {

@@ -12,6 +12,7 @@ enum PracticeAction {
 	addStatistic = "practice/addStatistic",
 	editBackgroundMusic = "practice/editBackgroundMusic",
 	editBackgroundVolume = "practice/editBackgroundVolume",
+	setPractice = "practice/setPractice",
 }
 
 export const addFavoritePractice = createAsyncThunk<State.FavoritePractices, State.Practice, AsyncThunkConfig>(
@@ -53,3 +54,5 @@ export const editBackgroundMusic = createAction<keyof typeof BackgroundSound | n
 );
 
 export const editBackgroundVolume = createAction<number>(PracticeAction.editBackgroundVolume);
+
+export const setPractice = createAction<State.Practice>(PracticeAction.setPractice);

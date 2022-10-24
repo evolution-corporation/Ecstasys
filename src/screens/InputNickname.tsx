@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { ElementRef, useCallback, useRef, useState } from "react";
+import React, { ElementRef, useCallback, useEffect, useRef, useState } from "react";
 import { View, StyleSheet, Text, Pressable } from "react-native";
 import auth from "@react-native-firebase/auth";
 
@@ -14,31 +14,30 @@ import i18n from "~i18n";
 
 import CheckMarkerGreen from "~assets/icons/CheckMarkerGreen.svg";
 import { useFocusEffect } from "@react-navigation/native";
-import { Account } from "src/models";
-import { Request } from "~api";
 
 const InputLoginScreen: RootScreenProps<"InputNickname"> = ({ navigation }) => {
 	const appDispatch = useAppDispatch();
-	const account = useAppSelector(store => Account.createByState(store.account));
+	const resultCheckNickname = useAppSelector(store => {
+		if (store.account.changeData.lastCheckNicknameAndResult === undefined) return false;
+		return store.account.changeData.lastCheckNicknameAndResult[1];
+	});
+
 	const [variableNicknameList, setVariableNicknameList] = useState<string[]>([]);
-	const [allowed, setAllowed] = useState(false);
 	const NicknameBaseRef = useRef<ElementRef<typeof NicknameBase>>(null);
 
 	const processing = async (checkedNickname: string, statusCheck: StatusCheck) => {
 		if (statusCheck === StatusCheck.USED) {
 			setVariableNicknameList(await generateNickname(checkedNickname));
 		}
-		await appDispatch(actions.setChangedAccountData({ nickname: checkedNickname })).unwrap();
-		setAllowed(statusCheck === StatusCheck.FREE);
 	};
 
 	useFocusEffect(
 		useCallback(() => {
 			const user = auth().currentUser;
-			// if (!!user && !!user.displayName) {
-			// 	const convertedDisplayName = converterDisplayNameToNickname(user.displayName);
-			// 	if (convertedDisplayName) NicknameBaseRef.current?.editNickname(convertedDisplayName);
-			// }
+			if (!!user && !!user.displayName) {
+				const convertedDisplayName = converterDisplayNameToNickname(user.displayName);
+				if (convertedDisplayName) NicknameBaseRef.current?.editNickname(convertedDisplayName);
+			}
 		}, [])
 	);
 
@@ -48,7 +47,10 @@ const InputLoginScreen: RootScreenProps<"InputNickname"> = ({ navigation }) => {
 				ref={NicknameBaseRef}
 				onEndChange={processing}
 				checkValidateNickname={async (nickname: string) => {
-					return (await account.changeUserData.checkValidateNickname(nickname)) ? StatusCheck.FREE : StatusCheck.USED;
+					return (await appDispatch(actions.addChangedInformationUser({ nickname })).unwrap())
+						.lastCheckNicknameAndResult?.[1] ?? false
+						? StatusCheck.FREE
+						: StatusCheck.USED;
 				}}
 			/>
 			{variableNicknameList.length > 0 && (
@@ -70,10 +72,9 @@ const InputLoginScreen: RootScreenProps<"InputNickname"> = ({ navigation }) => {
 			<Text style={styles.subText}>{i18n.t("f0955b62-3ce1-49d6-bf79-aba68266ef8e")}</Text>
 			<ColorButton
 				onPress={() => {
-					account.changeUserData.reservationNickname();
 					navigation.navigate("InputImageAndBirthday");
 				}}
-				disabled={!allowed}
+				disabled={!resultCheckNickname}
 			>
 				{i18n.t("continue")}
 			</ColorButton>

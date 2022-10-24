@@ -16,7 +16,7 @@ import core from "~core";
 import { initializationTimer } from "src/TaskManager";
 import Headphones from "assets/icons/Headphones_white.svg";
 import { useAppSelector } from "~store";
-import i18n from "~i18n";
+import { SharedElement } from "react-navigation-shared-element";
 
 enum StatusPractice {
 	Loading,
@@ -26,8 +26,14 @@ enum StatusPractice {
 }
 
 const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, route }) => {
-	const { practiceState } = route.params;
-	const selectBackgroundSound = useAppSelector(store => store.practice.selectBackgroundMusicName);
+	const { selectedPractice } = route.params;
+	const practiceState = useAppSelector(store => {
+		if (store.practice.currentPractice === undefined) throw new Error("Not Found Practice");
+		return store.practice.currentPractice;
+	});
+	const { currentNameBackgroundSound, currentVolumeBackgroundSound } = useAppSelector(
+		store => store.practice.paramsPractice
+	);
 
 	const [statusPractice, setStatusStatusPractice] = React.useState<StatusPractice>(StatusPractice.Loading);
 	const [currentTime, setCurrentTime] = React.useState<number>(0);
@@ -120,13 +126,12 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 	}, []);
 
 	useEffect(() => {
-		console.log("useEffect", "audioBackgroundName", selectBackgroundSound);
-		if (selectBackgroundSound) {
-			setBackgroundSound(selectBackgroundSound);
+		if (currentNameBackgroundSound) {
+			setBackgroundSound(currentNameBackgroundSound);
 		} else {
 			removeBackgroundSound();
 		}
-	}, [selectBackgroundSound]);
+	}, [currentNameBackgroundSound]);
 
 	const play = React.useCallback(async () => {
 		await Promise.all([
@@ -191,12 +196,14 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 
 	return (
 		<View style={{ flex: 1 }}>
-			<Image
-				source={{
-					uri: practice.image,
-				}}
-				style={styles.imageBackground}
-			/>
+			<SharedElement id={`practice.item.${selectedPractice.id}`} style={styles.imageBackground}>
+				<Image
+					source={{
+						uri: practice.image,
+					}}
+					style={{ flex: 1 }}
+				/>
+			</SharedElement>
 			<Animated.View style={[styles.background]}>
 				<View style={styles.panelControlContainer}>
 					{statusPractice === StatusPractice.Loading ? (
@@ -266,8 +273,8 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 							}}
 						>
 							{i18n.t(
-								selectBackgroundSound !== null
-									? BackgroundSound[selectBackgroundSound].translate
+								currentNameBackgroundSound !== null
+									? BackgroundSound[currentNameBackgroundSound].translate
 									: "12ee6d3a-ad58-4c4a-9b87-63645efe9c90"
 							)}
 						</ColorButton>
@@ -292,7 +299,6 @@ const styles = StyleSheet.create({
 		position: "absolute",
 	},
 	imageBackground: {
-		position: "absolute",
 		width: "100%",
 		height: "100%",
 	},

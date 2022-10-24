@@ -12,16 +12,9 @@ interface Props extends RN.ViewProps {
 }
 
 const MessageProfessor: React.FC<Props> = props => {
-	const { message, greeting } = props;
+	const { message, greeting, style } = props;
 	return (
-		<RN.View
-		// style={styles.greetingViewBackground}
-		// onLayout={({ nativeEvent: { layout } }) => {
-		// 	if (!heightGreeting) {
-		// 		setHeightGreeting(layout.height + 20);
-		// 	}
-		// }}
-		>
+		<RN.View style={style}>
 			<RN.View style={{ justifyContent: "center", alignItems: "center" }}>
 				<RN.View
 					style={{
@@ -49,7 +42,8 @@ const MessageProfessor: React.FC<Props> = props => {
 									flexDirection: "row",
 									justifyContent: "center",
 									alignItems: "flex-start",
-									marginVertical: 17,
+									marginTop: 17,
+									marginBottom: 12,
 								}}
 							>
 								<RN.View style={styles.lineBR} key={"leftLine"} />
@@ -139,7 +133,7 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		color: "#FFFFFF",
 		lineHeight: 20,
-		maxWidth: "68%",
+		maxWidth: "80%",
 		...Tools.gStyle.font("400"),
 	},
 });

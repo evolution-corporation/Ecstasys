@@ -30,18 +30,18 @@ export const addChangedInformationUser = createAsyncThunk<
 	SetChangedAccountDataParams,
 	AsyncThunkConfig
 >(AccountAction.setChangedData, async ({ birthday, displayName, image, nickname }) => {
-	let lastSuccessCheckNickname: undefined | [Date, boolean];
+	let lastCheckNicknameAndResult: undefined | [Date, boolean];
 	if (nickname !== undefined) {
-		lastSuccessCheckNickname = [new Date(), Request.getUserByNickname(nickname) === null];
+		lastCheckNicknameAndResult = [new Date(), (await Request.getUserByNickname(nickname)) === null];
 	}
 	return {
 		birthday: birthday !== undefined ? birthday.toISOString() : undefined,
 		displayName,
 		image,
-		nickname: lastSuccessCheckNickname !== undefined ? nickname : undefined,
-		lastSuccessCheckNickname:
-			lastSuccessCheckNickname !== undefined
-				? [lastSuccessCheckNickname[0].toISOString(), lastSuccessCheckNickname[1]]
+		nickname: lastCheckNicknameAndResult !== undefined ? nickname : undefined,
+		lastCheckNicknameAndResult:
+			lastCheckNicknameAndResult !== undefined
+				? [lastCheckNicknameAndResult[0].toISOString(), lastCheckNicknameAndResult[1]]
 				: undefined,
 	};
 });

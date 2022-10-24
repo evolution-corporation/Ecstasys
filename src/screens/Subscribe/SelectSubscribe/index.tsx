@@ -12,8 +12,6 @@ import i18n from "~i18n";
 
 import { typeSubscribe } from "./types";
 import { SubscribeCard } from "./components";
-import { useSubscribe } from "~modules/subscribe";
-import { SubscribeInfoNew } from "~modules/subscribe/types";
 
 const price = {
 	month_1: 279,

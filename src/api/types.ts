@@ -32,7 +32,7 @@ export namespace SupportType {
 	/** Тип медитации строковой */
 	export type TypeMeditation =
 		| "relaxation"
-		| "breathingPractices"
+		| "breathtakingPractice"
 		| "directionalVisualizations"
 		| "dancePsychotechnics"
 		| "set";

@@ -15,10 +15,10 @@
 			"~store": ["./src/store"],
 			"~hooks": ["./src/hooks"],
 			"~contexts/*": ["./src/contexts/*"],
-			"~modules/*": ["./src/modules/*"],
 			"~tools": ["./src/tools"],
 			"~types": ["./src/types"],
-			"~i18n": ["./src/i18n"]
+			"~i18n": ["./src/i18n"],
+			"~styles": ["./src/styles"]
 		},
 		"typeRoots": ["./node_modules/@types"],
 		"experimentalDecorators": true

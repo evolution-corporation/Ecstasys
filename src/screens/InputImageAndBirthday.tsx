@@ -16,17 +16,19 @@ import { convertedImageURLInBase64 } from "~tools";
 
 const InputImageAndBirthdayScreen: RootScreenProps<"InputImageAndBirthday"> = ({}) => {
 	const appDispatch = useAppDispatch();
+	const SelectImageButtonRef = React.useRef<React.ElementRef<typeof SelectImageButton>>();
 	const registration = async () => {
-		await appDispatch(actions.registrationAccountData()).unwrap();
+		await appDispatch(actions.registrationAccount()).unwrap();
 	};
 
 	useFocusEffect(
 		useCallback(() => {
 			const user = auth().currentUser;
 			if (!!user && user.photoURL) {
-				convertedImageURLInBase64(user.photoURL).then(base64 =>
-					appDispatch(actions.setChangedAccountData({ image: base64 }))
-				);
+				SelectImageButtonRef.current?.setImage(user.photoURL);
+				convertedImageURLInBase64(user.photoURL).then(base64 => {
+					appDispatch(actions.addChangedInformationUser({ image: base64 }));
+				});
 			}
 		}, [])
 	);
@@ -38,16 +40,17 @@ const InputImageAndBirthdayScreen: RootScreenProps<"InputImageAndBirthday"> = ({
 			<View style={{ alignItems: "center" }}>
 				<Text style={styles.helper}>{i18n.t("f22ace97-97e5-4f87-b1b7-c179f1d7e893")}</Text>
 				<SelectImageButton
+					ref={SelectImageButtonRef}
 					style={styles.selectImage}
 					onChangeImage={base64 => {
 						if (base64) {
-							appDispatch(actions.setChangedAccountData({ image: base64 }));
+							appDispatch(actions.addChangedInformationUser({ image: base64 }));
 						}
 					}}
 				/>
 				<SelectBirthday
 					onChange={date => {
-						appDispatch(actions.setChangedAccountData({ birthday: date }));
+						appDispatch(actions.addChangedInformationUser({ birthday: date }));
 					}}
 				/>
 			</View>

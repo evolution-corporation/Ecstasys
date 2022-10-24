@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
 	Text,
 	TouchableOpacity,
@@ -24,16 +24,21 @@ import { GeneralCompositeScreenProps, PracticesMeditation } from "~types";
 import { useAppSelector } from "~store";
 import * as Models from "src/models";
 import { CategoryCard } from "~components/dump";
+import { Request } from "~api";
 // import { useCountMeditation } from "./hooks";
 
 const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) => {
 	// useShowIntro("@IsFirstShownPractices", () => navigation.navigate("IntroPractices"), [navigation.isFocused()]);
-	const countPractices = useAppSelector(store => Models.Practice.convertCount(store.practice.countPractice));
+	const [countPractices, setCountPractices] = useState<{ [key: string]: number | null }>({
+		basic: null,
+		relaxation: null,
+		breathingPractices: null,
+		directionalVisualizations: null,
+	});
 	const [getPaddingTopFunc, setGetPaddingTopFunc] = useState<{
 		f: (width: number) => number;
 	} | null>(null);
 	const [widthTitle, setWidthTitle] = useState<number | null>(null);
-	const { width } = useWindowDimensions();
 
 	const topPaddingContent = useMemo(() => {
 		if (!getPaddingTopFunc || !widthTitle) return null;
@@ -41,6 +46,20 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 	}, [getPaddingTopFunc, widthTitle]);
 
 	const refFlatList = useRef<FlatList>(null);
+
+	useEffect(() => {
+		(async => {
+			Request.getCountMeditationsByType("relaxation").then(count =>
+				setCountPractices(preValue => ({ ...preValue, relaxation: count }))
+			);
+			Request.getCountMeditationsByType("breathtakingPractice").then(count =>
+				setCountPractices(preValue => ({ ...preValue, breathingPractices: count }))
+			);
+			Request.getCountMeditationsByType("directionalVisualizations").then(count =>
+				setCountPractices(preValue => ({ ...preValue, directionalVisualizations: count }))
+			);
+		})();
+	}, []);
 
 	return (
 		<DoubleColorView
@@ -63,13 +82,6 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 				</Text>
 				<FlatList
 					ref={refFlatList}
-					onLayout={() => {
-						refFlatList.current?.scrollToIndex({
-							index: 0,
-							viewOffset: -40,
-							animated: false,
-						});
-					}}
 					data={CategoryMeditation}
 					initialScrollIndex={0}
 					renderItem={({ item }) => (
@@ -85,7 +97,6 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 					keyExtractor={item => `${item.id}_small`}
 					horizontal={true}
 					ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
-					inverted={true}
 					style={styles.fastList}
 					contentContainerStyle={{ paddingHorizontal: 20 }}
 					showsHorizontalScrollIndicator={false}
@@ -100,6 +111,7 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 								image={item.image}
 								name={i18n.t(item.name)}
 								onPress={() => navigation.navigate("PracticeListByType", { typePractices: item.id })}
+								style={{ marginVertical: 11 }}
 							/>
 						);
 					})}

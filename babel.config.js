@@ -28,7 +28,8 @@ module.exports = function(api) {
             '~tools': './src/tools',
             '~types': './src/types',
             '~hooks': './src/hooks',
-            '~i18n': './src/i18n'
+            '~i18n': './src/i18n',
+            '~styles': './src/styles'
           },
         },
         "@babel/plugin-transform-typescript",

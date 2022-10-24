@@ -51,11 +51,13 @@ export default createReducer<PracticeState>(
 			}
 			if (recommendationPracticeToDay !== null) state.recommendationPracticeToDay = recommendationPracticeToDay;
 		});
-
 		builder.addCase(Actions.editBackgroundVolume, (state, { payload }) => {
 			if (payload < 0) payload = 0;
 			if (payload > 1) payload = 1;
 			state.paramsPractice.currentVolumeBackgroundSound = payload;
+		});
+		builder.addCase(Actions.setPractice, (state, { payload }) => {
+			state.currentPractice = payload;
 		});
 	}
 );

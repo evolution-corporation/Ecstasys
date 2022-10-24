@@ -52,7 +52,7 @@ export function composePractice(data: ServerEntities.Meditation | null): State.P
 			case "relaxation":
 				typePractices = "RELAXATION";
 				break;
-			case "breathingPractices":
+			case "breathtakingPractice":
 				typePractices = "BREATHING_PRACTICES";
 				break;
 			case "dancePsychotechnics":
@@ -64,7 +64,7 @@ export function composePractice(data: ServerEntities.Meditation | null): State.P
 			default:
 				throw new Error(`Not found ${data.TypeMeditation} in PracticesMeditation`);
 		}
-		const image = "https://storage.yandexcloud.net/dmdmeditationimage/meditations/" + data.id;
+		const image = "https://storage.yandexcloud.net/dmdmeditationimage/meditations/" + data.id + ".png";
 		let audio: string | undefined;
 		if (data.HasAudio) {
 			audio = "https://storage.yandexcloud.net/dmdmeditatonaudio/" + data.id;

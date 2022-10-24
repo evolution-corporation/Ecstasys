@@ -1,22 +1,32 @@
 /** @format */
 
 import React from "react";
-import { View, Text, StyleSheet, Pressable, Dimensions, Image, ImageSourcePropType } from "react-native";
+import {
+	View,
+	Text,
+	StyleSheet,
+	Pressable,
+	Dimensions,
+	Image,
+	ViewProps,
+	ImageSourcePropType,
+	ActivityIndicator,
+} from "react-native";
 import Tools from "~core";
 import i18n from "~i18n";
 
 import Headphones from "assets/icons/Headphones_white.svg";
 
-interface Props {
+interface Props extends ViewProps {
 	onPress?: () => void;
 	image: ImageSourcePropType;
 	name: string;
 	description: string;
-	count: number;
+	count: number | null;
 }
 
 const CategoryCard: React.FC<Props> = props => {
-	const { description, image, name, onPress, count } = props;
+	const { description, image, name, onPress, count, style } = props;
 	const [widthComponent, setWidthComponent] = React.useState<number>(Dimensions.get("window").width);
 	return (
 		<Pressable
@@ -26,6 +36,7 @@ const CategoryCard: React.FC<Props> = props => {
 			onLayout={({ nativeEvent: { layout } }) => {
 				setWidthComponent(layout.width);
 			}}
+			style={style}
 		>
 			<View style={styles.background}>
 				<Image
@@ -47,13 +58,17 @@ const CategoryCard: React.FC<Props> = props => {
 						<Text style={styles.description} adjustsFontSizeToFit>
 							{description}
 						</Text>
-						<View style={{ alignItems: "center" }}>
+						<View style={{ alignItems: "center", width: 100 }}>
 							<Headphones />
-							<Text style={styles.countMeditation}>
-								{i18n.t("9790bd12-4b66-419f-a3e0-705134494734", {
-									count,
-								})}
-							</Text>
+							{count === null ? (
+								<ActivityIndicator size={"small"} color={"#FFFF"} />
+							) : (
+								<Text style={styles.countMeditation}>
+									{i18n.t("9790bd12-4b66-419f-a3e0-705134494734", {
+										count,
+									})}
+								</Text>
+							)}
 						</View>
 					</View>
 				</View>
@@ -71,7 +86,6 @@ const styles = StyleSheet.create({
 		justifyContent: "flex-start",
 		overflow: "hidden",
 		backgroundColor: "#9765A8",
-		marginBottom: 150,
 	},
 	name: {
 		color: "#FFFFFF",
@@ -94,8 +108,8 @@ const styles = StyleSheet.create({
 	},
 	description: {
 		fontSize: 14,
-		lineHeight: 18,
-		width: "70%",
+		width: "60%",
+		maxHeight: 53,
 		color: "#FFFFFF",
 		...Tools.gStyle.font("400"),
 	},
@@ -103,6 +117,8 @@ const styles = StyleSheet.create({
 		fontSize: 12,
 		color: "#FFFFFF",
 		...Tools.gStyle.font("400"),
+		textAlign: "center",
+		textAlignVertical: "center",
 	},
 });
 

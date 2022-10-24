@@ -4,9 +4,10 @@ import React from "react";
 import { View, Text, StyleSheet, FlatList, Pressable, ViewProps, Image } from "react-native";
 import { Practice } from "src/models";
 import core from "~core";
+import { State } from "~types";
 
 interface Props extends ViewProps {
-	historyPractices: Practice[];
+	historyPractices: State.Practice[];
 }
 
 const ShowListPractices: React.FC<Props> = props => {

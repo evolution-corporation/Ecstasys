@@ -5,7 +5,6 @@ import { CompositeNavigationProp, CompositeScreenProps, NavigatorScreenParams } 
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { AVPlaybackSource } from "expo-av";
 import { FC } from "react";
-import { TypeMeditation } from "~modules/meditation/types";
 import type { useAppSelector, useAppDispatch } from "./store";
 import type { BackgroundSound } from "src/models/practices";
 import { ImageSourcePropType } from "react-native";
@@ -121,7 +120,7 @@ export namespace State {
 		/** Обновленная дата рождения пользователя */
 		readonly birthday?: string;
 		/** Когда был проверка вернула успешный результат nickname на валидность */
-		readonly lastSuccessCheckNickname?: [string, boolean];
+		readonly lastCheckNicknameAndResult?: [string, boolean];
 	}
 	export interface Practice {
 		id: string;
@@ -216,8 +215,11 @@ export type RootStackList = {
 	InputNickname: undefined;
 	InputImageAndBirthday: undefined;
 	PlayerForPractice: {
-		practiceState: State.Practice;
+		selectedPractice: State.Practice;
 		practiceLength: number;
+	};
+	SelectTimeForRelax: {
+		selectedPractice: State.Practice;
 	};
 	PlayerForDMD: {};
 	DMDSettingNotification: {};
@@ -233,21 +235,3 @@ export type RootStackList = {
 };
 
 export type RootScreenProps<T extends keyof RootStackList> = FC<NativeStackScreenProps<RootStackList, T>>;
-
-export interface Meditation {
-	id: string;
-	lengthAudio: number;
-	name?: string;
-	type: TypeMeditation;
-	image: string;
-	description?: string;
-	audio?: string;
-	permission: boolean;
-	instruction?: Instruction;
-}
-
-export interface Instruction {
-	title: string;
-	description: string;
-	data: { image?: string; text: string }[];
-}

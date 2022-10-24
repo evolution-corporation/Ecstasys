@@ -4,6 +4,7 @@
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AsyncStorageEntities, GreetingScreen, StatusShowGreetingScreens, SupportType } from "./types";
+import * as SecureStore from "expo-secure-store";
 import * as Crypto from "expo-crypto";
 
 enum AsyncStorageKey {
@@ -12,6 +13,8 @@ enum AsyncStorageKey {
 	PROFILE = "@PROFILE",
 	STATISTIC = "@STATISTIC",
 	USE_MESSAGE_PROFESSOR = "@USE_MESSAGE_PROFESSOR",
+	JWT_TOKEN = "@JWT_TOKEN",
+	JWT_TOKEN_TIME_DEAD = "@JWT_TOKEN_TIME_DEAD",
 }
 
 /**
@@ -19,8 +22,12 @@ enum AsyncStorageKey {
  * @param key Ключ асинхронного хранилища
  * @param value значение которое необходимо сохранить
  */
-async function AsyncStorageSet<T>(key: AsyncStorageKey, value: T) {
-	await AsyncStorage.setItem(key, JSON.stringify(value));
+async function AsyncStorageSet<T>(key: AsyncStorageKey, value: T, secure: boolean = false) {
+	if (secure && new Blob([JSON.stringify(value)], { type: "text/plain" }).size < 2048) {
+		await SecureStore.setItemAsync(key.replace("@", "."), JSON.stringify(value));
+	} else {
+		await AsyncStorage.setItem(key, JSON.stringify(value));
+	}
 }
 
 /**
@@ -28,8 +35,11 @@ async function AsyncStorageSet<T>(key: AsyncStorageKey, value: T) {
  * @param key Ключ асинхронного хранилища по которому будут получены данные
  * @returns null если данных по данному ключу не найдено
  */
-async function AsyncStorageGet<T>(key: AsyncStorageKey): Promise<T | null> {
-	const asyncStorageRequest = await AsyncStorage.getItem(AsyncStorageKey.STATUS_SHOW_GREETING_SCREEN);
+async function AsyncStorageGet<T>(key: AsyncStorageKey, secure: boolean = false): Promise<T | null> {
+	let asyncStorageRequest: string | null = null;
+	if (secure) {
+		asyncStorageRequest = await SecureStore.getItemAsync(key.replace("@", "."));
+	} else asyncStorageRequest = await AsyncStorage.getItem(key);
 	if (asyncStorageRequest === null) {
 		return null;
 	} else {
@@ -255,4 +265,25 @@ export async function updateMessage(id?: string): Promise<AsyncStorageEntities.U
 	message[index] = { ...message[index], dateLastUpdate: new Date().toISOString() };
 	await AsyncStorageSet(AsyncStorageKey.USE_MESSAGE_PROFESSOR, message);
 	return message;
+}
+
+//!
+export async function getToken(): Promise<null | string> {
+	const timeDeadStorage = await AsyncStorageGet<string>(AsyncStorageKey.JWT_TOKEN_TIME_DEAD);
+	if (timeDeadStorage === null) return null;
+	if (new Date(timeDeadStorage).getTime() >= Date.now()) return null;
+	const token = await AsyncStorageGet<string | null>(AsyncStorageKey.JWT_TOKEN, true);
+	return token;
+}
+
+//!
+export async function saveToken(token: string, timeDead: Date): Promise<string> {
+	await AsyncStorageSet<string>(AsyncStorageKey.JWT_TOKEN_TIME_DEAD, timeDead.toISOString());
+	await AsyncStorageSet(AsyncStorageKey.JWT_TOKEN, token, true);
+	return token;
+}
+
+export async function clear() {
+	await AsyncStorage.clear();
+	await SecureStore.deleteItemAsync(AsyncStorageKey.JWT_TOKEN);
 }

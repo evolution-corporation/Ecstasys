@@ -54,7 +54,9 @@ const GreetingScreen: RootScreenProps<"Greeting"> = ({ navigation }) => {
 			</Animated.View>
 			<View style={styles.text}>
 				<Animated.Text style={[aStyles.title, styles.title]}>{text.title}</Animated.Text>
-				<Animated.Text style={[aStyles.description, styles.description]}>{text.description}</Animated.Text>
+				<Animated.Text style={[aStyles.description, styles.description]} adjustsFontSizeToFit>
+					{text.description}
+				</Animated.Text>
 				<View style={styles.menuButton}>
 					{isShowSkipButton ? (
 						<TextButton>{i18n.t("skip")}</TextButton>
@@ -101,8 +103,8 @@ const styles = StyleSheet.create({
 		...Tools.gStyle.font("400"),
 		color: "#404040",
 		opacity: 0.71,
-		lineHeight: 22.4,
 		marginVertical: 26,
+		maxHeight: "60%",
 	},
 	text: {
 		flex: 2,

@@ -1,7 +1,7 @@
 /** @format */
 
 export { default as Intro } from "./AuthorizationAndRegistration/Intro";
-export { default as SelectMethodAuthentication } from "./AuthorizationAndRegistration/SelectMethodAuthentication";
+export { default as SelectMethodAuthentication } from "./SelectMethodAuthentication";
 export { default as InputNumberPhone } from "./AuthorizationAndRegistration/InputNumberPhone";
 export { default as InputSMSCode } from "./AuthorizationAndRegistration/InputSMSCode";
 export { default as InputNickname } from "./InputNickname";
@@ -13,7 +13,7 @@ export { default as SelectSubscribe } from "./Subscribe/SelectSubscribe";
 export { default as ResultSubscribe } from "./Subscribe/ResultSubscribe";
 export { default as PracticeListByType } from "./PracticeListByType";
 export { default as PlayerMeditationPractices } from "./PlayerForPractice";
-export { default as TimerPractices } from "./Practices/TimerPractices";
+export { default as SelectTimeForRelax } from "./SelectTimeForRelax";
 export { default as IntroPractices } from "./Practices/Intro";
 export { default as DMDIntro } from "./Practices/IntroDMD";
 export { default as Instruction } from "./Practices/Instruction";

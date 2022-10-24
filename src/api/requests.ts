@@ -6,7 +6,7 @@
 import auth from "@react-native-firebase/auth";
 import { RequestError } from "src/Errors";
 import { ServerEntities, SupportType } from "./types";
-
+import * as Storage from "./asyncStorage";
 const URL = "http://62.84.125.238:8000/";
 
 /**
@@ -16,13 +16,22 @@ const URL = "http://62.84.125.238:8000/";
 async function getFirebaseToken(firebaseToken: string | undefined) {
 	const start = Date.now();
 	if (firebaseToken === undefined) {
-		firebaseToken = await auth().currentUser?.getIdToken();
-	}
-	if (firebaseToken === undefined) {
-		throw new Error("User token not found");
+		const tokenSaved = await Storage.getToken();
+		if (tokenSaved === null) {
+			const firebaseUser = auth().currentUser;
+			if (firebaseUser !== null) {
+				const { token, expirationTime } = await firebaseUser.getIdTokenResult();
+				firebaseToken = await Storage.saveToken(token, new Date(expirationTime));
+			}
+		} else {
+			firebaseToken = tokenSaved;
+		}
 	}
 	const end = Date.now();
 	if (end - start > 200) console.log("getFirebaseToken", end - start);
+	if (firebaseToken === undefined) {
+		throw new Error("User token not found");
+	}
 	return firebaseToken;
 }
 
@@ -199,6 +208,18 @@ export async function getMeditationById(meditationId: string, firebaseTokenToken
  * @return Запрошенная медитация
  */
 export async function getMeditationsByType(meditationType: SupportType.TypeMeditation, firebaseTokenToken?: string) {
+	return [
+		{
+			id: "6387521c-adb7-49b7-8a0f-5882eacc35af",
+			AudioLength: 100000,
+			HasAudio: true,
+			IsSubscribed: false,
+			Name: "123,421",
+			TypeMeditation: "relaxation",
+			Description: "12313123",
+			Language: "ru",
+		},
+	] as ServerEntities.Meditation[];
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
 	const url = URL + "meditation?type=" + meditationType;
 	const requestServer = await fetch(url, {
@@ -366,9 +387,20 @@ export async function getInformationUser(
 }
 
 //!
+
 export async function getRecommendationMeditation(firebaseTokenToken?: string) {
+	return {
+		id: "6387521c-adb7-49b7-8a0f-5882eacc35af",
+		AudioLength: 100000,
+		HasAudio: true,
+		IsSubscribed: false,
+		Name: "123,421",
+		TypeMeditation: "breathtakingPractice",
+		Description: "12313123",
+		Language: "ru",
+	} as ServerEntities.Meditation;
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const url = URL + "meditation?getIsNotListened=true";
+	const url = URL + "meditation?getIsNotListened=true&countOfMeditations=1";
 	const requestServer = await fetch(url, {
 		headers: {
 			Authorization: firebaseTokenToken,
@@ -376,7 +408,10 @@ export async function getRecommendationMeditation(firebaseTokenToken?: string) {
 		},
 	});
 	if (requestServer.status >= 500) {
-		throw new RequestError(`getMeditationsByType: ${await requestServer.text()}`, url, undefined, "GET", "50x");
+		throw new RequestError(`getRecommendationMeditation: ${await requestServer.text()}`, url, undefined, "GET", "50x");
+	}
+	if (requestServer.status === 404) {
+		return null;
 	}
 	const json = await requestServer.json();
 	return json as ServerEntities.Meditation;

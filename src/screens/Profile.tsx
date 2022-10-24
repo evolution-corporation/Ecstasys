@@ -5,15 +5,27 @@ import RN, { Dimensions, ScrollView, StyleSheet } from "react-native";
 import Heart from "assets/icons/Heart_Red.svg";
 import Start from "assets/icons/Star.svg";
 import { DoubleColorView } from "~components/containers";
-import Tools from "~core";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import i18n from "~i18n";
-
+import gStyle from "~styles";
 import { useAppSelector } from "~store";
 import * as Models from "src/models";
 import * as Dump from "src/components/dump";
-import { StatisticPeriod, GeneralCompositeScreenProps } from "~types";
-import core from "~core";
+import { StatisticPeriod, GeneralCompositeScreenProps, State } from "~types";
+
+const getStartWeek = () => {
+	const date = new Date();
+	date.setHours(0, 0, 0, 0);
+	date.setDate(date.getDate() - date.getDay());
+	return date;
+};
+
+const getStartMonth = () => {
+	const date = new Date();
+	date.setHours(23, 59, 59, 999);
+	date.setDate(0);
+	return date;
+};
 
 const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 	//* local state
@@ -21,21 +33,53 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 	const [statisticPeriod, setStatisticPeriod] = React.useState<StatisticPeriod>(StatisticPeriod.MONTH);
 	const [heightScreen, setHeightScreen] = React.useState<number | null>(null);
 	//* global state
-	const { displayName, image, nickName } = useAppSelector(store =>
-		Models.Account.createByState(store.account).getUserData()
-	);
-	const [statisticCount, statisticTime] = useAppSelector(store =>
-		Models.Statistic.createByState(store.statistic.data).getStatistic(statisticPeriod)
-	);
-	const subscribe = useAppSelector(store => Models.Account.createByState(store.account).subscribe);
+	const { displayName, image, nickName } = useAppSelector(store => {
+		if (store.account.currentData === undefined) throw new Error("Not found user");
+		return store.account.currentData;
+	});
+	const [statisticCount, statisticTime] = useAppSelector(store => {
+		let listPracticesListened: {
+			dateListen: string;
+			msListened: number;
+			practice: State.Practice;
+		}[] = [];
+		if (statisticPeriod === StatisticPeriod.WEEK) {
+			listPracticesListened = store.practice.listPracticesListened.filter(
+				item => new Date(item.dateListen) >= getStartWeek()
+			);
+		} else if (statisticPeriod === StatisticPeriod.MONTH) {
+			listPracticesListened = store.practice.listPracticesListened.filter(
+				item => new Date(item.dateListen) >= getStartMonth()
+			);
+		} else {
+			listPracticesListened = store.practice.listPracticesListened;
+		}
+		return [listPracticesListened.length, listPracticesListened.reduce((value, item) => value + item.msListened, 0)];
+	});
+	const subscribe = useAppSelector(store => {
+		if (store.account.subscribe === undefined) return null;
+		const endSubscribe = new Date(store.account.subscribe.whenSubscribe);
+		endSubscribe.setDate(
+			endSubscribe.getDate() +
+				(store.account.subscribe.type === "WEEK" ? 7 : store.account.subscribe.type === "MONTH" ? 30 : 90)
+		);
+		if (endSubscribe.getTime() >= Date.now())
+			return {
+				endSubscribe: new Date(store.account.subscribe.whenSubscribe),
+				autoPayment: store.account.subscribe.autoPayment,
+			};
+		return null;
+	});
 
-	const historyMeditation = useAppSelector(store => Models.Statistic.createByState(store.statistic.data).getHistory());
+	const historyMeditation = useAppSelector(store => {
+		return store.practice.listPracticesListened.map(item => item.practice);
+	});
 
 	React.useEffect(() => {
 		navigation.setOptions({
 			title: nickName,
 		});
-	});
+	}, [nickName]);
 	return (
 		<DoubleColorView
 			style={styles.background}
@@ -102,14 +146,14 @@ const styles = StyleSheet.create({
 	buttonText: {
 		color: "#FFFFFF",
 		fontSize: 14,
-		...Tools.gStyle.font("500"),
+		...gStyle.font("500"),
 	},
 	background: { flex: 1, paddingHorizontal: 20 },
 	historyText: {
 		marginTop: 16,
 		color: "#3D3D3D",
 		fontSize: 20,
-		...core.gStyle.font("600"),
+		...gStyle.font("600"),
 	},
 });
 

@@ -5,24 +5,26 @@ import { Text, StyleSheet, useWindowDimensions, Dimensions } from "react-native"
 import { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 import Tools from "~core";
-import { RootScreenProps, State } from "~types";
+import { PracticesMeditation, RootScreenProps, State } from "~types";
 var height = Dimensions.get("window").height;
-import { DescriptionMeditationCategory, MeditationType } from "~modules/meditation";
 
 import { ColorButton } from "~components/dump";
 import { DoubleColorView } from "~components/containers";
 import i18n from "~i18n";
-
+import DescriptionPrentices from "assets/descriptionPrentices.json";
 import { CarouselPractices } from "~components/dump";
 import { Practice } from "src/models";
 import { useFocusEffect } from "@react-navigation/native";
+import { actions, useAppDispatch } from "~store";
+import { Converter, Request } from "~api";
+import { SupportType } from "src/api/types";
 
 const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navigation }) => {
 	const { typePractices } = route.params;
 	const { height } = useWindowDimensions();
-	//* локальные стайты
 	const [selectedPracticeId, setSelectedPracticeId] = useState<string | null>(null);
 	const [practiceList, setPracticeList] = useState<State.Practice[]>([]);
+	const dispatch = useAppDispatch();
 	const opacityButton = useSharedValue(1);
 	const aStyle = {
 		button: useAnimatedStyle(() => ({
@@ -33,7 +35,29 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 	useFocusEffect(
 		useCallback(() => {
 			(async () => {
-				setPracticeList((await Practice.getByType(typePractices)).map(practice => practice.getState()));
+				if (typePractices !== PracticesMeditation.BASIC) {
+					let typePractice: SupportType.TypeMeditation;
+					switch (typePractices) {
+						case PracticesMeditation.RELAXATION:
+							typePractice = "relaxation";
+							break;
+						case PracticesMeditation.BREATHING_PRACTICES:
+							typePractice = "breathtakingPractice";
+							break;
+						case PracticesMeditation.DANCE_PSYCHOTECHNICS:
+							typePractice = "dancePsychotechnics";
+							break;
+						case PracticesMeditation.DIRECTIONAL_VISUALIZATIONS:
+							typePractice = "directionalVisualizations";
+							break;
+						default:
+							throw new Error("Not found Type");
+					}
+					const newListPractice = (await Request.getMeditationsByType(typePractice))
+						.map(practice => Converter.composePractice(practice))
+						.filter(practice => practice !== null) as State.Practice[];
+					setPracticeList(newListPractice);
+				}
 			})();
 		}, [])
 	);
@@ -49,6 +73,21 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 		// }
 	}, [typePractices]);
 
+	const onClick = (practiceId: string) => {
+		const practiceIndex = practiceList.findIndex(item => item.id === practiceId);
+		if (practiceIndex !== -1) {
+			dispatch(actions.setPractice(practiceList[practiceIndex]));
+			if (practiceList[practiceIndex].type === "RELAXATION") {
+				navigation.navigate("SelectTimeForRelax", { selectedPractice: practiceList[practiceIndex] });
+			} else {
+				navigation.navigate("PlayerForPractice", {
+					practiceLength: practiceList[practiceIndex].length,
+					selectedPractice: practiceList[practiceIndex],
+				});
+			}
+		}
+	};
+
 	return (
 		<DoubleColorView style={styles.background} heightViewPart={height / 2 - 100}>
 			<ColorButton
@@ -60,21 +99,24 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 			>
 				{i18n.t("ce174d00-e4df-42f3-bb19-82ed6c987750")}
 			</ColorButton>
-			<Text style={styles.descriptionType}>
-				{i18n.t(DescriptionMeditationCategory[route.params.typePractices].text)}
-			</Text>
+			<Text style={styles.descriptionType}>{i18n.t(DescriptionPrentices[route.params.typePractices])}</Text>
 			{practiceList.length > 0 && (
 				<CarouselPractices
 					data={practiceList}
 					style={{ width: Dimensions.get("window").width, left: -20 }}
-					onPress={practiceId => {}}
+					onPress={practiceId => {
+						onClick(practiceId);
+					}}
+					onChange={setSelectedPracticeId}
 				/>
 			)}
 			<ColorButton
 				animationStyle={aStyle.button}
 				styleButton={styles.button}
 				styleText={styles.buttonText}
-				onPress={() => {}}
+				onPress={() => {
+					if (selectedPracticeId !== null) onClick(selectedPracticeId);
+				}}
 			>
 				{i18n.t("1a2b0df6-fa67-4f71-8fd4-be1f0a576439")}
 			</ColorButton>

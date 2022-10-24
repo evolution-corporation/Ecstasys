@@ -1,36 +1,10 @@
 /** @format */
 
-import React, { FC, useCallback, useEffect, useRef } from "react";
-import {
-	StyleSheet,
-	FlatList,
-	ViewProps,
-	Dimensions,
-	ViewToken,
-	ViewabilityConfig,
-	StyleProp,
-	ViewStyle,
-	View,
-} from "react-native";
-import Animated, {
-	interpolate,
-	SharedValue,
-	useAnimatedStyle,
-	useSharedValue,
-	withTiming,
-} from "react-native-reanimated";
-import { MeditationType } from "~modules/meditation";
+import React, { FC, useCallback, useRef } from "react";
+import { StyleSheet, FlatList, ViewProps, Dimensions, ViewToken, ViewabilityConfig, View } from "react-native";
+
 import CarouselPracticesElement from "./CarouselPracticesElement";
-import Tools from "~core";
 import { State } from "~types";
-
-interface AnimatedValue {
-	scale: SharedValue<number>;
-	translateX: SharedValue<number>;
-	zIndex: SharedValue<number>;
-}
-
-type AnimateStyle = StyleProp<Animated.AnimateStyle<StyleProp<ViewStyle>>>;
 
 const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 	const { data, style, onChange, onPress } = props;
@@ -100,6 +74,7 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 							lengthAudio={item.length}
 							name={item.name}
 							onPress={() => onPressElement(index, item.id)}
+							sharedID={`practice.item.${item.id}`}
 						/>
 					</View>
 				)}
