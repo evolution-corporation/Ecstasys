@@ -10,9 +10,8 @@ import Tools from "~core";
 import Animated, { interpolate, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import i18n from "~i18n";
 import { fontStyle, viewStyle } from "~styles";
-import { Video, AVPlaybackStatus } from "expo-av";
 
-import { GeneralCompositeScreenProps, StatisticPeriod } from "~types";
+import { GeneralCompositeScreenProps, State, StatisticPeriod } from "~types";
 import * as Store from "~store";
 
 const getStartWeek = () => {
@@ -23,7 +22,7 @@ const getStartWeek = () => {
 };
 
 const Main: GeneralCompositeScreenProps = ({ navigation }) => {
-	const [toDayPopularMeditation, setTodayPopularMeditation] = React.useState<Meditation | null>(null);
+	const [toDayPopularMeditation, setTodayPopularMeditation] = React.useState<State.Practice | null>(null);
 	const { height } = RN.useWindowDimensions();
 	const [heightGreeting, setHeightGreeting] = React.useState<number | null>(null);
 	//* Данные из глобального состояния

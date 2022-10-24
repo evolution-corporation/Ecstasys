@@ -81,18 +81,24 @@ const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
 		}
 	}, [selectedIndexMinute, selectedIndexSecond, minutes, seconds]);
 
-	const FlatListRef = React.useRef<FlatList>(null);
+	const minutesRef = React.useRef<FlatList>(null);
+	const secondsRef = React.useRef<FlatList>(null);
 
 	React.useImperativeHandle(ref, () => ({
 		setTime: (newTime: number) => {
-			FlatListRef.current?.scrollToIndex();
+			const minuteIndex = minutes.findIndex(item => item.value === Math.floor(newTime / 60000));
+			const secondIndex = seconds.findIndex(item => item.value === Math.fround((newTime % 60000) / 10000));
+			if (minuteIndex !== -1 && secondIndex !== -1) {
+				minutesRef.current?.scrollToIndex({ index: minuteIndex });
+				secondsRef.current?.scrollToIndex({ index: secondIndex });
+			}
 		},
 	}));
 
 	return (
 		<View style={[styles.container, style]}>
 			<FlatList
-				ref={FlatListRef}
+				ref={minutesRef}
 				key={"minutes"}
 				data={minutes}
 				renderItem={({ item, index }) => (
@@ -137,6 +143,7 @@ const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
 				end={{ x: 0, y: 1 }}
 			/>
 			<FlatList
+				ref={secondsRef}
 				key={"seconds"}
 				data={seconds}
 				renderItem={({ item, index }) => (
