@@ -12,7 +12,11 @@ interface Props {
 	style?: ViewStyle;
 }
 
-const SelectTime: React.FC<Props> = props => {
+interface Ref {
+	setTime: (newTime: number) => void;
+}
+
+const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
 	const { start, end, onChange, style } = props;
 	const [selectedIndexMinute, setSelectedIndexMinute] = React.useState(0);
 	const [selectedIndexSecond, setSelectedIndexSecond] = React.useState(0);
@@ -77,9 +81,18 @@ const SelectTime: React.FC<Props> = props => {
 		}
 	}, [selectedIndexMinute, selectedIndexSecond, minutes, seconds]);
 
+	const FlatListRef = React.useRef<FlatList>(null);
+
+	React.useImperativeHandle(ref, () => ({
+		setTime: (newTime: number) => {
+			FlatListRef.current?.scrollToIndex();
+		},
+	}));
+
 	return (
 		<View style={[styles.container, style]}>
 			<FlatList
+				ref={FlatListRef}
 				key={"minutes"}
 				data={minutes}
 				renderItem={({ item, index }) => (
@@ -154,14 +167,14 @@ const SelectTime: React.FC<Props> = props => {
 			/>
 		</View>
 	);
-};
+});
 
 SelectTime.defaultProps = {};
 
 const styles = StyleSheet.create({
 	container: {
 		alignItems: "center",
-		height: 216,
+		height: "100%",
 		justifyContent: "center",
 		flexDirection: "row",
 		width: 200,
