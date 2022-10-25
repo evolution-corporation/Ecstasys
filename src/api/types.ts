@@ -31,11 +31,11 @@ export namespace SupportType {
 	export type SubscribeType = "Week" | "Month" | "Month6";
 	/** Тип медитации строковой */
 	export type TypeMeditation =
-		| "relaxation"
-		| "breathtakingPractice"
-		| "directionalVisualizations"
-		| "dancePsychotechnics"
-		| "set";
+		| "Relaxation"
+		| "BreathtakingPractice"
+		| "DirectionalVisualizations"
+		| "DancePsychotechnics"
+		| "Set";
 
 	/** Тип медитационной практики */
 	export type PracticesMeditation =

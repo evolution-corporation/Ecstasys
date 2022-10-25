@@ -15,9 +15,7 @@ import { Inter_700Bold } from "@expo-google-fonts/inter";
 
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import { PracticesMeditation, State } from "~types";
-import type { AsyncThunkConfig } from "../index";
-import { RequestError } from "src/Errors";
+import { State } from "~types";
 import { Request, Converter, Storage } from "~api";
 
 enum GeneralAction {
@@ -99,7 +97,10 @@ export const initialization = createAsyncThunk(GeneralAction.initialization, asy
 				}
 				recommendationPracticeToDay = Converter.composePractice(await Request.getRecommendationMeditation());
 			} else {
-				let randomId = listPracticesFavorite[Math.floor(listPracticesFavorite.length * Math.random())].id;
+				let randomId =
+					listPracticesFavorite.length > 0
+						? listPracticesFavorite[Math.floor(listPracticesFavorite.length * Math.random())].id
+						: null;
 				const listNeedPracticeDataAsync = [...listPracticesFavorite];
 				for (let id of listNeedPracticeId) {
 					const indexPracticeDataAsync = listNeedPracticeDataAsync.findIndex(item => item.id === id);

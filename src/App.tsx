@@ -24,7 +24,11 @@ const AppCore = () => {
 		if (!isLoaded.current) {
 			(async () => {
 				await SplashScreen.preventAutoHideAsync();
-				await Store.dispatch(actions.initialization()).unwrap();
+				try {
+					await Store.dispatch(actions.initialization()).unwrap();
+				} catch (error) {
+					console.info(error);
+				}
 				isLoaded.current = true;
 				await SplashScreen.hideAsync();
 			})();

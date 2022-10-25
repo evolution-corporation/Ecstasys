@@ -49,16 +49,16 @@ export function composePractice(data: ServerEntities.Meditation | null): State.P
 	} else {
 		let typePractices: State.PracticesMeditation;
 		switch (data.TypeMeditation) {
-			case "relaxation":
+			case "Relaxation":
 				typePractices = "RELAXATION";
 				break;
-			case "breathtakingPractice":
+			case "BreathtakingPractice":
 				typePractices = "BREATHING_PRACTICES";
 				break;
-			case "dancePsychotechnics":
+			case "DancePsychotechnics":
 				typePractices = "DANCE_PSYCHOTECHNICS";
 				break;
-			case "directionalVisualizations":
+			case "DirectionalVisualizations":
 				typePractices = "DIRECTIONAL_VISUALIZATIONS";
 				break;
 			default:

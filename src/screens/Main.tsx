@@ -1,6 +1,6 @@
 /** @format */
 
-import React from "react";
+import React, { useCallback } from "react";
 
 import * as RN from "react-native";
 
@@ -13,6 +13,9 @@ import { fontStyle, viewStyle } from "~styles";
 
 import { GeneralCompositeScreenProps, State, StatisticPeriod } from "~types";
 import * as Store from "~store";
+import { useFocusEffect } from "@react-navigation/native";
+import { Converter, Request } from "~api";
+import practice from "src/store/reducers/practice";
 
 const getStartWeek = () => {
 	const date = new Date();
@@ -88,6 +91,14 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 		if (_greetingText !== undefined && displayName !== undefined) return `${_greetingText}, ${displayName}!`;
 		return undefined;
 	}, [displayName, greeting]);
+
+	useFocusEffect(
+		useCallback(() => {
+			Request.getPopularToDayMeditation().then(practice =>
+				setTodayPopularMeditation(Converter.composePractice(practice))
+			);
+		}, [])
+	);
 
 	return (
 		<RN.ScrollView

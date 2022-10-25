@@ -18,6 +18,7 @@ import { SharedElement } from "react-navigation-shared-element";
 
 const SelectTimeForRelax: RootScreenProps<"SelectTimeForRelax"> = ({ navigation, route }) => {
 	const { selectedPractice } = route.params;
+	const selectTime = React.useRef<React.ElementRef<typeof SelectTime>>(null);
 	const [milliseconds, setMilliseconds] = useState<number>(selectedPractice.length);
 	console.log(selectedPractice);
 	const heightHeaded = useHeaderHeight();
@@ -45,6 +46,7 @@ const SelectTimeForRelax: RootScreenProps<"SelectTimeForRelax"> = ({ navigation,
 				</Text>
 			</View>
 			<SelectTime
+				ref={selectTime}
 				start={[Math.floor(selectedPractice.length / 60000), Math.floor((selectedPractice.length % 60000) / 1000)]}
 				end={[25, 0]}
 				style={{ height: 200 }}
@@ -53,7 +55,14 @@ const SelectTimeForRelax: RootScreenProps<"SelectTimeForRelax"> = ({ navigation,
 				}}
 			/>
 			<View style={styles.bottomBlock}>
-				<TextButton styleText={styles.resetDefault}>{i18n.t("d61edffc-4710-4707-9ddc-3576780004fc")}</TextButton>
+				<TextButton
+					styleText={styles.resetDefault}
+					onPress={() => {
+						selectTime.current?.setTime(selectedPractice.length);
+					}}
+				>
+					{i18n.t("d61edffc-4710-4707-9ddc-3576780004fc")}
+				</TextButton>
 				<View style={{ width: "100%" }}>
 					<ColorButton
 						styleButton={styles.buttonView}
@@ -94,6 +103,8 @@ const styles = StyleSheet.create({
 		width: "100%",
 		height: "100%",
 		position: "absolute",
+		borderBottomLeftRadius: 20,
+		borderBottomRightRadius: 20,
 	},
 	imageContent: {
 		width: "100%",

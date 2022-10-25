@@ -44,11 +44,10 @@ const SelectMethodAuthentication: RootScreenProps<"SelectMethodAuthentication"> 
 
 	React.useEffect(() => {
 		const appId = Application.applicationId;
+		console.log(appId !== null && appId.includes("dev"));
+
 		GoogleSignin.configure({
-			webClientId:
-				appId !== null && appId.includes("dev")
-					? "878799007977-1joirrt9o7a07t8lajm32ddqu2ff314g.apps.googleusercontent.com"
-					: "878799007977-cj3549ni87jre2rmg4eq0hiolp08igh2.apps.googleusercontent.com",
+			webClientId: "878799007977-cj3549ni87jre2rmg4eq0hiolp08igh2.apps.googleusercontent.com",
 		});
 	}, []);
 

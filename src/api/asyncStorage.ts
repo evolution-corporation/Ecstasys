@@ -271,7 +271,7 @@ export async function updateMessage(id?: string): Promise<AsyncStorageEntities.U
 export async function getToken(): Promise<null | string> {
 	const timeDeadStorage = await AsyncStorageGet<string>(AsyncStorageKey.JWT_TOKEN_TIME_DEAD);
 	if (timeDeadStorage === null) return null;
-	if (new Date(timeDeadStorage).getTime() >= Date.now()) return null;
+	if (new Date(timeDeadStorage).getTime() <= Date.now()) return null;
 	const token = await AsyncStorageGet<string | null>(AsyncStorageKey.JWT_TOKEN, true);
 	return token;
 }

@@ -49,15 +49,17 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 
 	useEffect(() => {
 		(async => {
-			Request.getCountMeditationsByType("relaxation").then(count =>
-				setCountPractices(preValue => ({ ...preValue, relaxation: count }))
-			);
-			Request.getCountMeditationsByType("breathtakingPractice").then(count =>
-				setCountPractices(preValue => ({ ...preValue, breathingPractices: count }))
-			);
-			Request.getCountMeditationsByType("directionalVisualizations").then(count =>
-				setCountPractices(preValue => ({ ...preValue, directionalVisualizations: count }))
-			);
+			Promise.all([
+				Request.getCountMeditationsByType("relaxation").then(count =>
+					setCountPractices(preValue => ({ ...preValue, relaxation: count }))
+				),
+				Request.getCountMeditationsByType("breathtakingPractice").then(count =>
+					setCountPractices(preValue => ({ ...preValue, breathingPractices: count }))
+				),
+				Request.getCountMeditationsByType("directionalVisualizations").then(count =>
+					setCountPractices(preValue => ({ ...preValue, directionalVisualizations: count }))
+				),
+			]);
 		})();
 	}, []);
 
