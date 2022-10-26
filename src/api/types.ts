@@ -69,7 +69,7 @@ export namespace ServerEntities {
 		/** Дата регистрации пользователя */
 		readonly DateTimeRegistration: string;
 		/** Есть ли у пользователя изображение профиля */
-		readonly HasPhoto: boolean;
+		readonly PhotoId?: string;
 		/** Есть ли у пользователя подписка */
 		readonly IsSubscribe: boolean;
 	}
