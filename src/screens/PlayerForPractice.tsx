@@ -26,7 +26,7 @@ enum StatusPractice {
 }
 
 const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, route }) => {
-	const { selectedPractice } = route.params;
+	const { selectedPractice, practiceLength } = route.params;
 	const practiceState = useAppSelector(store => {
 		if (store.practice.currentPractice === undefined) throw new Error("Not Found Practice");
 		return store.practice.currentPractice;
@@ -50,8 +50,8 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 		() => {
 			timerTask.current = initializationTimer(() => {
 				setCurrentTime(prevCurrentTime => {
-					timeLineRef.current?.setValue((prevCurrentTime + 100) / practice.length);
-					if (prevCurrentTime + 100 > practice.length) {
+					timeLineRef.current?.setValue((prevCurrentTime + 100) / practiceLength);
+					if (prevCurrentTime + 100 > practiceLength) {
 						stopTimer();
 					}
 					return prevCurrentTime + 100;
@@ -64,7 +64,6 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 	]).current;
 
 	useEffect(() => {
-		console.log("mount");
 		//* Загружаем главный трек
 		(async () => {
 			if (practiceState.audio && statusPractice === StatusPractice.Loading) {
@@ -83,7 +82,6 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 		})();
 		//* Создаем счетчик времени прослушивания
 		return () => {
-			console.log("unmount");
 			audioVoice.getStatusAsync().then(status => {
 				if (status.isLoaded) audioVoice.stopAsync();
 			});
@@ -184,14 +182,14 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 			new Promise(async (resolve, reject) => {
 				if (audioBackground.current !== null) {
 					const audioBackgroundState = await audioBackground.current.getStatusAsync();
-					if (audioBackgroundState.isLoaded) {
-						await audioBackground.current.setPositionAsync(millisecond % (audioBackgroundState.durationMillis ?? 0));
-					}
+					// if (audioBackgroundState.isLoaded) {
+					// 	await audioBackground.current.setPositionAsync(millisecond % (audioBackgroundState.durationMillis ?? 0));
+					// }
 				}
 				resolve(undefined);
 			}),
 		]);
-		timeLineRef.current?.setValue(millisecond / practice.length);
+		timeLineRef.current?.setValue(millisecond / practiceLength);
 	}, []);
 
 	return (
@@ -238,7 +236,7 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 						ref={timeLineRef}
 						disable={statusPractice === StatusPractice.Loading}
 						onChange={percent => {
-							update(practice.length * percent);
+							update(practiceLength * percent);
 						}}
 						onStartChange={() => {
 							pause();
@@ -257,7 +255,7 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 							{i18n.strftime(new Date(currentTime), "%M:%S")}
 						</Text>
 						<Text style={styles.timeCode} key={"all"}>
-							{i18n.strftime(new Date(practice.length), "%M:%S")}
+							{i18n.strftime(new Date(practiceLength), "%M:%S")}
 						</Text>
 					</View>
 					{practice.type !== PracticesMeditation.DIRECTIONAL_VISUALIZATIONS && (
@@ -266,7 +264,6 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 							styleText={styles.buttonBackgroundText}
 							secondItem={<Headphones style={{ marginRight: 24 }} />}
 							onPress={() => {
-								console.log("1234567890");
 								navigation.navigate("SelectBackgroundSound", {
 									backgroundImage: { uri: practice.image },
 								});

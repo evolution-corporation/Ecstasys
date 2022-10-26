@@ -57,7 +57,6 @@ export default class ChangeUserData {
 		if (this.lastSuccessCheckNickname !== undefined) {
 			lastSuccessCheckNickname = [this.lastSuccessCheckNickname[0].toISOString(), this.lastSuccessCheckNickname[1]];
 		}
-		console.log("getState", lastSuccessCheckNickname);
 		return {
 			birthday: this.birthday?.toISOString(),
 			displayName: this.displayName,

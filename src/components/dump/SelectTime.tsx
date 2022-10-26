@@ -40,13 +40,17 @@ const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
 			{ text: null, value: -1 },
 		];
 
-		for (let i = 0; i <= 62; i++) {
+		for (
+			let i = selectedIndexMinute === 2 ? start[1] : 0;
+			i <= (selectedIndexMinute === minutes.length - 2 ? end[1] : 62);
+			i++
+		) {
 			_seconds.push({ text: i < 10 ? `0${i}` : i.toString(), value: i });
 		}
 		_seconds[_seconds.length - 2].text = null;
 		_seconds[_seconds.length - 1].text = null;
 		return _seconds;
-	}, [start, end]);
+	}, [start, end, selectedIndexMinute]);
 
 	const _viewabilityConfig = React.useRef<ViewabilityConfig>({
 		// viewAreaCoveragePercentThreshold: 100,

@@ -20,9 +20,7 @@ const SelectTimeForRelax: RootScreenProps<"SelectTimeForRelax"> = ({ navigation,
 	const { selectedPractice } = route.params;
 	const selectTime = React.useRef<React.ElementRef<typeof SelectTime>>(null);
 	const [milliseconds, setMilliseconds] = useState<number>(selectedPractice.length);
-	console.log(selectedPractice);
 	const heightHeaded = useHeaderHeight();
-
 	return (
 		<View style={styles.background}>
 			<View style={styles.topBlock}>
