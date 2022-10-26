@@ -31,6 +31,10 @@ import { RootScreenProps, RootStackList, State, TabNavigatorList } from "~types"
 const TabNavigator = createBottomTabNavigator<TabNavigatorList>();
 
 const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
+	const { nickName, image } = useAppSelector(store => {
+		if (store.account.currentData === undefined) throw new Error("User Not Found");
+		return store.account.currentData;
+	});
 	return (
 		<TabNavigator.Navigator
 			screenOptions={{
@@ -63,7 +67,7 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
 				component={Screens.PracticesList}
 				options={{
 					title: i18n.t("c08bb9d1-1769-498e-acf5-8c37c18bed05"),
-					headerRight: () => <UserButton style={{ marginRight: 20 }} />,
+					headerRight: () => <UserButton style={{ marginRight: 20 }} image={image} nickname={nickName} />,
 					tabBarIcon: ({ focused }) => (focused ? <PracticesIconSelected /> : <PracticesIconNoSelected />),
 				}}
 			/>
@@ -79,7 +83,7 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
 								marginRight: 17,
 							}}
 							onPress={() => {
-								navigation.navigate("OptionsProfile");
+								navigation.navigate("Options");
 							}}
 						/>
 					),
@@ -126,9 +130,9 @@ const RootRoutes: FC = () => {
 			{accountStatus === "REGISTRATION" && (
 				<>
 					<RootNavigation.Screen name={"TabNavigator"} component={TabRoutes} options={{ headerShown: false }} />
-					<RootNavigation.Screen name={"OptionsProfile"} component={Screens.OptionsProfile} />
+					<RootNavigation.Screen name={"Options"} component={Screens.Options} />
 					<RootNavigation.Screen name={"FavoriteMeditation"} component={Screens.FavoriteMeditation} />
-					<RootNavigation.Screen name={"EditMainUserData"} component={Screens.EditMainUserData} />
+					<RootNavigation.Screen name={"EditUser"} component={Screens.EditUser} />
 					<RootNavigation.Screen name={"EditUserBirthday"} component={Screens.EditUserBirthday} />
 					<RootNavigation.Screen
 						name={"DMDSettingNotification"}

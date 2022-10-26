@@ -79,6 +79,14 @@ export const initialization = createAsyncThunk(GeneralAction.initialization, asy
 		// Обработка практик
 		(async () => {
 			//* Получаем список медитаций данные которых нам нужно получить
+			const userFirebase = auth().currentUser;
+			if (userFirebase === null) {
+				return {
+					listPracticesListened: [],
+					listPracticesFavorite: [],
+					recommendationPracticeToDay: null,
+				};
+			}
 			const listNeedPracticeId: string[] = [];
 			const listPracticesListened = await Storage.getStatistic();
 			listNeedPracticeId.push(...listPracticesListened.map(item => item.meditationId));

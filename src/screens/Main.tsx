@@ -29,7 +29,7 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 	const { height } = RN.useWindowDimensions();
 	const [heightGreeting, setHeightGreeting] = React.useState<number | null>(null);
 	//* Данные из глобального состояния
-	const { displayName } = Store.useAppSelector(store => {
+	const { displayName, image, nickName } = Store.useAppSelector(store => {
 		if (store.account.currentData === undefined) throw new Error("Not Found User Data");
 		return store.account.currentData;
 	});
@@ -131,12 +131,11 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 			<Animated.View
 				style={greetingStyle}
 				onLayout={({ nativeEvent: { layout } }) => {
-					console.info(heightGreeting, layout.height);
 					setHeightGreeting(layout.height);
 				}}
 			>
 				<RN.ImageBackground source={require("/assets/backgroundMain.png")} style={styles.imageGreeting}>
-					<Dump.UserButton style={styles.userButton} />
+					<Dump.UserButton style={styles.userButton} image={image} nickname={nickName} />
 					<Dump.MessageProfessor
 						greeting={greetingText}
 						message={i18n.t(messageProfessor)}
@@ -162,12 +161,13 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 						typePractice={recommendationPractice.type}
 						isPermission={recommendationPractice.isNeedSubscribe && isSubscribe}
 						onPress={() => {
+							dispatch(Store.actions.setPractice(recommendationPractice));
+
 							if (recommendationPractice.type === "RELAXATION") {
 								navigation.navigate("SelectTimeForRelax", {
 									selectedPractice: recommendationPractice,
 								});
 							} else {
-								dispatch(Store.actions.setPractice(recommendationPractice));
 								navigation.navigate("PlayerForPractice", {
 									practiceLength: recommendationPractice.length,
 									selectedPractice: recommendationPractice,
@@ -175,21 +175,37 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 							}
 						}}
 					/>
-					// <MeditationCard
-					// 	name={recommendationMeditation.name}
-					// 	description={recommendationMeditation.description}
-					// 	time={recommendationMeditation.lengthAudio}
-					// 	id={recommendationMeditation.id}
-					// />
-					// <RN.ActivityIndicator color={"#9765A8"} size={"large"} />
 				)}
 
 				<Dump.StatisticsMeditation style={viewStyle.margin.mediumV} count={countMeditation} time={timeMeditation} />
 				<RN.Text style={styles.title}>{i18n.t("9d0cd47a-0392-4e5c-9573-00642b12f868")}</RN.Text>
 				<RN.Text style={styles.description}>{i18n.t("f292b17c-2295-471e-80cf-f99f6a618701")}</RN.Text>
-				{toDayPopularMeditation !== null ? null : ( // /> // 	id={toDayPopularMeditation.id} // 	time={toDayPopularMeditation.lengthAudio} // 	description={toDayPopularMeditation.description} // 	name={toDayPopularMeditation.name} // <MeditationCard
-					<RN.ActivityIndicator color={"#9765A8"} size={"large"} />
-				)}
+				{toDayPopularMeditation !== null ? (
+					<Dump.PracticeCard
+						id={toDayPopularMeditation.id}
+						style={{ marginTop: 13 }}
+						description={toDayPopularMeditation.description}
+						image={toDayPopularMeditation.image}
+						lengthAudio={toDayPopularMeditation.length}
+						name={toDayPopularMeditation.name}
+						typePractice={toDayPopularMeditation.type}
+						isPermission={toDayPopularMeditation.isNeedSubscribe && isSubscribe}
+						onPress={() => {
+							dispatch(Store.actions.setPractice(toDayPopularMeditation));
+
+							if (toDayPopularMeditation.type === "RELAXATION") {
+								navigation.navigate("SelectTimeForRelax", {
+									selectedPractice: toDayPopularMeditation,
+								});
+							} else {
+								navigation.navigate("PlayerForPractice", {
+									practiceLength: toDayPopularMeditation.length,
+									selectedPractice: toDayPopularMeditation,
+								});
+							}
+						}}
+					/>
+				) : null}
 			</Animated.View>
 		</RN.ScrollView>
 	);

@@ -20,14 +20,13 @@ async function getFirebaseToken(firebaseToken: string | undefined) {
 		if (tokenSaved === null) {
 			const firebaseUser = auth().currentUser;
 			if (firebaseUser !== null) {
-				const { token, expirationTime } = await firebaseUser.getIdTokenResult();
+				const { token, expirationTime } = await firebaseUser.getIdTokenResult(true);
 				firebaseToken = await Storage.saveToken(token, new Date(expirationTime));
 			}
 		} else {
 			firebaseToken = tokenSaved;
 		}
 	}
-	console.log(firebaseToken);
 	const end = Date.now();
 	if (end - start > 200) console.log("getFirebaseToken", end - start);
 	if (firebaseToken === undefined) {
@@ -130,7 +129,7 @@ export async function updateUser(
 	if (image !== undefined) body.push(["Image", image]);
 	const url = URL + "users";
 	const requestServer = await fetch(url, {
-		method: "PUT",
+		method: "PATCH",
 		headers: {
 			Authorization: firebaseTokenToken,
 			"Content-Type": "application/json",
@@ -142,7 +141,7 @@ export async function updateUser(
 			`updateUser: ${await requestServer.text()}`,
 			url,
 			JSON.stringify(Object.fromEntries(body)),
-			"PUT",
+			"PATCH",
 			"50x"
 		);
 	}

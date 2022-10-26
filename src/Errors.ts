@@ -10,7 +10,7 @@ export class RequestError extends Error {
 		message: string,
 		url: string,
 		body?: string,
-		method: "POST" | "GET" | "PUT" = "GET",
+		method: "POST" | "GET" | "PUT" | "PATCH" = "GET",
 		codeError: "50x" | "40x" = "50x"
 	) {
 		super(message);

@@ -77,7 +77,7 @@ export namespace ServerEntities {
 	/** Сущность медитации которая возвращается с сервера */
 	export interface Meditation {
 		/** Идентификатор медитации в системе Evolution */
-		readonly id: SupportType.Guid;
+		readonly Id: SupportType.Guid;
 		/** Натуральный язык на котором получены данные об медитации */
 		readonly Language?: string;
 		/** Название медитации */
@@ -89,9 +89,11 @@ export namespace ServerEntities {
 		/** Требуется ли подписка, чтобы прослушать данную медитацию */
 		readonly IsSubscribed: boolean;
 		/** Если ли у данной медитации главная аудиозапись */
-		readonly HasAudio: boolean;
+		readonly AudioId?: string;
 		/** Длина аудиозаписи */
 		readonly AudioLength: number;
+		//!
+		readonly PhotoId?: string;
 	}
 
 	/** Сущность подписки которая возвращается с сервера */

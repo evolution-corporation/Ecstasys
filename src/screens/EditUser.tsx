@@ -4,16 +4,21 @@ import React from "react";
 import { StyleSheet, TextInput, View, Text, TouchableOpacity } from "react-native";
 import { EvilIcons } from "@expo/vector-icons";
 import i18n from "~i18n";
+import gStyle from "~styles";
 
 import { ColorButton, SelectImageButton, NicknameInput } from "~components/dump";
-import Tools from "~core";
 import { RootScreenProps } from "~types";
+import { actions, useAppDispatch, useAppSelector } from "~store";
+import { StatusCheck } from "~components/dump/NicknameInput/NicknameBase";
+import { Request } from "~api";
 
-const EditMainUserDataScreen: RootScreenProps<"EditMainUserData"> = ({ navigation }) => {
-	const { state, func } = contextHook.account();
-	if (state.userData === undefined) {
-		return null;
-	}
+const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
+	const changedData = useAppSelector(store => store.account.changeData);
+	const { displayName, birthday, gender, image, nickName } = useAppSelector(store => {
+		if (store.account.currentData === undefined) throw new Error("Not found user");
+		return store.account.currentData;
+	});
+	const dispatch = useAppDispatch();
 	return (
 		<View style={styles.background}>
 			<View style={{ width: "100%", alignItems: "center" }}>
@@ -21,12 +26,10 @@ const EditMainUserDataScreen: RootScreenProps<"EditMainUserData"> = ({ navigatio
 					style={styles.selectImage}
 					onChangeImage={base64 => {
 						if (base64) {
-							func.editUserData({
-								image: base64,
-							});
+							dispatch(actions.addChangedInformationUser({ image: base64 }));
 						}
 					}}
-					initImage={state.userData.image}
+					initImage={image}
 				/>
 				<TextInput
 					style={styles.TextInputTransparent}
@@ -34,18 +37,28 @@ const EditMainUserDataScreen: RootScreenProps<"EditMainUserData"> = ({ navigatio
 					placeholder={i18n.t("b89f2757-8b5e-4a08-b8f8-1bbe87834f3e")}
 					placeholderTextColor={"rgba(231, 221, 236, 1)"}
 					onChangeText={text => {
-						func.editUserData({
-							display_name: text,
-						});
+						dispatch(actions.addChangedInformationUser({ displayName: text }));
 					}}
-					defaultValue={state.editUserData?.display_name ?? state.userData.displayName}
+					defaultValue={changedData.displayName ?? displayName}
 				/>
 				<NicknameInput
-					defaultValue={state.editUserData?.nickName ?? state.userData.nickName}
-					onEndChange={(nickName, status) => {
-						func.editUserData({ nickName });
+					defaultValue={nickName}
+					onEndChange={(inputNickName, status) => {
+						if (status === StatusCheck.FREE) {
+							Request.reservationNickname(inputNickName);
+						}
 					}}
 					styleNicknameInputView={styles.editNickname}
+					checkValidateNickname={async (inputNickName: string) => {
+						if (nickName !== inputNickName) {
+							return (await dispatch(actions.addChangedInformationUser({ nickname: inputNickName })).unwrap())
+								.lastCheckNicknameAndResult?.[1] ?? false
+								? StatusCheck.FREE
+								: StatusCheck.USED;
+						} else {
+							return StatusCheck.AWAIT;
+						}
+					}}
 				/>
 				<TouchableOpacity
 					style={styles.inputBirthday}
@@ -54,12 +67,21 @@ const EditMainUserDataScreen: RootScreenProps<"EditMainUserData"> = ({ navigatio
 					}}
 				>
 					<Text style={styles.inputBirthdayText}>
-						{i18n.strftime(state.editUserData?.birthday ?? state.userData.birthday, "%d.%m.%Y")}
+						{i18n.strftime(
+							changedData.birthday === undefined ? new Date(birthday) : new Date(changedData.birthday),
+							"%d.%m.%Y"
+						)}
 					</Text>
 					<EvilIcons name="pencil" size={24} color="#FFFFFF" />
 				</TouchableOpacity>
 			</View>
-			<ColorButton styleButton={styles.saveButton} styleText={styles.saveButtonText}>
+			<ColorButton
+				styleButton={styles.saveButton}
+				styleText={styles.saveButtonText}
+				onPress={() => {
+					dispatch(actions.updateAccount());
+				}}
+			>
 				{i18n.t("save")}
 			</ColorButton>
 		</View>
@@ -78,7 +100,7 @@ const styles = StyleSheet.create({
 	TextInputTransparent: {
 		color: "#FFFFFF",
 		fontSize: 14,
-		...Tools.gStyle.font("400"),
+		...gStyle.font("400"),
 		paddingRight: 44,
 		width: "100%",
 		height: 45,
@@ -134,8 +156,8 @@ const styles = StyleSheet.create({
 	inputBirthdayText: {
 		color: "#FFFFFF",
 		fontSize: 13,
-		...Tools.gStyle.font("400"),
+		...gStyle.font("400"),
 	},
 });
 
-export default EditMainUserDataScreen;
+export default EditUser;

@@ -64,18 +64,18 @@ export function composePractice(data: ServerEntities.Meditation | null): State.P
 			default:
 				throw new Error(`Not found ${data.TypeMeditation} in PracticesMeditation`);
 		}
-		const image = "https://storage.yandexcloud.net/dmdmeditationimage/meditations/" + data.id + ".png";
+		const image = "https://storage.yandexcloud.net/dmdmeditationimage/meditations/" + data.PhotoId + ".png";
 		let audio: string | undefined;
-		if (data.HasAudio) {
-			audio = "https://storage.yandexcloud.net/dmdmeditatonaudio/" + data.id;
+		if (data.AudioId) {
+			audio = "https://storage.yandexcloud.net/dmdmeditatonaudio/" + data.AudioId;
 		}
 		if (data.Description === undefined) {
-			throw new Error(`Not found description in practices. MeditationID: ${data.id}`);
+			throw new Error(`Not found description in practices. MeditationID: ${data.Id}`);
 		}
 		return {
 			image: image,
 			description: data.Description,
-			id: data.id,
+			id: data.Id,
 			name: data.Name,
 			audio: audio,
 			type: typePractices,

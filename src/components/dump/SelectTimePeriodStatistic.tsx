@@ -78,7 +78,7 @@ const SelectTimePeriodStatistic: React.FC<Props> = props => {
 				containerWidth.current = layout.width;
 			}}
 		>
-			<RN.View style={[styles.selectTimePeriodContainer, { borderColor: "blue", borderWidth: 2 }]}>
+			<RN.View style={[styles.selectTimePeriodContainer]}>
 				{[
 					{ index: StatisticPeriod.WEEK, text: i18n.t("9e9fa745-7048-4a16-b227-7e3393a0e760") },
 					{ index: StatisticPeriod.MONTH, text: i18n.t("39f791d7-75c7-4c2a-9ea2-cbdd0d4fac17") },
@@ -86,7 +86,6 @@ const SelectTimePeriodStatistic: React.FC<Props> = props => {
 				].map(({ index, text }) => (
 					<RN.Pressable
 						key={index}
-						style={{ borderColor: "blue", borderWidth: 2 }}
 						hitSlop={20}
 						onPress={() => editStatisticPeriod(index)}
 						onLayout={({ nativeEvent: { layout } }) => {

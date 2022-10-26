@@ -98,7 +98,7 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 							: { endSubscribe: subscribe.endSubscribe, isAutoPayment: subscribe.autoPayment }
 					}
 					onPress={() => {
-						navigation.navigate("EditMainUserData");
+						navigation.navigate("EditUser");
 					}}
 				/>
 				<Dump.SelectTimePeriodStatistic onChangePeriod={setStatisticPeriod} style={{ marginTop: 16 }} />

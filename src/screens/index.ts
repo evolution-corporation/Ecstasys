@@ -7,7 +7,7 @@ export { default as InputSMSCode } from "./AuthorizationAndRegistration/InputSMS
 export { default as InputNickname } from "./InputNickname";
 export { default as InputImageAndBirthday } from "./InputImageAndBirthday";
 export { default as Greeting } from "./AuthorizationAndRegistration/Greeting";
-export { default as EditMainUserData } from "./Profile/EditMainUserData_old";
+export { default as EditUser } from "./EditUser";
 export { default as EditUserBirthday } from "./Profile/SelectDateBirthday_old";
 export { default as SelectSubscribe } from "./Subscribe/SelectSubscribe";
 export { default as ResultSubscribe } from "./Subscribe/ResultSubscribe";
@@ -18,7 +18,7 @@ export { default as IntroPractices } from "./Practices/Intro";
 export { default as DMDIntro } from "./Practices/IntroDMD";
 export { default as Instruction } from "./Practices/Instruction";
 export { default as FavoriteMeditation } from "./Profile/FavoriteMeditation_old";
-export { default as OptionsProfile } from "./Profile/OptionsProfile";
+export { default as Options } from "./Options";
 export { default as PaymentWeb } from "./Subscribe/PaymentWeb";
 
 export { default as Main } from "./Main";

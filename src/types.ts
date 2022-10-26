@@ -190,7 +190,7 @@ export type MeditationPracticesScreenProps<T extends keyof MeditationPracticesLi
 
 export type RootStackList = {
 	TabNavigator: NavigatorScreenParams<TabNavigatorList>;
-	EditMainUserData: undefined;
+	EditUser: undefined;
 	EditUserBirthday: undefined;
 	SelectSubscribe: undefined;
 	PracticeListByType: {
@@ -203,7 +203,7 @@ export type RootStackList = {
 		typeMeditationName: string;
 	};
 	FavoriteMeditation: undefined;
-	OptionsProfile: undefined;
+	Options: undefined;
 	devSetting: undefined;
 	Payment: undefined;
 	Intro: undefined;

@@ -39,7 +39,7 @@ const NicknameInput = forwardRef<Ref, Props>((props, ref) => {
 	const [statusCheck, setStatusCheck] = useState<StatusCheck>(StatusCheck.AWAIT);
 	const [nickname, setNickname] = useState<string>(defaultValue);
 
-	const _colorBorderView = useSharedValue("#FF5C00");
+	const _colorBorderView = useSharedValue("#C2A9CE");
 
 	const animatedView = useAnimatedStyle(() => ({
 		borderColor: withTiming(_colorBorderView.value),
@@ -76,10 +76,10 @@ const NicknameInput = forwardRef<Ref, Props>((props, ref) => {
 		editNickname,
 	}));
 
-	let [StatusCheckView, StatusCheckText] = (() => {
+	let [StatusCheckView, StatusCheckText] = React.useMemo(() => {
 		switch (statusCheck) {
 			case StatusCheck.AWAIT:
-				return [<ActivityIndicator color={"#FFFFFFFF"} size={"small"} />, null];
+				return [null, null];
 			case StatusCheck.USED:
 			case StatusCheck.INCORRECT:
 				return [
@@ -96,10 +96,12 @@ const NicknameInput = forwardRef<Ref, Props>((props, ref) => {
 				];
 			case StatusCheck.FREE:
 				return [<CheckMarkerWhite />, null];
+			case StatusCheck.LOADING:
+				return [<ActivityIndicator color={"#FFFFFFFF"} size={"small"} />, null];
 			default:
 				return [null, null];
 		}
-	})();
+	}, [statusCheck]);
 
 	return (
 		<>
