@@ -11,7 +11,7 @@ import { ServerEntities } from "./types";
 export function composeUser(data: ServerEntities.User | null): State.User | null {
 	if (data === null) return null;
 	let image = "https://storage.yandexcloud.net/dmdmeditationimage/users/NoUserImage.png";
-	if (data.PhotoId) image = "https://storage.yandexcloud.net/dmdmeditationimage/users/" + data.PhotoId;
+	if (data.PhotoId) image = "https://storage.yandexcloud.net/dmdmeditationimage/users/" + data.PhotoId + ".png";
 	return {
 		uid: data.Id,
 		birthday: data.Birthday,
