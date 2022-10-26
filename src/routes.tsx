@@ -133,7 +133,11 @@ const RootRoutes: FC = () => {
 					<RootNavigation.Screen name={"Options"} component={Screens.Options} />
 					<RootNavigation.Screen name={"FavoriteMeditation"} component={Screens.FavoriteMeditation} />
 					<RootNavigation.Screen name={"EditUser"} component={Screens.EditUser} />
-					<RootNavigation.Screen name={"EditUserBirthday"} component={Screens.EditUserBirthday} />
+					<RootNavigation.Screen
+						name={"EditUserBirthday"}
+						component={Screens.EditUserBirthday}
+						options={{ presentation: "transparentModal" }}
+					/>
 					<RootNavigation.Screen
 						name={"DMDSettingNotification"}
 						component={Screens.DMDSettingNotification}
