@@ -15,7 +15,6 @@ enum AccountAction {
 	signOut = "account/signOut",
 	signIn = "account/signIn",
 	getData = "account/getAccountData",
-	initialization = "account/initialization",
 }
 
 interface SetChangedAccountDataParams {

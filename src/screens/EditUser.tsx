@@ -19,6 +19,15 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 		return store.account.currentData;
 	});
 	const dispatch = useAppDispatch();
+
+	const update = async () => {
+		await dispatch(actions.updateAccount()).unwrap();
+		navigation.navigate("MessageLog", {
+			message: i18n.t("6962d75a-b6cc-4e30-aa87-addabf7450e7"),
+			result: "Resolve",
+		});
+	};
+
 	return (
 		<View style={styles.background}>
 			<View style={{ width: "100%", alignItems: "center" }}>
@@ -75,13 +84,7 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 					<EvilIcons name="pencil" size={24} color="#FFFFFF" />
 				</TouchableOpacity>
 			</View>
-			<ColorButton
-				styleButton={styles.saveButton}
-				styleText={styles.saveButtonText}
-				onPress={() => {
-					dispatch(actions.updateAccount());
-				}}
-			>
+			<ColorButton styleButton={styles.saveButton} styleText={styles.saveButtonText} onPress={update}>
 				{i18n.t("save")}
 			</ColorButton>
 		</View>

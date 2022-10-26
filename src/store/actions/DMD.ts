@@ -1,10 +1,7 @@
 /** @format */
 
 import { ActionCreatorWithPayload, createAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { FavoritePractices, Practice, Statistic } from "src/models";
-import { BackgroundSound } from "src/models/practices";
 import { State } from "~types";
-import type { AsyncThunkConfig } from "../index";
 
 enum DMDActions {
 	setOption = "DMD/setOption",

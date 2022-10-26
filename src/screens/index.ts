@@ -29,6 +29,7 @@ export { default as SelectBackgroundSound } from "./SelectBackgroundSound";
 export { default as PlayerForDMD } from "./PlayerForDMD";
 export { default as DMDSettingNotification } from "./DMDSettingNotification";
 export { default as DMDSelectTimeBright } from "./DMDSelectTimeBright";
+export { default as MessageLog } from "./MessageLog";
 // export const TabsScreen = {
 // 	Main,
 // 	Profile,

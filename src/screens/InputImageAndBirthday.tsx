@@ -16,7 +16,7 @@ import { convertedImageURLInBase64 } from "~tools";
 
 const InputImageAndBirthdayScreen: RootScreenProps<"InputImageAndBirthday"> = ({}) => {
 	const appDispatch = useAppDispatch();
-	const SelectImageButtonRef = React.useRef<React.ElementRef<typeof SelectImageButton>>();
+	const SelectImageButtonRef = React.useRef<React.ElementRef<typeof SelectImageButton>>(null);
 	const registration = async () => {
 		await appDispatch(actions.registrationAccount()).unwrap();
 	};

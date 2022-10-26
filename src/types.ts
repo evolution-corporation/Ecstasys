@@ -1,12 +1,10 @@
 /** @format */
 
-import { BottomTabNavigationProp, BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import { CompositeNavigationProp, CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native";
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import { CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { AVPlaybackSource } from "expo-av";
 import { FC } from "react";
 import type { useAppSelector, useAppDispatch } from "./store";
-import type { BackgroundSound } from "src/models/practices";
 import { ImageSourcePropType } from "react-native";
 
 /** Пол пользователя */
@@ -231,6 +229,11 @@ export type RootStackList = {
 	};
 	DMDSelectTimeBright: {
 		type: "activate" | "random";
+	};
+	MessageLog: {
+		title?: string;
+		message: string;
+		result: "Resolve" | "Reject" | "Loading" | "Info";
 	};
 };
 

@@ -188,6 +188,11 @@ const RootRoutes: FC = () => {
 						}}
 					/>
 					<RootNavigation.Screen name={"SelectBackgroundSound"} component={Screens.SelectBackgroundSound} />
+					<RootNavigation.Screen
+						name={"MessageLog"}
+						component={Screens.MessageLog}
+						options={{ presentation: "transparentModal" }}
+					/>
 				</>
 			)}
 		</RootNavigation.Navigator>
