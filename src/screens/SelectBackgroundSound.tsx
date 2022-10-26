@@ -22,26 +22,15 @@ import { actions, useAppDispatch, useAppSelector } from "~store";
 const SelectBackgroundSound: RootScreenProps<"SelectBackgroundSound"> = ({ navigation, route }) => {
 	const { backgroundImage } = route.params;
 	const [selectBackgroundSound, volume] = useAppSelector(store => [
-		store.practice.selectBackgroundMusicName,
-		store.practice.backgroundMusicVolume,
+		store.practice.paramsPractice.currentNameBackgroundSound,
+		store.practice.paramsPractice.currentVolumeBackgroundSound,
 	]);
 	const dispatch = useAppDispatch();
 	const TimeLineRef = useRef<ElementRef<typeof TimeLine>>(null);
 
 	const offPlayBackgroundSound = useRef<{ (): Promise<void> } | null>(null);
-	const [zIndexMax, setZIndexMax] = useState<keyof typeof BackgroundSound | undefined>(undefined);
 
 	const headerHeight = useHeaderHeight();
-
-	const scalePressable: { [index: string]: SharedValue<number> } = {};
-	const aStyle: { [index: string]: any } = {};
-
-	for (let nameBackgroundSound of Object.keys(BackgroundSound)) {
-		scalePressable[nameBackgroundSound] = useSharedValue(1);
-		aStyle[nameBackgroundSound] = useAnimatedStyle(() => ({
-			transform: [{ scale: withTiming(scalePressable[nameBackgroundSound].value) }],
-		}));
-	}
 
 	return (
 		<View style={styles.background}>
@@ -50,7 +39,6 @@ const SelectBackgroundSound: RootScreenProps<"SelectBackgroundSound"> = ({ navig
 				<View style={styles.backgroundSoundList}>
 					{Object.entries(BackgroundSound).map(item => (
 						<Pressable
-							style={{ zIndex: item[0] === zIndexMax ? 2 : 1 }}
 							key={item[0]}
 							onPress={() => {
 								if (selectBackgroundSound && selectBackgroundSound === item[0]) {
@@ -60,8 +48,6 @@ const SelectBackgroundSound: RootScreenProps<"SelectBackgroundSound"> = ({ navig
 								}
 							}}
 							onLongPress={async () => {
-								setZIndexMax(item[0] as keyof typeof BackgroundSound);
-								scalePressable[item[0]].value = 2;
 								offPlayBackgroundSound.current = await playFragmentMeditationBackground(
 									item[0] as keyof typeof BackgroundSound
 								);
@@ -71,21 +57,18 @@ const SelectBackgroundSound: RootScreenProps<"SelectBackgroundSound"> = ({ navig
 									await offPlayBackgroundSound.current();
 									offPlayBackgroundSound.current = null;
 								}
-								scalePressable[item[0]].value = 1;
 							}}
 						>
-							<Animated.View style={aStyle[item[0]]}>
-								<Image
-									source={item[1].image}
-									style={[
-										styles.iconBackgroundSound,
-										selectBackgroundSound && selectBackgroundSound === item[0]
-											? { borderColor: "#FFFFFF", borderWidth: 2 }
-											: null,
-									]}
-								/>
-								<Text style={styles.nameBackgroundSound}>{i18n.t(item[1].translate)}</Text>
-							</Animated.View>
+							<Image
+								source={item[1].image}
+								style={[
+									styles.iconBackgroundSound,
+									selectBackgroundSound && selectBackgroundSound === item[0]
+										? { borderColor: "#FFFFFF", borderWidth: 2 }
+										: null,
+								]}
+							/>
+							<Text style={styles.nameBackgroundSound}>{i18n.t(item[1].translate)}</Text>
 						</Pressable>
 					))}
 				</View>
