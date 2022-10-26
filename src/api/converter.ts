@@ -64,7 +64,7 @@ export function composePractice(data: ServerEntities.Meditation | null): State.P
 			default:
 				throw new Error(`Not found ${data.TypeMeditation} in PracticesMeditation`);
 		}
-		const image = "https://storage.yandexcloud.net/dmdmeditationimage/meditations/" + data.PhotoId + ".png";
+		const image = "https://storage.yandexcloud.net/dmdmeditationimage/meditations/" + data.PhotoId;
 		let audio: string | undefined;
 		if (data.AudioId) {
 			audio = "https://storage.yandexcloud.net/dmdmeditatonaudio/" + data.AudioId;

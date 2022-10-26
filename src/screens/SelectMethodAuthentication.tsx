@@ -42,14 +42,16 @@ const SelectMethodAuthentication: RootScreenProps<"SelectMethodAuthentication"> 
 		return true;
 	});
 
-	React.useEffect(() => {
-		const appId = Application.applicationId;
-		console.log(appId !== null && appId.includes("dev"));
-
+	const authWithGoogle = async () => {
+		setIsLoading(true);
 		GoogleSignin.configure({
 			webClientId: "878799007977-cj3549ni87jre2rmg4eq0hiolp08igh2.apps.googleusercontent.com",
 		});
-	}, []);
+		const { idToken } = await GoogleSignin.signIn();
+		const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+		await auth().signInWithCredential(googleCredential);
+		await appDispatch(actions.signInAccount()).unwrap();
+	};
 
 	return (
 		<ImageBackground style={styles.background} source={require("~assets/rockDrugs.jpg")}>
@@ -106,17 +108,7 @@ const SelectMethodAuthentication: RootScreenProps<"SelectMethodAuthentication"> 
 					>
 						{i18n.t("526fba9f-2b69-4fe6-aefd-d491e86e59da")}
 					</ColorButton>
-					<ColorWithIconButton
-						icon={<GoogleLogo />}
-						styleButton={styles.button}
-						onPress={async () => {
-							setIsLoading(true);
-							const { idToken } = await GoogleSignin.signIn();
-							const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-							await auth().signInWithCredential(googleCredential);
-							await appDispatch(actions.signInAccount()).unwrap();
-						}}
-					>
+					<ColorWithIconButton icon={<GoogleLogo />} styleButton={styles.button} onPress={authWithGoogle}>
 						{i18n.t("235a94d8-5deb-460a-bf03-e0e30e93df1b")}
 					</ColorWithIconButton>
 					<Text style={styles.terms}>

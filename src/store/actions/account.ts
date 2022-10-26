@@ -2,7 +2,7 @@
 import auth from "@react-native-firebase/auth";
 
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { Account } from "src/models";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { Converter, Request, Storage } from "~api";
 import { State } from "~types";
 import type { AsyncThunkConfig } from "../index";
@@ -107,6 +107,7 @@ export const registrationAccount = createAsyncThunk<State.User, undefined, Async
 
 export const signOutAccount = createAsyncThunk(AccountAction.signOut, async () => {
 	await auth().signOut();
+	await GoogleSignin.signOut();
 	//! Сделать функцию по очистке AsyncStorage
 });
 
