@@ -175,7 +175,9 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 			new Promise(async (resolve, reject) => {
 				const mainAudioState = await audioVoice.getStatusAsync();
 				if (mainAudioState.isLoaded) {
-					await audioVoice.setPositionAsync(millisecond % (mainAudioState.durationMillis ?? 0));
+					await audioVoice.setPositionAsync(
+						millisecond > (mainAudioState.durationMillis ?? 0) ? mainAudioState.durationMillis ?? 0 : millisecond
+					);
 				}
 				resolve(undefined);
 			}),
