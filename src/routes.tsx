@@ -72,6 +72,25 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
 				}}
 			/>
 			<TabNavigator.Screen
+				name={"RelaxListForDMD"}
+				component={Screens.RelaxListForDMD}
+				options={{
+					headerRight: () => (
+						<ColorButton
+							secondItem={<TreeLine />}
+							styleButton={{
+								backgroundColor: "transparent",
+								marginRight: 17,
+							}}
+							onPress={() => {
+								navigation.navigate("Options");
+							}}
+						/>
+					),
+					tabBarIcon: ({ focused }) => (focused ? <ProfileIconSelected /> : <ProfileIconNoSelected />),
+				}}
+			/>
+			<TabNavigator.Screen
 				name={"Profile"}
 				component={Screens.Profile}
 				options={{
@@ -137,6 +156,14 @@ const RootRoutes: FC = () => {
 						name={"EditUserBirthday"}
 						component={Screens.EditUserBirthday}
 						options={{ presentation: "transparentModal" }}
+					/>
+					<RootNavigation.Screen
+						name={"SelectSet"}
+						component={Screens.SelectSet}
+						sharedElements={({ params }) => {
+							const { id } = params.selectedRelax as State.Practice;
+							return [`practice.item.${id}`];
+						}}
 					/>
 					<RootNavigation.Screen
 						name={"DMDSettingNotification"}

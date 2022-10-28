@@ -10,8 +10,9 @@ import { ColorButton } from "~components/dump";
 import Tools from "~core";
 import i18n from "~i18n";
 
-import { typeSubscribe } from "./types";
+import { SubscribeType } from "~types";
 import { SubscribeCard } from "./components";
+import store, { useAppDispatch, useAppSelector } from "~store";
 
 const price = {
 	month_1: 279,
@@ -19,33 +20,30 @@ const price = {
 };
 
 const SelectSubscribeScreen = () => {
-	const subscribeInformation = useSubscribe();
-	let info: SubscribeInfoNew | undefined;
-	if (subscribeInformation) {
-		info = subscribeInformation.info;
-	}
-	const [selectedSubscribe, setSelectedSubscribe] = useState<typeSubscribe>(null);
+	const subscribe = useAppSelector(store => store.account.subscribe);
+
+	const [selectedSubscribeType, setSelectedSubscribeType] = useState<SubscribeType | null>(null);
 
 	const modalRef = useRef<ElementRef<typeof CustomModal>>(null);
 
-	const _transpareteYButton = useSharedValue(300);
+	const _transporteeYButton = useSharedValue(300);
 	const aStyle = {
 		button: useAnimatedStyle(() => ({
 			transform: [
 				{
-					translateY: withSpring(_transpareteYButton.value),
+					translateY: withSpring(_transporteeYButton.value),
 				},
 			],
 		})),
 	};
 
 	useEffect(() => {
-		if (selectedSubscribe !== null && selectedSubscribe !== info?.type) {
-			_transpareteYButton.value = 0;
+		if (selectedSubscribeType !== undefined && subscribe !== undefined && selectedSubscribeType !== subscribe.type) {
+			_transporteeYButton.value = 0;
 		}
-	}, [selectedSubscribe]);
+	}, [selectedSubscribeType]);
 
-	const isActiveSubs = (info && info.nextPayment.getTime() >= Date.now()) ?? false;
+	const isActiveSubs = (subscribe !== undefined && new Date(subscribe.whenSubscribe) >= new Date()) ?? false;
 
 	return (
 		<DoubleColorView heightViewPart={229} style={styles.background}>
@@ -54,13 +52,11 @@ const SelectSubscribeScreen = () => {
 				<AntDesign name="star" size={24} color={"#FBBC05"} />
 				<Text style={styles.TitlePremium}>Premium</Text>
 				<Text style={styles.currentMeditationInfo}>
-					{info && info.nextPayment.getTime() >= Date.now()
+					{subscribe && new Date(subscribe.whenSubscribe) >= new Date()
 						? i18n.t(
-								info.autoPayment ? "392fd6e3-9b0c-4673-b1c2-45deeaadd7b1" : "048d71cd-03e2-4c8f-9f29-d2e5e9576a07",
+								subscribe.autoPayment ? "392fd6e3-9b0c-4673-b1c2-45deeaadd7b1" : "048d71cd-03e2-4c8f-9f29-d2e5e9576a07",
 								{
-									datemtime: `${info.nextPayment.getDate()}.${
-										info.nextPayment.getMonth() + 1
-									}.${info.nextPayment.getFullYear()}`,
+									datemtime: i18n.strftime(new Date(subscribe.whenSubscribe), "%d%m%Y"),
 								}
 						  )
 						: i18n.t("636763b2-80fc-4bd3-84ac-63c21cd34d77")}

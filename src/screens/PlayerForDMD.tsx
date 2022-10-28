@@ -16,6 +16,7 @@ import { initializationTimer } from "src/TaskManager";
 import Headphones from "assets/icons/Headphones_white.svg";
 import { useAppSelector } from "~store";
 import i18n from "~i18n";
+import { SharedElement } from "react-navigation-shared-element";
 
 enum Status {
 	Loading,
@@ -25,13 +26,16 @@ enum Status {
 }
 
 const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) => {
-	const [image, audioOptionURL, audioSetURL] = useAppSelector(store => [
-		store.DMD.option?.image ??
-			"https://storage.yandexcloud.net/dmdmeditationimage/meditations/404-not-found-error-page-examples.png",
-		store.DMD.set?.name ?? "404",
-		store.DMD.option?.audio ?? "",
-		store.DMD.set?.audio ?? "",
-	]);
+	const [image, audioOptionURL, audioSetURL] = useAppSelector(store => {
+		if (store.DMD.option === undefined) {
+			throw new Error("not Found Option");
+		}
+		if (store.DMD.set === undefined) {
+			throw new Error("not found Set");
+		}
+		return [store.DMD.option.image, store.DMD.option.audio, store.DMD.set.audio];
+	});
+	const { selectedRelax } = route.params;
 	const [activateLength, optionLength, randomLength, lengthSet, allLength] = useAppSelector(store => [
 		store.DMD.configuratorNotification.activate,
 		store.DMD.configuratorNotification.option ?? 0,
@@ -186,12 +190,14 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 
 	return (
 		<View style={{ flex: 1 }}>
-			<Image
-				source={{
-					uri: image,
-				}}
-				style={styles.imageBackground}
-			/>
+			<SharedElement id={`practice.item.${selectedRelax.id}`} style={styles.imageBackground}>
+				<Image
+					source={{
+						uri: image,
+					}}
+					style={{ width: "100%", height: "100%" }}
+				/>
+			</SharedElement>
 			<Animated.View style={[styles.background]}>
 				<View style={styles.panelControlContainer}>
 					{statusDMD === Status.Loading ? (

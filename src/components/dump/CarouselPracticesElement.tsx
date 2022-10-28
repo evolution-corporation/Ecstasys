@@ -48,7 +48,7 @@ const CarouselPracticesElement: React.FC<Props> = props => {
 				<Animated.View style={[styles.sharedImage, animatedShared]}>
 					{sharedID ? (
 						<SharedElement id={sharedID} style={styles.image}>
-							<Image source={{ uri: image }} style={{ width: "100%", height: "100%" }} />
+							<Image source={{ uri: image }} style={{ width: "100%", height: "100%", borderRadius: 20 }} />
 						</SharedElement>
 					) : (
 						<Image source={{ uri: image }} style={styles.image} />

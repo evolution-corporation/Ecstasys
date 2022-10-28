@@ -168,6 +168,7 @@ export type TabNavigatorList = {
 	Profile: undefined;
 	Main: undefined;
 	PracticesList: undefined;
+	RelaxListForDMD: undefined;
 };
 
 export type TabNavigatorScreenProps<T extends keyof TabNavigatorList> = FC<BottomTabScreenProps<TabNavigatorList, T>>;
@@ -219,8 +220,12 @@ export type RootStackList = {
 	SelectTimeForRelax: {
 		selectedPractice: State.Practice;
 	};
-	PlayerForDMD: {};
-	DMDSettingNotification: {};
+	PlayerForDMD: {
+		selectedRelax: State.Practice & { type: "RELAXATION" };
+	};
+	DMDSettingNotification: {
+		selectedRelax: State.Practice & { type: "RELAXATION" };
+	};
 	SelectBackgroundSound: {
 		backgroundImage?: ImageSourcePropType;
 	};
@@ -234,6 +239,9 @@ export type RootStackList = {
 		title?: string;
 		message: string;
 		result: "Resolve" | "Reject" | "Loading" | "Info";
+	};
+	SelectSet: {
+		selectedRelax: State.Practice & { type: "RELAXATION" };
 	};
 };
 

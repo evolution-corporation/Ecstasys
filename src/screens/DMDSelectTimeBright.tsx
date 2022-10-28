@@ -18,7 +18,10 @@ const DMDSelectTimeBright: RootScreenProps<"DMDSelectTimeBright"> = ({ navigatio
 
 	return (
 		<View style={{ flex: 1 }}>
-			<Pressable style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", flexGrow: 1 }} onPress={() => navigation.goBack()} />
+			<Pressable
+				style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", width: "100%", height: "100%" }}
+				onPress={() => navigation.goBack()}
+			/>
 			<View style={styles.container}>
 				<SelectTime
 					start={type === "activate" ? [5, 0] : [35, 0]}
@@ -52,7 +55,7 @@ const styles = StyleSheet.create({
 	container: {
 		backgroundColor: "#FFFFFF",
 		alignItems: "center",
-		paddingBottom: 31,
+		paddingBottom: 30,
 		borderTopLeftRadius: 20,
 		borderTopRightRadius: 20,
 		position: "absolute",
@@ -70,6 +73,7 @@ const styles = StyleSheet.create({
 	},
 	selectTime: {
 		marginVertical: 9,
+		height: 216,
 	},
 });
 

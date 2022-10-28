@@ -15,12 +15,7 @@ import {
 } from "react-native";
 import { TextButton } from "~components/dump";
 
-import Tools from "~core";
-
-import Bird from "../../assets/bird";
-import { typeSubscribe } from "../../types";
-import CircleCheck from "../CircleCheck";
-import { useIsFirstPayment } from "./hook";
+import gStyles from "~styles";
 import i18n from "~i18n";
 
 const SubscribeCard: FC<SubscribeCardProps> = props => {
@@ -37,7 +32,7 @@ const SubscribeCard: FC<SubscribeCardProps> = props => {
 		textPrice,
 		isShowCancelButton,
 	} = props;
-	const isFirstPaymant = useIsFirstPayment();
+	const isFirstPayment = false;
 	return (
 		<>
 			<TouchableOpacity style={[styles.background, stylesContent.background, style]} onPress={() => onPress()}>
@@ -54,7 +49,7 @@ const SubscribeCard: FC<SubscribeCardProps> = props => {
 						<Text style={styles.price}>{textPrice.top}</Text>
 						{"\n"}
 						{textPrice.bottom}
-						{isFirstPaymant && i18n.t("a8ffa396-e17e-4836-817a-f4f61bad261d")}
+						{isFirstPayment && i18n.t("a8ffa396-e17e-4836-817a-f4f61bad261d")}
 					</Text>
 				</View>
 				<View style={styles.imageCard}>
@@ -91,12 +86,12 @@ interface SubscribeCardProps extends ViewProps {
 const styles = StyleSheet.create({
 	priceSubs: {
 		fontSize: 14,
-		...Tools.gStyle.font("400"),
+		...gStyles.font("400"),
 		width: 160,
 		lineHeight: 16,
 	},
 	price: {
-		...Tools.gStyle.font("600"),
+		...gStyles.font("600"),
 	},
 	background: {
 		width: "100%",
@@ -110,7 +105,7 @@ const styles = StyleSheet.create({
 
 	month: {
 		fontSize: 20,
-		...Tools.gStyle.font("600"),
+		...gStyles.font("600"),
 	},
 	textPrice: {
 		justifyContent: "space-between",
@@ -137,13 +132,13 @@ const styles = StyleSheet.create({
 		paddingVertical: 7,
 		borderRadius: 15,
 		fontSize: 13,
-		...Tools.gStyle.font("600"),
+		...gStyles.font("600"),
 		marginTop: 12,
 	},
 	cancelSubs: {
 		fontSize: 14,
 		color: "#C2A9CE",
-		...Tools.gStyle.font("400"),
+		...gStyles.font("400"),
 		marginVertical: 10,
 	},
 });

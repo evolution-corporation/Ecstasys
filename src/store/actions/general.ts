@@ -103,6 +103,11 @@ export const initialization = createAsyncThunk(GeneralAction.initialization, asy
 					const practice = Converter.composePractice(await Request.getMeditationById(id));
 					if (practice !== null) listNeedPractice.set(id, practice);
 				}
+				//!
+				// recommendationPracticeToDay = Converter.composePractice(
+				// 	await Request.getMeditationById("3a6d27ba-200c-4540-9e3e-ec5684f17e07")
+				// );
+				//!
 				recommendationPracticeToDay = Converter.composePractice(await Request.getRecommendationMeditation());
 			} else {
 				let randomId =

@@ -86,3 +86,19 @@ export function composePractice(data: ServerEntities.Meditation | null): State.P
 		};
 	}
 }
+
+export function composeSet(data: (ServerEntities.Meditation & { TypeMeditation: "Set" }) | null): State.Set | null {
+	if (data === null) {
+		return null;
+	} else {
+		if (data.AudioId === undefined) throw new Error("Not Found AudioID");
+		let audio = "https://storage.yandexcloud.net/dmdmeditatonaudio/" + data.AudioId;
+
+		return {
+			id: data.Id,
+			name: data.Name,
+			audio: audio,
+			length: data.AudioLength,
+		};
+	}
+}

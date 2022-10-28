@@ -30,6 +30,8 @@ export { default as PlayerForDMD } from "./PlayerForDMD";
 export { default as DMDSettingNotification } from "./DMDSettingNotification";
 export { default as DMDSelectTimeBright } from "./DMDSelectTimeBright";
 export { default as MessageLog } from "./MessageLog";
+export { default as RelaxListForDMD } from "./RelaxListForDMD";
+export { default as SelectSet } from "./SelectSet";
 // export const TabsScreen = {
 // 	Main,
 // 	Profile,

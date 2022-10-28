@@ -3,14 +3,16 @@
 import React from "react";
 import { SafeAreaView, Text, StyleSheet, Image, Pressable, View } from "react-native";
 import { ColorButton, TextButton } from "~components/dump";
-import core from "~core";
 import { actions, useAppDispatch, useAppSelector } from "~store";
 import { RootScreenProps } from "~types";
 import i18n from "~i18n";
-
+import gStyle from "~styles";
 import ArrowDown from "assets/icons/Chevron_Down.svg";
+import { SharedElement } from "react-navigation-shared-element";
+import { LinearGradient } from "expo-linear-gradient";
 
 const DMDSettingNotification: RootScreenProps<"DMDSettingNotification"> = ({ navigation, route }) => {
+	const { selectedRelax } = route.params;
 	const [image, name] = useAppSelector(store => [
 		store.DMD.option?.image ??
 			"https://storage.yandexcloud.net/dmdmeditationimage/meditations/404-not-found-error-page-examples.png",
@@ -28,7 +30,19 @@ const DMDSettingNotification: RootScreenProps<"DMDSettingNotification"> = ({ nav
 	return (
 		<SafeAreaView style={styles.container}>
 			<View style={styles.imageHeader}>
-				<Image source={{ uri: image }} style={styles.image} />
+				<SharedElement id={`practice.item.${selectedRelax.id}`} style={styles.image}>
+					<Image
+						source={{ uri: image }}
+						style={{ width: "100%", height: "100%", borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }}
+					/>
+				</SharedElement>
+				<LinearGradient style={styles.timeMinutesBox} colors={["#75348B", "#6A2382"]}>
+					<Text style={styles.timeMinutes}>
+						{i18n.t("minute", {
+							count: Math.floor((lengthSet + selectedRelax.length) / 60000),
+						})}
+					</Text>
+				</LinearGradient>
 			</View>
 			<View style={styles.footer}>
 				<Text style={styles.description}>
@@ -83,7 +97,7 @@ const DMDSettingNotification: RootScreenProps<"DMDSettingNotification"> = ({ nav
 					styleButton={styles.meditationButton}
 					styleText={styles.meditationButtonText}
 					onPress={() => {
-						navigation.navigate("PlayerForDMD", {});
+						navigation.navigate("PlayerForDMD", { selectedRelax });
 					}}
 				>
 					{i18n.t("79dc5c1b-465a-4ead-bb4b-57fcf88af1d1")}
@@ -115,12 +129,12 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 		textAlign: "center",
 		color: "#3D3D3D",
-		...core.gStyle.font("400"),
+		...gStyle.font("400"),
 		lineHeight: 17,
 		marginBottom: 22,
 	},
 	help: {
-		...core.gStyle.font("600"),
+		...gStyle.font("600"),
 	},
 	footer: {
 		width: "100%",
@@ -144,7 +158,7 @@ const styles = StyleSheet.create({
 	containerTimeText: {
 		color: "#FFFFFF",
 		fontSize: 14,
-		...core.gStyle.font("500"),
+		...gStyle.font("500"),
 	},
 	containerTimeMiddle: {
 		backgroundColor: "#9765A8",
@@ -152,7 +166,7 @@ const styles = StyleSheet.create({
 	backDefault: {
 		color: "#C2A9CE",
 		fontSize: 12,
-		...core.gStyle.font("500"),
+		...gStyle.font("500"),
 		alignSelf: "center",
 		marginTop: 11,
 		marginBottom: 20,
@@ -166,6 +180,19 @@ const styles = StyleSheet.create({
 	},
 	row: {
 		flexDirection: "row",
+	},
+	timeMinutes: {
+		color: "#FFFFFF",
+		fontSize: 14,
+		...gStyle.font("600"),
+	},
+	timeMinutesBox: {
+		borderRadius: 15,
+		paddingHorizontal: 34,
+		height: 30,
+		alignItems: "center",
+		justifyContent: "center",
+		alignSelf: "center",
 	},
 });
 

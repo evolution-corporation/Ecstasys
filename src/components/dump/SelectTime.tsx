@@ -42,7 +42,7 @@ const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
 
 		for (
 			let i = selectedIndexMinute === 2 ? start[1] : 0;
-			i <= (selectedIndexMinute === minutes.length - 2 ? end[1] : 62);
+			i <= (selectedIndexMinute === minutes.length - 2 ? end[1] : 61);
 			i++
 		) {
 			_seconds.push({ text: i < 10 ? `0${i}` : i.toString(), value: i });

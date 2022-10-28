@@ -8,6 +8,8 @@ import TextButton from "./Buttons/Text";
 import * as UIText from "../UIText";
 import i18n from "~i18n";
 
+import SelectImageButton from "./Buttons/SelectImage";
+
 interface Props extends RN.ViewProps {
 	displayName?: string;
 	image: string;
@@ -16,21 +18,31 @@ interface Props extends RN.ViewProps {
 		endSubscribe: Date;
 	};
 	onPress?: () => void;
+	onChangeImage?: (image: string) => void;
 }
 
 const ProfileInformation: React.FC<Props> = props => {
-	const { image, displayName, subscribeInformation, onPress } = props;
+	const { image, displayName, subscribeInformation, onPress, onChangeImage } = props;
 	const isActivateSubscribe = subscribeInformation !== undefined && subscribeInformation.endSubscribe > new Date();
 	return (
 		<RN.View style={styles.container}>
-			<RN.Image
-				source={{
-					uri: image,
-				}}
-				style={styles.image}
-				resizeMethod={"resize"}
-				resizeMode={"contain"}
-			/>
+			{onChangeImage === undefined ? (
+				<RN.Image
+					source={{
+						uri: image,
+					}}
+					style={styles.image}
+					resizeMethod={"resize"}
+					resizeMode={"contain"}
+				/>
+			) : (
+				<SelectImageButton
+					initImage={image}
+					onChangeImage={image => {
+						onChangeImage(image);
+					}}
+				/>
+			)}
 			<RN.View style={styles.backgroundInfo}>
 				{displayName && <RN.Text style={styles.displayName}>{displayName}</RN.Text>}
 				<RN.Text style={styles.nameSubscribe}>

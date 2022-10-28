@@ -208,18 +208,6 @@ export async function getMeditationById(meditationId: string, firebaseTokenToken
  * @return Запрошенная медитация
  */
 export async function getMeditationsByType(meditationType: SupportType.TypeMeditation, firebaseTokenToken?: string) {
-	// return [
-	// 	{
-	// 		id: "6387521c-adb7-49b7-8a0f-5882eacc35af",
-	// 		AudioLength: 100000,
-	// 		HasAudio: true,
-	// 		IsSubscribed: false,
-	// 		Name: "123,421",
-	// 		TypeMeditation: "relaxation",
-	// 		Description: "12313123",
-	// 		Language: "ru",
-	// 	},
-	// ] as ServerEntities.Meditation[];
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
 	const url = URL + "meditation?type=" + meditationType;
 	const requestServer = await fetch(url, {

@@ -47,36 +47,42 @@ export const addChangedInformationUser = createAsyncThunk<
 
 export const removeChangedInformationUser = createAction(AccountAction.removeChangedData);
 
-export const updateAccount = createAsyncThunk<State.User, undefined, AsyncThunkConfig>(
-	AccountAction.saveChangeData,
-	async (_, { getState }) => {
-		let { birthday, displayName, gender, image, lastCheckNicknameAndResult, nickname } = getState().account.changeData;
-		if (nickname !== undefined) {
-			if (
-				lastCheckNicknameAndResult === undefined ||
-				Date.now() - new Date(lastCheckNicknameAndResult[0]).getTime() > 300000
-			) {
-				const isFree = (await Request.getUserByNickname(nickname)) === null;
-				lastCheckNicknameAndResult = [new Date().toISOString(), isFree];
-			}
+export const updateAccount = createAsyncThunk<
+	State.User,
+	{ image?: string; displayName?: string; birthday?: string },
+	AsyncThunkConfig
+>(AccountAction.saveChangeData, async ({ image, birthday, displayName }, { getState }) => {
+	const changeData = getState().account.changeData;
+	if (image === undefined) image = changeData.image;
+	if (birthday === undefined) birthday = changeData.birthday;
+	if (displayName === undefined) displayName = changeData.displayName;
+	let { nickname, lastCheckNicknameAndResult, gender } = changeData;
+
+	if (nickname !== undefined) {
+		if (
+			lastCheckNicknameAndResult === undefined ||
+			Date.now() - new Date(lastCheckNicknameAndResult[0]).getTime() > 300000
+		) {
+			const isFree = (await Request.getUserByNickname(nickname)) === null;
+			lastCheckNicknameAndResult = [new Date().toISOString(), isFree];
 		}
-		const user = Converter.composeUser(
-			await Request.updateUser({
-				birthday: birthday !== undefined ? new Date(birthday) : undefined,
-				displayName,
-				image,
-				nickname:
-					nickname !== undefined && lastCheckNicknameAndResult !== undefined && lastCheckNicknameAndResult[1]
-						? nickname
-						: undefined,
-			})
-		);
-		if (user === null) {
-			throw new Error("Not Return UserInformation");
-		}
-		return user;
 	}
-);
+	const user = Converter.composeUser(
+		await Request.updateUser({
+			birthday: birthday !== undefined ? new Date(birthday) : undefined,
+			displayName,
+			image,
+			nickname:
+				nickname !== undefined && lastCheckNicknameAndResult !== undefined && lastCheckNicknameAndResult[1]
+					? nickname
+					: undefined,
+		})
+	);
+	if (user === null) {
+		throw new Error("Not Return UserInformation");
+	}
+	return user;
+});
 
 export const registrationAccount = createAsyncThunk<State.User, undefined, AsyncThunkConfig>(
 	AccountAction.registration,

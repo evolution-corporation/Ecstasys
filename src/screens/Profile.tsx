@@ -8,8 +8,7 @@ import { DoubleColorView } from "~components/containers";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import i18n from "~i18n";
 import gStyle from "~styles";
-import { useAppSelector } from "~store";
-import * as Models from "src/models";
+import { actions, useAppDispatch, useAppSelector } from "~store";
 import * as Dump from "src/components/dump";
 import { StatisticPeriod, GeneralCompositeScreenProps, State } from "~types";
 
@@ -75,6 +74,8 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 		return store.practice.listPracticesListened.map(item => item.practice);
 	});
 
+	const appDispatch = useAppDispatch();
+
 	React.useEffect(() => {
 		navigation.setOptions({
 			title: nickName,
@@ -99,6 +100,9 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 					}
 					onPress={() => {
 						navigation.navigate("EditUser");
+					}}
+					onChangeImage={image => {
+						appDispatch(actions.updateAccount({ image }));
 					}}
 				/>
 				<Dump.SelectTimePeriodStatistic onChangePeriod={setStatisticPeriod} style={{ marginTop: 16 }} />
