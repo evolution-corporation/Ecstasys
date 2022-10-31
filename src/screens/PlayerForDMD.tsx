@@ -9,11 +9,10 @@ import { TimeLine, PlayerControl } from "~components/dump";
 import { RootScreenProps } from "~types";
 
 import { Audio } from "expo-av";
-import { actions, useAppDispatch, useAppSelector } from "~store";
+import { useAppSelector } from "~store";
 import i18n from "~i18n";
 import gStyle from "~styles";
 import { SharedElement } from "react-navigation-shared-element";
-import { setSetForDMD } from "src/store/actions/DMD";
 
 enum Status {
 	Loading,
@@ -40,8 +39,6 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 		const random = store.DMD.configuratorNotification.random + activate;
 		return [option, activate, random];
 	});
-
-	const appDispatch = useAppDispatch();
 
 	const [statusDMD, setStatusStatusDMD] = React.useState<Status>(Status.Loading);
 	const [currentTime, setCurrentTime] = React.useState<number>(0);
