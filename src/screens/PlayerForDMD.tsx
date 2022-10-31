@@ -4,20 +4,16 @@ import React, { useEffect, useRef } from "react";
 import { Image, StyleSheet, View, Text, Pressable, ActivityIndicator } from "react-native";
 import Animated from "react-native-reanimated";
 
-import Tools from "~core";
-import { TimeLine, PlayerControl, ColorButton } from "~components/dump";
+import { TimeLine, PlayerControl } from "~components/dump";
 
-import { PracticesMeditation, RootScreenProps } from "~types";
-import Practice, { BackgroundSound } from "src/models/practices";
+import { RootScreenProps } from "~types";
 
-import { Audio, AVPlaybackStatus } from "expo-av";
-import core from "~core";
-import { initializationTimer } from "src/TaskManager";
-import Headphones from "assets/icons/Headphones_white.svg";
-import { useAppSelector } from "~store";
+import { Audio } from "expo-av";
+import { actions, useAppDispatch, useAppSelector } from "~store";
 import i18n from "~i18n";
+import gStyle from "~styles";
 import { SharedElement } from "react-navigation-shared-element";
-import { useSelector } from "react-redux";
+import { setSetForDMD } from "src/store/actions/DMD";
 
 enum Status {
 	Loading,
@@ -25,7 +21,6 @@ enum Status {
 	Pause,
 	Change,
 }
-
 const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) => {
 	const [image, audioOptionURL, audioSetURL] = useAppSelector(store => {
 		if (store.DMD.option === undefined) {
@@ -41,64 +36,26 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 
 	const [optionTriggerTime, activateTriggerTime, randomTriggerTime] = useAppSelector(store => {
 		const option = store.DMD.configuratorNotification.option ?? 0;
-		const activate = store.DMD.configuratorNotification.activate + option;
+		const activate = store.DMD.configuratorNotification.activate;
 		const random = store.DMD.configuratorNotification.random + activate;
 		return [option, activate, random];
 	});
 
+	const appDispatch = useAppDispatch();
+
 	const [statusDMD, setStatusStatusDMD] = React.useState<Status>(Status.Loading);
 	const [currentTime, setCurrentTime] = React.useState<number>(0);
-
 	const audioOption = useRef<Audio.Sound>(new Audio.Sound()).current;
 	const audioSet = useRef<Audio.Sound>(new Audio.Sound()).current;
-
+	const TimeOutId = useRef<NodeJS.Timeout | null>(null);
 	const timeLineRef = useRef<React.ElementRef<typeof TimeLine>>(null);
 
-	const timerTask = React.useRef<ReturnType<typeof initializationTimer> | null>(null);
 	const triggerSound = React.useRef<Audio.Sound>(new Audio.Sound()).current;
-
-	const getIsPlayTriggerSound = async (time: number) => {
-		const triggerSoundStatus = await triggerSound.getStatusAsync();
-		if (triggerSoundStatus.isLoaded) {
-			const halfTriggerLength = triggerSoundStatus.durationMillis ?? 3000 / 2;
-			if (time > activateTriggerTime - halfTriggerLength && time < activateTriggerTime) return true;
-			if (time > optionTriggerTime - halfTriggerLength && time < optionTriggerTime) return true;
-			if (time > randomTriggerTime - halfTriggerLength && time < randomTriggerTime) return true;
-		}
-		return false;
-	};
-
-	const [startTimer, stopTimer] = React.useRef([
-		() => {
-			timerTask.current = initializationTimer(() => {
-				setCurrentTime(prevCurrentTime => {
-					timeLineRef.current?.setValue((prevCurrentTime + 100) / allLength);
-					if (prevCurrentTime + 100 > allLength) {
-						stopTimer();
-					}
-					getIsPlayTriggerSound(prevCurrentTime + 100).then(async isNeedTrigger => {
-						const triggerSoundStatus = await triggerSound.getStatusAsync();
-						if (triggerSoundStatus.isLoaded) {
-							if (isNeedTrigger && !triggerSoundStatus.isPlaying) {
-								await triggerSound.setPositionAsync(0);
-								await triggerSound.playAsync();
-							}
-						}
-					});
-
-					return prevCurrentTime + 100;
-				});
-			});
-		},
-		() => {
-			if (timerTask.current !== null) timerTask.current();
-		},
-	]).current;
 
 	useEffect(() => {
 		console.log("mount");
-		//* Загружаем главный трек
-		(async () => {
+		const init = async () => {
+			// Загрузка треков
 			if (statusDMD === Status.Loading) {
 				await Promise.all([
 					new Promise(async (resolve, reject) => {
@@ -112,106 +69,143 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 					new Promise(async (resolve, reject) => {
 						await triggerSound.loadAsync(require("assets/triggerSounds/b51f4cc4-55e4-4734-97e6-8d581a201a2a.mp3"));
 						resolve(undefined);
+						triggerSound.setOnPlaybackStatusUpdate(status => {
+							if (status.isLoaded && status.didJustFinish) {
+								triggerSound.pauseAsync();
+								triggerSound.setPositionAsync(0);
+							}
+						});
 					}),
 				]);
+				//Создание подписок на треки
+				audioOption.setOnPlaybackStatusUpdate(status => {
+					if (status.isLoaded) {
+						setCurrentTime(prevCurrentTime =>
+							prevCurrentTime <= optionTriggerTime ? status.positionMillis : prevCurrentTime
+						);
+						if (status.didJustFinish) {
+							audioSet.playAsync();
+							triggerSound.playAsync();
+						}
+					}
+				});
+
+				audioSet.setOnPlaybackStatusUpdate(async status => {
+					const statusOption = await audioOption.getStatusAsync();
+					if (status.isLoaded && statusOption.isLoaded && !statusOption.isPlaying) {
+						setCurrentTime(prevCurrentTime => status.positionMillis + statusOption.positionMillis);
+						if (
+							(status.isPlaying &&
+								status.positionMillis > activateTriggerTime - 1000 &&
+								status.positionMillis < activateTriggerTime) ||
+							(status.positionMillis > randomTriggerTime - 1000 && status.positionMillis < randomTriggerTime)
+						) {
+							triggerSound.getStatusAsync().then(status => {
+								if (status.isLoaded && !status.isPlaying) {
+									triggerSound.playAsync();
+								}
+							});
+						}
+					}
+				});
 			}
-			const [setStatus, optionStatus] = (await Promise.all([
-				new Promise(async (resolve, reject) => {
-					return resolve(await audioSet.getStatusAsync());
-				}),
-				new Promise(async (resolve, reject) => {
-					return resolve(await audioOption.getStatusAsync());
-				}),
-			])) as [AVPlaybackStatus, AVPlaybackStatus];
+
+			// Определение начального состояния
+			const optionStatus = await audioOption.getStatusAsync();
+			const setStatus = await audioSet.getStatusAsync();
 			if (setStatus.isLoaded && optionStatus.isLoaded) {
 				setStatusStatusDMD(setStatus.isPlaying || optionStatus.isPlaying ? Status.Play : Status.Pause);
 			} else {
 				setStatusStatusDMD(Status.Pause);
 			}
-		})();
-		//* Создаем счетчик времени прослушивания
+			if (currentTime > 0) {
+				timeLineRef.current?.setValue(currentTime / allLength);
+			}
+		};
+		init();
 		return () => {
-			console.log("unmount");
-			audioOption.getStatusAsync().then(status => {
-				if (status.isLoaded) audioOption.stopAsync();
-			});
-			audioSet.getStatusAsync().then(status => {
-				if (status.isLoaded) audioSet.stopAsync();
-			});
-			stopTimer();
+			Promise.all([
+				new Promise(resolve =>
+					audioOption.getStatusAsync().then(status => {
+						if (status.isLoaded) {
+							audioOption.stopAsync();
+							return resolve(status.positionMillis);
+						}
+					})
+				),
+				new Promise(resolve =>
+					audioSet.getStatusAsync().then(status => {
+						if (status.isLoaded) {
+							audioSet.stopAsync();
+							return resolve(status.positionMillis);
+						}
+					})
+				),
+			]);
 		};
 	}, []);
 
-	const play = React.useCallback(
-		() =>
-			(async time => {
-				const isLoaded = (await audioOption.getStatusAsync()).isLoaded && (await audioSet.getStatusAsync()).isLoaded;
-				if (isLoaded) {
-					if (time <= optionTriggerTime) {
-						await audioOption.playAsync();
-						await audioSet.stopAsync();
-					} else {
-						await audioOption.pauseAsync();
-						await audioSet.playAsync();
-					}
-					startTimer();
-					setStatusStatusDMD(Status.Play);
-				}
-			})(currentTime),
-		[currentTime]
-	);
-
-	const pause = React.useCallback(
-		async (newStatus: Status = Status.Pause) => {
-			const isLoaded = (await audioOption.getStatusAsync()).isLoaded && (await audioSet.getStatusAsync()).isLoaded;
-			if (isLoaded) {
-				await audioOption.pauseAsync();
-				await audioSet.pauseAsync();
-				stopTimer();
-				setStatusStatusDMD(newStatus);
+	const play = async () => {
+		const isLoaded = (await audioOption.getStatusAsync()).isLoaded && (await audioSet.getStatusAsync()).isLoaded;
+		if (isLoaded) {
+			if (currentTime < optionTriggerTime) {
+				await audioOption.playAsync();
+			} else {
+				await audioSet.playAsync();
 			}
-		},
-		[currentTime]
-	);
-
-	const update = React.useCallback(
-		async (millisecond: number) => {
-			const isLoaded = !(
-				await Promise.all([
-					new Promise(async resolve => {
-						return resolve((await audioOption.getStatusAsync()).isLoaded);
-					}),
-					new Promise(async resolve => {
-						return resolve((await audioSet.getStatusAsync()).isLoaded);
-					}),
-				])
-			).includes(false);
-			if (isLoaded) {
-				await Promise.all([
-					new Promise(async resolve => {
-						await audioOption.setPositionAsync(optionTriggerTime % millisecond);
-						resolve(undefined);
-					}),
-					new Promise(async resolve => {
-						await audioSet.setPositionAsync(millisecond - optionTriggerTime < 0 ? 0 : millisecond - optionTriggerTime);
-						resolve(undefined);
-					}),
-				]);
-			}
-			setCurrentTime(millisecond);
-
-			timeLineRef.current?.setValue(millisecond / allLength);
-		},
-		[currentTime]
-	);
-
-	const endChange = React.useMemo(() => {
-		if (statusDMD === Status.Change) {
-			return play;
-		} else {
-			return () => {};
+			setStatusStatusDMD(Status.Play);
 		}
+	};
+
+	const pause = async (editStatus: boolean = true) => {
+		const isLoaded = (await audioOption.getStatusAsync()).isLoaded && (await audioSet.getStatusAsync()).isLoaded;
+		if (isLoaded) {
+			await audioOption.pauseAsync();
+			await audioSet.pauseAsync();
+			if (editStatus) setStatusStatusDMD(Status.Pause);
+		}
+	};
+
+	const update = async (millisecond: number, needUpdateTimeLineRef: boolean = true, needTimeOut: boolean = false) => {
+		const updateAudio = async (millisecond: number) => {
+			await Promise.all([
+				new Promise(async resolve => {
+					const status = await audioSet.getStatusAsync();
+					if (status.isLoaded) {
+						if (status.isPlaying) await audioOption.pauseAsync();
+						audioSet.setPositionAsync(millisecond > optionTriggerTime ? millisecond - optionTriggerTime : 0);
+					}
+					resolve(undefined);
+				}),
+				new Promise(async resolve => {
+					const status = await audioOption.getStatusAsync();
+					if (status.isLoaded) {
+						if (status.isPlaying) await audioOption.pauseAsync();
+						audioOption.setPositionAsync(millisecond < optionTriggerTime ? millisecond : optionTriggerTime);
+					}
+					resolve(undefined);
+				}),
+			]);
+		};
+
+		if (TimeOutId.current !== null) clearTimeout(TimeOutId.current);
+		if (needTimeOut) {
+			TimeOutId.current = setTimeout(updateAudio, 200, millisecond);
+		} else {
+			await updateAudio(millisecond);
+		}
+		if (needUpdateTimeLineRef) timeLineRef.current?.setValue(millisecond / allLength);
+	};
+
+	useEffect(() => {
+		console.log(Status[statusDMD]);
 	}, [statusDMD]);
+
+	const updateStep = async (millisecond: number) => {
+		const needPlay = statusDMD === Status.Play;
+		await update(millisecond);
+		if (needPlay) await play();
+	};
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -233,10 +227,10 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 							pause={pause}
 							play={play}
 							stepBack={async () => {
-								update(currentTime < 15000 ? currentTime : currentTime - 15000);
+								updateStep(currentTime > 15000 ? currentTime - 15000 : currentTime);
 							}}
 							stepForward={async () => {
-								update(currentTime + 15000);
+								updateStep(currentTime + 15000 < allLength ? currentTime + 15000 : allLength);
 							}}
 							rewindMillisecond={15000}
 						/>
@@ -246,13 +240,20 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 					<TimeLine
 						ref={timeLineRef}
 						disable={statusDMD === Status.Loading}
-						onChange={percent => {
-							update(allLength * percent);
+						onChange={async percent => {
+							await update(allLength * percent, false, true);
 						}}
 						onStartChange={() => {
-							pause(statusDMD === Status.Play ? Status.Change : Status.Pause);
+							if (statusDMD === Status.Play) {
+								pause(false);
+								setStatusStatusDMD(Status.Change);
+							} else {
+								pause();
+							}
 						}}
-						onEndChange={endChange}
+						onEndChange={() => {
+							if (statusDMD === Status.Change) play();
+						}}
 					/>
 					<View style={styles.timesCodeBox}>
 						<Text style={styles.timeCode} key={"current"}>
@@ -302,7 +303,7 @@ const styles = StyleSheet.create({
 	timeCode: {
 		fontSize: 14,
 		color: "#FFFFFF",
-		...Tools.gStyle.font("400"),
+		...gStyle.font("400"),
 		opacity: 0.7,
 	},
 	buttonBackgroundSound: {
@@ -346,7 +347,7 @@ const styles = StyleSheet.create({
 	textJumpTime: {
 		color: "#FFFFFF",
 		fontSize: 13,
-		...core.gStyle.font("400"),
+		...gStyle.font("400"),
 	},
 	panelControlContainer: {
 		alignSelf: "center",

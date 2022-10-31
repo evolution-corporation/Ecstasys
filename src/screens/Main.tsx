@@ -148,7 +148,9 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 					/>
 				</RN.ImageBackground>
 			</Animated.View>
-			<Animated.View style={[viewStyle.white, viewStyle.temple.feed, feedStyle, { minHeight: height }]}>
+			<Animated.View
+				style={[viewStyle.white, viewStyle.temple.feed, feedStyle, { minHeight: height, paddingBottom: 75 }]}
+			>
 				<RN.Text style={[fontStyle.title.h3_Roboto, fontStyle.darkLetters]}>
 					{i18n.t("9d0cd47a-0392-4e5c-9573-00642b12f868")}
 				</RN.Text>
