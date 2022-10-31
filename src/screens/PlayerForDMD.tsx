@@ -208,7 +208,7 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 							pause={pause}
 							play={play}
 							stepBack={async () => {
-								update(currentTime - 15000);
+								update(currentTime < 15000 ? currentTime : currentTime - 15000);
 							}}
 							stepForward={async () => {
 								update(currentTime + 15000);

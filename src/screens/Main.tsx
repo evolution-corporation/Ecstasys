@@ -135,7 +135,12 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 				}}
 			>
 				<RN.ImageBackground source={require("/assets/backgroundMain.png")} style={styles.imageGreeting}>
-					<Dump.UserButton style={styles.userButton} image={image} nickname={nickName} />
+					<Dump.UserButton
+						style={styles.userButton}
+						image={image}
+						nickname={nickName}
+						onPress={() => navigation.navigate("Profile")}
+					/>
 					<Dump.MessageProfessor
 						greeting={greetingText}
 						message={i18n.t(messageProfessor)}

@@ -25,9 +25,11 @@ const InputImageAndBirthdayScreen: RootScreenProps<"InputImageAndBirthday"> = ({
 		useCallback(() => {
 			const user = auth().currentUser;
 			if (!!user && user.photoURL) {
-				SelectImageButtonRef.current?.setImage(user.photoURL);
 				convertedImageURLInBase64(user.photoURL).then(base64 => {
-					appDispatch(actions.addChangedInformationUser({ image: base64 }));
+					if (!!user && user.photoURL) {
+						appDispatch(actions.addChangedInformationUser({ image: base64 }));
+						SelectImageButtonRef.current?.setImage(user.photoURL);
+					}
 				});
 			}
 		}, [])

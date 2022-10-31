@@ -3676,6 +3676,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/bluebird@npm:^3":
+  version: 3.5.37
+  resolution: "@types/bluebird@npm:3.5.37"
+  checksum: 851a2eca0ae2daa422d4bcea5f8f659a673fcff5f51d18997ffb19bb9e54b64800301b167613d9cbbebaa8fdfd2433f0f9f8bb39267efd7b6898011aedcc944d
+  languageName: node
+  linkType: hard
+
 "@types/cacheable-request@npm:^6.0.1":
   version: 6.0.2
   resolution: "@types/cacheable-request@npm:6.0.2"
@@ -5209,7 +5216,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bluebird@npm:^3.5.5":
+"bluebird@npm:^3.5.5, bluebird@npm:^3.7.2":
   version: 3.7.2
   resolution: "bluebird@npm:3.7.2"
   checksum: 869417503c722e7dc54ca46715f70e15f4d9c602a423a02c825570862d12935be59ed9c7ba34a9b31f186c017c23cac6b54e35446f8353059c101da73eac22ef
@@ -7654,12 +7661,14 @@ __metadata:
     "@react-navigation/stack": ^6.3.0
     "@reduxjs/toolkit": ^1.8.3
     "@types/babel__preset-env": ^7
+    "@types/bluebird": ^3
     "@types/jest": ^29.1.2
     "@types/react": ~18.0.0
     "@types/react-native": ~0.69.1
     "@types/react-native-snap-carousel": ^3.8.5
     "@types/validator": ^13.7.3
     babel-jest: ^29.1.2
+    bluebird: ^3.7.2
     eas-cli: ^2.1.0
     expo: ~46.0.13
     expo-av: ~12.0.4

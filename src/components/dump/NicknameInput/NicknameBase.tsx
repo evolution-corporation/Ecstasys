@@ -12,13 +12,13 @@ import {
 	View,
 	ViewStyle,
 } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import i18n from "~i18n";
-
+import gStyle from "~styles";
 import CheckMarkerWhite from "assets/icons/CheckMarkerWhite.svg";
+import CrossMarkerWhite from "assets/icons/CrossMarker_White.svg";
 import { isNicknameValidate } from "src/validators";
-import { Users } from "src/models";
-import Tools from "~core";
+import PromiseCustom from "src/Promise";
 
 export enum StatusCheck {
 	"FREE",
@@ -39,33 +39,56 @@ const NicknameInput = forwardRef<Ref, Props>((props, ref) => {
 	const [statusCheck, setStatusCheck] = useState<StatusCheck>(StatusCheck.AWAIT);
 	const [nickname, setNickname] = useState<string>(defaultValue);
 
-	const _colorBorderView = useSharedValue("#C2A9CE");
+	const PromiseChecked = React.useRef<PromiseCustom<StatusCheck, undefined, StatusCheck> | null>(null);
 
-	const animatedView = useAnimatedStyle(() => ({
-		borderColor: withTiming(_colorBorderView.value),
-	}));
+	const _colorBorderView = useSharedValue(0);
+
+	const animatedView = useAnimatedStyle(() => {
+		return {
+			borderColor: interpolateColor(
+				_colorBorderView.value,
+				[0, 0.5, 1],
+				["rgb(194,169,206)", "rgb(219,138,122)", "rgb(255,92,0)"],
+				"RGB"
+			),
+		};
+	});
 
 	const editNickname = async (inputNickname: string) => {
+		if (PromiseChecked.current !== null) {
+			PromiseChecked.current.cancel();
+		}
 		setNickname(inputNickname);
-		if (inputNickname === defaultValue || inputNickname.length === 0) {
-			setStatusCheck(StatusCheck.AWAIT);
-			return;
-		}
-		setStatusCheck(StatusCheck.LOADING);
-		if (isNicknameValidate(inputNickname)) {
-			const result = await checkValidateNickname(inputNickname);
-			setStatusCheck(result);
-		} else {
-			setStatusCheck(StatusCheck.INCORRECT);
-			return;
-		}
+		PromiseChecked.current = new PromiseCustom<StatusCheck, undefined, StatusCheck>(
+			async (resolve, reject, returnMiddle, cancelSignal) => {
+				if (inputNickname === defaultValue || inputNickname.length === 0) {
+					return resolve(StatusCheck.AWAIT);
+				}
+				returnMiddle(StatusCheck.LOADING);
+				if (isNicknameValidate(inputNickname)) {
+					const result = await checkValidateNickname(inputNickname);
+					return resolve(result);
+				} else {
+					return resolve(StatusCheck.INCORRECT);
+				}
+			},
+			false
+		);
+		PromiseChecked.current
+			.getMiddle(statusCheck => {
+				setStatusCheck(statusCheck);
+			})
+			.finally(statusCheck => {
+				setStatusCheck(statusCheck);
+			})
+			.start();
 	};
 
 	useEffect(() => {
-		if ([StatusCheck.INCORRECT, StatusCheck.USED].includes(statusCheck)) {
-			_colorBorderView.value = "#FF5C00";
+		if (statusCheck === StatusCheck.INCORRECT || statusCheck === StatusCheck.USED) {
+			_colorBorderView.value = withTiming(1);
 		} else {
-			_colorBorderView.value = "#C2A9CE";
+			_colorBorderView.value = withTiming(0);
 		}
 		if (!!onEndChange) {
 			onEndChange(nickname, statusCheck);
@@ -78,8 +101,6 @@ const NicknameInput = forwardRef<Ref, Props>((props, ref) => {
 
 	let [StatusCheckView, StatusCheckText] = React.useMemo(() => {
 		switch (statusCheck) {
-			case StatusCheck.AWAIT:
-				return [null, null];
 			case StatusCheck.USED:
 			case StatusCheck.INCORRECT:
 				return [
@@ -87,19 +108,20 @@ const NicknameInput = forwardRef<Ref, Props>((props, ref) => {
 						onPress={() => {
 							editNickname("");
 						}}
+						key={"checkMarkerWhite"}
 					>
-						<CheckMarkerWhite />
+						<CrossMarkerWhite />
 					</Pressable>,
 					StatusCheck.INCORRECT
 						? i18n.t("d6a4f1c4-4344-4712-ac61-0c81292d0994")
 						: i18n.t("564efb95-c192-4406-830f-13b3612bae0e"),
 				];
 			case StatusCheck.FREE:
-				return [<CheckMarkerWhite />, null];
+				return [<CheckMarkerWhite key={"checkMarkerWhite"} />, null];
 			case StatusCheck.LOADING:
-				return [<ActivityIndicator color={"#FFFFFFFF"} size={"small"} />, null];
+				return [<ActivityIndicator color={"#FFFFFFFF"} size={"small"} key={"activityIndicator"} />, null];
 			default:
-				return [null, null];
+				return [<View key={"await"} />, null];
 		}
 	}, [statusCheck]);
 
@@ -137,7 +159,7 @@ const styles = StyleSheet.create({
 	textInputView: {
 		color: "#FFFFFF",
 		fontSize: 14,
-		...Tools.gStyle.font("400"),
+		...gStyle.font("400"),
 		flex: 1,
 		paddingRight: 44,
 	},
@@ -159,7 +181,7 @@ const styles = StyleSheet.create({
 	errorMessage: {
 		fontSize: 13,
 		lineHeight: 16,
-		...Tools.gStyle.font("400"),
+		...gStyle.font("400"),
 		textAlign: "center",
 		color: "#E7DDEC",
 	},

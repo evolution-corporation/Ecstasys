@@ -41,6 +41,7 @@ const ProfileInformation: React.FC<Props> = props => {
 					onChangeImage={image => {
 						onChangeImage(image);
 					}}
+					style={styles.image}
 				/>
 			)}
 			<RN.View style={styles.backgroundInfo}>

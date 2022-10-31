@@ -311,23 +311,34 @@ export async function getPaymentURL(subscribeType: SupportType.SubscribeType, fi
  * @param firebaseTokenToken FirebaseToken пользователя от имени которого происходит запрос
  * @return Информация об пользователе или null если пользователь с таким nickname не найден
  */
-export async function getUserByNickname(nickname: string, firebaseTokenToken?: string) {
-	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
+export async function getUserByNickname(
+	nickname: string,
+	options: { firebaseTokenToken?: string; signal?: AbortSignal } = {}
+) {
+	const firebaseTokenToken = await getFirebaseToken(options.firebaseTokenToken);
 	const url = URL + "nickname?nickname=" + nickname;
-	const requestServer = await fetch(url, {
-		headers: {
-			Authorization: firebaseTokenToken,
-			"Content-Type": "application/json",
-		},
-	});
-	if (requestServer.status === 404) {
-		return null;
+	try {
+		const requestServer = await fetch(url, {
+			headers: {
+				Authorization: firebaseTokenToken,
+				"Content-Type": "application/json",
+			},
+			signal: options.signal,
+		});
+		if (requestServer.status === 404) {
+			return null;
+		}
+		if (requestServer.status >= 500) {
+			throw new RequestError(`getUserByNickname: ${await requestServer.text()}`, url, undefined, "GET", "50x");
+		}
+		const json = await requestServer.json();
+		return json.length as ServerEntities.User;
+	} catch (error) {
+		if (error instanceof Error && error.name == "AbortError") {
+		} else {
+			throw error;
+		}
 	}
-	if (requestServer.status >= 500) {
-		throw new RequestError(`getUserByNickname: ${await requestServer.text()}`, url, undefined, "GET", "50x");
-	}
-	const json = await requestServer.json();
-	return json.length as ServerEntities.User;
 }
 
 //!
