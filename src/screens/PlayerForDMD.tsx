@@ -17,6 +17,7 @@ import Headphones from "assets/icons/Headphones_white.svg";
 import { useAppSelector } from "~store";
 import i18n from "~i18n";
 import { SharedElement } from "react-navigation-shared-element";
+import { useSelector } from "react-redux";
 
 enum Status {
 	Loading,
@@ -36,16 +37,14 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 		return [store.DMD.option.image, store.DMD.option.audio, store.DMD.set.audio];
 	});
 	const { selectedRelax } = route.params;
-	const [activateLength, optionLength, randomLength, lengthSet, allLength] = useAppSelector(store => [
-		store.DMD.configuratorNotification.activate,
-		store.DMD.configuratorNotification.option ?? 0,
-		store.DMD.configuratorNotification.random,
-		store.DMD.set?.length ?? 0,
-		store.DMD.configuratorNotification.activate +
-			(store.DMD.configuratorNotification.option ?? 0) +
-			store.DMD.configuratorNotification.random +
-			(store.DMD.set?.length ?? 0),
-	]);
+	const allLength = useAppSelector(store => (store.DMD.option?.length ?? 0) + (store.DMD.set?.length ?? 0));
+
+	const [optionTriggerTime, activateTriggerTime, randomTriggerTime] = useAppSelector(store => {
+		const option = store.DMD.configuratorNotification.option ?? 0;
+		const activate = store.DMD.configuratorNotification.activate + option;
+		const random = store.DMD.configuratorNotification.random + activate;
+		return [option, activate, random];
+	});
 
 	const [statusDMD, setStatusStatusDMD] = React.useState<Status>(Status.Loading);
 	const [currentTime, setCurrentTime] = React.useState<number>(0);
@@ -56,6 +55,18 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 	const timeLineRef = useRef<React.ElementRef<typeof TimeLine>>(null);
 
 	const timerTask = React.useRef<ReturnType<typeof initializationTimer> | null>(null);
+	const triggerSound = React.useRef<Audio.Sound>(new Audio.Sound()).current;
+
+	const getIsPlayTriggerSound = async (time: number) => {
+		const triggerSoundStatus = await triggerSound.getStatusAsync();
+		if (triggerSoundStatus.isLoaded) {
+			const halfTriggerLength = triggerSoundStatus.durationMillis ?? 3000 / 2;
+			if (time > activateTriggerTime - halfTriggerLength && time < activateTriggerTime) return true;
+			if (time > optionTriggerTime - halfTriggerLength && time < optionTriggerTime) return true;
+			if (time > randomTriggerTime - halfTriggerLength && time < randomTriggerTime) return true;
+		}
+		return false;
+	};
 
 	const [startTimer, stopTimer] = React.useRef([
 		() => {
@@ -65,6 +76,16 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 					if (prevCurrentTime + 100 > allLength) {
 						stopTimer();
 					}
+					getIsPlayTriggerSound(prevCurrentTime + 100).then(async isNeedTrigger => {
+						const triggerSoundStatus = await triggerSound.getStatusAsync();
+						if (triggerSoundStatus.isLoaded) {
+							if (isNeedTrigger && !triggerSoundStatus.isPlaying) {
+								await triggerSound.setPositionAsync(0);
+								await triggerSound.playAsync();
+							}
+						}
+					});
+
 					return prevCurrentTime + 100;
 				});
 			});
@@ -86,6 +107,10 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 					}),
 					new Promise(async (resolve, reject) => {
 						await audioOption.loadAsync({ uri: audioOptionURL });
+						resolve(undefined);
+					}),
+					new Promise(async (resolve, reject) => {
+						await triggerSound.loadAsync(require("assets/triggerSounds/b51f4cc4-55e4-4734-97e6-8d581a201a2a.mp3"));
 						resolve(undefined);
 					}),
 				]);
@@ -122,7 +147,7 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 			(async time => {
 				const isLoaded = (await audioOption.getStatusAsync()).isLoaded && (await audioSet.getStatusAsync()).isLoaded;
 				if (isLoaded) {
-					if (time <= optionLength) {
+					if (time <= optionTriggerTime) {
 						await audioOption.playAsync();
 						await audioSet.stopAsync();
 					} else {
@@ -164,11 +189,11 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 			if (isLoaded) {
 				await Promise.all([
 					new Promise(async resolve => {
-						await audioOption.setPositionAsync(optionLength % millisecond);
+						await audioOption.setPositionAsync(optionTriggerTime % millisecond);
 						resolve(undefined);
 					}),
 					new Promise(async resolve => {
-						await audioSet.setPositionAsync(millisecond - optionLength < 0 ? 0 : millisecond - optionLength);
+						await audioSet.setPositionAsync(millisecond - optionTriggerTime < 0 ? 0 : millisecond - optionTriggerTime);
 						resolve(undefined);
 					}),
 				]);
@@ -231,10 +256,10 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 					/>
 					<View style={styles.timesCodeBox}>
 						<Text style={styles.timeCode} key={"current"}>
-							{i18n.strftime(new Date(currentTime - 18000000), "%-H:%M:%S")}
+							{i18n.strftime(new Date(currentTime), "%-H:%M:%S")}
 						</Text>
 						<Text style={styles.timeCode} key={"all"}>
-							{i18n.strftime(new Date(allLength - 18000000), "%-H:%M:%S")}
+							{i18n.strftime(new Date(allLength), "%-H:%M:%S")}
 						</Text>
 					</View>
 				</View>

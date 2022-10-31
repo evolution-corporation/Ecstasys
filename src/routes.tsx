@@ -87,7 +87,7 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
 							}}
 						/>
 					),
-					tabBarIcon: ({ focused }) => (focused ? <ProfileIconSelected /> : <ProfileIconNoSelected />),
+					tabBarIcon: ({ focused }) => (focused ? <DMDIconSelected /> : <DMDIconNoSelected />),
 				}}
 			/>
 			<TabNavigator.Screen
