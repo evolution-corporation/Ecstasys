@@ -220,7 +220,7 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 						<ActivityIndicator color={"#FFFFFF"} size={"large"} />
 					) : (
 						<PlayerControl
-							isPlay={statusDMD === Status.Play}
+							isPlay={statusDMD === Status.Play || statusDMD === Status.Change}
 							pause={pause}
 							play={play}
 							stepBack={async () => {
@@ -249,7 +249,7 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 							}
 						}}
 						onEndChange={() => {
-							if (statusDMD === Status.Change) play();
+							if (statusDMD === Status.Change || statusDMD === Status.Play) play();
 						}}
 					/>
 					<View style={styles.timesCodeBox}>
