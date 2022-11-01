@@ -14,12 +14,13 @@ import { RootScreenProps } from "~types";
 import { convertedImageURLInBase64 } from "~tools";
 import { StatusBar } from "expo-status-bar";
 
-const InputImageAndBirthdayScreen: RootScreenProps<"InputImageAndBirthday"> = ({}) => {
+const InputImageAndBirthdayScreen: RootScreenProps<"InputImageAndBirthday"> = ({ navigation }) => {
 	const appDispatch = useAppDispatch();
 	const SelectImageButtonRef = React.useRef<React.ElementRef<typeof SelectImageButton>>(null);
 	const countBack = React.useRef<number>(0);
 	const registration = async () => {
 		await appDispatch(actions.registrationAccount()).unwrap();
+		navigation.navigate("Greeting");
 	};
 
 	useFocusEffect(

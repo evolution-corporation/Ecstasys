@@ -11,18 +11,20 @@ import type { RootScreenProps } from "~types";
 import { SMSCodeInput, SMSCodeInputInfo, SMSCodeInputInfoShow } from "./components";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { StatusBar } from "expo-status-bar";
+import { actions, useAppDispatch } from "~store";
 
 const SMSCodeInputScreen: RootScreenProps<"InputSMSCode"> = ({ route }) => {
 	const { phoneNumber } = route.params;
 	const refSMSCodeInput = useRef<ElementRef<typeof SMSCodeInput>>(null);
 	const [status, setStatus] = useState<SMSCodeInputInfoShow>(SMSCodeInputInfoShow.requestSMS);
 	const [confirm, setConfirm] = useState<FirebaseAuthTypes.ConfirmationResult | null>(null);
-
+	const appDispatch = useAppDispatch();
 	const checkSMSCode = useCallback(
 		async (code: string) => {
 			setStatus(SMSCodeInputInfoShow.loadingIndicator);
 			if (confirm !== null) {
-				confirm.confirm(code);
+				await confirm.confirm(code);
+				await appDispatch(actions.signInAccount()).unwrap();
 			}
 		},
 		[confirm]

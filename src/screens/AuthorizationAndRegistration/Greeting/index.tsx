@@ -4,7 +4,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, Text, Image, View, Dimensions } from "react-native";
 import Animated from "react-native-reanimated";
 
-import Tools from "~core";
 import { TextButton } from "~components/dump";
 
 import useAnimation from "./animated";
@@ -12,8 +11,13 @@ import { ArrowButtonMask, ArrowButton, Bird } from "./components";
 
 import type { RootScreenProps } from "~types";
 import i18n from "~i18n";
+import gStyle from "~styles";
+import { actions, useAppDispatch } from "~store";
+import * as StatusBar from "expo-status-bar";
+import { useFocusEffect } from "@react-navigation/native";
 
 const GreetingScreen: RootScreenProps<"Greeting"> = ({ navigation }) => {
+	const appDispatch = useAppDispatch();
 	const { aStyles, setNextValue, setPrevValue } = useAnimation();
 	const [text, setText] = useState<{ title: string; description: string }>({
 		title: i18n.t("b5bc86ea-4af9-49ac-bb9f-319069df78ee"),
@@ -22,9 +26,7 @@ const GreetingScreen: RootScreenProps<"Greeting"> = ({ navigation }) => {
 	const [isShowSkipButton, setIsShowSkipButton] = useState<boolean>(true);
 	const nextPage = useCallback(async () => {
 		if (!isShowSkipButton) {
-			if (navigation.canGoBack()) {
-				navigation.goBack();
-			}
+			appDispatch(actions.setRegistrationAccountStatus());
 		} else {
 			setNextValue();
 			setText({
@@ -43,9 +45,17 @@ const GreetingScreen: RootScreenProps<"Greeting"> = ({ navigation }) => {
 		});
 		setIsShowSkipButton(true);
 	}, []);
+	useFocusEffect(
+		useCallback(() => {
+			StatusBar.setStatusBarTranslucent(true);
+			StatusBar.setStatusBarStyle("light");
+			console.log("focus");
+		}, [])
+	);
 
 	return (
 		<Animated.View style={[aStyles.background, styles.background]}>
+			<StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
 			<Animated.View style={[aStyles.professor, styles.professor]}>
 				<Image source={require("./assets/professor.png")} />
 			</Animated.View>
@@ -59,7 +69,9 @@ const GreetingScreen: RootScreenProps<"Greeting"> = ({ navigation }) => {
 				</Animated.Text>
 				<View style={styles.menuButton}>
 					{isShowSkipButton ? (
-						<TextButton>{i18n.t("skip")}</TextButton>
+						<TextButton onPress={() => appDispatch(actions.setRegistrationAccountStatus())}>
+							{i18n.t("skip")}
+						</TextButton>
 					) : (
 						<ArrowButton onPress={() => prevPage()} color={"#9765A8"} />
 					)}
@@ -100,7 +112,7 @@ const styles = StyleSheet.create({
 	},
 	description: {
 		fontSize: 20,
-		...Tools.gStyle.font("400"),
+		...gStyle.font("400"),
 		color: "#404040",
 		opacity: 0.71,
 		marginVertical: 26,

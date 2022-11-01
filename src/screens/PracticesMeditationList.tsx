@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
 	Text,
 	TouchableOpacity,
@@ -18,11 +18,11 @@ import { DoubleColorView } from "~components/containers";
 import Tools from "~core";
 import { GeneralCompositeScreenProps, PracticesMeditation } from "~types";
 import { CategoryCard } from "~components/dump";
-import { Request } from "~api";
+import { Request, Storage } from "~api";
 import { StatusBar } from "expo-status-bar";
+import { useFocusEffect } from "@react-navigation/native";
 
 const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) => {
-	// useShowIntro("@IsFirstShownPractices", () => navigation.navigate("IntroPractices"), [navigation.isFocused()]);
 	const [countPractices, setCountPractices] = useState<{ [key: string]: number | null }>({
 		basic: null,
 		relaxation: null,
@@ -56,6 +56,19 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 			]);
 		})();
 	}, []);
+
+	useFocusEffect(
+		useCallback(() => {
+			const init = async () => {
+				const result = await Storage.getStatusShowGreetingScreens();
+				console.log(result);
+				if (!result.DescriptionPractices) {
+					navigation.navigate("IntroPractices");
+				}
+			};
+			init();
+		}, [])
+	);
 
 	return (
 		<DoubleColorView

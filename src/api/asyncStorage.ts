@@ -87,7 +87,7 @@ export async function setStatusShowGreetingScreen(
 		AsyncStorageKey.STATUS_SHOW_GREETING_SCREEN,
 		Object.entries(state)
 			.filter(([key, value]) => value)
-			.map(([key, value]) => value)
+			.map(([key, value]) => key)
 	);
 	return state;
 }

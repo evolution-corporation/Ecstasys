@@ -182,7 +182,7 @@ const RootRoutes: FC = () => {
 						}}
 					/>
 
-					<RootNavigation.Screen name={"Greeting"} component={Screens.Greeting} />
+					<RootNavigation.Screen name={"Greeting"} component={Screens.Greeting} options={{ headerShown: false }} />
 				</>
 			);
 			break;
@@ -277,8 +277,14 @@ const RootRoutes: FC = () => {
 					<RootNavigation.Screen
 						name={"MessageLog"}
 						component={Screens.MessageLog}
-						options={{ presentation: "transparentModal" }}
+						options={{ presentation: "transparentModal", headerShown: false }}
 					/>
+					<RootNavigation.Screen
+						name={"IntroPractices"}
+						component={Screens.IntroPractices}
+						options={{ headerShown: false }}
+					/>
+					<RootNavigation.Screen name={"DMDIntro"} component={Screens.DMDIntro} options={{ headerShown: false }} />
 				</>
 			);
 	}

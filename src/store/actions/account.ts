@@ -15,6 +15,7 @@ enum AccountAction {
 	signOut = "account/signOut",
 	signIn = "account/signIn",
 	getData = "account/getAccountData",
+	setRegistrationAccountStatus = "account/setRegistrationAccountStatus",
 }
 
 interface SetChangedAccountDataParams {
@@ -135,3 +136,5 @@ export const signInAccount = createAsyncThunk<
 	}
 	return { user, subscribe, id: userFirebase.uid };
 });
+
+export const setRegistrationAccountStatus = createAction(AccountAction.setRegistrationAccountStatus);

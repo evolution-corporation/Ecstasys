@@ -14,7 +14,7 @@ import i18n from "~i18n";
 import { CarouselPractices } from "~components/dump";
 import { useFocusEffect } from "@react-navigation/native";
 import { actions, useAppDispatch } from "~store";
-import { Converter, Request } from "~api";
+import { Converter, Request, Storage } from "~api";
 import { StatusBar } from "expo-status-bar";
 
 const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => {
@@ -47,6 +47,20 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 			navigation.navigate("SelectSet", { selectedRelax: practiceList[practiceIndex] });
 		}
 	};
+
+	useFocusEffect(
+		useCallback(() => {
+			const init = async () => {
+				const result = await Storage.getStatusShowGreetingScreens();
+				console.log(result);
+				if (!result.DescriptionDMD) {
+					navigation.navigate("DMDIntro");
+				}
+			};
+			init();
+		}, [])
+	);
+
 	return (
 		<DoubleColorView style={styles.background} heightViewPart={height / 2 - 100}>
 			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />

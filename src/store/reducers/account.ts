@@ -97,7 +97,7 @@ export default createReducer<AccountState>(
 			state.currentData = payload;
 			state.uid = payload.uid;
 			state.changeData = {};
-			state.status = "REGISTRATION";
+			// state.status = "REGISTRATION";
 		});
 		builder.addCase(Actions.updateAccount.fulfilled, (state, { payload }) => {
 			state.changeData = {};
@@ -111,6 +111,9 @@ export default createReducer<AccountState>(
 				...Object.fromEntries(Object.entries(state.changeData).filter(([key, value]) => value !== undefined)),
 				...Object.fromEntries(Object.entries(payload).filter(([key, value]) => value !== undefined)),
 			};
+		});
+		builder.addCase(Actions.setRegistrationAccountStatus, state => {
+			state.status = "REGISTRATION";
 		});
 	}
 );

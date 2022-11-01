@@ -1,19 +1,21 @@
 /** @format */
 
-import React, { ElementRef, useRef, useState } from "react";
+import React, { ElementRef, useCallback, useRef, useState } from "react";
 import { StyleSheet, Text, View, Image, Button, Pressable, Dimensions } from "react-native";
 import Animated from "react-native-reanimated";
 import Swiper from "react-native-swiper";
 import i18n from "~i18n";
 
-import Core from "~core";
 import { ColorButton, TextButton } from "~components/dump";
 
 import useAnimation from "./animation";
 import Arrow from "./assets/Arrow.svg";
 import ArrowLeft from "./assets/arrowLeft.svg";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import type { RootScreenProps } from "~types";
+import gStyle from "~styles";
+import { GreetingScreen, RootScreenProps } from "~types";
+import { useFocusEffect } from "@react-navigation/native";
+import * as StatusBar from "expo-status-bar";
+import { Storage } from "~api";
 
 const swiperContent = [
 	{
@@ -54,8 +56,21 @@ const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation })
 	const refSwiper = useRef<ElementRef<typeof Swiper>>(null);
 	const indexSwiper = useRef<number>(0);
 
+	useFocusEffect(
+		useCallback(() => {
+			StatusBar.setStatusBarTranslucent(true);
+			StatusBar.setStatusBarStyle("light");
+		}, [])
+	);
+
+	const end = async () => {
+		await Storage.setStatusShowGreetingScreen(GreetingScreen.DESCRIPTION_PRACTICES);
+		navigation.navigate("PracticesList");
+	};
+
 	return (
 		<View style={styles.background}>
+			<StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
 			<Animated.View style={[styles.birdProffessor, aStyle.bird]}>
 				<Image source={require("./assets/BirdProfessor.png")} />
 			</Animated.View>
@@ -90,15 +105,7 @@ const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation })
 			</View>
 			<View style={styles.buttonControl}>
 				{isGreeting ? (
-					<TextButton
-						onPress={() => {
-							if (navigation.canGoBack()) {
-								navigation.goBack();
-							}
-						}}
-					>
-						{i18n.t("skip")}
-					</TextButton>
+					<TextButton onPress={() => end()}>{i18n.t("skip")}</TextButton>
 				) : (
 					<Pressable
 						onPress={() => {
@@ -162,7 +169,7 @@ const styles = StyleSheet.create({
 		color: "rgba(64, 64, 64, 0.71)",
 		marginHorizontal: 20,
 		fontSize: 16,
-		...Core.gStyle.font("400"),
+		...gStyle.font("400"),
 		marginTop: 26,
 	},
 	buttonControl: {
@@ -197,7 +204,7 @@ const styles = StyleSheet.create({
 		color: "rgba(64, 64, 64, 0.71)",
 		fontSize: 16,
 		lineHeight: 22,
-		...Core.gStyle.font("400"),
+		...gStyle.font("400"),
 		textAlign: "center",
 		marginHorizontal: 20,
 	},

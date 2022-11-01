@@ -244,6 +244,7 @@ export type RootStackList = {
 	SelectSet: {
 		selectedRelax: State.Practice & { type: "RELAXATION" };
 	};
+	DMDIntro: undefined;
 };
 
 export type RootScreenProps<T extends keyof RootStackList> = FC<NativeStackScreenProps<RootStackList, T>>;

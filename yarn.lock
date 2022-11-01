@@ -7554,7 +7554,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eas-cli@npm:^2.1.0":
+"eas-cli@npm:^2.6.0":
   version: 2.6.0
   resolution: "eas-cli@npm:2.6.0"
   dependencies:
@@ -7669,7 +7669,7 @@ __metadata:
     "@types/validator": ^13.7.3
     babel-jest: ^29.1.2
     bluebird: ^3.7.2
-    eas-cli: ^2.1.0
+    eas-cli: ^2.6.0
     expo: ~46.0.13
     expo-av: ~12.0.4
     expo-blur: ~11.2.0

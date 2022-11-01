@@ -100,7 +100,6 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 			);
 			StatusBar.setStatusBarTranslucent(true);
 			StatusBar.setStatusBarStyle("light");
-			console.log("focus");
 		}, [])
 	);
 
