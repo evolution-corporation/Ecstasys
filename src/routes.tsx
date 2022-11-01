@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { FC, memo } from "react";
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 
@@ -27,6 +27,7 @@ import DMDIconNoSelected from "assets/icons/DMDNoSelectedIcon.svg";
 
 import { useAppSelector } from "~store";
 import { RootScreenProps, RootStackList, State, TabNavigatorList } from "~types";
+import { createStackNavigator } from "@react-navigation/stack";
 
 const TabNavigator = createBottomTabNavigator<TabNavigatorList>();
 
@@ -50,6 +51,13 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
 				},
 				tabBarStyle: {
 					height: 75,
+					width: "100%",
+					alignItems: "center",
+				},
+				tabBarItemStyle: {
+					flex: 0,
+					paddingHorizontal: 40,
+					maxWidth: Dimensions.get("window").width / 4,
 				},
 			}}
 		>
@@ -67,7 +75,14 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
 				component={Screens.PracticesList}
 				options={{
 					title: i18n.t("c08bb9d1-1769-498e-acf5-8c37c18bed05"),
-					headerRight: () => <UserButton style={{ marginRight: 20 }} image={image} nickname={nickName} />,
+					headerRight: () => (
+						<UserButton
+							style={{ marginRight: 20 }}
+							image={image}
+							nickname={nickName}
+							onPress={() => navigation.navigate("Profile")}
+						/>
+					),
 					tabBarIcon: ({ focused }) => (focused ? <PracticesIconSelected /> : <PracticesIconNoSelected />),
 				}}
 			/>
@@ -75,18 +90,16 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
 				name={"RelaxListForDMD"}
 				component={Screens.RelaxListForDMD}
 				options={{
+					title: i18n.t("DMD"),
 					headerRight: () => (
-						<ColorButton
-							secondItem={<TreeLine />}
-							styleButton={{
-								backgroundColor: "transparent",
-								marginRight: 17,
-							}}
-							onPress={() => {
-								navigation.navigate("Options");
-							}}
+						<UserButton
+							style={{ marginRight: 20 }}
+							image={image}
+							nickname={nickName}
+							onPress={() => navigation.navigate("Profile")}
 						/>
 					),
+
 					tabBarIcon: ({ focused }) => (focused ? <DMDIconSelected /> : <DMDIconNoSelected />),
 				}}
 			/>
@@ -113,11 +126,164 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
 	);
 };
 
-const RootNavigation = createSharedElementStackNavigator<RootStackList>();
+const RootNavigation = createStackNavigator<RootStackList>();
 
 const RootRoutes: FC = () => {
 	const accountStatus = useAppSelector(store => store.account.status);
 	if (accountStatus === "IS_LOADING") return null;
+	let screenList;
+	switch (accountStatus) {
+		case "NO_AUTHENTICATION":
+			screenList = (
+				<>
+					<RootNavigation.Screen
+						name={"IntroAboutApp"}
+						component={Screens.IntroAboutApp}
+						options={{ headerShown: false }}
+					/>
+					<RootNavigation.Screen
+						name={"IntroAboutYou"}
+						component={Screens.IntroAboutYou}
+						options={{ headerShown: false }}
+					/>
+					<RootNavigation.Screen
+						name={"SelectMethodAuthentication"}
+						component={Screens.SelectMethodAuthentication}
+						options={{ headerShown: false }}
+					/>
+					<RootNavigation.Screen
+						name={"InputNumberPhone"}
+						component={Screens.InputNumberPhone}
+						options={{
+							title: i18n.t("aa8609dd-caa8-4563-a1b5-e4cb896d03ae"),
+							headerTitleAlign: "center",
+							headerLeft: () => null,
+						}}
+					/>
+					<RootNavigation.Screen name={"InputSMSCode"} component={Screens.InputSMSCode} options={{ title: "" }} />
+				</>
+			);
+			break;
+		case "NO_REGISTRATION":
+			screenList = (
+				<>
+					<RootNavigation.Screen
+						name={"InputNickname"}
+						component={Screens.InputNickname}
+						options={{ title: i18n.t("323361e3-4ef1-4935-b3b2-03494b482a77"), headerTitleAlign: "center" }}
+					/>
+					<RootNavigation.Screen
+						name={"InputImageAndBirthday"}
+						component={Screens.InputImageAndBirthday}
+						options={{
+							title: i18n.t("01e5182d-f190-4bcb-9668-36a193e18325"),
+							headerTitleAlign: "center",
+							headerLeft: () => null,
+						}}
+					/>
+
+					<RootNavigation.Screen name={"Greeting"} component={Screens.Greeting} />
+				</>
+			);
+			break;
+		default:
+			screenList = (
+				<>
+					<RootNavigation.Screen name={"TabNavigator"} component={TabRoutes} options={{ headerShown: false }} />
+					<RootNavigation.Screen
+						name={"Options"}
+						component={Screens.Options}
+						options={{ title: i18n.t("options"), headerTitleAlign: "center" }}
+					/>
+					<RootNavigation.Screen
+						name={"FavoriteMeditation"}
+						component={Screens.FavoriteMeditation}
+						options={{ title: i18n.t("6a85652b-a14f-4545-8058-9cdad43f3de1"), headerTitleAlign: "center" }}
+					/>
+					<RootNavigation.Screen
+						name={"EditUser"}
+						component={Screens.EditUser}
+						options={{ title: i18n.t("Profile"), headerTitleAlign: "center" }}
+					/>
+					<RootNavigation.Screen
+						name={"EditUserBirthday"}
+						component={Screens.EditUserBirthday}
+						options={{ presentation: "transparentModal", headerShown: false }}
+					/>
+					<RootNavigation.Screen
+						name={"SelectSet"}
+						component={Screens.SelectSet}
+						options={{ title: i18n.t("DMD"), headerTitleAlign: "center" }}
+						// sharedElements={({ params }) => {
+						// 	const { id } = params.selectedRelax as State.Practice;
+						// 	return [`practice.item.${id}`];
+						// }}
+					/>
+					<RootNavigation.Screen
+						name={"DMDSettingNotification"}
+						component={Screens.DMDSettingNotification}
+						options={{ headerTitleAlign: "center", headerTransparent: true }}
+					/>
+					<RootNavigation.Screen
+						name={"DMDSelectTimeBright"}
+						component={Screens.DMDSelectTimeBright}
+						options={{ presentation: "transparentModal", headerShown: false }}
+					/>
+					<RootNavigation.Screen
+						name={"PlayerForDMD"}
+						component={Screens.PlayerForDMD}
+						options={{
+							headerTransparent: true,
+							headerTitleAlign: "center",
+						}}
+					/>
+
+					<RootNavigation.Screen
+						name={"PracticeListByType"}
+						component={Screens.PracticeListByType}
+						options={{ headerTitleAlign: "center" }}
+					/>
+					<RootNavigation.Screen
+						name={"SelectTimeForRelax"}
+						component={Screens.SelectTimeForRelax}
+						options={{ headerTitleAlign: "center", headerTransparent: true }}
+
+						// sharedElements={({ params }) => {
+						// 	const { id } = params.selectedPractice as State.Practice;
+						// 	return [`practice.item.${id}`];
+						// }}
+					/>
+					<RootNavigation.Screen
+						name={"PlayerForRelaxation"}
+						component={Screens.PlayerForRelaxation}
+						options={{
+							headerTransparent: true,
+							headerTitleAlign: "center",
+						}}
+						// sharedElements={route => {
+						// 	const { imageId } = route.params;
+						// 	return [{ id: `item.${imageId}`, animation: "move" }];
+						// }}
+					/>
+					<RootNavigation.Screen
+						name={"SelectBackgroundSound"}
+						component={Screens.SelectBackgroundSound}
+						options={{
+							headerTransparent: true,
+							headerTitleAlign: "center",
+							title: i18n.t("12ee6d3a-ad58-4c4a-9b87-63645efe9c90"),
+						}}
+					/>
+					<RootNavigation.Screen
+						name={"MessageLog"}
+						component={Screens.MessageLog}
+						options={{ presentation: "transparentModal" }}
+					/>
+				</>
+			);
+	}
+	{
+	}
 	return (
 		<RootNavigation.Navigator
 			screenOptions={{
@@ -132,96 +298,7 @@ const RootRoutes: FC = () => {
 				},
 			}}
 		>
-			{accountStatus === "NO_AUTHENTICATION" && (
-				<>
-					<RootNavigation.Screen name={"SelectMethodAuthentication"} component={Screens.SelectMethodAuthentication} />
-				</>
-			)}
-
-			{accountStatus === "NO_REGISTRATION" && (
-				<>
-					<RootNavigation.Screen name={"InputNickname"} component={Screens.InputNickname} />
-					<RootNavigation.Screen name={"InputImageAndBirthday"} component={Screens.InputImageAndBirthday} />
-					<RootNavigation.Screen name={"Greeting"} component={Screens.Greeting} />
-				</>
-			)}
-
-			{accountStatus === "REGISTRATION" && (
-				<>
-					<RootNavigation.Screen name={"TabNavigator"} component={TabRoutes} options={{ headerShown: false }} />
-					<RootNavigation.Screen name={"Options"} component={Screens.Options} />
-					<RootNavigation.Screen name={"FavoriteMeditation"} component={Screens.FavoriteMeditation} />
-					<RootNavigation.Screen name={"EditUser"} component={Screens.EditUser} />
-					<RootNavigation.Screen
-						name={"EditUserBirthday"}
-						component={Screens.EditUserBirthday}
-						options={{ presentation: "transparentModal" }}
-					/>
-					<RootNavigation.Screen
-						name={"SelectSet"}
-						component={Screens.SelectSet}
-						sharedElements={({ params }) => {
-							const { id } = params.selectedRelax as State.Practice;
-							return [`practice.item.${id}`];
-						}}
-					/>
-					<RootNavigation.Screen
-						name={"DMDSettingNotification"}
-						component={Screens.DMDSettingNotification}
-						initialParams={{
-							optionState: {
-								id: "6387521c-adb7-49b7-8a0f-5882eacc35af",
-								description: "test",
-								image:
-									"https://storage.yandexcloud.net/dmdmeditationimage/meditations/00bcbd42-038b-4ef7-95b5-9b8e3a592ef9.png",
-								audio: "https://storage.yandexcloud.net/dmdmeditatonaudio/6387521c-adb7-49b7-8a0f-5882eacc35af.mp3",
-								instruction: { body: [{ text: "rest" }], description: "te", id: "asd", title: "aseasae" },
-								isNeedSubscribe: false,
-								length: 1059000,
-								name: "test practive",
-								type: "RELAXATION",
-							},
-							setState: {
-								audio:
-									"https://storage.yandexcloud.net/dmdmeditatonaudio/01.%20%D0%94%D0%9C%D0%94-01-%20%D1%85%D0%BE%D1%80..mp3",
-								id: "106e64db-5e50-4326-822a-beb77d6dcdf7",
-								length: 4593000,
-								name: "TestSet",
-							},
-						}}
-					/>
-					<RootNavigation.Screen
-						name={"DMDSelectTimeBright"}
-						component={Screens.DMDSelectTimeBright}
-						options={{ presentation: "transparentModal" }}
-					/>
-					<RootNavigation.Screen name={"PlayerForDMD"} component={Screens.PlayerForDMD} />
-
-					<RootNavigation.Screen name={"PracticeListByType"} component={Screens.PracticeListByType} />
-					<RootNavigation.Screen
-						name={"SelectTimeForRelax"}
-						component={Screens.SelectTimeForRelax}
-						sharedElements={({ params }) => {
-							const { id } = params.selectedPractice as State.Practice;
-							return [`practice.item.${id}`];
-						}}
-					/>
-					<RootNavigation.Screen
-						name={"PlayerForPractice"}
-						component={Screens.PlayerForPractice}
-						sharedElements={route => {
-							const { imageId } = route.params;
-							return [{ id: `item.${imageId}`, animation: "move" }];
-						}}
-					/>
-					<RootNavigation.Screen name={"SelectBackgroundSound"} component={Screens.SelectBackgroundSound} />
-					<RootNavigation.Screen
-						name={"MessageLog"}
-						component={Screens.MessageLog}
-						options={{ presentation: "transparentModal" }}
-					/>
-				</>
-			)}
+			{screenList}
 		</RootNavigation.Navigator>
 	);
 };
@@ -257,4 +334,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default memo(RootRoutes);
+export default RootRoutes;

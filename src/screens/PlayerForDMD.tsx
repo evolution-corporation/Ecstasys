@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { Image, StyleSheet, View, Text, Pressable, ActivityIndicator } from "react-native";
 import Animated from "react-native-reanimated";
 
@@ -13,6 +13,8 @@ import { useAppSelector } from "~store";
 import i18n from "~i18n";
 import gStyle from "~styles";
 import { SharedElement } from "react-navigation-shared-element";
+import * as StatusBar from "expo-status-bar";
+import { useFocusEffect } from "@react-navigation/native";
 
 enum Status {
 	Loading,
@@ -203,9 +205,19 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 		await update(millisecond);
 		if (needPlay) await play();
 	};
-
+	useFocusEffect(
+		useCallback(() => {
+			StatusBar.setStatusBarTranslucent(true);
+			StatusBar.setStatusBarStyle("light");
+			navigation.setOptions({
+				title: selectedRelax.name,
+			});
+		}, [])
+	);
 	return (
 		<View style={{ flex: 1 }}>
+			<StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
+
 			<SharedElement id={`practice.item.${selectedRelax.id}`} style={styles.imageBackground}>
 				<Image
 					source={{

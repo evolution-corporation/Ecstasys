@@ -11,6 +11,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import RootRoutes from "./routes";
 import Store, { actions } from "./store";
 import "./TaskManager";
+import * as StatusBar from "expo-status-bar";
 
 if (Platform.OS === "android") {
 	if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -21,6 +22,8 @@ const AppCore = () => {
 	React.useEffect(() => {
 		console.log("AppLoading");
 		(async () => {
+			StatusBar.setStatusBarBackgroundColor("#FFFFFF", true);
+			StatusBar.setStatusBarStyle("dark");
 			await SplashScreen.preventAutoHideAsync();
 			try {
 				await Store.dispatch(actions.initialization()).unwrap();

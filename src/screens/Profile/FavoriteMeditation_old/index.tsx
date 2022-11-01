@@ -4,16 +4,18 @@ import React from "react";
 import { View, Text, FlatList, StyleSheet, ScrollView, TouchableOpacity, Image } from "react-native";
 import { DoubleColorView } from "~components/containers";
 import core from "~core";
-import { RootScreenProps } from "src/routes";
+import { RootScreenProps } from "src/types";
 import i18n from "~i18n";
 
 import { useFavoriteMeditation } from "./hooks";
+import { StatusBar } from "expo-status-bar";
 
 const FavoriteMeditationScreen: RootScreenProps<"FavoriteMeditation"> = ({ navigation }) => {
 	const { listFavoriteMeditation, typesMeditation } = useFavoriteMeditation();
 
 	return (
 		<DoubleColorView style={styles.background} heightViewPart={140}>
+			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
 			<ScrollView showsVerticalScrollIndicator={false}>
 				{typesMeditation.map((typeMeditation, index) => (
 					<View key={typeMeditation} style={styles.favoriteTypeMeditationCard}>

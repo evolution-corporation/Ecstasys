@@ -10,6 +10,7 @@ import type { RootScreenProps } from "~types";
 
 import { SMSCodeInput, SMSCodeInputInfo, SMSCodeInputInfoShow } from "./components";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import { StatusBar } from "expo-status-bar";
 
 const SMSCodeInputScreen: RootScreenProps<"InputSMSCode"> = ({ route }) => {
 	const { phoneNumber } = route.params;
@@ -42,6 +43,7 @@ const SMSCodeInputScreen: RootScreenProps<"InputSMSCode"> = ({ route }) => {
 
 	return (
 		<View style={styles.background}>
+			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
 			<Text style={styles.header}>{i18n.t("cfdefbe6-ae49-4e17-8628-bbe46d144418")}</Text>
 			<SMSCodeInput ref={refSMSCodeInput} autoFocus onEndInput={checkSMSCode} />
 			<SMSCodeInputInfo status={status} style={styles.SMSCodeInputInfoStyle} onPress={requestSMSCode} seconds={160} />

@@ -47,10 +47,7 @@ const PlayerControl: React.FC<Props> = props => {
 		transform: [{ translateX: withTiming(rightValueTranslateX.value) }],
 	}));
 
-	const textRewindMillisecond = React.useMemo(
-		() => i18n.strftime(new Date(rewindMillisecond), "%S"),
-		[rewindMillisecond]
-	);
+	const textRewindMillisecond = i18n.strftime(new Date(rewindMillisecond), "%S");
 
 	return (
 		<View {...props} style={[styles.background, style]}>

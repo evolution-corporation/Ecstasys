@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 import { Text, StyleSheet, useWindowDimensions, Dimensions } from "react-native";
 import { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
@@ -13,16 +13,15 @@ import { DoubleColorView } from "~components/containers";
 import i18n from "~i18n";
 import DescriptionPrentices from "assets/descriptionPrentices.json";
 import { CarouselPractices } from "~components/dump";
-import { Practice } from "src/models";
-import { useFocusEffect } from "@react-navigation/native";
 import { actions, useAppDispatch } from "~store";
 import { Converter, Request } from "~api";
 import { SupportType } from "src/api/types";
+import { StatusBar } from "expo-status-bar";
 
 const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navigation }) => {
 	const { typePractices } = route.params;
 	const { height } = useWindowDimensions();
-	const [selectedPracticeId, setSelectedPracticeId] = useState<string | null>(null);
+	const selectedPracticeId = React.useRef<string | null>(null);
 	const [practiceList, setPracticeList] = useState<State.Practice[]>([]);
 	const dispatch = useAppDispatch();
 	const opacityButton = useSharedValue(1);
@@ -32,47 +31,35 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 		})),
 	};
 
-	useFocusEffect(
-		useCallback(() => {
-			(async () => {
-				if (typePractices !== PracticesMeditation.BASIC) {
-					let typePractice: SupportType.TypeMeditation;
-					switch (typePractices) {
-						case PracticesMeditation.RELAXATION:
-							typePractice = "relaxation";
-							break;
-						case PracticesMeditation.BREATHING_PRACTICES:
-							typePractice = "breathtakingPractice";
-							break;
-						case PracticesMeditation.DANCE_PSYCHOTECHNICS:
-							typePractice = "dancePsychotechnics";
-							break;
-						case PracticesMeditation.DIRECTIONAL_VISUALIZATIONS:
-							typePractice = "directionalVisualizations";
-							break;
-						default:
-							throw new Error("Not found Type");
-					}
-					const newListPractice = (await Request.getMeditationsByType(typePractice))
-						.map(practice => Converter.composePractice(practice))
-						.filter(practice => practice !== null) as State.Practice[];
-					setPracticeList(newListPractice);
+	React.useLayoutEffect(() => {
+		navigation.setOptions({ title: i18n.t(typePractices) });
+		const init = async () => {
+			if (typePractices !== PracticesMeditation.BASIC) {
+				let typePractice: SupportType.TypeMeditation;
+				switch (typePractices) {
+					case PracticesMeditation.RELAXATION:
+						typePractice = "relaxation";
+						break;
+					case PracticesMeditation.BREATHING_PRACTICES:
+						typePractice = "breathtakingPractice";
+						break;
+					case PracticesMeditation.DANCE_PSYCHOTECHNICS:
+						typePractice = "dancePsychotechnics";
+						break;
+					case PracticesMeditation.DIRECTIONAL_VISUALIZATIONS:
+						typePractice = "directionalVisualizations";
+						break;
+					default:
+						throw new Error("Not found Type");
 				}
-			})();
-		}, [])
-	);
-
-	const showInstruction = useMemo(() => {
-		// switch (typeMeditation) {
-		// 	case "relaxation":
-		// 		return relaxationInstruction;
-		// 	case "directionalVisualizations":
-		// 		return InstructionDirectionalVisualization;
-		// 	default:
-		// 		return DefaultInstruction;
-		// }
-	}, [typePractices]);
-
+				const newListPractice = (await Request.getMeditationsByType(typePractice))
+					.map(practice => Converter.composePractice(practice))
+					.filter(practice => practice !== null) as State.Practice[];
+				setPracticeList([...newListPractice]);
+			}
+		};
+		init();
+	}, []);
 	const onClick = (practiceId: string) => {
 		const practiceIndex = practiceList.findIndex(item => item.id === practiceId);
 		if (practiceIndex !== -1) {
@@ -87,9 +74,10 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 			}
 		}
 	};
-
 	return (
 		<DoubleColorView style={styles.background} heightViewPart={height / 2 - 100}>
+			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
+
 			<ColorButton
 				animationStyle={aStyle.button}
 				styleButton={styles.buttonInstruction}
@@ -104,22 +92,24 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 				<CarouselPractices
 					data={practiceList}
 					style={{ width: Dimensions.get("window").width, left: -20 }}
-					onPress={practiceId => {
-						onClick(practiceId);
+					onPress={onClick}
+					onChange={(practiceId: string | null) => {
+						selectedPracticeId.current = practiceId;
 					}}
-					onChange={setSelectedPracticeId}
 				/>
 			)}
-			<ColorButton
-				animationStyle={aStyle.button}
-				styleButton={styles.button}
-				styleText={styles.buttonText}
-				onPress={() => {
-					if (selectedPracticeId !== null) onClick(selectedPracticeId);
-				}}
-			>
-				{i18n.t("1a2b0df6-fa67-4f71-8fd4-be1f0a576439")}
-			</ColorButton>
+			{height >= 800 && (
+				<ColorButton
+					animationStyle={aStyle.button}
+					styleButton={styles.button}
+					styleText={styles.buttonText}
+					onPress={() => {
+						if (selectedPracticeId.current !== null) onClick(selectedPracticeId.current);
+					}}
+				>
+					{i18n.t("1a2b0df6-fa67-4f71-8fd4-be1f0a576439")}
+				</ColorButton>
+			)}
 		</DoubleColorView>
 	);
 };
@@ -137,7 +127,7 @@ const styles = StyleSheet.create({
 	},
 	background: {
 		paddingHorizontal: 20,
-		// justifyContent: "space-between",
+		justifyContent: "space-between",
 		flex: 1,
 	},
 	carouselMeditation: {

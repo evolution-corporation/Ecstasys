@@ -2,21 +2,22 @@
 
 import { useBackHandler } from "@react-native-community/hooks";
 import { useFocusEffect } from "@react-navigation/native";
-import React, { useCallback, useRef } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import React, { useCallback } from "react";
+import { View, StyleSheet, Text, Platform, BackHandler } from "react-native";
 import auth from "@react-native-firebase/auth";
-import { Account } from "src/models";
 import i18n from "~i18n";
 
 import { ColorButton, SelectImageButton, SelectBirthday } from "~components/dump";
 import Tools from "~core";
-import { actions, useAppDispatch, useAppSelector } from "~store";
+import { actions, useAppDispatch } from "~store";
 import { RootScreenProps } from "~types";
 import { convertedImageURLInBase64 } from "~tools";
+import { StatusBar } from "expo-status-bar";
 
 const InputImageAndBirthdayScreen: RootScreenProps<"InputImageAndBirthday"> = ({}) => {
 	const appDispatch = useAppDispatch();
 	const SelectImageButtonRef = React.useRef<React.ElementRef<typeof SelectImageButton>>(null);
+	const countBack = React.useRef<number>(0);
 	const registration = async () => {
 		await appDispatch(actions.registrationAccount()).unwrap();
 	};
@@ -35,10 +36,21 @@ const InputImageAndBirthdayScreen: RootScreenProps<"InputImageAndBirthday"> = ({
 		}, [])
 	);
 
-	useBackHandler(() => true);
+	useBackHandler(() => {
+		if (countBack.current > 2) {
+			if (Platform.OS === "android") {
+				BackHandler.exitApp();
+			}
+			return true;
+		} else {
+			countBack.current += 1;
+			return true;
+		}
+	});
 
 	return (
 		<View style={styles.background}>
+			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
 			<View style={{ alignItems: "center" }}>
 				<Text style={styles.helper}>{i18n.t("f22ace97-97e5-4f87-b1b7-c179f1d7e893")}</Text>
 				<SelectImageButton

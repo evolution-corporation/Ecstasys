@@ -1,8 +1,7 @@
 /** @format */
 
-export { default as Intro } from "./AuthorizationAndRegistration/Intro";
 export { default as SelectMethodAuthentication } from "./SelectMethodAuthentication";
-export { default as InputNumberPhone } from "./AuthorizationAndRegistration/InputNumberPhone";
+export { default as InputNumberPhone } from "./InputNumberPhone";
 export { default as InputSMSCode } from "./AuthorizationAndRegistration/InputSMSCode";
 export { default as InputNickname } from "./InputNickname";
 export { default as InputImageAndBirthday } from "./InputImageAndBirthday";
@@ -12,7 +11,7 @@ export { default as EditUserBirthday } from "./EditUserBirthday";
 export { default as SelectSubscribe } from "./Subscribe/SelectSubscribe";
 export { default as ResultSubscribe } from "./Subscribe/ResultSubscribe";
 export { default as PracticeListByType } from "./PracticeListByType";
-export { default as PlayerMeditationPractices } from "./PlayerForPractice";
+export { default as PlayerMeditationPractices } from "./PlayerForRelaxation";
 export { default as SelectTimeForRelax } from "./SelectTimeForRelax";
 export { default as IntroPractices } from "./Practices/Intro";
 export { default as DMDIntro } from "./Practices/IntroDMD";
@@ -24,7 +23,7 @@ export { default as PaymentWeb } from "./Subscribe/PaymentWeb";
 export { default as Main } from "./Main";
 export { default as Profile } from "./Profile";
 export { default as PracticesList } from "./PracticesMeditationList";
-export { default as PlayerForPractice } from "./PlayerForPractice";
+export { default as PlayerForRelaxation } from "./PlayerForRelaxation";
 export { default as SelectBackgroundSound } from "./SelectBackgroundSound";
 export { default as PlayerForDMD } from "./PlayerForDMD";
 export { default as DMDSettingNotification } from "./DMDSettingNotification";
@@ -32,6 +31,9 @@ export { default as DMDSelectTimeBright } from "./DMDSelectTimeBright";
 export { default as MessageLog } from "./MessageLog";
 export { default as RelaxListForDMD } from "./RelaxListForDMD";
 export { default as SelectSet } from "./SelectSet";
+
+export { default as IntroAboutApp } from "./IntroAboutApp";
+export { default as IntroAboutYou } from "./IntroAboutYou";
 // export const TabsScreen = {
 // 	Main,
 // 	Profile,

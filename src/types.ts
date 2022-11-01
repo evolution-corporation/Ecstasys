@@ -205,7 +205,8 @@ export type RootStackList = {
 	Options: undefined;
 	devSetting: undefined;
 	Payment: undefined;
-	Intro: undefined;
+	IntroAboutApp: undefined;
+	IntroAboutYou: undefined;
 	SelectMethodAuthentication: undefined;
 	InputNumberPhone: undefined;
 	InputSMSCode: {
@@ -213,7 +214,7 @@ export type RootStackList = {
 	};
 	InputNickname: undefined;
 	InputImageAndBirthday: undefined;
-	PlayerForPractice: {
+	PlayerForRelaxation: {
 		selectedPractice: State.Practice;
 		practiceLength: number;
 	};

@@ -10,22 +10,16 @@ import {
 	ScrollView,
 	ImageSourcePropType,
 	Dimensions,
-	Pressable,
-	ImageBackground,
-	useWindowDimensions,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import { Feather } from "@expo/vector-icons";
 import i18n from "~i18n";
 
 import { DoubleColorView } from "~components/containers";
 import Tools from "~core";
 import { GeneralCompositeScreenProps, PracticesMeditation } from "~types";
-import { useAppSelector } from "~store";
-import * as Models from "src/models";
 import { CategoryCard } from "~components/dump";
 import { Request } from "~api";
-// import { useCountMeditation } from "./hooks";
+import { StatusBar } from "expo-status-bar";
 
 const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) => {
 	// useShowIntro("@IsFirstShownPractices", () => navigation.navigate("IntroPractices"), [navigation.isFocused()]);
@@ -70,6 +64,8 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 			}}
 			hideElementVioletPart
 		>
+			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
+
 			<ScrollView
 				contentContainerStyle={[topPaddingContent ? { paddingTop: topPaddingContent } : null, styles.background]}
 				showsVerticalScrollIndicator={false}

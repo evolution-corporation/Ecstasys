@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { ElementRef, useCallback, useEffect, useRef, useState } from "react";
-import { View, StyleSheet, Text, Pressable } from "react-native";
+import { View, StyleSheet, Text, Pressable, BackHandler, Platform } from "react-native";
 import auth from "@react-native-firebase/auth";
 
 import { ColorButton } from "~components/dump";
@@ -14,6 +14,8 @@ import i18n from "~i18n";
 
 import CheckMarkerGreen from "~assets/icons/CheckMarkerGreen.svg";
 import { useFocusEffect } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
+import { useBackHandler } from "@react-native-community/hooks";
 
 const InputLoginScreen: RootScreenProps<"InputNickname"> = ({ navigation }) => {
 	const appDispatch = useAppDispatch();
@@ -21,6 +23,7 @@ const InputLoginScreen: RootScreenProps<"InputNickname"> = ({ navigation }) => {
 		if (store.account.changeData.lastCheckNicknameAndResult === undefined) return false;
 		return store.account.changeData.lastCheckNicknameAndResult[1];
 	});
+	const countBack = React.useRef<number>(0);
 
 	const [variableNicknameList, setVariableNicknameList] = useState<string[]>([]);
 	const NicknameBaseRef = useRef<ElementRef<typeof NicknameBase>>(null);
@@ -41,8 +44,24 @@ const InputLoginScreen: RootScreenProps<"InputNickname"> = ({ navigation }) => {
 		}, [])
 	);
 
+	useBackHandler(() => {
+		if (countBack.current > 2) {
+			if (Platform.OS === "android") {
+				BackHandler.exitApp();
+			}
+			return true;
+		} else {
+			countBack.current += 1;
+			setTimeout(() => {
+				if (countBack.current > 0) countBack.current = 0;
+			}, 1000);
+			return true;
+		}
+	});
+
 	return (
 		<View style={styles.background}>
+			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
 			<NicknameBase
 				ref={NicknameBaseRef}
 				onEndChange={processing}

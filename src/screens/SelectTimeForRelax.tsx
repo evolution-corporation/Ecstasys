@@ -4,7 +4,7 @@
 //TODO: требуется рефракторинг
 
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useHeaderHeight } from "@react-navigation/elements";
 
 import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
@@ -15,14 +15,27 @@ import i18n from "~i18n";
 
 import { RootScreenProps } from "~types";
 import { SharedElement } from "react-navigation-shared-element";
+import * as StatusBar from "expo-status-bar";
+import { useFocusEffect } from "@react-navigation/native";
 
 const SelectTimeForRelax: RootScreenProps<"SelectTimeForRelax"> = ({ navigation, route }) => {
 	const { selectedPractice } = route.params;
 	const selectTime = React.useRef<React.ElementRef<typeof SelectTime>>(null);
 	const [milliseconds, setMilliseconds] = useState<number>(selectedPractice.length);
 	const heightHeaded = useHeaderHeight();
+	useFocusEffect(
+		useCallback(() => {
+			StatusBar.setStatusBarTranslucent(true);
+			StatusBar.setStatusBarStyle("light");
+			navigation.setOptions({
+				title: selectedPractice.name,
+			});
+		}, [])
+	);
 	return (
 		<View style={styles.background}>
+			<StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
+
 			<View style={styles.topBlock}>
 				<View style={styles.topContent}>
 					<SharedElement id={`practice.item.${selectedPractice.id}`} style={styles.image}>
@@ -38,11 +51,11 @@ const SelectTimeForRelax: RootScreenProps<"SelectTimeForRelax"> = ({ navigation,
 						</LinearGradient>
 					</View>
 				</View>
-				<Text style={styles.mainText}>
-					{i18n.t("e233a33c-3f87-4695-b7ac-29d57ff11ad2")}{" "}
-					<Text style={styles.boldMainText}>{i18n.t("399ca325-5376-44e1-8767-f07451e209e8")}</Text>
-				</Text>
 			</View>
+			<Text style={styles.mainText}>
+				{i18n.t("e233a33c-3f87-4695-b7ac-29d57ff11ad2")}{" "}
+				<Text style={styles.boldMainText}>{i18n.t("399ca325-5376-44e1-8767-f07451e209e8")}</Text>
+			</Text>
 			<SelectTime
 				ref={selectTime}
 				start={[Math.floor(selectedPractice.length / 60000), Math.floor((selectedPractice.length % 60000) / 1000)]}
@@ -66,7 +79,7 @@ const SelectTimeForRelax: RootScreenProps<"SelectTimeForRelax"> = ({ navigation,
 						styleButton={styles.buttonView}
 						styleText={styles.buttonText}
 						onPress={() => {
-							navigation.navigate("PlayerForPractice", { selectedPractice, practiceLength: milliseconds });
+							navigation.navigate("PlayerForRelaxation", { selectedPractice, practiceLength: milliseconds });
 						}}
 					>
 						{i18n.t("c45a8d0b-dca1-46d8-8110-6fe268acabfd")}

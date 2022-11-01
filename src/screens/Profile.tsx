@@ -11,6 +11,7 @@ import gStyle from "~styles";
 import { actions, useAppDispatch, useAppSelector } from "~store";
 import * as Dump from "src/components/dump";
 import { StatisticPeriod, GeneralCompositeScreenProps, State } from "~types";
+import { StatusBar } from "expo-status-bar";
 
 const getStartWeek = () => {
 	const date = new Date();
@@ -89,6 +90,8 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 				setHeightScreen(layout.height);
 			}}
 		>
+			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
+
 			<ScrollView>
 				<Dump.ProfileInformation
 					image={image}

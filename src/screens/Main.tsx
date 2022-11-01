@@ -16,6 +16,7 @@ import * as Store from "~store";
 import { useFocusEffect } from "@react-navigation/native";
 import { Converter, Request } from "~api";
 import practice from "src/store/reducers/practice";
+import * as StatusBar from "expo-status-bar";
 
 const getStartWeek = () => {
 	const date = new Date();
@@ -97,6 +98,9 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 			Request.getPopularToDayMeditation().then(practice =>
 				setTodayPopularMeditation(Converter.composePractice(practice))
 			);
+			StatusBar.setStatusBarTranslucent(true);
+			StatusBar.setStatusBarStyle("light");
+			console.log("focus");
 		}, [])
 	);
 
@@ -128,6 +132,7 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 			contentContainerStyle={{ paddingVertical: 50 }}
 			bounces={false}
 		>
+			<StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
 			<Animated.View
 				style={greetingStyle}
 				onLayout={({ nativeEvent: { layout } }) => {
@@ -234,7 +239,7 @@ const styles = RN.StyleSheet.create({
 	},
 	userButton: {
 		marginLeft: 20,
-		marginTop: 20,
+		marginTop: 40,
 		alignSelf: "flex-start",
 	},
 

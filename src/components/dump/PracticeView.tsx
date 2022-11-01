@@ -162,13 +162,7 @@ interface CardProps extends GeneralProps {}
 
 const Card: React.FC<CardProps> = props => {
 	const { image, description, lengthAudio, name, typePractice, style, onPress, id } = props;
-	const translateIdTime = React.useMemo(() => {
-		if (typePractice === "RELAXATION") {
-			return "baacc210-74b7-44f0-b59c-b08733b51adc";
-		} else {
-			return "minute";
-		}
-	}, [typePractice]);
+	const translateIdTime = typePractice === "RELAXATION" ? "baacc210-74b7-44f0-b59c-b08733b51adc" : "minute";
 	return (
 		<Pressable style={[cardStyles.container, style]} onPress={onPress}>
 			<SharedElement id={`practice.item.${id}`} style={cardStyles.imageBackground}>

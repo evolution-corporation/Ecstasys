@@ -5,18 +5,17 @@ import { Platform, StyleSheet, FlatList, Text, TouchableOpacity, TextInput } fro
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import isMobilePhone from "validator/lib/isMobilePhone";
 import i18n from "~i18n";
-
-import Tools from "~core";
+import gStyle from "~styles";
 import TheArrow from "~assets/icons/TheArrow_WhiteTop.svg";
-import { CustomModal } from "~components/containers";
-import { ColorButtonDoubleText } from "~components/dump";
+import CustomModal from "../containers/CustomModal";
+import ColorButtonDoubleText from "./Buttons/ColorDoubleText";
 
-import listCodePhoneCountry from "./ListCodePhoneCountry";
+import listCodePhoneCountry from "assets/ListCodePhoneCountry.json";
 
 type CodePhoneCountryType = keyof typeof listCodePhoneCountry;
 const ListCodePhoneCountry = Object.keys(listCodePhoneCountry) as CodePhoneCountryType[];
 
-export const NumberInput: FC<Props> = props => {
+const NumberInput: FC<Props> = props => {
 	const {
 		defaultCode = "RU",
 		autoFocus = false,
@@ -176,7 +175,7 @@ const styles = StyleSheet.create({
 	phoneStyle: {
 		color: "#FFFFFF",
 		fontSize: 14,
-		...Tools.gStyle.font("500"),
+		...gStyle.font("500"),
 	},
 	textInputStyle: {
 		borderLeftColor: "#C2A9CE",
@@ -208,7 +207,7 @@ const styles = StyleSheet.create({
 		width: 70,
 		textAlign: "center",
 		fontSize: 14,
-		...Tools.gStyle.font("500"),
+		...gStyle.font("500"),
 	},
 	selectCountryText: {
 		paddingLeft: 24,
@@ -216,6 +215,8 @@ const styles = StyleSheet.create({
 		color: "#000000",
 		fontSize: 13,
 		textAlign: "left",
-		...Tools.gStyle.font("400"),
+		...gStyle.font("400"),
 	},
 });
+
+export default NumberInput;

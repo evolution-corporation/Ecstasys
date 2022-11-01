@@ -47,6 +47,7 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 	);
 
 	if (widthCarousel <= 300) {
+		console.log("ooops");
 		return null;
 	}
 
@@ -54,7 +55,7 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 		<View
 			style={[{ flex: 1, overflow: "hidden" }, style]}
 			onLayout={({ nativeEvent: { layout } }) => {
-				setWidthCarousel(layout.width);
+				if (widthCarousel === null) setWidthCarousel(layout.width);
 			}}
 		>
 			<FlatList
@@ -102,6 +103,7 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 						}
 						refFlatList.current?.scrollToIndex({ index, animated: true, viewPosition: 0.5 });
 						setSelectedIndex(index);
+						if (onChange) onChange(data[index].id);
 					}
 				}}
 			/>

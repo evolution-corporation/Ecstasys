@@ -11,6 +11,7 @@ import { RootScreenProps } from "~types";
 import { actions, useAppDispatch, useAppSelector } from "~store";
 import { StatusCheck } from "~components/dump/NicknameInput/NicknameBase";
 import { Request } from "~api";
+import { StatusBar } from "expo-status-bar";
 
 const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 	const changedData = useAppSelector(store => store.account.changeData);
@@ -30,6 +31,8 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 
 	return (
 		<View style={styles.background}>
+			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
+
 			<View style={{ width: "100%", alignItems: "center" }}>
 				<SelectImageButton
 					style={styles.selectImage}

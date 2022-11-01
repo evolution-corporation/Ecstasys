@@ -12,11 +12,14 @@ import Mail from "assets/icons/Mail.svg";
 import LogOut from "assets/icons/Log_Out.svg";
 import { actions, useAppDispatch } from "~store";
 import { RootScreenProps } from "~types";
+import { StatusBar } from "expo-status-bar";
 
 const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 	const appDispatch = useAppDispatch();
 	return (
 		<View style={styles.background}>
+			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
+
 			<TouchableOpacity
 				style={styles.button}
 				onPress={() => {

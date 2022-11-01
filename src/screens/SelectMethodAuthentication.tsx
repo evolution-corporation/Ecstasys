@@ -28,6 +28,7 @@ import Bird from "assets/icons/BirdWhite.svg";
 import auth from "@react-native-firebase/auth";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { actions, useAppDispatch } from "~store";
+import { StatusBar } from "expo-status-bar";
 
 var height = Dimensions.get("window").height;
 
@@ -55,6 +56,7 @@ const SelectMethodAuthentication: RootScreenProps<"SelectMethodAuthentication"> 
 
 	return (
 		<ImageBackground style={styles.background} source={require("~assets/rockDrugs.jpg")}>
+			<StatusBar hidden />
 			<View style={styles.logoBox}>
 				<Bird />
 				{/* <Image style={[styles.bird]} source={require("./assets/bird.png")} resizeMode={"contain"} /> */}

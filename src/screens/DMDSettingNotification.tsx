@@ -1,6 +1,6 @@
 /** @format */
 
-import React from "react";
+import React, { useCallback } from "react";
 import { SafeAreaView, Text, StyleSheet, Image, Pressable, View } from "react-native";
 import { ColorButton, TextButton } from "~components/dump";
 import { actions, useAppDispatch, useAppSelector } from "~store";
@@ -10,6 +10,10 @@ import gStyle from "~styles";
 import ArrowDown from "assets/icons/Chevron_Down.svg";
 import { SharedElement } from "react-navigation-shared-element";
 import { LinearGradient } from "expo-linear-gradient";
+import { useFocusEffect } from "@react-navigation/native";
+import * as StatusBar from "expo-status-bar";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { useDimensions } from "@react-native-community/hooks";
 
 const DMDSettingNotification: RootScreenProps<"DMDSettingNotification"> = ({ navigation, route }) => {
 	const { selectedRelax } = route.params;
@@ -24,27 +28,48 @@ const DMDSettingNotification: RootScreenProps<"DMDSettingNotification"> = ({ nav
 		store.DMD.configuratorNotification.random,
 		store.DMD.set?.length ?? 0,
 	]);
-
+	const headerHeight = useHeaderHeight();
 	const dispatch = useAppDispatch();
+
+	const [heightTopView, setHeightTopView] = React.useState<number | null>(null);
+	const { window } = useDimensions();
+	useFocusEffect(
+		useCallback(() => {
+			StatusBar.setStatusBarTranslucent(true);
+			StatusBar.setStatusBarStyle("light");
+			navigation.setOptions({
+				title: selectedRelax.name,
+			});
+		}, [])
+	);
 
 	return (
 		<SafeAreaView style={styles.container}>
-			<View style={styles.imageHeader}>
+			<StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
+
+			<View style={[styles.imageHeader, { height: heightTopView ?? 0 }]}>
 				<SharedElement id={`practice.item.${selectedRelax.id}`} style={styles.image}>
 					<Image
 						source={{ uri: image }}
-						style={{ width: "100%", height: "100%", borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }}
+						style={{ width: "100%", borderBottomLeftRadius: 20, borderBottomRightRadius: 20, height: "100%" }}
 					/>
 				</SharedElement>
-				<LinearGradient style={styles.timeMinutesBox} colors={["#75348B", "#6A2382"]}>
-					<Text style={styles.timeMinutes}>
-						{i18n.t("minute", {
-							count: Math.floor((lengthSet + selectedRelax.length) / 60000),
-						})}
-					</Text>
-				</LinearGradient>
+				<View style={{ marginTop: headerHeight, flex: 1 }}>
+					<LinearGradient style={styles.timeMinutesBox} colors={["#75348B", "#6A2382"]}>
+						<Text style={styles.timeMinutes}>
+							{i18n.t("minute", {
+								count: Math.floor((lengthSet + selectedRelax.length) / 60000),
+							})}
+						</Text>
+					</LinearGradient>
+				</View>
 			</View>
-			<View style={styles.footer}>
+			<View
+				style={styles.footer}
+				onLayout={({ nativeEvent: { layout } }) => {
+					if (heightTopView === null) setHeightTopView(window.height - layout.height);
+				}}
+			>
 				<Text style={styles.description}>
 					{i18n.t("efbd27b4-4e3c-4cfe-8328-0e085d16167e")}
 					{"\n"}
@@ -122,7 +147,6 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 		borderBottomLeftRadius: 20,
 		borderBottomRightRadius: 20,
-		flexGrow: 1,
 		width: "100%",
 	},
 	description: {

@@ -15,10 +15,11 @@ import { CarouselPractices } from "~components/dump";
 import { useFocusEffect } from "@react-navigation/native";
 import { actions, useAppDispatch } from "~store";
 import { Converter, Request } from "~api";
+import { StatusBar } from "expo-status-bar";
 
 const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => {
 	const { height } = useWindowDimensions();
-	const [selectedPracticeId, setSelectedPracticeId] = useState<string | null>(null);
+	const selectedPracticeId = React.useRef<string | null>(null);
 	const [practiceList, setPracticeList] = useState<State.Practice[]>([]);
 	const dispatch = useAppDispatch();
 	const opacityButton = useSharedValue(1);
@@ -46,9 +47,10 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 			navigation.navigate("SelectSet", { selectedRelax: practiceList[practiceIndex] });
 		}
 	};
-
 	return (
 		<DoubleColorView style={styles.background} heightViewPart={height / 2 - 100}>
+			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
+
 			<ColorButton
 				animationStyle={aStyle.button}
 				styleButton={styles.buttonInstruction}
@@ -66,19 +68,23 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 					onPress={practiceId => {
 						onClick(practiceId);
 					}}
-					onChange={setSelectedPracticeId}
+					onChange={(practiceId: string | null) => {
+						selectedPracticeId.current = practiceId;
+					}}
 				/>
 			)}
-			<ColorButton
-				animationStyle={aStyle.button}
-				styleButton={styles.button}
-				styleText={styles.buttonText}
-				onPress={() => {
-					if (selectedPracticeId !== null) onClick(selectedPracticeId);
-				}}
-			>
-				{i18n.t("1a2b0df6-fa67-4f71-8fd4-be1f0a576439")}
-			</ColorButton>
+			{height >= 800 && (
+				<ColorButton
+					animationStyle={aStyle.button}
+					styleButton={styles.button}
+					styleText={styles.buttonText}
+					onPress={() => {
+						if (selectedPracticeId.current !== null) onClick(selectedPracticeId.current);
+					}}
+				>
+					{i18n.t("1a2b0df6-fa67-4f71-8fd4-be1f0a576439")}
+				</ColorButton>
+			)}
 		</DoubleColorView>
 	);
 };

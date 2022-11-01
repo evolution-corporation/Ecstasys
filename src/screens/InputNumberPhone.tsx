@@ -4,12 +4,11 @@ import React, { useCallback, useRef } from "react";
 import { StyleSheet, View } from "react-native";
 import { useHeaderHeight } from "@react-navigation/elements";
 
-import { ColorButton } from "~components/dump";
-import Tools from "~core";
+import { ColorButton, NumberInput } from "~components/dump";
 import i18n from "~i18n";
 
-import { NumberInput } from "./components";
 import type { RootScreenProps } from "~types";
+import { StatusBar } from "expo-status-bar";
 
 const NumberInputScreen: RootScreenProps<"InputNumberPhone"> = ({ navigation }) => {
 	const NumberPhone = useRef<{ numberPhone: string; isValidate: boolean }>({
@@ -27,6 +26,7 @@ const NumberInputScreen: RootScreenProps<"InputNumberPhone"> = ({ navigation }) 
 	};
 	return (
 		<View style={styles.background}>
+			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
 			<NumberInput
 				onChange={(numberPhone: string, isValidate: boolean) => {
 					NumberPhone.current = { numberPhone, isValidate };

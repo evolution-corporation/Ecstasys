@@ -17,12 +17,13 @@ import { useFocusEffect } from "@react-navigation/native";
 import { Converter, Request } from "~api";
 import Play from "assets/icons/PlayWhite.svg";
 import { ColorButton } from "~components/dump";
+import { StatusBar } from "expo-status-bar";
 
 const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 	const { selectedRelax } = route.params;
 	const [setList, setSetList] = React.useState<State.Set[]>([]);
 	const [selectedSetIndex, setSelectedSetIndex] = React.useState<number | null>(0);
-	const { width } = useWindowDimensions();
+	const { width, height } = useWindowDimensions();
 	const appDispatch = useAppDispatch();
 	useFocusEffect(
 		useCallback(() => {
@@ -40,6 +41,8 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 
 	return (
 		<DoubleColorView style={styles.background} heightViewPart={133} hideElementVioletPart>
+			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
+
 			<View style={styles.header}>
 				<View style={styles.informationPractice}>
 					<SharedElement id={`practice.item.${selectedRelax.id}`} style={styles.image}>
@@ -73,13 +76,21 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 				style={{ width, top: 133 }}
 				renderItem={({ item, index }) => (
 					<Pressable
-						style={[styles.renderElement, selectedSetIndex === index ? { backgroundColor: "#E7DDEC" } : null]}
+						style={[
+							styles.renderElement,
+							selectedSetIndex === index && height >= 800 ? { backgroundColor: "#E7DDEC" } : null,
+						]}
 						onPress={() => {
-							setSelectedSetIndex(index);
+							if (height >= 800) {
+								setSelectedSetIndex(index);
+							} else {
+								appDispatch(actions.setSetForDMD(setList[index]));
+								navigation.navigate("DMDSettingNotification", { selectedRelax });
+							}
 						}}
 					>
 						<View style={[{ flexDirection: "row", alignItems: "center" }]}>
-							{selectedSetIndex === index ? (
+							{selectedSetIndex === index && height >= 800 ? (
 								<View
 									style={{
 										width: 56,
@@ -107,18 +118,20 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 				keyExtractor={item => item.id}
 				contentContainerStyle={{ paddingTop: heightViewPart2 + 21 }}
 			/>
-			<ColorButton
-				styleButton={styles.continueButton}
-				styleText={styles.continueButtonText}
-				onPress={() => {
-					if (selectedSetIndex !== null) {
-						appDispatch(actions.setSetForDMD(setList[selectedSetIndex]));
-						navigation.navigate("DMDSettingNotification", { selectedRelax });
-					}
-				}}
-			>
-				{i18n.t("1a2b0df6-fa67-4f71-8fd4-be1f0a576439")}
-			</ColorButton>
+			{height >= 800 && (
+				<ColorButton
+					styleButton={styles.continueButton}
+					styleText={styles.continueButtonText}
+					onPress={() => {
+						if (selectedSetIndex !== null) {
+							appDispatch(actions.setSetForDMD(setList[selectedSetIndex]));
+							navigation.navigate("DMDSettingNotification", { selectedRelax });
+						}
+					}}
+				>
+					{i18n.t("1a2b0df6-fa67-4f71-8fd4-be1f0a576439")}
+				</ColorButton>
+			)}
 		</DoubleColorView>
 	);
 };

@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { Image, StyleSheet, View, Text, Pressable, ActivityIndicator } from "react-native";
 import Animated from "react-native-reanimated";
 
@@ -17,6 +17,8 @@ import { initializationTimer } from "src/TaskManager";
 import Headphones from "assets/icons/Headphones_white.svg";
 import { useAppSelector } from "~store";
 import { SharedElement } from "react-navigation-shared-element";
+import { useFocusEffect } from "@react-navigation/native";
+import * as StatusBar from "expo-status-bar";
 
 enum StatusPractice {
 	Loading,
@@ -25,7 +27,7 @@ enum StatusPractice {
 	Change,
 }
 
-const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, route }) => {
+const PlayerForRelaxation: RootScreenProps<"PlayerForRelaxation"> = ({ navigation, route }) => {
 	const { selectedPractice, practiceLength } = route.params;
 	const practiceState = useAppSelector(store => {
 		if (store.practice.currentPractice === undefined) throw new Error("Not Found Practice");
@@ -193,9 +195,19 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 		]);
 		timeLineRef.current?.setValue(millisecond / practiceLength);
 	}, []);
-
+	useFocusEffect(
+		useCallback(() => {
+			StatusBar.setStatusBarTranslucent(true);
+			StatusBar.setStatusBarStyle("light");
+			navigation.setOptions({
+				title: selectedPractice.name,
+			});
+		}, [])
+	);
 	return (
 		<View style={{ flex: 1 }}>
+			<StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
+
 			<SharedElement id={`practice.item.${selectedPractice.id}`} style={styles.imageBackground}>
 				<Image
 					source={{
@@ -284,7 +296,7 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 	);
 };
 
-export default PlayerForPractice;
+export default PlayerForRelaxation;
 
 const styles = StyleSheet.create({
 	background: {
