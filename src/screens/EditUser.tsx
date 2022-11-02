@@ -22,7 +22,7 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 	const dispatch = useAppDispatch();
 
 	const update = async () => {
-		await dispatch(actions.updateAccount()).unwrap();
+		await dispatch(actions.updateAccount({})).unwrap();
 		navigation.navigate("MessageLog", {
 			message: i18n.t("6962d75a-b6cc-4e30-aa87-addabf7450e7"),
 			result: "Resolve",

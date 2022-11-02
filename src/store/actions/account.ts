@@ -57,8 +57,7 @@ export const updateAccount = createAsyncThunk<
 	if (image === undefined) image = changeData.image;
 	if (birthday === undefined) birthday = changeData.birthday;
 	if (displayName === undefined) displayName = changeData.displayName;
-	let { nickname, lastCheckNicknameAndResult, gender } = changeData;
-
+	let { nickname, lastCheckNicknameAndResult } = changeData;
 	if (nickname !== undefined) {
 		if (
 			lastCheckNicknameAndResult === undefined ||
