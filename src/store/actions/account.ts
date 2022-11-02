@@ -114,7 +114,7 @@ export const registrationAccount = createAsyncThunk<State.User, undefined, Async
 export const signOutAccount = createAsyncThunk(AccountAction.signOut, async () => {
 	await auth().signOut();
 	await GoogleSignin.signOut();
-	//! Сделать функцию по очистке AsyncStorage
+	await Storage.clear();
 });
 
 export const signInAccount = createAsyncThunk<

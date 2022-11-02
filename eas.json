@@ -18,10 +18,12 @@
 		"preview": {
 			"distribution": "internal",
 			"channel": "dev",
-
 			"env": {
 				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
 				"APP_VARIANT": "preview"
+			},
+			"android": {
+				
 			}
 		},
 		"production": {
