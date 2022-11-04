@@ -52,7 +52,6 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 		useCallback(() => {
 			const init = async () => {
 				const result = await Storage.getStatusShowGreetingScreens();
-				console.log(result);
 				if (!result.DescriptionDMD) {
 					navigation.navigate("DMDIntro");
 				}

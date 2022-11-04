@@ -61,7 +61,6 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 		useCallback(() => {
 			const init = async () => {
 				const result = await Storage.getStatusShowGreetingScreens();
-				console.log(result);
 				if (!result.DescriptionPractices) {
 					navigation.navigate("IntroPractices");
 				}

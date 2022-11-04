@@ -82,7 +82,6 @@ const PlayerForRelaxation: RootScreenProps<"PlayerForRelaxation"> = ({ navigatio
 			interruptionModeIOS: InterruptionModeIOS.DoNotMix,
 		});
 		//* Загружаем главный трек
-		console.log("mount");
 		// Notifications.dismissAllNotificationsAsync();
 		(async () => {
 			if (practiceState.audio && statusPractice === StatusPractice.Loading) {
@@ -314,14 +313,7 @@ const PlayerForRelaxation: RootScreenProps<"PlayerForRelaxation"> = ({ navigatio
 						/>
 					)}
 				</View>
-				<View
-					style={[
-						styles.timeInfoBox,
-						{
-							bottom: 95 - styles.buttonBackgroundSound.height - styles.buttonBackgroundSound.marginTop,
-						},
-					]}
-				>
+				<View style={[styles.timeInfoBox]}>
 					<TimeLine
 						ref={timeLineRef}
 						disable={statusPractice === StatusPractice.Loading}
@@ -398,6 +390,7 @@ const styles = StyleSheet.create({
 		width: "100%",
 		position: "absolute",
 		alignSelf: "center",
+		bottom: 28,
 	},
 	timesCodeBox: {
 		width: "100%",
@@ -417,7 +410,6 @@ const styles = StyleSheet.create({
 		backgroundColor: "rgba(255, 255, 255, 0.5)",
 		paddingRight: 33,
 		paddingLeft: 13,
-		marginTop: 17,
 		height: 50,
 	},
 	buttonBackgroundText: {

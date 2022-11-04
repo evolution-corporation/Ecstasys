@@ -62,7 +62,6 @@ export const addStatisticPractice = createAsyncThunk<
 	[State.Practice, number],
 	AsyncThunkConfig
 >(PracticeAction.addStatistic, async ([practiceState, timeListen]) => {
-	console.log(practiceState, timeListen);
 	const statisticsList = await Storage.getStatistic();
 	let lastIndex: string;
 	if (statisticsList.length > 0) {
@@ -71,7 +70,6 @@ export const addStatisticPractice = createAsyncThunk<
 		lastIndex = Math.floor(100 * Math.random()).toString();
 	}
 
-	console.log(timeListen);
 	const nextId = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, lastIndex);
 	const toDay = new Date();
 	await Storage.addStatistic(nextId, timeListen, toDay, practiceState.id);

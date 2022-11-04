@@ -49,7 +49,6 @@ const GreetingScreen: RootScreenProps<"Greeting"> = ({ navigation }) => {
 		useCallback(() => {
 			StatusBar.setStatusBarTranslucent(true);
 			StatusBar.setStatusBarStyle("light");
-			console.log("focus");
 		}, [])
 	);
 
