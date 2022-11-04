@@ -22,33 +22,23 @@ const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
 	const [selectedIndexSecond, setSelectedIndexSecond] = React.useState(0);
 
 	const minutes = React.useMemo(() => {
-		const _minutes: Array<{ text: string | null; value: number }> = [
-			{ text: null, value: -2 },
-			{ text: null, value: -1 },
-		];
-		for (let i = start[0]; i <= end[0] + 2; i++) {
+		const _minutes: Array<{ text: string | null; value: number }> = [];
+		for (let i = start[0]; i <= end[0]; i++) {
 			_minutes.push({ text: i < 10 ? `0${i}` : i.toString(), value: i });
 		}
-		_minutes[_minutes.length - 2].text = null;
-		_minutes[_minutes.length - 1].text = null;
 		return _minutes;
 	}, [start, end]);
 
 	const seconds = React.useMemo(() => {
-		const _seconds: Array<{ text: string | null; value: number }> = [
-			{ text: null, value: -2 },
-			{ text: null, value: -1 },
-		];
+		const _seconds: Array<{ text: string | null; value: number }> = [];
 
 		for (
 			let i = selectedIndexMinute === 2 ? start[1] : 0;
-			i <= (selectedIndexMinute === minutes.length - 2 ? end[1] : 61);
+			i <= (selectedIndexMinute === minutes.length - 1 ? end[1] : 59);
 			i++
 		) {
 			_seconds.push({ text: i < 10 ? `0${i}` : i.toString(), value: i });
 		}
-		_seconds[_seconds.length - 2].text = null;
-		_seconds[_seconds.length - 1].text = null;
 		return _seconds;
 	}, [start, end, selectedIndexMinute]);
 
@@ -110,11 +100,7 @@ const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
 						<Text
 							style={[
 								styles.numberGeneral,
-								index === selectedIndexMinute
-									? styles.numberSelected
-									: Math.abs(index - selectedIndexMinute) === 1
-									? styles.numberNoSelectedOne
-									: styles.numberNoSelectedTwo,
+								index === selectedIndexMinute ? styles.numberSelected : styles.numberNoSelectedOne,
 							]}
 						>
 							{item.text}
@@ -124,7 +110,8 @@ const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
 				viewabilityConfig={_viewabilityConfig}
 				onViewableItemsChanged={_onViewableItemsChangedMinute}
 				contentContainerStyle={{
-					paddingVertical: Math.abs(styles.selected.bottom) - styles.numberGeneral.height * 0.5,
+					paddingTop: styles.numberGeneral.height * 2,
+					paddingBottom: styles.numberGeneral.height,
 				}}
 				style={[styles.selected, { left: 0 }]}
 				keyExtractor={item => `minute_${item.value}`}
@@ -137,14 +124,9 @@ const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
 			/>
 			<LinearGradient
 				style={styles.br}
-				colors={[
-					"rgba(235, 235, 235, 1)",
-					"rgba(235, 235, 235, 0)",
-					"rgba(235, 235, 235, 1)",
-					"rgba(235, 235, 235, 0)",
-				]}
-				start={{ x: 0, y: 0 }}
-				end={{ x: 0, y: 1 }}
+				colors={["rgba(235, 235, 235, 0)", "rgba(235, 235, 235, 1)", "rgba(235, 235, 235, 0)"]}
+				start={{ x: 0, y: 1 }}
+				end={{ x: 0, y: 0 }}
 			/>
 			<FlatList
 				ref={secondsRef}
@@ -154,11 +136,7 @@ const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
 					<Text
 						style={[
 							styles.numberGeneral,
-							index === selectedIndexSecond
-								? styles.numberSelected
-								: Math.abs(index - selectedIndexSecond) === 1
-								? styles.numberNoSelectedOne
-								: styles.numberNoSelectedTwo,
+							index === selectedIndexSecond ? styles.numberSelected : styles.numberNoSelectedOne,
 						]}
 					>
 						{item.text}
@@ -167,7 +145,8 @@ const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
 				viewabilityConfig={_viewabilityConfig}
 				onViewableItemsChanged={_onViewableItemsChangedSecond}
 				contentContainerStyle={{
-					paddingVertical: Math.abs(styles.selected.bottom) - styles.numberGeneral.height * 0.5,
+					paddingTop: styles.numberGeneral.height * 2,
+					paddingBottom: styles.numberGeneral.height,
 				}}
 				style={[styles.selected, { right: 0 }]}
 				keyExtractor={item => `second_${item.value}`}
@@ -186,6 +165,7 @@ const styles = StyleSheet.create({
 	container: {
 		alignItems: "center",
 		height: "100%",
+		maxHeight: 250,
 		justifyContent: "center",
 		flexDirection: "row",
 		width: 200,
@@ -212,14 +192,14 @@ const styles = StyleSheet.create({
 	},
 	br: {
 		height: "100%",
-		width: 4,
+		width: 2,
 	},
 	selected: {
 		width: 60,
 		top: -55,
 		bottom: -55,
 		position: "absolute",
-		height: "auto",
+		height: 220,
 	},
 });
 

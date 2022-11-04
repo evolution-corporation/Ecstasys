@@ -185,6 +185,8 @@ export async function getPopularToDayMeditation(firebaseTokenToken?: string) {
 export async function getMeditationById(meditationId: string, firebaseTokenToken?: string) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
 	const url = URL + "meditation?meditationId=" + meditationId + "&count=1";
+	console.log(" --getMeditationById", url);
+
 	const requestServer = await fetch(url, {
 		headers: {
 			Authorization: firebaseTokenToken,
@@ -220,6 +222,7 @@ export async function getMeditationsByType(meditationType: SupportType.TypeMedit
 		throw new RequestError(`getMeditationsByType: ${await requestServer.text()}`, url, undefined, "GET", "50x");
 	}
 	const json = await requestServer.json();
+	console.log(json);
 	return json as ServerEntities.Meditation[];
 }
 

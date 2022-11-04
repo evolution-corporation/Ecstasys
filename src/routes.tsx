@@ -285,6 +285,14 @@ const RootRoutes: FC = () => {
 						options={{ headerShown: false }}
 					/>
 					<RootNavigation.Screen name={"DMDIntro"} component={Screens.DMDIntro} options={{ headerShown: false }} />
+					<RootNavigation.Screen
+						name={"PlayerForPractice"}
+						component={Screens.PlayerForPractice}
+						options={{
+							headerTransparent: true,
+							headerTitleAlign: "center",
+						}}
+					/>
 				</>
 			);
 	}

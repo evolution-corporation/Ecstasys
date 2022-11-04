@@ -131,9 +131,7 @@ const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation })
 							if (indexSwiper.current + 1 < swiperContent.length) {
 								refSwiper.current?.scrollBy(1);
 							} else {
-								navigation.navigate("TabNavigator", {
-									screen: "PracticesList",
-								});
+								end();
 							}
 						}
 					}}
@@ -155,7 +153,6 @@ const styles = StyleSheet.create({
 	},
 	birdProffessor: {
 		position: "absolute",
-
 		left: 0,
 		bottom: 0,
 	},

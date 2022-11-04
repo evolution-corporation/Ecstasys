@@ -4,13 +4,13 @@ import { Audio, AVPlaybackStatus } from "expo-av";
 
 const BackgroundSound = {
 	thunderstorm: {
-		image: require("assets/backgroundSound/image/thunderstorm.png"),
-		audio: require("assets/backgroundSound/image/thunderstorm.mp3"),
+		image: require("assets/backgroundMusic/image/thunderstorm.png"),
+		audio: require("assets/backgroundMusic/sound/thunderstorm.mp3"),
 		translate: "10196d40-2dcd-48c9-a070-3b8f9b264df6",
 	},
 	waterfall: {
-		image: require("assets/backgroundSound/sound/waterfall.png"),
-		audio: require("assets/backgroundSound/sound/waterfall.mp3"),
+		image: require("assets/backgroundMusic/image/waterfall.png"),
+		audio: require("assets/backgroundMusic/sound/waterfall.mp3"),
 		translate: "cd529b21-208b-4103-94ab-ee84b9845cd0",
 	},
 };

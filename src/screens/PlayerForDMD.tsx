@@ -1,14 +1,14 @@
 /** @format */
 
 import React, { useCallback, useEffect, useRef } from "react";
-import { Image, StyleSheet, View, Text, Pressable, ActivityIndicator } from "react-native";
+import { Image, StyleSheet, View, Text, AppState, ActivityIndicator, Platform } from "react-native";
 import Animated from "react-native-reanimated";
 
 import { TimeLine, PlayerControl } from "~components/dump";
 
 import { RootScreenProps } from "~types";
 
-import { Audio } from "expo-av";
+import { Audio, InterruptionModeAndroid, InterruptionModeIOS } from "expo-av";
 import { useAppSelector } from "~store";
 import i18n from "~i18n";
 import gStyle from "~styles";
@@ -48,21 +48,52 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 	const audioSet = useRef<Audio.Sound>(new Audio.Sound()).current;
 	const TimeOutId = useRef<NodeJS.Timeout | null>(null);
 	const timeLineRef = useRef<React.ElementRef<typeof TimeLine>>(null);
-
 	const triggerSound = React.useRef<Audio.Sound>(new Audio.Sound()).current;
-
 	useEffect(() => {
-		console.log("mount");
+		Audio.setAudioModeAsync({
+			staysActiveInBackground: true,
+			interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
+			interruptionModeIOS: InterruptionModeIOS.DoNotMix,
+		});
 		const init = async () => {
 			// Загрузка треков
 			if (statusDMD === Status.Loading) {
 				await Promise.all([
 					new Promise(async (resolve, reject) => {
-						await audioSet.loadAsync({ uri: audioSetURL });
+						await audioSet.loadAsync({ uri: audioSetURL }, { progressUpdateIntervalMillis: 100 });
+						audioOption.setOnPlaybackStatusUpdate(status => {
+							if (status.isLoaded) {
+								setCurrentTime(prevCurrentTime =>
+									prevCurrentTime <= optionTriggerTime ? status.positionMillis : prevCurrentTime
+								);
+								if (status.didJustFinish) {
+									audioSet.playAsync();
+									triggerSound.playAsync();
+								}
+							}
+						});
 						resolve(undefined);
 					}),
 					new Promise(async (resolve, reject) => {
 						await audioOption.loadAsync({ uri: audioOptionURL });
+						audioSet.setOnPlaybackStatusUpdate(async status => {
+							const statusOption = await audioOption.getStatusAsync();
+							if (status.isLoaded && statusOption.isLoaded && !statusOption.isPlaying) {
+								setCurrentTime(prevCurrentTime => status.positionMillis + statusOption.positionMillis);
+								if (
+									(status.isPlaying &&
+										status.positionMillis > activateTriggerTime - 1000 &&
+										status.positionMillis < activateTriggerTime) ||
+									(status.positionMillis > randomTriggerTime - 1000 && status.positionMillis < randomTriggerTime)
+								) {
+									triggerSound.getStatusAsync().then(status => {
+										if (status.isLoaded && !status.isPlaying) {
+											triggerSound.playAsync();
+										}
+									});
+								}
+							}
+						});
 						resolve(undefined);
 					}),
 					new Promise(async (resolve, reject) => {
@@ -77,36 +108,6 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 					}),
 				]);
 				//Создание подписок на треки
-				audioOption.setOnPlaybackStatusUpdate(status => {
-					if (status.isLoaded) {
-						setCurrentTime(prevCurrentTime =>
-							prevCurrentTime <= optionTriggerTime ? status.positionMillis : prevCurrentTime
-						);
-						if (status.didJustFinish) {
-							audioSet.playAsync();
-							triggerSound.playAsync();
-						}
-					}
-				});
-
-				audioSet.setOnPlaybackStatusUpdate(async status => {
-					const statusOption = await audioOption.getStatusAsync();
-					if (status.isLoaded && statusOption.isLoaded && !statusOption.isPlaying) {
-						setCurrentTime(prevCurrentTime => status.positionMillis + statusOption.positionMillis);
-						if (
-							(status.isPlaying &&
-								status.positionMillis > activateTriggerTime - 1000 &&
-								status.positionMillis < activateTriggerTime) ||
-							(status.positionMillis > randomTriggerTime - 1000 && status.positionMillis < randomTriggerTime)
-						) {
-							triggerSound.getStatusAsync().then(status => {
-								if (status.isLoaded && !status.isPlaying) {
-									triggerSound.playAsync();
-								}
-							});
-						}
-					}
-				});
 			}
 
 			// Определение начального состояния

@@ -9,7 +9,7 @@ import Tools from "~core";
 
 const StatisticsMeditation: React.FC<Props> = props => {
 	const { style, colorR = "#9765A8", colorL = "#9765A8", count, time } = props;
-
+	const minutes = Math.floor(time / 60000);
 	return (
 		<View style={[style, { flexDirection: "row" }]}>
 			<View style={[styles.staticCardBackground, styles.staticCardBackgroundLeft, { borderColor: colorL }]}>
@@ -29,11 +29,11 @@ const StatisticsMeditation: React.FC<Props> = props => {
 					<MaterialIcons name={"timer"} size={40} color={"#FFFFFF"} />
 					<Text style={[styles.staticCardText, { color: "#FFFFFF" }]}>
 						{i18n.t("dc1fa27d-9146-4a08-a241-7c10997eb654", {
-							count: time,
+							count: minutes,
 						})}
 					</Text>
 				</View>
-				<Text style={[styles.staticCardData, { color: "#FFFFFF" }]}>{time}</Text>
+				<Text style={[styles.staticCardData, { color: "#FFFFFF" }]}>{minutes}</Text>
 			</View>
 		</View>
 	);

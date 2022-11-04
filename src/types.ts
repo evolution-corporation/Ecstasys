@@ -245,6 +245,9 @@ export type RootStackList = {
 		selectedRelax: State.Practice & { type: "RELAXATION" };
 	};
 	DMDIntro: undefined;
+	PlayerForPractice: {
+		selectedPractice: State.Practice;
+	};
 };
 
 export type RootScreenProps<T extends keyof RootStackList> = FC<NativeStackScreenProps<RootStackList, T>>;

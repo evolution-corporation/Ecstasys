@@ -12,11 +12,13 @@ import {
 	Roboto_900Black,
 } from "@expo-google-fonts/roboto";
 import { Inter_700Bold } from "@expo-google-fonts/inter";
+import * as Notifications from "expo-notifications";
 
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import { State } from "~types";
 import { Request, Converter, Storage } from "~api";
+import i18n from "~i18n";
 
 enum GeneralAction {
 	initialization = "general/initialization",
@@ -26,7 +28,7 @@ export const initialization = createAsyncThunk(GeneralAction.initialization, asy
 	// let userInformation: State.User | null = null;
 	// let subscribeInformation: State.Subscribe | null = null;
 	const start = Date.now();
-	let [accountInformation, __, practicesInformation, messageProfessor] = await Promise.all([
+	let [accountInformation, __, practicesInformation, messageProfessor, ___] = await Promise.all([
 		// авторизация данных об аккаунте и их перезапись в памяти
 		(async () => {
 			const userFirebase = auth().currentUser;
@@ -88,7 +90,7 @@ export const initialization = createAsyncThunk(GeneralAction.initialization, asy
 				};
 			}
 			const listNeedPracticeId: string[] = [];
-			const listPracticesListened = await Storage.getStatistic();
+			const listPracticesListened = []; //await Storage.getStatistic();
 			listNeedPracticeId.push(...listPracticesListened.map(item => item.meditationId));
 			const listPracticesFavorite = await Storage.getFavoriteMeditationPractices();
 			listNeedPracticeId.push(
@@ -224,6 +226,11 @@ export const initialization = createAsyncThunk(GeneralAction.initialization, asy
 			}
 			return message;
 		})(),
+		// async () => {
+		// 	await Notifications.setNotificationCategoryAsync("~Meditation", [
+		// 		{ buttonTitle: i18n.t("Pause"), identifier: "~pause", options: { opensAppToForeground: true } },
+		// 	]);
+		// },
 	]);
 	console.info("Loading", Date.now() - start, "ms");
 

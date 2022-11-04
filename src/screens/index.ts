@@ -34,6 +34,7 @@ export { default as SelectSet } from "./SelectSet";
 
 export { default as IntroAboutApp } from "./IntroAboutApp";
 export { default as IntroAboutYou } from "./IntroAboutYou";
+export { default as PlayerForPractice } from "./PlayerForPractice";
 // export const TabsScreen = {
 // 	Main,
 // 	Profile,

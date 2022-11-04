@@ -56,6 +56,7 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 		}
 		return [listPracticesListened.length, listPracticesListened.reduce((value, item) => value + item.msListened, 0)];
 	});
+
 	const subscribe = useAppSelector(store => {
 		if (store.account.subscribe === undefined) return null;
 		const endSubscribe = new Date(store.account.subscribe.whenSubscribe);
@@ -72,7 +73,13 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 	});
 
 	const historyMeditation = useAppSelector(store => {
-		return store.practice.listPracticesListened.map(item => item.practice);
+		const listUnique: State.Practice[] = [];
+		for (const { practice } of store.practice.listPracticesListened) {
+			if (listUnique.findIndex(({ id }) => practice.id === id) === -1) {
+				listUnique.push(practice);
+			}
+		}
+		return listUnique;
 	});
 
 	const appDispatch = useAppDispatch();
@@ -82,6 +89,7 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 			title: nickName,
 		});
 	}, [nickName]);
+
 	return (
 		<DoubleColorView
 			style={styles.background}
@@ -133,7 +141,19 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 				{heightScreen !== null && heightScreen - tabBarHeight > 550 && (
 					<>
 						<RN.Text style={styles.historyText}>{i18n.t("7923b738-2122-408b-af79-caf0b1643cdf")}</RN.Text>
-						<Dump.ShowListPractices historyPractices={historyMeditation} />
+						<Dump.ShowListPractices
+							historyPractices={historyMeditation}
+							onPress={practice => {
+								appDispatch(actions.setPractice(practice));
+								if (practice.type === "RELAXATION") {
+									navigation.navigate("SelectTimeForRelax", { selectedPractice: practice });
+								} else {
+									navigation.navigate("PlayerForPractice", {
+										selectedPractice: practice,
+									});
+								}
+							}}
+						/>
 					</>
 				)}
 			</ScrollView>

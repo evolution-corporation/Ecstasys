@@ -17,11 +17,13 @@ import { RootScreenProps } from "~types";
 import { SharedElement } from "react-navigation-shared-element";
 import * as StatusBar from "expo-status-bar";
 import { useFocusEffect } from "@react-navigation/native";
+import { useDimensions } from "@react-native-community/hooks";
 
 const SelectTimeForRelax: RootScreenProps<"SelectTimeForRelax"> = ({ navigation, route }) => {
 	const { selectedPractice } = route.params;
 	const selectTime = React.useRef<React.ElementRef<typeof SelectTime>>(null);
 	const [milliseconds, setMilliseconds] = useState<number>(selectedPractice.length);
+	const { window } = useDimensions();
 	const heightHeaded = useHeaderHeight();
 	useFocusEffect(
 		useCallback(() => {
@@ -35,8 +37,7 @@ const SelectTimeForRelax: RootScreenProps<"SelectTimeForRelax"> = ({ navigation,
 	return (
 		<View style={styles.background}>
 			<StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
-
-			<View style={styles.topBlock}>
+			<View style={{ flex: 1, width: "100%" }}>
 				<View style={styles.topContent}>
 					<SharedElement id={`practice.item.${selectedPractice.id}`} style={styles.image}>
 						<Image source={{ uri: selectedPractice.image }} style={{ width: "100%", height: "100%" }} />
@@ -51,21 +52,21 @@ const SelectTimeForRelax: RootScreenProps<"SelectTimeForRelax"> = ({ navigation,
 						</LinearGradient>
 					</View>
 				</View>
+				<Text style={styles.mainText}>
+					{i18n.t("e233a33c-3f87-4695-b7ac-29d57ff11ad2")}{" "}
+					<Text style={styles.boldMainText}>{i18n.t("399ca325-5376-44e1-8767-f07451e209e8")}</Text>
+				</Text>
 			</View>
-			<Text style={styles.mainText}>
-				{i18n.t("e233a33c-3f87-4695-b7ac-29d57ff11ad2")}{" "}
-				<Text style={styles.boldMainText}>{i18n.t("399ca325-5376-44e1-8767-f07451e209e8")}</Text>
-			</Text>
-			<SelectTime
-				ref={selectTime}
-				start={[Math.floor(selectedPractice.length / 60000), Math.floor((selectedPractice.length % 60000) / 1000)]}
-				end={[25, 0]}
-				style={{ height: 200 }}
-				onChange={([minute, second]) => {
-					setMilliseconds((minute * 60 + second) * 1000);
-				}}
-			/>
-			<View style={styles.bottomBlock}>
+			<View style={{ width: window.width, height: 420, justifyContent: "flex-end", paddingHorizontal: 20 }}>
+				<SelectTime
+					ref={selectTime}
+					start={[Math.floor(selectedPractice.length / 60000), Math.floor((selectedPractice.length % 60000) / 1000)]}
+					end={[25, 0]}
+					style={{ alignSelf: "center" }}
+					onChange={([minute, second]) => {
+						setMilliseconds((minute * 60 + second) * 1000);
+					}}
+				/>
 				<TextButton
 					styleText={styles.resetDefault}
 					onPress={() => {
@@ -74,17 +75,15 @@ const SelectTimeForRelax: RootScreenProps<"SelectTimeForRelax"> = ({ navigation,
 				>
 					{i18n.t("d61edffc-4710-4707-9ddc-3576780004fc")}
 				</TextButton>
-				<View style={{ width: "100%" }}>
-					<ColorButton
-						styleButton={styles.buttonView}
-						styleText={styles.buttonText}
-						onPress={() => {
-							navigation.navigate("PlayerForRelaxation", { selectedPractice, practiceLength: milliseconds });
-						}}
-					>
-						{i18n.t("c45a8d0b-dca1-46d8-8110-6fe268acabfd")}
-					</ColorButton>
-				</View>
+				<ColorButton
+					styleButton={styles.buttonView}
+					styleText={styles.buttonText}
+					onPress={() => {
+						navigation.navigate("PlayerForRelaxation", { selectedPractice, practiceLength: milliseconds });
+					}}
+				>
+					{i18n.t("c45a8d0b-dca1-46d8-8110-6fe268acabfd")}
+				</ColorButton>
 			</View>
 		</View>
 	);
@@ -94,21 +93,8 @@ export default SelectTimeForRelax;
 
 const styles = StyleSheet.create({
 	background: {
-		paddingHorizontal: 20,
 		paddingBottom: 55,
-		justifyContent: "space-between",
-		alignItems: "center",
 		flex: 1,
-	},
-	topBlock: {
-		left: 0,
-		right: 0,
-		width: Dimensions.get("window").width,
-		alignItems: "center",
-	},
-	bottomBlock: {
-		width: "100%",
-		justifyContent: "space-between",
 	},
 	image: {
 		width: "100%",
@@ -125,7 +111,6 @@ const styles = StyleSheet.create({
 	},
 	topContent: {
 		width: "100%",
-		height: Dimensions.get("screen").height / 3,
 		left: 0,
 		right: 0,
 		...gStyle.shadows(2, 3),
@@ -134,13 +119,14 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 	},
 	mainText: {
-		marginTop: 18,
 		color: "#3D3D3D",
 		fontSize: 15,
 		...gStyle.font("400"),
 		textAlign: "center",
 		lineHeight: 17.58,
 		width: 340,
+		marginTop: 18,
+		alignSelf: "center",
 	},
 	boldMainText: {
 		...gStyle.font("600"),
@@ -148,10 +134,10 @@ const styles = StyleSheet.create({
 	buttonView: {
 		backgroundColor: "#9765A8",
 		borderRadius: 15,
+		width: "100%",
 	},
 	buttonText: {
 		color: "#FFFFFF",
-		textAlign: "center",
 	},
 	timeMinutes: {
 		color: "#FFFFFF",

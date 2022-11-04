@@ -34,24 +34,20 @@ const MessageProfessor: React.FC<Props> = props => {
 					</Blur.BlurView>
 				</RN.View>
 				<RN.View style={styles.greetingView}>
-					{greeting && (
-						<>
-							<RN.Text style={styles.greeting}>{greeting}</RN.Text>
-							<RN.View
-								style={{
-									flexDirection: "row",
-									justifyContent: "center",
-									alignItems: "flex-start",
-									marginTop: 17,
-									marginBottom: 12,
-								}}
-							>
-								<RN.View style={styles.lineBR} key={"leftLine"} />
-								<Quote />
-								<RN.View style={styles.lineBR} key={"rightLine"} />
-							</RN.View>
-						</>
-					)}
+					<RN.Text style={styles.greeting}>{greeting}</RN.Text>
+					<RN.View
+						style={{
+							flexDirection: "row",
+							justifyContent: "center",
+							alignItems: "flex-start",
+							marginTop: 17,
+							marginBottom: 12,
+						}}
+					>
+						<RN.View style={styles.lineBR} key={"leftLine"} />
+						<Quote />
+						<RN.View style={styles.lineBR} key={"rightLine"} />
+					</RN.View>
 
 					{message && <RN.Text style={styles.catchPhrases}>{message}</RN.Text>}
 				</RN.View>

@@ -1,7 +1,6 @@
 /** @format */
 
 import { createReducer } from "@reduxjs/toolkit";
-import { BackHandler } from "react-native";
 import { BackgroundSound } from "src/models/practices";
 import { State } from "~types";
 
@@ -61,6 +60,18 @@ export default createReducer<PracticeState>(
 		});
 		builder.addCase(Actions.setPractice, (state, { payload }) => {
 			state.currentPractice = payload;
+		});
+		builder.addCase(Actions.addFavoritePractice.fulfilled, (state, { payload }) => {
+			state.listPracticesFavorite = [...state.listPracticesFavorite, payload];
+		});
+		builder.addCase(Actions.addStatisticPractice.fulfilled, (state, { payload }) => {
+			state.listPracticesListened = [
+				...state.listPracticesListened,
+				{ dateListen: payload[1], msListened: payload[0], practice: payload[2] },
+			];
+		});
+		builder.addCase(Actions.removeFavoritePractice.fulfilled, (state, { payload }) => {
+			state.listPracticesFavorite = [...state.listPracticesFavorite.filter(({ id }) => payload.id !== id)];
 		});
 	}
 );

@@ -10,7 +10,7 @@ function createAppConfig(){
       slug: "dmd_meditation",
       version: version,
       orientation: "portrait",
-      githubUrl: "https://github.com/HardKot/ecstasys",
+      githubUrl: "https://github.com/evolution-corporation/dmd-meditation",
       icon: "./assets/icon.png",
       userInterfaceStyle: "light",
       splash: {
@@ -34,8 +34,12 @@ function createAppConfig(){
         icon: "./assets/icon.png",
         package: `com.ecorp.dmd_meditation${IS_DEV ? '_dev' : ''}`,
         googleServicesFile: `./google-services.json`,
-        permissions: ["android.permission.RECORD_AUDIO"]
+        permissions: ["android.permission.RECORD_AUDIO"],
+        
       },
+      notification: {
+			  icon: "./assets/SystemUI/notificationIcon.png"
+		  },
       plugins: [
         "expo-dev-client",
         "expo-splash-screen",
@@ -43,6 +47,7 @@ function createAppConfig(){
         "expo-av",
         "expo-updates",
         "@react-native-firebase/app",
+        "expo-notifications",
         "@react-native-google-signin/google-signin"
       ],
       extra: {

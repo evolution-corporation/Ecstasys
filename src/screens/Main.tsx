@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 
 import * as RN from "react-native";
 
@@ -93,11 +93,14 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 		return undefined;
 	}, [displayName, greeting]);
 
+	useEffect(() => {
+		Request.getPopularToDayMeditation().then(practice =>
+			setTodayPopularMeditation(Converter.composePractice(practice))
+		);
+	}, []);
+
 	useFocusEffect(
 		useCallback(() => {
-			Request.getPopularToDayMeditation().then(practice =>
-				setTodayPopularMeditation(Converter.composePractice(practice))
-			);
 			StatusBar.setStatusBarTranslucent(true);
 			StatusBar.setStatusBarStyle("light");
 		}, [])
@@ -180,7 +183,6 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 								});
 							} else {
 								navigation.navigate("PlayerForPractice", {
-									practiceLength: recommendationPractice.length,
 									selectedPractice: recommendationPractice,
 								});
 							}

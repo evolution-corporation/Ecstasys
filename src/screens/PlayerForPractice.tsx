@@ -1,25 +1,22 @@
 /** @format */
 
 import React, { useCallback, useEffect, useRef } from "react";
-import { Image, StyleSheet, View, Text, AppState, ActivityIndicator } from "react-native";
+import { Image, StyleSheet, View, Text, AppState, ActivityIndicator, Platform } from "react-native";
 import Animated from "react-native-reanimated";
-import * as Notifications from "expo-notifications";
+import Headphones from "assets/icons/Headphones_white.svg";
 
-import Tools from "~core";
 import { TimeLine, PlayerControl, ColorButton } from "~components/dump";
 
 import { RootScreenProps } from "~types";
-import BackgroundSound from "src/backgroundSound";
-import i18n from "~i18n";
 
 import { Audio, InterruptionModeAndroid, InterruptionModeIOS } from "expo-av";
-import core from "~core";
-import { initializationTimer } from "src/TaskManager";
-import Headphones from "assets/icons/Headphones_white.svg";
 import { actions, useAppDispatch, useAppSelector } from "~store";
+import i18n from "~i18n";
+import gStyle from "~styles";
 import { SharedElement } from "react-navigation-shared-element";
-import { useFocusEffect } from "@react-navigation/native";
 import * as StatusBar from "expo-status-bar";
+import { useFocusEffect } from "@react-navigation/native";
+import BackgroundSound from "src/backgroundSound";
 
 enum StatusPractice {
 	Loading,
@@ -27,137 +24,28 @@ enum StatusPractice {
 	Pause,
 	Change,
 }
-
-Notifications.setNotificationHandler({
-	handleNotification: async () => ({
-		shouldShowAlert: true,
-		shouldPlaySound: false,
-		shouldSetBadge: true,
-	}),
-});
-
-const PlayerForRelaxation: RootScreenProps<"PlayerForRelaxation"> = ({ navigation, route }) => {
-	const { selectedPractice, practiceLength } = route.params;
-	const practiceState = useAppSelector(store => {
-		if (store.practice.currentPractice === undefined) throw new Error("Not Found Practice");
+const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, route }) => {
+	const { selectedPractice } = route.params;
+	const { image, audio, name, length, id } = useAppSelector(store => {
+		if (!store.practice.currentPractice) {
+			throw new Error("not found Practice");
+		}
 		return store.practice.currentPractice;
 	});
+	if (audio === undefined) throw new Error("212");
 	const { currentNameBackgroundSound, currentVolumeBackgroundSound } = useAppSelector(
 		store => store.practice.paramsPractice
 	);
-
-	const [statusPractice, setStatusStatusPractice] = React.useState<StatusPractice>(StatusPractice.Loading);
+	const [statusPractice, setStatusPractice] = React.useState<StatusPractice>(StatusPractice.Loading);
 	const [currentTime, setCurrentTime] = React.useState<number>(0);
+	const audioBackground = useRef<Audio.Sound | null>(null);
 	const _currentTime = useRef<number>(0);
-	const TimeOutId = useRef<NodeJS.Timeout | null>(null);
+
+	const appDispatch = useAppDispatch();
 
 	const audioVoice = useRef<Audio.Sound>(new Audio.Sound()).current;
-	const audioBackground = useRef<Audio.Sound | null>(null);
+	const TimeOutId = useRef<NodeJS.Timeout | null>(null);
 	const timeLineRef = useRef<React.ElementRef<typeof TimeLine>>(null);
-
-	const timerTask = React.useRef<ReturnType<typeof initializationTimer> | null>(null);
-	const appDispatch = useAppDispatch();
-	const [startTimer, stopTimer] = React.useRef([
-		() => {
-			timerTask.current = initializationTimer(() => {
-				setCurrentTime(prevCurrentTime => {
-					timeLineRef.current?.setValue((prevCurrentTime + 100) / practiceLength);
-					if (prevCurrentTime + 100 > practiceLength) {
-						stopTimer();
-					}
-					_currentTime.current += 100;
-					return prevCurrentTime + 100;
-				});
-			});
-		},
-		() => {
-			if (timerTask.current !== null) timerTask.current();
-		},
-	]).current;
-
-	useEffect(() => {
-		Audio.setAudioModeAsync({
-			staysActiveInBackground: true,
-			interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
-			interruptionModeIOS: InterruptionModeIOS.DoNotMix,
-		});
-		//* Загружаем главный трек
-		console.log("mount");
-		// Notifications.dismissAllNotificationsAsync();
-		(async () => {
-			if (practiceState.audio && statusPractice === StatusPractice.Loading) {
-				await audioVoice.loadAsync({ uri: practiceState.audio });
-				const status = await audioVoice.getStatusAsync();
-				setStatusStatusPractice(
-					(() => {
-						if (status.isLoaded) {
-							return status.isPlaying ? StatusPractice.Play : StatusPractice.Pause;
-						} else {
-							return StatusPractice.Loading;
-						}
-					})()
-				);
-			}
-		})();
-
-		// AppState.addEventListener("change", status => {
-		// 	if (status === "active") {
-		// 		Notifications.dismissNotificationAsync();
-		// 	} else if (status === "background" && statusPractice === StatusPractice.Play) {
-		// 		setNotificationControl();
-		// 	}
-		// });
-
-		// const setNotificationControl = async (repeat: boolean = false) => {
-		// 	let permission = await Notifications.getPermissionsAsync();
-		// 	if (permission.granted) {
-		// 		await Notifications.setNotificationCategoryAsync("~Meditation", [
-		// 			{ buttonTitle: i18n.t("Pause"), identifier: "pause", options: { opensAppToForeground: true } },
-		// 		]);
-		// 		await Notifications.scheduleNotificationAsync({
-		// 			content: {
-		// 				title: selectedPractice.name,
-		// 				subtitle: i18n.t("relaxation"),
-		// 				color: "#9765A8",
-		// 				priority: Notifications.AndroidNotificationPriority.HIGH,
-		// 				autoDismiss: false,
-		// 				sticky: false,
-		// 				sound: false,
-		// 				categoryIdentifier: "~Meditation",
-		// 			},
-		// 			trigger: null,
-		// 		});
-		// 	} else {
-		// 		permission = await Notifications.requestPermissionsAsync();
-		// 		if (!repeat) {
-		// 			setNotificationControl(true);
-		// 		}
-		// 	}
-		// };
-
-		// const listenerNotification = Notifications.addNotificationResponseReceivedListener(({ actionIdentifier }) => {
-		// 	if (actionIdentifier === "pause") {
-		// 		pause();
-		// 	}
-		// });
-
-		return () => {
-			audioVoice.getStatusAsync().then(status => {
-				if (status.isLoaded) audioVoice.stopAsync();
-			});
-			if (audioBackground.current !== null) {
-				audioBackground.current.getStatusAsync().then(status => {
-					if (audioBackground.current !== null && status.isLoaded) audioBackground.current.stopAsync();
-				});
-			}
-			stopTimer();
-			if (_currentTime.current >= 60000) {
-				appDispatch(actions.addStatisticPractice([selectedPractice, Math.floor(_currentTime.current)]));
-			}
-
-			// Notifications.removeNotificationSubscription(listenerNotification);
-		};
-	}, []);
 
 	const setBackgroundSound = React.useCallback(
 		async (name: keyof typeof BackgroundSound, volume: number = 1) => {
@@ -215,8 +103,7 @@ const PlayerForRelaxation: RootScreenProps<"PlayerForRelaxation"> = ({ navigatio
 				resolve(undefined);
 			}),
 		]);
-		startTimer();
-		setStatusStatusPractice(StatusPractice.Play);
+		setStatusPractice(StatusPractice.Play);
 	}, []);
 
 	const pause = React.useCallback(async (editStatus: boolean = true) => {
@@ -234,9 +121,78 @@ const PlayerForRelaxation: RootScreenProps<"PlayerForRelaxation"> = ({ navigatio
 				resolve(undefined);
 			}),
 		]);
-		stopTimer();
-		if (editStatus) setStatusStatusPractice(StatusPractice.Pause);
+		if (editStatus) setStatusPractice(StatusPractice.Pause);
 	}, []);
+
+	useEffect(() => {
+		Audio.setAudioModeAsync({
+			staysActiveInBackground: true,
+			interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
+			interruptionModeIOS: InterruptionModeIOS.DoNotMix,
+		});
+		const init = async () => {
+			// Загрузка треков
+			if (statusPractice === StatusPractice.Loading) {
+				await Promise.all([
+					new Promise(async (resolve, reject) => {
+						await audioVoice.loadAsync({ uri: audio }, { progressUpdateIntervalMillis: 100 });
+						audioVoice.setOnPlaybackStatusUpdate(status => {
+							if (status.isLoaded) {
+								setCurrentTime(status.positionMillis);
+								_currentTime.current = status.positionMillis;
+							}
+						});
+						resolve(undefined);
+					}),
+					new Promise(async (resolve, reject) => {
+						if (currentNameBackgroundSound) {
+							setBackgroundSound(currentNameBackgroundSound, currentVolumeBackgroundSound);
+						}
+						resolve(undefined);
+					}),
+				]);
+				//Создание подписок на треки
+			}
+		};
+		init();
+		return () => {
+			Promise.all([
+				new Promise(resolve =>
+					audioVoice.getStatusAsync().then(status => {
+						if (status.isLoaded) {
+							audioVoice.stopAsync();
+							return resolve(status.positionMillis);
+						}
+					})
+				),
+				new Promise(resolve => {
+					if (audioBackground.current !== null) {
+						audioBackground.current.getStatusAsync().then(status => {
+							if (status.isLoaded && audioBackground.current !== null) {
+								audioBackground.current.stopAsync();
+								return resolve(status.positionMillis);
+							}
+						});
+					}
+				}),
+			]);
+		};
+		if (_currentTime.current >= 60000) {
+			appDispatch(actions.addStatisticPractice([selectedPractice, Math.floor(_currentTime.current)]));
+		}
+	}, []);
+
+	useEffect(() => {
+		if (currentNameBackgroundSound) {
+			setBackgroundSound(currentNameBackgroundSound);
+		} else {
+			removeBackgroundSound();
+		}
+	}, [currentNameBackgroundSound]);
+
+	useEffect(() => {
+		audioBackground.current?.setVolumeAsync(currentVolumeBackgroundSound);
+	}, [currentVolumeBackgroundSound]);
 
 	const update = React.useCallback(
 		async (millisecond: number, needUpdateTimeLineRef: boolean = true, needTimeOut: boolean = false) => {
@@ -247,15 +203,13 @@ const PlayerForRelaxation: RootScreenProps<"PlayerForRelaxation"> = ({ navigatio
 					new Promise(async (resolve, reject) => {
 						const mainAudioState = await audioVoice.getStatusAsync();
 						if (mainAudioState.isLoaded) {
-							await audioVoice.setPositionAsync(
-								millisecond > (mainAudioState.durationMillis ?? 0) ? mainAudioState.durationMillis ?? 0 : millisecond
-							);
+							await audioVoice.setPositionAsync(millisecond);
 						}
 						resolve(undefined);
 					}),
 					new Promise(async (resolve, reject) => {
 						if (audioBackground.current !== null) {
-							const audioBackgroundState = await audioBackground.current.getStatusAsync();
+							// const audioBackgroundState = await audioBackground.current.getStatusAsync();
 							// if (audioBackgroundState.isLoaded) {
 							// 	await audioBackground.current.setPositionAsync(millisecond % (audioBackgroundState.durationMillis ?? 0));
 							// }
@@ -270,29 +224,34 @@ const PlayerForRelaxation: RootScreenProps<"PlayerForRelaxation"> = ({ navigatio
 			} else {
 				await updateAudio(millisecond);
 			}
-			if (needUpdateTimeLineRef) timeLineRef.current?.setValue(millisecond / practiceLength);
+			if (needUpdateTimeLineRef) timeLineRef.current?.setValue(millisecond / length);
 		},
 		[]
 	);
 
+	const updateStep = async (millisecond: number) => {
+		const needPlay = statusPractice === StatusPractice.Play;
+		await update(millisecond);
+		if (needPlay) await play();
+	};
 	useFocusEffect(
 		useCallback(() => {
 			StatusBar.setStatusBarTranslucent(true);
 			StatusBar.setStatusBarStyle("light");
 			navigation.setOptions({
-				title: selectedPractice.name,
+				title: name,
 			});
 		}, [])
 	);
 	return (
 		<View style={{ flex: 1 }}>
 			<StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
-			<SharedElement id={`practice.item.${selectedPractice.id}`} style={styles.imageBackground}>
+			<SharedElement id={`practice.item.${id}`} style={styles.imageBackground}>
 				<Image
 					source={{
-						uri: practiceState.image,
+						uri: image,
 					}}
-					style={{ flex: 1 }}
+					style={{ width: "100%", height: "100%" }}
 				/>
 			</SharedElement>
 			<Animated.View style={[styles.background]}>
@@ -301,67 +260,53 @@ const PlayerForRelaxation: RootScreenProps<"PlayerForRelaxation"> = ({ navigatio
 						<ActivityIndicator color={"#FFFFFF"} size={"large"} />
 					) : (
 						<PlayerControl
-							isPlay={statusPractice === StatusPractice.Play}
+							isPlay={statusPractice === StatusPractice.Play || statusPractice === StatusPractice.Change}
 							pause={pause}
 							play={play}
 							stepBack={async () => {
-								update(currentTime < 15000 ? currentTime : currentTime - 15000);
+								updateStep(length - 15000);
 							}}
 							stepForward={async () => {
-								update(currentTime + 15000);
+								updateStep(length + 15000);
 							}}
 							rewindMillisecond={15000}
 						/>
 					)}
 				</View>
-				<View
-					style={[
-						styles.timeInfoBox,
-						{
-							bottom: 95 - styles.buttonBackgroundSound.height - styles.buttonBackgroundSound.marginTop,
-						},
-					]}
-				>
+				<View style={styles.timeInfoBox}>
 					<TimeLine
 						ref={timeLineRef}
 						disable={statusPractice === StatusPractice.Loading}
 						onChange={async percent => {
-							await update(practiceLength * percent, false, true);
+							await update(length * percent, false, true);
 						}}
 						onStartChange={() => {
 							if (statusPractice === StatusPractice.Play) {
 								pause(false);
-								setStatusStatusPractice(StatusPractice.Change);
+								setStatusPractice(StatusPractice.Change);
 							} else {
 								pause();
 							}
-							pause();
-							if (statusPractice === StatusPractice.Play) {
-								setStatusStatusPractice(StatusPractice.Change);
-							}
 						}}
 						onEndChange={() => {
-							if (statusPractice === StatusPractice.Change || statusPractice === StatusPractice.Play) {
-								play();
-							}
+							if (statusPractice === StatusPractice.Change || statusPractice === StatusPractice.Play) play();
 						}}
 					/>
 					<View style={styles.timesCodeBox}>
 						<Text style={styles.timeCode} key={"current"}>
-							{i18n.strftime(new Date(currentTime), "%M:%S")}
+							{i18n.strftime(new Date(currentTime), "%-H:%M:%S")}
 						</Text>
 						<Text style={styles.timeCode} key={"all"}>
-							{i18n.strftime(new Date(practiceLength), "%M:%S")}
+							{i18n.strftime(new Date(length), "%-H:%M:%S")}
 						</Text>
 					</View>
-
 					<ColorButton
 						styleButton={styles.buttonBackgroundSound}
 						styleText={styles.buttonBackgroundText}
 						secondItem={<Headphones style={{ marginRight: 24 }} />}
 						onPress={() => {
 							navigation.navigate("SelectBackgroundSound", {
-								backgroundImage: { uri: practiceState.image },
+								backgroundImage: { uri: image },
 							});
 						}}
 					>
@@ -377,7 +322,7 @@ const PlayerForRelaxation: RootScreenProps<"PlayerForRelaxation"> = ({ navigatio
 	);
 };
 
-export default PlayerForRelaxation;
+export default PlayerForPractice;
 
 const styles = StyleSheet.create({
 	background: {
@@ -409,7 +354,7 @@ const styles = StyleSheet.create({
 	timeCode: {
 		fontSize: 14,
 		color: "#FFFFFF",
-		...Tools.gStyle.font("400"),
+		...gStyle.font("400"),
 		opacity: 0.7,
 	},
 	buttonBackgroundSound: {
@@ -453,7 +398,7 @@ const styles = StyleSheet.create({
 	textJumpTime: {
 		color: "#FFFFFF",
 		fontSize: 13,
-		...core.gStyle.font("400"),
+		...gStyle.font("400"),
 	},
 	panelControlContainer: {
 		alignSelf: "center",

@@ -8,15 +8,20 @@ import { State } from "~types";
 
 interface Props extends ViewProps {
 	historyPractices: State.Practice[];
+	onPress?: (practice: State.Practice) => void;
 }
 
 const ShowListPractices: React.FC<Props> = props => {
-	const { historyPractices } = props;
+	const { historyPractices, onPress } = props;
 	return (
 		<FlatList
 			data={historyPractices}
 			renderItem={({ item }) => (
-				<Pressable>
+				<Pressable
+					onPress={() => {
+						if (onPress) onPress(item);
+					}}
+				>
 					<Image source={{ uri: item.image }} style={styles.image} />
 					<Text style={styles.name}>{item.name}</Text>
 				</Pressable>
