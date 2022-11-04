@@ -135,7 +135,9 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 			if (statusPractice === StatusPractice.Loading) {
 				await Promise.all([
 					new Promise(async (resolve, reject) => {
-						await audioVoice.loadAsync({ uri: audio }, { progressUpdateIntervalMillis: 100 });
+						if (statusPractice === StatusPractice.Loading) {
+							await audioVoice.loadAsync({ uri: audio }, { progressUpdateIntervalMillis: 100 });
+						}
 						audioVoice.setOnPlaybackStatusUpdate(status => {
 							if (status.isLoaded) {
 								setCurrentTime(status.positionMillis);
@@ -176,10 +178,10 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 					}
 				}),
 			]);
+			if (_currentTime.current >= 60000) {
+				appDispatch(actions.addStatisticPractice([selectedPractice, Math.floor(_currentTime.current)]));
+			}
 		};
-		if (_currentTime.current >= 60000) {
-			appDispatch(actions.addStatisticPractice([selectedPractice, Math.floor(_currentTime.current)]));
-		}
 	}, []);
 
 	useEffect(() => {
@@ -330,12 +332,13 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "space-between",
 		paddingHorizontal: 20,
-		paddingBottom: 37,
+		// paddingBottom: 37,
 		width: "100%",
 		height: "100%",
 		position: "absolute",
 	},
 	imageBackground: {
+		position: "absolute",
 		width: "100%",
 		height: "100%",
 	},
@@ -343,6 +346,7 @@ const styles = StyleSheet.create({
 		width: "100%",
 		position: "absolute",
 		alignSelf: "center",
+		bottom: 28,
 	},
 	timesCodeBox: {
 		width: "100%",
@@ -350,6 +354,7 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		alignItems: "center",
 		paddingHorizontal: 5,
+		bottom: 0,
 	},
 	timeCode: {
 		fontSize: 14,

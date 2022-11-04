@@ -47,7 +47,6 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 	);
 
 	if (widthCarousel <= 300) {
-		console.log("ooops");
 		return null;
 	}
 

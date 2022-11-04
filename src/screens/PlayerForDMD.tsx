@@ -197,10 +197,6 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 		if (needUpdateTimeLineRef) timeLineRef.current?.setValue(millisecond / allLength);
 	};
 
-	useEffect(() => {
-		console.log(Status[statusDMD]);
-	}, [statusDMD]);
-
 	const updateStep = async (millisecond: number) => {
 		const needPlay = statusDMD === Status.Play;
 		await update(millisecond);
