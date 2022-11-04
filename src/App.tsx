@@ -20,7 +20,6 @@ if (Platform.OS === "android") {
 }
 const AppCore = () => {
 	React.useEffect(() => {
-		console.log("AppLoading");
 		(async () => {
 			StatusBar.setStatusBarBackgroundColor("#FFFFFF", true);
 			StatusBar.setStatusBarStyle("dark");

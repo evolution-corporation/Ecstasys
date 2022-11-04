@@ -184,9 +184,7 @@ export async function getPopularToDayMeditation(firebaseTokenToken?: string) {
  */
 export async function getMeditationById(meditationId: string, firebaseTokenToken?: string) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const url = URL + "meditation?meditationId=" + meditationId + "&count=1";
-	console.log(" --getMeditationById", url);
-
+	const url = URL + "meditation?meditationId=" + meditationId;
 	const requestServer = await fetch(url, {
 		headers: {
 			Authorization: firebaseTokenToken,
@@ -222,7 +220,6 @@ export async function getMeditationsByType(meditationType: SupportType.TypeMedit
 		throw new RequestError(`getMeditationsByType: ${await requestServer.text()}`, url, undefined, "GET", "50x");
 	}
 	const json = await requestServer.json();
-	console.log(json);
 	return json as ServerEntities.Meditation[];
 }
 
@@ -410,7 +407,6 @@ export async function getRecommendationMeditation(firebaseTokenToken?: string) {
 		},
 	});
 	if (requestServer.status >= 500) {
-		requestServer.text().then(console.log);
 		throw new RequestError(`getRecommendationMeditation: ${await requestServer.text()}`, url, undefined, "GET", "50x");
 	}
 	if (requestServer.status === 404) {

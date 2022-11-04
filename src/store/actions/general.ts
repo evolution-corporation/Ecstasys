@@ -90,7 +90,7 @@ export const initialization = createAsyncThunk(GeneralAction.initialization, asy
 				};
 			}
 			const listNeedPracticeId: string[] = [];
-			const listPracticesListened = []; //await Storage.getStatistic();
+			const listPracticesListened = await Storage.getStatistic();
 			listNeedPracticeId.push(...listPracticesListened.map(item => item.meditationId));
 			const listPracticesFavorite = await Storage.getFavoriteMeditationPractices();
 			listNeedPracticeId.push(
