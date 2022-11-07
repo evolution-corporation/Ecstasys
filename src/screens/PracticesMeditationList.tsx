@@ -21,6 +21,7 @@ import { CategoryCard } from "~components/dump";
 import { Request, Storage } from "~api";
 import { StatusBar } from "expo-status-bar";
 import { useFocusEffect } from "@react-navigation/native";
+import * as BaseMeditation from "src/baseMeditation";
 
 const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) => {
 	const [countPractices, setCountPractices] = useState<{ [key: string]: number | null }>({
@@ -53,6 +54,10 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 				Request.getCountMeditationsByType("directionalVisualizations").then(count =>
 					setCountPractices(preValue => ({ ...preValue, directionalVisualizations: count }))
 				),
+				new Promise(resolve => {
+					setCountPractices(preValue => ({ ...preValue, basic: Object.keys(BaseMeditation).length }));
+					resolve();
+				}),
 			]);
 		})();
 	}, []);

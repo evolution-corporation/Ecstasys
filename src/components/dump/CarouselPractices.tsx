@@ -70,7 +70,7 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 							image={item.image}
 							isSelected={index === selectedIndex}
 							isFavorite={false}
-							isPermission={true}
+							isPermission={item.isPermission}
 							lengthAudio={item.length}
 							name={item.name}
 							onPress={() => onPressElement(index, item.id)}
@@ -111,7 +111,7 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 };
 
 interface CarouselMeditationProps extends ViewProps {
-	data: State.Practice[];
+	data: (State.Practice & { isPermission: boolean })[];
 	onChange?: (practiceId: string | null) => void;
 	onPress?: (practiceId: string) => void;
 }

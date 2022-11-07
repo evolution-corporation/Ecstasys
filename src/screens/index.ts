@@ -19,7 +19,6 @@ export { default as Instruction } from "./Practices/Instruction";
 export { default as FavoriteMeditation } from "./Profile/FavoriteMeditation_old";
 export { default as Options } from "./Options";
 export { default as PaymentWeb } from "./Subscribe/PaymentWeb";
-
 export { default as Main } from "./Main";
 export { default as Profile } from "./Profile";
 export { default as PracticesList } from "./PracticesMeditationList";
@@ -31,45 +30,9 @@ export { default as DMDSelectTimeBright } from "./DMDSelectTimeBright";
 export { default as MessageLog } from "./MessageLog";
 export { default as RelaxListForDMD } from "./RelaxListForDMD";
 export { default as SelectSet } from "./SelectSet";
-
 export { default as IntroAboutApp } from "./IntroAboutApp";
 export { default as IntroAboutYou } from "./IntroAboutYou";
 export { default as PlayerForPractice } from "./PlayerForPractice";
-// export const TabsScreen = {
-// 	Main,
-// 	Profile,
-// 	PracticesList,
-// };
-
-// export const StackScreen: {
-// 	[key in keyof RootStackList]?: [RootScreenProps<key>, AccountStatus];
-// } = {
-// 	//AccountStatus.NO_AUTHENTICATION
-// 	Intro: [Intro, AccountStatus.NO_AUTHENTICATION],
-// 	SelectMethodAuthentication: [SelectMethodAuthentication, AccountStatus.NO_AUTHENTICATION],
-// 	InputNumberPhone: [InputNumberPhone, AccountStatus.NO_AUTHENTICATION],
-// 	InputSMSCode: [InputSMSCode, AccountStatus.NO_AUTHENTICATION],
-// 	// AccountStatus.REGISTRATION
-// 	InputNickname: [InputNickname, AccountStatus.NO_REGISTRATION],
-// 	InputImageAndBirthday: [InputImageAndBirthday, AccountStatus.NO_REGISTRATION],
-// 	Greeting: [Greeting, AccountStatus.NO_REGISTRATION],
-// 	//AccountStatus.REGISTRATION
-// 	EditMainUserData: [EditMainUserData, AccountStatus.REGISTRATION],
-// 	EditUserBirthday: [EditUserBirthday, AccountStatus.REGISTRATION],
-// 	SelectSubscribe: [SelectSubscribe, AccountStatus.REGISTRATION],
-// 	// ResultSubscribe: [ResultSubscribe, AccountStatus.REGISTRATION],
-// 	PracticeListByType: [PracticeListByType, AccountStatus.REGISTRATION],
-// 	// PlayerMeditationPractices: [
-// 	//   PlayerMeditationPractices,
-// 	//   AccountStatus.REGISTRATION,
-// 	// ],
-// 	// BackgroundSound: [BackgroundSound, AccountStatus.REGISTRATION],
-// 	// TimerPractices: [TimerPractices, AccountStatus.REGISTRATION],
-// 	IntroPractices: [IntroPractices, AccountStatus.REGISTRATION],
-// 	// DMDIntro: [DMDIntro, AccountStatus.REGISTRATION],
-// 	Instruction: [Instruction, AccountStatus.REGISTRATION],
-// 	FavoriteMeditation: [FavoriteMeditation, AccountStatus.REGISTRATION],
-// 	OptionsProfile: [OptionsProfile, AccountStatus.REGISTRATION],
-// 	// PaymentWeb: [PaymentWeb, AccountStatus.REGISTRATION],
-// 	Player: [PlayerScreen, AccountStatus.REGISTRATION],
-// };
+export { default as PlayerMeditationOnTheMandala } from "./PlayerMeditationOnTheMandala";
+export { default as SelectTimeForBase } from "./SelectTimeForBase";
+export { default as PlayerMeditationOnTheNose } from "./PlayerMeditationOnTheNose";

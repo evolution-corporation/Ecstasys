@@ -12,23 +12,35 @@
 			},
 			"env": {
 				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
-				"APP_VARIANT": "development"
+				"APP_VARIANT": "dev"
 			}
 		},
-		"preview": {
+		"preview-close": {
 			"distribution": "internal",
 			"channel": "dev",
+			"autoIncrement": true,
 			"env": {
-				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
-				"APP_VARIANT": "preview"
+				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false"
 			},
 			"android": {
-				
+				"buildType": "app-bundle"
+			}
+		},
+		"preview-open": {
+			"distribution": "internal",
+			"channel": "preview",
+			"autoIncrement": true,
+			"env": {
+				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false"
+			},
+			"android": {
+				"buildType": "app-bundle"
 			}
 		},
 		"production": {
 			"channel": "main",
 			"distribution": "store",
+			"autoIncrement": true,
 			"env": {
 				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false"
 			},

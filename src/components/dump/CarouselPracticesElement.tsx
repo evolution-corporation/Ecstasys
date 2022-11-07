@@ -48,7 +48,10 @@ const CarouselPracticesElement: React.FC<Props> = props => {
 				<Animated.View style={[styles.sharedImage, animatedShared]}>
 					{sharedID ? (
 						<SharedElement id={sharedID} style={styles.image}>
-							<Image source={{ uri: image }} style={{ width: "100%", height: "100%", borderRadius: 20 }} />
+							<Image
+								source={typeof image === "string" ? { uri: image } : image}
+								style={{ width: "100%", height: "100%", borderRadius: 20 }}
+							/>
 						</SharedElement>
 					) : (
 						<Image source={{ uri: image }} style={styles.image} />
@@ -57,11 +60,16 @@ const CarouselPracticesElement: React.FC<Props> = props => {
 					<View style={[styles.backgroundImage, { justifyContent: isPermission ? "flex-end" : "center" }]}>
 						{isPermission ? (
 							<View style={styles.imageFooter}>
-								<Text style={styles.audioLength}>
-									{i18n.t("minute", {
-										count: Math.floor(lengthAudio / 60000),
-									})}
-								</Text>
+								{lengthAudio > 0 ? (
+									<Text style={styles.audioLength}>
+										{i18n.t("minute", {
+											count: Math.floor(lengthAudio / 60000),
+										})}
+									</Text>
+								) : (
+									<View />
+								)}
+
 								{isFavorite && (
 									<View style={styles.heartView}>
 										<Heart />

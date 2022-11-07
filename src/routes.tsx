@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { FC, memo } from "react";
-import { Dimensions, StyleSheet } from "react-native";
+import { Dimensions, Pressable, StyleSheet } from "react-native";
 
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 
@@ -28,6 +28,8 @@ import DMDIconNoSelected from "assets/icons/DMDNoSelectedIcon.svg";
 import { useAppSelector } from "~store";
 import { RootScreenProps, RootStackList, State, TabNavigatorList } from "~types";
 import { createStackNavigator } from "@react-navigation/stack";
+
+import InfoIcon from "assets/icons/Info.svg";
 
 const TabNavigator = createBottomTabNavigator<TabNavigatorList>();
 
@@ -237,7 +239,6 @@ const RootRoutes: FC = () => {
 							headerTitleAlign: "center",
 						}}
 					/>
-
 					<RootNavigation.Screen
 						name={"PracticeListByType"}
 						component={Screens.PracticeListByType}
@@ -292,6 +293,53 @@ const RootRoutes: FC = () => {
 							headerTransparent: true,
 							headerTitleAlign: "center",
 						}}
+					/>
+					<RootNavigation.Screen name={"SelectSubscribe"} component={Screens.SelectSubscribe} options={{}} />
+					<RootNavigation.Screen
+						name={"PlayerMeditationOnTheMandala"}
+						component={Screens.PlayerMeditationOnTheMandala}
+						options={{
+							headerTransparent: true,
+							headerTitleAlign: "center",
+							title: i18n.t("db679041-5c95-4487-a86a-7bbb38d7d220"),
+						}}
+						initialParams={{ isNeedVoice: false, practiceLength: 600000 }}
+					/>
+					<RootNavigation.Screen
+						name={"PlayerMeditationOnTheNose"}
+						component={Screens.PlayerMeditationOnTheNose}
+						options={{
+							headerTransparent: true,
+							headerTitleAlign: "center",
+							title: i18n.t("6dff586b-050e-4476-9b9f-8fd5c1114afa"),
+						}}
+						initialParams={{ isNeedVoice: false, practiceLength: 600000 }}
+					/>
+					<RootNavigation.Screen
+						name={"SelectTimeForBase"}
+						component={Screens.SelectTimeForBase}
+						options={({ route, navigation }) => ({
+							headerTitleAlign: "center",
+							headerTransparent: true,
+							headerRight: ({}) => (
+								<Pressable
+									onPress={() => {
+										navigation.navigate("Instruction", { instruction: route.params.selectedPractice.instruction });
+									}}
+								>
+									<InfoIcon />
+								</Pressable>
+							),
+						})}
+						// sharedElements={({ params }) => {
+						// 	const { id } = params.selectedPractice as State.Practice;
+						// 	return [`practice.item.${id}`];
+						// }}
+					/>
+					<RootNavigation.Screen
+						name={"Instruction"}
+						component={Screens.Instruction}
+						options={{ title: i18n.t("ce174d00-e4df-42f3-bb19-82ed6c987750"), headerTitleAlign: "center" }}
 					/>
 				</>
 			);

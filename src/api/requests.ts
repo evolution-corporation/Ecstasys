@@ -277,7 +277,7 @@ export async function getSubscribeUserInformation(
 			Type: "Month",
 			UserId: "GEdKUP844QdzlStc6rpmnyPEyqJ2",
 			RebillId: -1,
-			WhenSubscribe: "2022-10-11T18:00:00.000Z",
+			WhenSubscribe: "2022-04-30T19:00:00.000Z",
 			RemainingTime: 20,
 		};
 	}
@@ -291,17 +291,26 @@ export async function getSubscribeUserInformation(
  */
 export async function getPaymentURL(subscribeType: SupportType.SubscribeType, firebaseTokenToken?: string) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const url = URL + "payment?type=" + subscribeType + "&needRecurrent=" + subscribeType === "Week" ? "false" : "true";
+	const url =
+		URL +
+		"payment?type=" +
+		0 +
+		"&needRecurrent=" +
+		(subscribeType === "Week" ? "false" : "true") +
+		"&token=" +
+		firebaseTokenToken;
 	const requestServer = await fetch(url, {
 		headers: {
 			Authorization: firebaseTokenToken,
 			"Content-Type": "application/json",
 		},
 	});
+	console.log(requestServer.status, firebaseTokenToken);
 	if (requestServer.status >= 500) {
 		throw new RequestError(`getPaymentURL: ${await requestServer.text()}`, url, undefined, "GET", "50x");
 	}
 	const json = await requestServer.json();
+	console.log(json);
 	return json.length as string;
 }
 

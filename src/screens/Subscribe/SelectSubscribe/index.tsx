@@ -7,24 +7,24 @@ import { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reani
 
 import { CustomModal, DoubleColorView } from "~components/containers";
 import { ColorButton } from "~components/dump";
-import Tools from "~core";
 import i18n from "~i18n";
+import gStyle from "~styles";
 
-import { SubscribeType } from "~types";
+import { RootScreenProps, SubscribeType } from "~types";
 import { SubscribeCard } from "./components";
-import store, { useAppDispatch, useAppSelector } from "~store";
+import store, { actions, useAppDispatch, useAppSelector } from "~store";
 
 const price = {
 	month_1: 279,
 	month_6: 1179,
 };
 
-const SelectSubscribeScreen = () => {
+const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = () => {
 	const subscribe = useAppSelector(store => store.account.subscribe);
 
 	const [selectedSubscribeType, setSelectedSubscribeType] = useState<SubscribeType | null>(null);
 
-	const modalRef = useRef<ElementRef<typeof CustomModal>>(null);
+	// const modalRef = useRef<ElementRef<typeof CustomModal>>(null);
 
 	const _transporteeYButton = useSharedValue(300);
 	const aStyle = {
@@ -42,8 +42,12 @@ const SelectSubscribeScreen = () => {
 			_transporteeYButton.value = 0;
 		}
 	}, [selectedSubscribeType]);
-
+	const appDispatch = useAppDispatch();
 	const isActiveSubs = (subscribe !== undefined && new Date(subscribe.whenSubscribe) >= new Date()) ?? false;
+
+	const editSubscribe = () => {
+		if (selectedSubscribeType !== null) appDispatch(actions.getPaymentURLForSubscribe(selectedSubscribeType));
+	};
 
 	return (
 		<DoubleColorView heightViewPart={229} style={styles.background}>
@@ -63,9 +67,9 @@ const SelectSubscribeScreen = () => {
 				</Text>
 				<SubscribeCard
 					image={require("./assets/pillow.png")}
-					isSelected={selectedSubscribe === "1 month"}
-					isUsed={isActiveSubs && info?.type === "1 month"}
-					onPress={() => setSelectedSubscribe("1 month")}
+					isSelected={selectedSubscribeType === SubscribeType.MONTH}
+					isUsed={isActiveSubs && subscribe?.type === "MONTH"}
+					onPress={() => setSelectedSubscribeType(SubscribeType.MONTH)}
 					price={price.month_1}
 					stylesContent={{
 						textStyle: { color: "#702D87" },
@@ -80,16 +84,16 @@ const SelectSubscribeScreen = () => {
 						bottom: i18n.t("4415fe5e-bd86-41b1-91ca-5b20c685172b"),
 					}}
 					onCancelSubscribe={() => {}}
-					isShowCancelButton={info?.autoPayment ?? false}
+					isShowCancelButton={subscribe?.autoPayment ?? false}
 				/>
-				{isActiveSubs && info?.type === "1 month" && (
+				{isActiveSubs && subscribe?.type === "MONTH" && (
 					<Text style={styles.offerToChangeSubscribeType}>{i18n.t("b6f80560-6ba6-4646-821a-a03ca72acb74")}</Text>
 				)}
 				<SubscribeCard
 					image={require("./assets/armchair.png")}
-					isSelected={selectedSubscribe === "6 month"}
-					isUsed={isActiveSubs && info?.type === "6 month"}
-					onPress={() => setSelectedSubscribe("6 month")}
+					isSelected={selectedSubscribeType === SubscribeType.HALF_YEAR}
+					isUsed={isActiveSubs && subscribe?.type === "HALF_YEAR"}
+					onPress={() => setSelectedSubscribeType(SubscribeType.HALF_YEAR)}
 					price={price.month_6}
 					stylesContent={{
 						textStyle: { color: "#FFFFFF" },
@@ -112,7 +116,7 @@ const SelectSubscribeScreen = () => {
 					}}
 					onCancelSubscribe={() => {}}
 					// TODO: Navigation
-					isShowCancelButton={info?.autoPayment ?? false}
+					isShowCancelButton={subscribe?.autoPayment ?? false}
 				/>
 			</View>
 			<ColorButton
@@ -120,12 +124,12 @@ const SelectSubscribeScreen = () => {
 				styleText={styles.buttonText}
 				animationStyle={aStyle.button}
 				onPress={() => {
-					modalRef.current?.open();
+					editSubscribe();
 				}}
 			>
 				{i18n.t("Arrange")}
 			</ColorButton>
-			<CustomModal
+			{/* <CustomModal
 				ref={modalRef}
 				style={styles.informationMessage}
 				mainStyle={{
@@ -136,15 +140,23 @@ const SelectSubscribeScreen = () => {
 				}}
 			>
 				<Text style={styles.titleInformation}>
-					{i18n.t(selectedSubscribe ? "2a881f76-a942-4175-a734-462661892693" : "0f3b106b-5bfb-4870-8405-3735cf6ac3a5")}
+					{i18n.t(
+						selectedSubscribeType !== null
+							? "2a881f76-a942-4175-a734-462661892693"
+							: "0f3b106b-5bfb-4870-8405-3735cf6ac3a5"
+					)}
 				</Text>
 				<Text style={styles.messageInformation}>
-					{i18n.t(selectedSubscribe ? "664c1f21-3425-485a-b4d1-d59f8578207f" : "274347f0-628b-4128-8595-d6be9611ea03")}
+					{i18n.t(
+						selectedSubscribeType !== null
+							? "664c1f21-3425-485a-b4d1-d59f8578207f"
+							: "274347f0-628b-4128-8595-d6be9611ea03"
+					)}
 				</Text>
 				<ColorButton styleButton={styles.buttonModal} styleText={styles.buttonModalText}>
-					{i18n.t(selectedSubscribe ? "edit" : "off")}
+					{i18n.t(selectedSubscribeType !== null ? "edit" : "off")}
 				</ColorButton>
-			</CustomModal>
+			</CustomModal> */}
 		</DoubleColorView>
 	);
 };
@@ -155,11 +167,11 @@ const styles = StyleSheet.create({
 	TitlePremium: {
 		color: "#FFFFFF",
 		fontSize: 20,
-		...Tools.gStyle.font("600"),
+		...gStyle.font("600"),
 	},
 
 	price: {
-		...Tools.gStyle.font("600"),
+		...gStyle.font("600"),
 	},
 	subscribeCard: {
 		width: "100%",
@@ -177,7 +189,7 @@ const styles = StyleSheet.create({
 	},
 	month: {
 		fontSize: 20,
-		...Tools.gStyle.font("600"),
+		...gStyle.font("600"),
 	},
 	textPrice: {
 		justifyContent: "space-between",
@@ -187,14 +199,14 @@ const styles = StyleSheet.create({
 		color: "#E7DDEC",
 		textAlign: "center",
 		fontSize: 16,
-		...Tools.gStyle.font("400"),
+		...gStyle.font("400"),
 		width: "80%",
 	},
 
 	isHaveSubscribe: {
 		color: "#FFFFFF",
 		fontSize: 20,
-		...Tools.gStyle.font("600"),
+		...gStyle.font("600"),
 		textAlign: "center",
 		marginBottom: 12,
 	},
@@ -207,7 +219,7 @@ const styles = StyleSheet.create({
 	offerToChangeSubscribeType: {
 		color: "#3D3D3D",
 		fontSize: 16,
-		...Tools.gStyle.font("600"),
+		...gStyle.font("600"),
 		textAlign: "center",
 	},
 
@@ -218,7 +230,7 @@ const styles = StyleSheet.create({
 		paddingVertical: 7,
 		borderRadius: 15,
 		fontSize: 13,
-		...Tools.gStyle.font("600"),
+		...gStyle.font("600"),
 		marginTop: 12,
 	},
 	informationMessage: {
@@ -235,7 +247,7 @@ const styles = StyleSheet.create({
 	messageInformation: {
 		color: "rgba(64, 64, 64, 0.71)",
 		fontSize: 14,
-		...Tools.gStyle.font("400"),
+		...gStyle.font("400"),
 		textAlign: "center",
 		marginVertical: 24,
 	},

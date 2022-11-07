@@ -14,9 +14,11 @@ import {
 	ColorValue,
 } from "react-native";
 import { TextButton } from "~components/dump";
-
+import BirdWhite from "assets/icons/BirdWhiteS.svg";
+import BirdViolet from "assets/icons/BitrdViolet.svg";
 import gStyles from "~styles";
 import i18n from "~i18n";
+import CircleCheck from "assets/icons/CircleCheck";
 
 const SubscribeCard: FC<SubscribeCardProps> = props => {
 	const {
@@ -53,7 +55,7 @@ const SubscribeCard: FC<SubscribeCardProps> = props => {
 					</Text>
 				</View>
 				<View style={styles.imageCard}>
-					<Bird color={mainColor} />
+					{mainColor === "#FFFFFF" ? <BirdWhite /> : <BirdViolet />}
 					<Image source={image} style={styles.imagePeople} />
 				</View>
 				{!isUsed && <CircleCheck isSelected={isSelected} style={styles.checkSelectedSubscribe} colorItem={mainColor} />}

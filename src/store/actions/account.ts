@@ -4,8 +4,10 @@ import auth from "@react-native-firebase/auth";
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { Converter, Request, Storage } from "~api";
-import { State } from "~types";
+import { State, SubscribeType } from "~types";
 import type { AsyncThunkConfig } from "../index";
+import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
+import { SupportType } from "src/api/types";
 
 enum AccountAction {
 	setChangedData = "account/setChangedData",
@@ -16,6 +18,7 @@ enum AccountAction {
 	signIn = "account/signIn",
 	getData = "account/getAccountData",
 	setRegistrationAccountStatus = "account/setRegistrationAccountStatus",
+	getPaymentURLForSubscribe = "account/getPaymentURLForSubscribe",
 }
 
 interface SetChangedAccountDataParams {
@@ -137,3 +140,23 @@ export const signInAccount = createAsyncThunk<
 });
 
 export const setRegistrationAccountStatus = createAction(AccountAction.setRegistrationAccountStatus);
+
+export const getPaymentURLForSubscribe = createAsyncThunk(
+	AccountAction.getPaymentURLForSubscribe,
+	async (type: SubscribeType) => {
+		let ty: SupportType.SubscribeType;
+		switch (type) {
+			case SubscribeType.HALF_YEAR:
+				ty = "Month6";
+				break;
+			case SubscribeType.MONTH:
+				ty = "Month";
+				break;
+			case SubscribeType.WEEK:
+				ty = "Week";
+				break;
+		}
+		const url = await Request.getPaymentURL(ty);
+		console.log(url);
+	}
+);

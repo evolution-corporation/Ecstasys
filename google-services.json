@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "878799007977-hjs2g5189etj53694sbta775b1r0d0hd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ecorp.dmd_meditation",
+            "certificate_hash": "1b5646d9272b9de0b37f521d93c88005d663cdc3"
+          }
+        },
+        {
           "client_id": "878799007977-u9ttb46265edd2o5712o144c46lts0lp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -119,6 +127,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "878799007977-4err715ojjlv0cepcc14qk3lp4a0bdje.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ecorp.plants",
+            "certificate_hash": "bd24c61fb13f9dc0412f3bf0c522c542d24de4d4"
+          }
+        },
+        {
           "client_id": "878799007977-6lg224mqq1eerpfh7vehs6lsk3i165ut.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -139,6 +155,66 @@
           "client_type": 1,
           "android_info": {
             "package_name": "com.ecorp.plants",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "878799007977-cj3549ni87jre2rmg4eq0hiolp08igh2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0lKHzxRYFSr--dBsOh9zt2G009m6g7hg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "878799007977-cj3549ni87jre2rmg4eq0hiolp08igh2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "878799007977-n3kvt3geq3l57ua4qjgr6dun4eho0vn8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.evolution.plants"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878799007977:android:a0a82d211b7d1ed5da0078",
+        "android_client_info": {
+          "package_name": "com.evodigital.dmdmeditation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "878799007977-1pdlugt8iecbqi9nru4s7uj5s8mpeder.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.evodigital.dmdmeditation",
+            "certificate_hash": "bd24c61fb13f9dc0412f3bf0c522c542d24de4d4"
+          }
+        },
+        {
+          "client_id": "878799007977-3j53alm0edtuj6k4cnitd0263qunjhsd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.evodigital.dmdmeditation",
+            "certificate_hash": "3fe78c513ce930d7aa383483ce36e217ca1b0a68"
+          }
+        },
+        {
+          "client_id": "878799007977-6vp6scniv52fimi2r1bkdm8r58n8slkb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.evodigital.dmdmeditation",
             "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },

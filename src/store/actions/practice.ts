@@ -83,3 +83,22 @@ export const editBackgroundMusic = createAction<keyof typeof BackgroundSound | n
 export const editBackgroundVolume = createAction<number>(PracticeAction.editBackgroundVolume);
 
 export const setPractice = createAction<State.Practice>(PracticeAction.setPractice);
+
+export const addStatisticBasePractice = createAsyncThunk<
+	[number, string, State.BasePractice],
+	[State.BasePractice, number],
+	AsyncThunkConfig
+>(PracticeAction.addStatistic, async ([practiceState, timeListen]) => {
+	const statisticsList = await Storage.getStatistic();
+	let lastIndex: string;
+	if (statisticsList.length > 0) {
+		lastIndex = statisticsList[statisticsList.length - 1].id;
+	} else {
+		lastIndex = Math.floor(100 * Math.random()).toString();
+	}
+
+	const nextId = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, lastIndex);
+	const toDay = new Date();
+	await Storage.addStatistic(nextId, timeListen, toDay, practiceState.id);
+	return [timeListen, toDay.toISOString(), practiceState];
+});

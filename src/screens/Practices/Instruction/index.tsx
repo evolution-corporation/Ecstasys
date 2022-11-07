@@ -3,17 +3,17 @@
 import React from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 
-import { RootScreenProps } from "src/routes";
+import { RootScreenProps } from "~types";
 import core from "~core";
 
 const Instruction: RootScreenProps<"Instruction"> = ({ route }) => {
-	const { data, description, title } = route.params.instruction;
+	const { body, description, id, title } = route.params.instruction;
 	return (
 		<ScrollView style={styles.background}>
 			<Text style={styles.title}>{title}</Text>
 			<Text style={styles.description}>{description}</Text>
 			<View style={styles.lineDescription} />
-			{data.map((item, index) => (
+			{body.map((item, index) => (
 				<Text key={`key_${index}`} style={styles.text}>
 					<Text style={styles.indexKey}>{`${index + 1} `}</Text>
 					{item.text}

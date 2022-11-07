@@ -13,10 +13,13 @@ import { DoubleColorView } from "~components/containers";
 import i18n from "~i18n";
 import DescriptionPrentices from "assets/descriptionPrentices.json";
 import { CarouselPractices } from "~components/dump";
-import { actions, useAppDispatch } from "~store";
+import { actions, useAppDispatch, useAppSelector } from "~store";
 import { Converter, Request } from "~api";
 import { SupportType } from "src/api/types";
 import { StatusBar } from "expo-status-bar";
+import { MeditationOnTheMandala, MeditationOnTheNose } from "src/baseMeditation";
+
+import * as Instruction from "src/instruction";
 
 const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navigation }) => {
 	const { typePractices } = route.params;
@@ -30,6 +33,29 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 			opacity: withTiming(opacityButton.value),
 		})),
 	};
+	const isSubscribe = useAppSelector(store => {
+		if (store.account.subscribe !== undefined) {
+			const endSubscribe = new Date(store.account.subscribe.whenSubscribe);
+			endSubscribe.setDate(
+				endSubscribe.getDate() +
+					(() => {
+						switch (store.account.subscribe.type) {
+							case "WEEK":
+								return 7;
+							case "MONTH":
+								return 30;
+							case "HALF_YEAR":
+								return 180;
+							default:
+								return 0;
+						}
+					})()
+			);
+			return endSubscribe.getTime() > Date.now();
+		} else {
+			return false;
+		}
+	});
 
 	React.useLayoutEffect(() => {
 		navigation.setOptions({ title: i18n.t(typePractices) });
@@ -55,7 +81,13 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 				const newListPractice = (await Request.getMeditationsByType(typePractice))
 					.map(practice => Converter.composePractice(practice))
 					.filter(practice => practice !== null) as State.Practice[];
-				setPracticeList([...newListPractice]);
+				setPracticeList([
+					...newListPractice.map(item => ({ ...item, isPermission: item.isNeedSubscribe ? isSubscribe : true })),
+				]);
+			} else {
+				setPracticeList(
+					[MeditationOnTheMandala, MeditationOnTheNose].map(item => ({ ...item, isNeedSubscribe: false }))
+				);
 			}
 		};
 		init();
@@ -63,14 +95,21 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 	const onClick = (practiceId: string) => {
 		const practiceIndex = practiceList.findIndex(item => item.id === practiceId);
 		if (practiceIndex !== -1) {
-			dispatch(actions.setPractice(practiceList[practiceIndex]));
-			if (practiceList[practiceIndex].type === "RELAXATION") {
-				navigation.navigate("SelectTimeForRelax", { selectedPractice: practiceList[practiceIndex] });
-			} else {
-				navigation.navigate("PlayerForPractice", {
-					practiceLength: practiceList[practiceIndex].length,
-					selectedPractice: practiceList[practiceIndex],
-				});
+			if (practiceList[practiceIndex].isPermission) {
+				const practice = Object.fromEntries(
+					Object.entries(practiceList[practiceIndex]).filter(([key, value]) => key !== "isPermission")
+				);
+				dispatch(actions.setPractice(practiceList[practiceIndex]));
+				if (practiceList[practiceIndex].type === "RELAXATION") {
+					navigation.navigate("SelectTimeForRelax", { selectedPractice: practiceList[practiceIndex] });
+				} else if (typePractices === PracticesMeditation.BASIC) {
+					navigation.navigate("SelectTimeForBase", { selectedPractice: practiceList[practiceIndex] });
+				} else {
+					navigation.navigate("PlayerForPractice", {
+						practiceLength: practiceList[practiceIndex].length,
+						selectedPractice: practiceList[practiceIndex],
+					});
+				}
 			}
 		}
 	};
@@ -83,7 +122,16 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 				styleButton={styles.buttonInstruction}
 				styleText={styles.buttonTextInstruction}
 				colors={["#75348B", "#6A2382"]}
-				onPress={() => {}}
+				onPress={() => {
+					if (typePractices === PracticesMeditation.RELAXATION) {
+						navigation.navigate("Instruction", { instruction: Instruction.relaxation });
+					} else if (typePractices === PracticesMeditation.DIRECTIONAL_VISUALIZATIONS) {
+						navigation.navigate("Instruction", { instruction: Instruction.directionalVisualization });
+					} else {
+						const index = practiceList.findIndex(item => item.id == selectedPracticeId.current);
+						if (index !== -1) navigation.navigate("Instruction", { instruction: practiceList[index].instruction });
+					}
+				}}
 			>
 				{i18n.t("ce174d00-e4df-42f3-bb19-82ed6c987750")}
 			</ColorButton>

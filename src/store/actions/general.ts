@@ -19,6 +19,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { State } from "~types";
 import { Request, Converter, Storage } from "~api";
 import i18n from "~i18n";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 enum GeneralAction {
 	initialization = "general/initialization",
@@ -102,8 +103,10 @@ export const initialization = createAsyncThunk(GeneralAction.initialization, asy
 				//* Получаем данные по медитациям с которыми мы как-то связаны.
 
 				for (let id of listNeedPracticeId) {
-					const practice = Converter.composePractice(await Request.getMeditationById(id));
-					if (practice !== null) listNeedPractice.set(id, practice);
+					if (id !== "32c996f7-13e6-4604-966d-b96a8bf0e7c3" && id !== "9ce4657e-2d0a-405a-b02f-408dd76cc8f7") {
+						const practice = Converter.composePractice(await Request.getMeditationById(id));
+						if (practice !== null) listNeedPractice.set(id, practice);
+					}
 				}
 				//!
 				// recommendationPracticeToDay = Converter.composePractice(

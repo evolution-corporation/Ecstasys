@@ -131,6 +131,14 @@ export namespace State {
 		isNeedSubscribe: boolean;
 		length: number;
 	}
+
+	export interface BasePractice {
+		id: string;
+		description: string;
+		name: string;
+		instruction: Instruction;
+		image: ImageSourcePropType;
+	}
 	export interface StatisticUnit {
 		id: string;
 		dateListen: string;
@@ -198,8 +206,7 @@ export type RootStackList = {
 	IntroPractices: undefined;
 	Greeting: undefined;
 	Instruction: {
-		// instruction: Instruction;
-		typeMeditationName: string;
+		instruction: State.Instruction;
 	};
 	FavoriteMeditation: undefined;
 	Options: undefined;
@@ -247,6 +254,17 @@ export type RootStackList = {
 	DMDIntro: undefined;
 	PlayerForPractice: {
 		selectedPractice: State.Practice;
+	};
+	PlayerMeditationOnTheMandala: {
+		isNeedVoice: boolean;
+		practiceLength: number;
+	};
+	SelectTimeForBase: {
+		selectedPractice: State.BasePractice;
+	};
+	PlayerMeditationOnTheNose: {
+		isNeedVoice: boolean;
+		practiceLength: number;
 	};
 };
 
