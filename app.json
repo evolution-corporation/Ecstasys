@@ -41,7 +41,15 @@
 			"expo-updates",
 			"@react-native-firebase/app",
 			"expo-notifications",
-			"@react-native-google-signin/google-signin"
+			"@react-native-google-signin/google-signin",
+			[
+				"expo-build-properties",
+				{
+					"ios": {
+						"useFrameworks": "static"
+					}
+				}
+			]
 		],
 		"extra": {
 			"eas": {
