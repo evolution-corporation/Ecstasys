@@ -1,56 +1,56 @@
 {
-  "expo": {
-    "jsEngine": "jsc",
-    "name": "DMD Meditation",
-    "slug": "dmd_meditation",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "githubUrl": "https://github.com/evolution-corporation/dmd-meditation",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#FFFFFF"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0,
-      "url": "https://u.expo.dev/65b7d342-ce66-4baa-9507-071987162a44"
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      },
-      "icon": "./assets/icon.png",
-      "package": "com.evodigital.dmdmeditation",
-      "googleServicesFile": "./google-services.json",
-      "permissions": [
-        "android.permission.RECORD_AUDIO"
-      ],
-      "versionCode": 3
-    },
-    "plugins": [
-      "expo-dev-client",
-      "expo-splash-screen",
-      "expo-image-picker",
-      "expo-av",
-      "expo-updates",
-      "@react-native-firebase/app",
-      "expo-notifications",
-      "@react-native-google-signin/google-signin"
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "65b7d342-ce66-4baa-9507-071987162a44"
-      },
-      "isDebug": true
-    },
-    "runtimeVersion": {
-      "policy": "sdkVersion"
-    }
-  }
+	"expo": {
+		"jsEngine": "jsc",
+		"name": "DMD Meditation",
+		"slug": "dmd_meditation",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"githubUrl": "https://github.com/evolution-corporation/dmd-meditation",
+		"icon": "./assets/icon.png",
+		"userInterfaceStyle": "light",
+		"splash": {
+			"image": "./assets/splash.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#FFFFFF"
+		},
+		"updates": {
+			"fallbackToCacheTimeout": 0,
+			"url": "https://u.expo.dev/65b7d342-ce66-4baa-9507-071987162a44"
+		},
+		"assetBundlePatterns": ["**/*"],
+		"android": {
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/adaptive-icon.png",
+				"backgroundColor": "#FFFFFF"
+			},
+			"icon": "./assets/icon.png",
+			"package": "com.evodigital.dmdmeditation",
+			"googleServicesFile": "./google-services.json",
+			"permissions": ["android.permission.RECORD_AUDIO"],
+			"versionCode": 3
+		},
+		"ios": {
+			"googleServicesFile": "./GoogleService-Info.plist",
+			"bundleIdentifier": "com.evodigital.dmdmeditation"
+		},
+		"plugins": [
+			"expo-dev-client",
+			"expo-splash-screen",
+			"expo-image-picker",
+			"expo-av",
+			"expo-updates",
+			"@react-native-firebase/app",
+			"expo-notifications",
+			"@react-native-google-signin/google-signin"
+		],
+		"extra": {
+			"eas": {
+				"projectId": "65b7d342-ce66-4baa-9507-071987162a44"
+			},
+			"isDebug": true
+		},
+		"runtimeVersion": {
+			"policy": "sdkVersion"
+		}
+	}
 }

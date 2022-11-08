@@ -18,7 +18,6 @@
 		"preview-close": {
 			"distribution": "internal",
 			"channel": "dev",
-			"autoIncrement": true,
 			"env": {
 				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false"
 			},
@@ -29,7 +28,6 @@
 		"preview-open": {
 			"distribution": "internal",
 			"channel": "preview",
-			"autoIncrement": true,
 			"env": {
 				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false"
 			},
@@ -40,7 +38,6 @@
 		"production": {
 			"channel": "main",
 			"distribution": "store",
-			"autoIncrement": true,
 			"env": {
 				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false"
 			},
