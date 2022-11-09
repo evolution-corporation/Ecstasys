@@ -46,7 +46,7 @@ DerivedData
 *.ipa
 *.xcuserstate
 project.xcworkspace
-
+GoogleService-Info.plist
 # Android/IntelliJ
 #
 build/
@@ -55,7 +55,7 @@ build/
 local.properties
 *.iml
 *.hprof
-
+google-services.json
 # node.js
 #
 node_modules/
