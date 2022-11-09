@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>635865863130-48kn1vou49h57mb0ghe10gqpsd5hr5kc.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.635865863130-48kn1vou49h57mb0ghe10gqpsd5hr5kc</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>635865863130-3qpv2ccg7l8c04qegavl7rjpii8mb1qk.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBfuOCJTbE-er8fjvhU8KRkCbLTn89nbPk</string>
+	<key>GCM_SENDER_ID</key>
+	<string>635865863130</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.evodigital.dmdmeditation</string>
+	<key>PROJECT_ID</key>
+	<string>pc-api-4643918752370993252-207</string>
+	<key>STORAGE_BUCKET</key>
+	<string>pc-api-4643918752370993252-207.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:635865863130:ios:f46b9c63fe7734f585a6e3</string>
+</dict>
+</plist>
