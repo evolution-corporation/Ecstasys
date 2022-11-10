@@ -13,45 +13,6 @@ const seconds = [
 ];
 
 const ScrollTime: FC<ScrollTimeProps> = props => {
-	// const { data } = props;
-	// const [selectedMinutesIndex, setSelectedMinutesIndex] = useState<number>(
-	//   Math.floor(data.length / 2)
-	// );
-
-	// const _viewabilityConfig = useRef<ViewabilityConfig>({
-	//   itemVisiblePercentThreshold: 70,
-	//   waitForInteraction: true,
-	// }).current;
-
-	// const _onViewableItemsChanged = useRef(
-	//   ({ viewableItems }: { viewableItems: ViewToken[] }) => {
-	//     console.log("ted");
-	//     if (viewableItems.length > 0) {
-	//       const mediumIndex = Math.floor(viewableItems.length / 2);
-	//       if (viewableItems[mediumIndex].index !== null) {
-	//         setSelectedMinutesIndex(mediumIndex);
-	//       }
-	//     }
-	//   }
-	// ).current;
-	// return (
-	//   <FlatList
-	//     data={data}
-	//     key={"test"}
-	//     renderItem={({ item }) => (
-	//       <View>
-	//         <Text style={[styles.item, styles.selectedItem]}>{item}</Text>
-	//       </View>
-	//     )}
-	//     extraData={data}
-	//     keyExtractor={(item) => `key-${item.toString()}`}
-	//     style={styles.background}
-	//     viewabilityConfig={_viewabilityConfig}
-	//     onViewableItemsChanged={_onViewableItemsChanged}
-	//     disableIntervalMomentum={true}
-	//     snapToInterval={56}
-	//   />
-	// );
 	const { onChange, style, minimalTime = 300000 } = props;
 	const [minutes, minimalSeconds] = useMemo(() => {
 		const _minutes = [];

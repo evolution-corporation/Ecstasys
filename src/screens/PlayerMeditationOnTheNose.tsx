@@ -134,7 +134,6 @@ const PlayerMeditationOnTheNose: RootScreenProps<"PlayerMeditationOnTheNose"> = 
 	}));
 
 	useEffect(() => {
-		console.log(currentNameBackgroundSound);
 		if (currentNameBackgroundSound) {
 			setBackgroundSound(currentNameBackgroundSound);
 		} else {

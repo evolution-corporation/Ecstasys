@@ -10,7 +10,7 @@ const countCode = 6;
 const keyList = [0, 1, 2, 3, 4, 5];
 
 export const SMSCodeInput = forwardRef<SMSCodeInputRef, SMSCodeInputProps>((props, ref) => {
-	const { autoFocus = false, onChange, onEndInput = text => console.info(text), style } = props;
+	const { autoFocus = false, onChange, onEndInput = text => {}, style } = props;
 	const refList = keyList.map(key => useRef<TextInput>(null));
 	const [code, setCode] = useState<string>("");
 

@@ -8,8 +8,10 @@
 			"distribution": "internal",
 			"channel": "dev",
 			"android": {
-				"buildType": "apk"
+				"buildType": "apk",
+				"prebuildCommand": "prebuild"
 			},
+
 			"env": {
 				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
 				"APP_VARIANT": "dev"
@@ -19,29 +21,42 @@
 			"distribution": "internal",
 			"channel": "dev",
 			"env": {
-				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false"
+				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
+				"APP_VARIANT": "alpha"
 			},
 			"android": {
-				"buildType": "app-bundle"
+				"buildType": "app-bundle",
+				"prebuildCommand": "prebuild "
+			},
+			"ios": {
+				"prebuildCommand": "prebuild"
 			}
 		},
 		"preview-open": {
 			"distribution": "internal",
 			"channel": "preview",
 			"env": {
-				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false"
+				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
+				"APP_VARIANT": "beta"
 			},
 			"android": {
-				"buildType": "app-bundle"
+				"buildType": "app-bundle",
+				"prebuildCommand": "prebuild "
 			}
 		},
 		"production": {
 			"channel": "main",
 			"distribution": "store",
 			"env": {
-				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false"
+				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
+				"APP_VARIANT": "prod"
 			},
-			"android": {}
+			"android": {
+				"prebuildCommand": "prebuild "
+			},
+			"ios": {
+				"prebuildCommand": "prebuild"
+			}
 		}
 	},
 	"submit": {

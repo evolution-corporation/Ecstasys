@@ -235,7 +235,6 @@ export const initialization = createAsyncThunk(GeneralAction.initialization, asy
 		// 	]);
 		// },
 	]);
-	console.info("Loading", Date.now() - start, "ms");
 
 	return {
 		account:

@@ -16,12 +16,7 @@ type CodePhoneCountryType = keyof typeof listCodePhoneCountry;
 const ListCodePhoneCountry = Object.keys(listCodePhoneCountry) as CodePhoneCountryType[];
 
 const NumberInput: FC<Props> = props => {
-	const {
-		defaultCode = "RU",
-		autoFocus = false,
-		onChange = (number: string, isValidate) => console.info(number, isValidate),
-		fixHeigth = 0,
-	} = props;
+	const { defaultCode = "RU", autoFocus = false, onChange = (number: string, isValidate) => {}, fixHeigth = 0 } = props;
 
 	const [regionCode, setRegionCode] = useState<CodePhoneCountryType>(defaultCode);
 	const [phone, setPhone] = useState<string>("");

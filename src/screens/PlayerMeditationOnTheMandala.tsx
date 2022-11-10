@@ -158,7 +158,6 @@ const PlayerMeditationOnTheMandala: RootScreenProps<"PlayerMeditationOnTheMandal
 	}));
 
 	useEffect(() => {
-		console.log(currentNameBackgroundSound);
 		if (currentNameBackgroundSound) {
 			setBackgroundSound(currentNameBackgroundSound);
 		} else {
@@ -223,7 +222,6 @@ const PlayerMeditationOnTheMandala: RootScreenProps<"PlayerMeditationOnTheMandal
 					renderItem={({ item }) => (
 						<Pressable
 							onPress={() => {
-								console.log(item.name === "Base", isSubscribe);
 								if (item.name === "Base" || isSubscribe) setMandala(item.uri);
 							}}
 						>

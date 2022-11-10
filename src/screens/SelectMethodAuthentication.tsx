@@ -15,7 +15,7 @@ import {
 import Swiper from "react-native-swiper";
 import { useBackHandler } from "@react-native-community/hooks";
 
-import * as Application from "expo-application";
+import Constants from "expo-constants";
 
 import Tools from "~core";
 import GoogleLogo from "~assets/icons/GoogleLogo.svg";
@@ -42,7 +42,6 @@ const SelectMethodAuthentication: RootScreenProps<"SelectMethodAuthentication"> 
 		}
 		return true;
 	});
-
 	const authWithGoogle = async () => {
 		setIsLoading(true);
 		GoogleSignin.configure({

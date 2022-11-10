@@ -157,6 +157,5 @@ export const getPaymentURLForSubscribe = createAsyncThunk(
 				break;
 		}
 		const url = await Request.getPaymentURL(ty);
-		console.log(url);
 	}
 );

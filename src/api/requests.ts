@@ -7,7 +7,11 @@ import auth from "@react-native-firebase/auth";
 import { RequestError } from "src/Errors";
 import { ServerEntities, SupportType } from "./types";
 import * as Storage from "./asyncStorage";
-const URL = "http://62.84.125.238:8000/";
+import Constants from "expo-constants";
+
+const { extra } = Constants.manifest ?? {};
+const { apiURL } = extra;
+const URL = "http://" + apiURL + "/";
 
 /**
  * Получает FirebaseToken пользователя
@@ -28,7 +32,6 @@ async function getFirebaseToken(firebaseToken: string | undefined) {
 		}
 	}
 	const end = Date.now();
-	if (end - start > 200) console.log("getFirebaseToken", end - start);
 	if (firebaseToken === undefined) {
 		throw new Error("User token not found");
 	}
@@ -305,12 +308,10 @@ export async function getPaymentURL(subscribeType: SupportType.SubscribeType, fi
 			"Content-Type": "application/json",
 		},
 	});
-	console.log(requestServer.status, firebaseTokenToken);
 	if (requestServer.status >= 500) {
 		throw new RequestError(`getPaymentURL: ${await requestServer.text()}`, url, undefined, "GET", "50x");
 	}
 	const json = await requestServer.json();
-	console.log(json);
 	return json.length as string;
 }
 
