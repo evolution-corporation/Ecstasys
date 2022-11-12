@@ -188,12 +188,12 @@ const CategoryMeditation: {
 		description: "bb340c18-2a8b-4b7b-8250-80a865dca9b4",
 		id: PracticesMeditation.DIRECTIONAL_VISUALIZATIONS,
 	},
-	{
-		name: "c15d823e-8dd8-4eb7-b9f5-87c9845ac397",
-		image: require("assets/practicesImage/breathingPractices.png"),
-		description: "c54bff96-21eb-4f10-8ad6-090e06f2eef9",
-		id: PracticesMeditation.BREATHING_PRACTICES,
-	},
+	// {
+	// 	name: "c15d823e-8dd8-4eb7-b9f5-87c9845ac397",
+	// 	image: require("assets/practicesImage/breathingPractices.png"),
+	// 	description: "c54bff96-21eb-4f10-8ad6-090e06f2eef9",
+	// 	id: PracticesMeditation.BREATHING_PRACTICES,
+	// },
 	{
 		name: "0d63a21e-eecc-45cc-9085-86b97c88d713",
 		image: require("assets/practicesImage/basic.png"),

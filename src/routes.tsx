@@ -341,6 +341,11 @@ const RootRoutes: FC = () => {
 						component={Screens.Instruction}
 						options={{ title: i18n.t("ce174d00-e4df-42f3-bb19-82ed6c987750"), headerTitleAlign: "center" }}
 					/>
+					<RootNavigation.Screen
+						name={"Payment"}
+						component={Screens.Payment}
+						options={{ title: i18n.t("35f5ec21-d765-46a5-a33e-ff5b418170fe") }}
+					/>
 				</>
 			);
 	}

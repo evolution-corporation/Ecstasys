@@ -47,10 +47,20 @@ const SelectMethodAuthentication: RootScreenProps<"SelectMethodAuthentication"> 
 		GoogleSignin.configure({
 			webClientId: "878799007977-cj3549ni87jre2rmg4eq0hiolp08igh2.apps.googleusercontent.com",
 		});
-		const { idToken } = await GoogleSignin.signIn();
-		const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-		await auth().signInWithCredential(googleCredential);
+		try {
+			const { idToken, serverAuthCode, user } = await GoogleSignin.signIn();
+			const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+			await auth().signInWithCredential(googleCredential);
+		} catch (error) {
+			if (error instanceof Error) {
+				if (error.message === "Sign in action cancelled") {
+					setIsLoading(false);
+					return;
+				}
+			}
+		}
 		await appDispatch(actions.signInAccount()).unwrap();
+		await GoogleSignin.signOut();
 	};
 
 	return (

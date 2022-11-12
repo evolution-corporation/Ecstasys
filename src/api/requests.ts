@@ -12,13 +12,11 @@ import Constants from "expo-constants";
 const { extra } = Constants.manifest ?? {};
 const { apiURL } = extra;
 const URL = "http://" + apiURL + "/";
-
 /**
  * Получает FirebaseToken пользователя
  * @returns FirebaseToken пользователя
  */
 async function getFirebaseToken(firebaseToken: string | undefined) {
-	const start = Date.now();
 	if (firebaseToken === undefined) {
 		const tokenSaved = await Storage.getToken();
 		if (tokenSaved === null) {
@@ -31,13 +29,11 @@ async function getFirebaseToken(firebaseToken: string | undefined) {
 			firebaseToken = tokenSaved;
 		}
 	}
-	const end = Date.now();
 	if (firebaseToken === undefined) {
 		throw new Error("User token not found");
 	}
 	return firebaseToken;
 }
-
 /**
  *	Возвращает пользователя по ID
  *	@param userId id пользователя данне которого необходимо получить
@@ -313,6 +309,25 @@ export async function getPaymentURL(subscribeType: SupportType.SubscribeType, fi
 	}
 	const json = await requestServer.json();
 	return json.length as string;
+}
+
+export async function redirectPaymentURL(subscribeType: SupportType.SubscribeType, firebaseTokenToken?: string) {
+	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
+	const url =
+		URL +
+		"payment?type=" +
+		0 +
+		"&needRecurrent=" +
+		(subscribeType === "Week" ? "false" : "true") +
+		"&token=" +
+		firebaseTokenToken;
+
+	return {
+		uri: url,
+		headers: {
+			Authorization: firebaseTokenToken,
+		},
+	};
 }
 
 /**

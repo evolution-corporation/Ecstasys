@@ -19,7 +19,7 @@ const price = {
 	month_6: 1179,
 };
 
-const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = () => {
+const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation }) => {
 	const subscribe = useAppSelector(store => store.account.subscribe);
 
 	const [selectedSubscribeType, setSelectedSubscribeType] = useState<SubscribeType | null>(null);
@@ -46,7 +46,7 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = () => {
 	const isActiveSubs = (subscribe !== undefined && new Date(subscribe.whenSubscribe) >= new Date()) ?? false;
 
 	const editSubscribe = () => {
-		if (selectedSubscribeType !== null) appDispatch(actions.getPaymentURLForSubscribe(selectedSubscribeType));
+		if (selectedSubscribeType !== null) navigation.navigate("Payment", { selectSubscribe: selectedSubscribeType });
 	};
 
 	return (

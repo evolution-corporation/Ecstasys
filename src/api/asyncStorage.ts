@@ -285,5 +285,5 @@ export async function saveToken(token: string, timeDead: Date): Promise<string> 
 
 export async function clear() {
 	await AsyncStorage.clear();
-	await SecureStore.deleteItemAsync(AsyncStorageKey.JWT_TOKEN);
+	await SecureStore.deleteItemAsync(AsyncStorageKey.JWT_TOKEN.replaceAll("@", "."));
 }

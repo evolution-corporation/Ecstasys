@@ -32,7 +32,9 @@ const SMSCodeInputScreen: RootScreenProps<"InputSMSCode"> = ({ route }) => {
 
 	const requestSMSCode = useCallback(async () => {
 		setStatus(SMSCodeInputInfoShow.loadingIndicator);
+		const start = Date.now();
 		const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+		console.log("signInWithPhoneNumber", confirm, phoneNumber, Date.now() - start);
 		setConfirm(confirmation);
 		setStatus(SMSCodeInputInfoShow.requestSMS);
 	}, [phoneNumber]);

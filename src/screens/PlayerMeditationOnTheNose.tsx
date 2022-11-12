@@ -21,6 +21,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import * as StatusBar from "expo-status-bar";
 import * as BasePractice from "src/baseMeditation";
 import { useDimensions } from "@react-native-community/hooks";
+import { SharedElement } from "react-navigation-shared-element";
 
 enum StatusPractice {
 	Loading,
@@ -149,61 +150,54 @@ const PlayerMeditationOnTheNose: RootScreenProps<"PlayerMeditationOnTheNose"> = 
 		useCallback(() => {
 			StatusBar.setStatusBarTranslucent(true);
 			StatusBar.setStatusBarStyle("light");
-
-			const circlingMandala = () => {
-				rotateMandala.value = withRepeat(
-					withTiming("36000deg", { duration: 3600000, easing: Easing.linear }),
-					-1,
-					false
-				);
-			};
-			circlingMandala();
 		}, [])
 	);
 	const { window } = useDimensions();
 	return (
 		<View style={styles.background}>
+			<SharedElement id={"image"} style={{ width: "100%", height: "100%", position: "absolute" }}>
+				<Image source={require("assets/BaseMeditationImage/Nose.png")} style={{ width: "100%", height: "100%" }} />
+			</SharedElement>
 			<StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
-			<Pressable
-				onPress={() => setIsShowTime(prevState => !prevState)}
-				style={{
-					alignSelf: "center",
-					width: window.width - 40,
-					height: window.width - 40,
-					alignItems: "center",
-					justifyContent: "center",
-					position: "absolute",
-					bottom: "40%",
-				}}
-			>
-				<Animated.View style={styleMandala}>
-					<Image source={require("assets/BaseMeditationImage/Nose.png")} style={{ width: "100%", height: "100%" }} />
-				</Animated.View>
-				{isShowTime && (
-					<View style={styles.timesCodeBox}>
-						<Text style={styles.timeCode} key={"current"}>
-							{i18n.strftime(new Date(currentTime), "%M:%S")}
-						</Text>
-					</View>
-				)}
-			</Pressable>
-			<View style={[styles.timeInfoBox]}>
-				<ColorButton
-					styleButton={styles.buttonBackgroundSound}
-					styleText={styles.buttonBackgroundText}
-					secondItem={<Headphones style={{ marginRight: 24 }} />}
-					onPress={() => {
-						navigation.navigate("SelectBackgroundSound", {
-							backgroundImage: require("assets/BaseMeditationImage/Nose.png"),
-						});
+			<View style={{ flex: 1, paddingHorizontal: 20 }}>
+				<Pressable
+					onPress={() => setIsShowTime(prevState => !prevState)}
+					style={{
+						alignSelf: "center",
+						width: window.width - 40,
+						height: window.width - 40,
+						alignItems: "center",
+						justifyContent: "center",
+						position: "absolute",
+						bottom: "40%",
 					}}
 				>
-					{i18n.t(
-						currentNameBackgroundSound !== null
-							? BackgroundSound[currentNameBackgroundSound].translate
-							: "12ee6d3a-ad58-4c4a-9b87-63645efe9c90"
+					{isShowTime && (
+						<View style={styles.timesCodeBox}>
+							<Text style={styles.timeCode} key={"current"}>
+								{i18n.strftime(new Date(currentTime), "%M:%S")}
+							</Text>
+						</View>
 					)}
-				</ColorButton>
+				</Pressable>
+				<View style={[styles.timeInfoBox]}>
+					<ColorButton
+						styleButton={styles.buttonBackgroundSound}
+						styleText={styles.buttonBackgroundText}
+						secondItem={<Headphones style={{ marginRight: 24 }} />}
+						onPress={() => {
+							navigation.navigate("SelectBackgroundSound", {
+								backgroundImage: require("assets/BaseMeditationImage/Nose.png"),
+							});
+						}}
+					>
+						{i18n.t(
+							currentNameBackgroundSound !== null
+								? BackgroundSound[currentNameBackgroundSound].translate
+								: "12ee6d3a-ad58-4c4a-9b87-63645efe9c90"
+						)}
+					</ColorButton>
+				</View>
 			</View>
 		</View>
 	);
@@ -216,8 +210,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "#000000",
 		flex: 1,
 		justifyContent: "space-between",
-		paddingHorizontal: 20,
-		paddingBottom: 37,
+		// paddingHorizontal: 20,
 		width: "100%",
 		height: "100%",
 		position: "absolute",

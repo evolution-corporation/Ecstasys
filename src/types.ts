@@ -211,7 +211,6 @@ export type RootStackList = {
 	FavoriteMeditation: undefined;
 	Options: undefined;
 	devSetting: undefined;
-	Payment: undefined;
 	IntroAboutApp: undefined;
 	IntroAboutYou: undefined;
 	SelectMethodAuthentication: undefined;
@@ -265,6 +264,9 @@ export type RootStackList = {
 	PlayerMeditationOnTheNose: {
 		isNeedVoice: boolean;
 		practiceLength: number;
+	};
+	Payment: {
+		selectSubscribe: State.SubscribeType;
 	};
 };
 

@@ -9,7 +9,7 @@ import { Provider } from "react-redux";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import RootRoutes from "./routes";
-import Store, { actions } from "./store";
+import Store, { actions, useAppDispatch } from "./store";
 import "./TaskManager";
 import * as StatusBar from "expo-status-bar";
 

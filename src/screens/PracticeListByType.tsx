@@ -85,9 +85,7 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 					...newListPractice.map(item => ({ ...item, isPermission: item.isNeedSubscribe ? isSubscribe : true })),
 				]);
 			} else {
-				setPracticeList(
-					[MeditationOnTheMandala, MeditationOnTheNose].map(item => ({ ...item, isNeedSubscribe: false }))
-				);
+				setPracticeList([MeditationOnTheMandala, MeditationOnTheNose].map(item => ({ ...item, isPermission: true })));
 			}
 		};
 		init();
