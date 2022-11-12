@@ -60,7 +60,6 @@ const SelectMethodAuthentication: RootScreenProps<"SelectMethodAuthentication"> 
 			}
 		}
 		await appDispatch(actions.signInAccount()).unwrap();
-		await GoogleSignin.signOut();
 	};
 
 	return (
