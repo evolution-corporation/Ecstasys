@@ -6,26 +6,23 @@ import Animated, * as AnimatedTools from "react-native-reanimated";
 import Lock from "assets/icons/Lock.svg";
 import Heart from "assets/icons/Heart_Red.svg";
 import core from "~core";
-import { PracticesMeditation } from "~types";
+import { PracticesMeditation, State } from "~types";
 
 import i18n from "~i18n";
 import { SharedElement } from "react-navigation-shared-element";
+import IsFavorite from "./IsFavorite";
 
 interface Props extends ViewProps {
-	isFavorite: boolean;
-	description: string;
-	name: string;
-	image: string;
+	practice: State.Practice;
 	isPermission: boolean;
-	lengthAudio: number;
 	onPress: () => void;
 	isSelected: boolean;
 	sharedID?: string;
+	isNoShowFavorite?: boolean;
 }
 
 const CarouselPracticesElement: React.FC<Props> = props => {
-	const { isSelected, description, image, isPermission, name, onPress, lengthAudio, isFavorite, style, sharedID } =
-		props;
+	const { isSelected, practice, isPermission, onPress, style, sharedID, isNoShowFavorite = false } = props;
 	const width = AnimatedTools.useSharedValue(182);
 
 	const animatedShared = AnimatedTools.useAnimatedStyle(() => ({
@@ -49,32 +46,32 @@ const CarouselPracticesElement: React.FC<Props> = props => {
 					{sharedID ? (
 						<SharedElement id={sharedID} style={styles.image}>
 							<Image
-								source={typeof image === "string" ? { uri: image } : image}
+								source={typeof practice.image === "string" ? { uri: practice.image } : practice.image}
 								style={{ width: "100%", height: "100%", borderRadius: 20 }}
 							/>
 						</SharedElement>
 					) : (
-						<Image source={{ uri: image }} style={styles.image} />
+						<Image source={{ uri: practice.image }} style={styles.image} />
 					)}
 
 					<View style={[styles.backgroundImage, { justifyContent: isPermission ? "flex-end" : "center" }]}>
 						{isPermission ? (
 							<View style={styles.imageFooter}>
-								{lengthAudio > 0 ? (
+								{practice.length > 0 ? (
 									<Text style={styles.audioLength}>
 										{i18n.t("minute", {
-											count: Math.floor(lengthAudio / 60000),
+											count: Math.floor(practice.length / 60000),
 										})}
 									</Text>
 								) : (
 									<View />
 								)}
-
-								{isFavorite && (
-									<View style={styles.heartView}>
-										<Heart />
-									</View>
-								)}
+								{!isNoShowFavorite &&
+								!["9ce4657e-2d0a-405a-b02f-408dd76cc8f7", "32c996f7-13e6-4604-966d-b96a8bf0e7c3"].includes(
+									practice.id
+								) ? (
+									<IsFavorite practice={practice} />
+								) : null}
 							</View>
 						) : (
 							<View style={styles.lock}>
@@ -87,10 +84,10 @@ const CarouselPracticesElement: React.FC<Props> = props => {
 			{isSelected && (
 				<>
 					<Text style={styles.name} adjustsFontSizeToFit>
-						{name}
+						{practice.name}
 					</Text>
 					<Text style={styles.description} adjustsFontSizeToFit>
-						{description}
+						{practice.description}
 					</Text>
 				</>
 			)}
@@ -132,10 +129,10 @@ const styles = StyleSheet.create({
 		color: "rgba(64, 64, 64, 0.71)",
 		fontSize: 13,
 		...core.gStyle.font("400"),
-		maxWidth: 200,
-		maxHeight: 68,
+		maxWidth: "100%",
+		// maxHeight: 68,
 		textAlign: "center",
-		lineHeight: 15,
+		// lineHeight: 15,
 	},
 	sharedImage: {
 		borderRadius: 28,

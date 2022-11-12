@@ -6,7 +6,6 @@
 		"development": {
 			"developmentClient": true,
 			"distribution": "internal",
-			"channel": "dev",
 			"android": {
 				"buildType": "apk",
 				"prebuildCommand": "prebuild"
@@ -19,7 +18,7 @@
 		},
 		"preview-close": {
 			"distribution": "internal",
-			"channel": "dev",
+			"channel": "preview",
 			"env": {
 				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
 				"APP_VARIANT": "alpha"
@@ -45,7 +44,7 @@
 			}
 		},
 		"production": {
-			"channel": "main",
+			"channel": "production",
 			"distribution": "store",
 			"env": {
 				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false",

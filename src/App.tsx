@@ -2,14 +2,15 @@
 
 import React, { FC } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { Platform, UIManager, View } from "react-native";
+import { Alert, Platform, UIManager, View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { Provider } from "react-redux";
 
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import * as Updates from "expo-updates";
 
 import RootRoutes from "./routes";
-import Store, { actions, useAppDispatch } from "./store";
+import Store, { actions } from "./store";
 import "./TaskManager";
 import * as StatusBar from "expo-status-bar";
 
@@ -26,7 +27,9 @@ const AppCore = () => {
 			await SplashScreen.preventAutoHideAsync();
 			try {
 				await Store.dispatch(actions.initialization()).unwrap();
-			} catch (error) {}
+			} catch (error) {
+				if (error instanceof Error) Alert.alert(`Ошибка при загрузке. ${error.name}`, error.message);
+			}
 			await SplashScreen.hideAsync();
 		})();
 	}, []);

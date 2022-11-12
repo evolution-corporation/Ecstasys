@@ -77,6 +77,7 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 			{practiceList.length > 0 && (
 				<CarouselPractices
 					data={practiceList}
+					isNoShowFavorite
 					style={{ width: Dimensions.get("window").width, left: -20 }}
 					onPress={practiceId => {
 						onClick(practiceId);

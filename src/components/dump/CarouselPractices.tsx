@@ -66,13 +66,9 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 				renderItem={({ item, index }) => (
 					<View style={styles.elementList}>
 						<CarouselPracticesElement
-							description={item.description}
-							image={item.image}
+							practice={item}
 							isSelected={index === selectedIndex}
-							isFavorite={false}
 							isPermission={item.isPermission}
-							lengthAudio={item.length}
-							name={item.name}
 							onPress={() => onPressElement(index, item.id)}
 							sharedID={`practice.item.${item.id}`}
 						/>

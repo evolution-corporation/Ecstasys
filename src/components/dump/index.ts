@@ -22,3 +22,4 @@ export { default as PlayerControl } from "./PlayerControl";
 export { default as SelectTime } from "./SelectTime";
 export { Card as PracticeCard, CarouselElement as CarouselPracticesElement } from "./PracticeView";
 export { default as NumberInput } from "./NumberInput";
+export { default as IsFavorite } from "./IsFavorite";
