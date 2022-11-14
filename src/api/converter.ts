@@ -11,7 +11,7 @@ import { ServerEntities } from "./types";
 export function composeUser(data: ServerEntities.User | null): State.User | null {
 	if (data === null) return null;
 	let image = "https://storage.yandexcloud.net/dmdmeditationimage/users/NoUserImage.png";
-	if (data.PhotoId) image = "https://storage.yandexcloud.net/dmdmeditationimage/users/" + data.PhotoId + ".png";
+	if (data.PhotoId) image = "https://storage.yandexcloud.net/dmdmeditationimage/users/" + data.PhotoId;
 	return {
 		uid: data.Id,
 		birthday: data.Birthday,
@@ -64,11 +64,11 @@ export function composePractice(data: ServerEntities.Meditation | null): State.P
 			default:
 				throw new Error(`Not found ${data.TypeMeditation} in PracticesMeditation`);
 		}
-		const image = "https://storage.yandexcloud.net/dmdmeditationimage/meditations/" + data.PhotoId + ".png";
+		const image = "https://storage.yandexcloud.net/dmdmeditationimage/meditations/" + data.PhotoId;
 
 		let audio: string | undefined;
 		if (data.AudioId) {
-			audio = "https://storage.yandexcloud.net/dmdmeditatonaudio/" + data.AudioId + ".mp3";
+			audio = "https://storage.yandexcloud.net/dmdmeditatonaudio/" + data.AudioId;
 		}
 		if (data.Description === undefined) {
 			throw new Error(`Not found description in practices. MeditationID: ${data.Id}`);

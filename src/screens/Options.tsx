@@ -14,6 +14,8 @@ import { actions, useAppDispatch } from "~store";
 import { RootScreenProps } from "~types";
 import { StatusBar } from "expo-status-bar";
 
+import { version } from "package.json";
+
 const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 	const appDispatch = useAppDispatch();
 	return (
@@ -51,6 +53,7 @@ const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 				<LogOut />
 				<Text style={styles.buttonText}>{i18n.t("c9bcb9a8-e59c-4ee5-97f1-94dae753a716")}</Text>
 			</TouchableOpacity>
+			<Text style={{ position: "absolute", bottom: 20, color: "#FFFFFF", right: 0 }}>{version}</Text>
 		</View>
 	);
 };

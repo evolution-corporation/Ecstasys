@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		paddingVertical: 25,
 		justifyContent: "flex-end",
+		backgroundColor: "#FFFFFF",
 	},
 	professor: {
 		position: "absolute",
