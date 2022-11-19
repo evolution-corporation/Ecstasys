@@ -16,6 +16,7 @@ import CheckMarkerGreen from "~assets/icons/CheckMarkerGreen.svg";
 import { useFocusEffect } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { useBackHandler } from "@react-native-community/hooks";
+import { Screen } from "~components/containers";
 
 const InputLoginScreen: RootScreenProps<"InputNickname"> = ({ navigation }) => {
 	const appDispatch = useAppDispatch();
@@ -60,8 +61,7 @@ const InputLoginScreen: RootScreenProps<"InputNickname"> = ({ navigation }) => {
 	});
 
 	return (
-		<View style={styles.background}>
-			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
+		<Screen backgroundColor={"#9765A8"}>
 			<NicknameBase
 				ref={NicknameBaseRef}
 				onEndChange={processing}
@@ -97,7 +97,7 @@ const InputLoginScreen: RootScreenProps<"InputNickname"> = ({ navigation }) => {
 			>
 				{i18n.t("continue")}
 			</ColorButton>
-		</View>
+		</Screen>
 	);
 };
 
@@ -106,7 +106,6 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 30,
 		paddingBottom: 75,
 		justifyContent: "flex-start",
-		backgroundColor: "#9765A8",
 		flex: 1,
 	},
 	ColorButtonStyle: { marginVertical: 10 },

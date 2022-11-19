@@ -26,10 +26,7 @@ enum GeneralAction {
 }
 
 export const initialization = createAsyncThunk(GeneralAction.initialization, async (_, {}) => {
-	// let userInformation: State.User | null = null;
-	// let subscribeInformation: State.Subscribe | null = null;
-	const start = Date.now();
-	let [accountInformation, __, practicesInformation, messageProfessor, ___] = await Promise.all([
+	let [accountInformation, __, practicesInformation, messageProfessor] = await Promise.all([
 		// авторизация данных об аккаунте и их перезапись в памяти
 		(async () => {
 			const userFirebase = auth().currentUser;
@@ -101,18 +98,12 @@ export const initialization = createAsyncThunk(GeneralAction.initialization, asy
 			let recommendationPracticeToDay: State.Practice | null = null;
 			if (await Request.checkAccess()) {
 				//* Получаем данные по медитациям с которыми мы как-то связаны.
-
 				for (let id of listNeedPracticeId) {
 					if (id !== "32c996f7-13e6-4604-966d-b96a8bf0e7c3" && id !== "9ce4657e-2d0a-405a-b02f-408dd76cc8f7") {
 						const practice = Converter.composePractice(await Request.getMeditationById(id));
 						if (practice !== null) listNeedPractice.set(id, practice);
 					}
 				}
-				//!
-				// recommendationPracticeToDay = Converter.composePractice(
-				// 	await Request.getMeditationById("3a6d27ba-200c-4540-9e3e-ec5684f17e07")
-				// );
-				//!
 				recommendationPracticeToDay = Converter.composePractice(await Request.getRecommendationMeditation());
 			} else {
 				let randomId =
@@ -235,7 +226,6 @@ export const initialization = createAsyncThunk(GeneralAction.initialization, asy
 		// 	]);
 		// },
 	]);
-
 	return {
 		account:
 			accountInformation !== null

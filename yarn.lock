@@ -1981,6 +1981,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@invertase/react-native-apple-authentication@npm:^2.2.2":
+  version: 2.2.2
+  resolution: "@invertase/react-native-apple-authentication@npm:2.2.2"
+  checksum: d51c121eba66721e914c16bfa352929b03bf8f6a38aae4b06157ee3399d0ecdc42bd53d5e655ae39b460ec7c759f87753d2c917bccedb3118e2c1bd75d6f874c
+  languageName: node
+  linkType: hard
+
 "@istanbuljs/load-nyc-config@npm:^1.0.0":
   version: 1.1.0
   resolution: "@istanbuljs/load-nyc-config@npm:1.1.0"
@@ -3295,6 +3302,15 @@ __metadata:
   dependencies:
     "@types/react": "*"
   checksum: 1b620095ddf2fe85157df9d57435edc619587eacb1a4fadd91c977c200cef8008e7fec4d8c5429ce373e1a2158199f1162f9c84e8e5a7d0b71a2224f31b64dfd
+  languageName: node
+  linkType: hard
+
+"@types/react-test-renderer@npm:^18":
+  version: 18.0.0
+  resolution: "@types/react-test-renderer@npm:18.0.0"
+  dependencies:
+    "@types/react": "*"
+  checksum: 6afc938a1d7618d88ab8793e251f0bd5981bf3f08c1b600f74df3f8800b92589ea534dc6dcb7c8d683893fcc740bf8d7843a42bf2dae59785cfe88f004bd7b0b
   languageName: node
   linkType: hard
 
@@ -5375,6 +5391,7 @@ __metadata:
     "@babel/preset-typescript": ^7.18.6
     "@expo-google-fonts/inter": ^0.2.2
     "@expo-google-fonts/roboto": ^0.2.2
+    "@invertase/react-native-apple-authentication": ^2.2.2
     "@react-native-async-storage/async-storage": ~1.17.3
     "@react-native-community/blur": ^4.2.0
     "@react-native-community/datetimepicker": 6.5.2
@@ -5396,6 +5413,7 @@ __metadata:
     "@types/react": ~18.0.24
     "@types/react-native": ~0.70.6
     "@types/react-native-snap-carousel": ^3.8.5
+    "@types/react-test-renderer": ^18
     "@types/validator": ^13.7.3
     babel-jest: ^29.1.2
     bluebird: ^3.7.2
@@ -5441,6 +5459,7 @@ __metadata:
     react-native-wheel-scrollview-picker: ^2.0.1
     react-navigation-shared-element: ^3.1.3
     react-redux: ^8.0.2
+    react-test-renderer: ^18.2.0
     typescript: ^4.6.3
     validator: ^13.7.0
     whatwg-fetch: ^3.6.2
@@ -10876,7 +10895,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-is@npm:^16.12.0 || ^17.0.0 || ^18.0.0, react-is@npm:^18.0.0, react-is@npm:^18.1.0":
+"react-is@npm:^16.12.0 || ^17.0.0 || ^18.0.0, react-is@npm:^18.0.0, react-is@npm:^18.1.0, react-is@npm:^18.2.0":
   version: 18.2.0
   resolution: "react-is@npm:18.2.0"
   checksum: e72d0ba81b5922759e4aff17e0252bd29988f9642ed817f56b25a3e217e13eea8a7f2322af99a06edb779da12d5d636e9fda473d620df9a3da0df2a74141d53e
@@ -11199,6 +11218,19 @@ __metadata:
   peerDependencies:
     react: ^16.0.0 || ^17.0.0 || ^18.0.0
   checksum: 6052c7e3e9627485120ebd8257f128aad8f56386fe8d42374b7743eac1be457c33506d153c7886b4e32923c0c352d402ab805ef9ca02dbcd8393b2bdeb6e5af8
+  languageName: node
+  linkType: hard
+
+"react-test-renderer@npm:^18.2.0":
+  version: 18.2.0
+  resolution: "react-test-renderer@npm:18.2.0"
+  dependencies:
+    react-is: ^18.2.0
+    react-shallow-renderer: ^16.15.0
+    scheduler: ^0.23.0
+  peerDependencies:
+    react: ^18.2.0
+  checksum: 6b6980ced93fa2b72662d5e4ab3b4896833586940047ce52ca9aca801e5432adf05fcbe28289b0af3ce6a2a7c590974e25dcc8aa43d0de658bfe8bbcd686f958
   languageName: node
   linkType: hard
 
@@ -11745,6 +11777,15 @@ __metadata:
   dependencies:
     loose-envify: ^1.1.0
   checksum: a8ef5cab769c020cd6382ad9ecc3f72dbde56a50a36639b3a42ad9c11f7724f03700bcad373044059b8067d4a6365154dc7c0ca8027ef20ff4900cf58a0fc2c5
+  languageName: node
+  linkType: hard
+
+"scheduler@npm:^0.23.0":
+  version: 0.23.0
+  resolution: "scheduler@npm:0.23.0"
+  dependencies:
+    loose-envify: ^1.1.0
+  checksum: d79192eeaa12abef860c195ea45d37cbf2bbf5f66e3c4dcd16f54a7da53b17788a70d109ee3d3dde1a0fd50e6a8fc171f4300356c5aee4fc0171de526bf35f8a
   languageName: node
   linkType: hard
 

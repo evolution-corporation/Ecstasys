@@ -133,26 +133,36 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 		const init = async () => {
 			// Загрузка треков
 			if (statusPractice === StatusPractice.Loading) {
-				await Promise.all([
-					new Promise(async (resolve, reject) => {
-						if (statusPractice === StatusPractice.Loading) {
-							await audioVoice.loadAsync({ uri: audio }, { progressUpdateIntervalMillis: 100 });
-						}
-						audioVoice.setOnPlaybackStatusUpdate(status => {
-							if (status.isLoaded) {
-								setCurrentTime(status.positionMillis);
-								_currentTime.current = status.positionMillis;
-							}
-						});
-						resolve(undefined);
-					}),
-					new Promise(async (resolve, reject) => {
-						if (currentNameBackgroundSound) {
-							setBackgroundSound(currentNameBackgroundSound, currentVolumeBackgroundSound);
-						}
-						resolve(undefined);
-					}),
-				]);
+				// await Promise.all([
+				// 	new Promise(async (resolve, reject) => {
+				// 		if (statusPractice === StatusPractice.Loading) {
+				// 			await audioVoice.loadAsync({ uri: audio }, { progressUpdateIntervalMillis: 100 });
+				// 		}
+				// 		audioVoice.setOnPlaybackStatusUpdate(status => {
+				// 			if (status.isLoaded) {
+				// 				setCurrentTime(status.positionMillis);
+				// 				_currentTime.current = status.positionMillis;
+				// 			}
+				// 		});
+				// 		resolve(undefined);
+				// 	}),
+				// 	new Promise(async (resolve, reject) => {
+				// 		if (currentNameBackgroundSound) {
+				// 			setBackgroundSound(currentNameBackgroundSound, currentVolumeBackgroundSound);
+				// 		}
+				// 		resolve(undefined);
+				// 	}),
+				// ]);
+				if (statusPractice === StatusPractice.Loading) {
+					await audioVoice.loadAsync({ uri: audio }, { progressUpdateIntervalMillis: 100 });
+				}
+				audioVoice.setOnPlaybackStatusUpdate(status => {
+					if (status.isLoaded) {
+						setCurrentTime(status.positionMillis);
+						_currentTime.current = status.positionMillis;
+					}
+				});
+				setStatusPractice(StatusPractice.Pause);
 				//Создание подписок на треки
 			}
 		};
@@ -245,6 +255,16 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 			});
 		}, [])
 	);
+
+	const openBackgroundSound = React.useCallback(
+		() => () => {
+			navigation.navigate("SelectBackgroundSound", {
+				backgroundImage: { uri: image },
+			});
+		},
+		[image]
+	);
+
 	return (
 		<View style={{ flex: 1 }}>
 			<StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
@@ -306,11 +326,7 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 						styleButton={styles.buttonBackgroundSound}
 						styleText={styles.buttonBackgroundText}
 						secondItem={<Headphones style={{ marginRight: 24 }} />}
-						onPress={() => {
-							navigation.navigate("SelectBackgroundSound", {
-								backgroundImage: { uri: image },
-							});
-						}}
+						onPress={() => openBackgroundSound()}
 					>
 						{i18n.t(
 							currentNameBackgroundSound !== null

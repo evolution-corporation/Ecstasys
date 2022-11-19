@@ -46,9 +46,7 @@ const temple = StyleSheet.create({
 	feed: {
 		borderTopRightRadius: 20,
 		borderTopLeftRadius: 20,
-		paddingHorizontal: 20,
 		marginTop: -20,
-		paddingTop: 20,
 	},
 	card: {
 		borderRadius: 20,

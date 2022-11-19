@@ -5,21 +5,24 @@ import { StyleSheet, Text, View, ScrollView } from "react-native";
 
 import { RootScreenProps } from "~types";
 import core from "~core";
+import { Screen } from "~components/containers";
 
 const Instruction: RootScreenProps<"Instruction"> = ({ route }) => {
 	const { body, description, id, title } = route.params.instruction;
 	return (
-		<ScrollView style={styles.background}>
-			<Text style={styles.title}>{title}</Text>
-			<Text style={styles.description}>{description}</Text>
-			<View style={styles.lineDescription} />
-			{body.map((item, index) => (
-				<Text key={`key_${index}`} style={styles.text}>
-					<Text style={styles.indexKey}>{`${index + 1} `}</Text>
-					{item.text}
-				</Text>
-			))}
-		</ScrollView>
+		<Screen backgroundColor={"#9765A8"} paddingHorizontalOff>
+			<ScrollView style={styles.background}>
+				<Text style={styles.title}>{title}</Text>
+				<Text style={styles.description}>{description}</Text>
+				<View style={styles.lineDescription} />
+				{body.map((item, index) => (
+					<Text key={`key_${index}`} style={styles.text}>
+						<Text style={styles.indexKey}>{`${index + 1} `}</Text>
+						{item.text}
+					</Text>
+				))}
+			</ScrollView>
+		</Screen>
 	);
 };
 
@@ -28,6 +31,7 @@ export default Instruction;
 const styles = StyleSheet.create({
 	background: {
 		paddingHorizontal: 20,
+		backgroundColor: "#FFFFFF",
 	},
 	title: {
 		color: "#3D3D3D",

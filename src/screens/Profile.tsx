@@ -1,7 +1,7 @@
 /** @format */
 
 import React from "react";
-import RN, { Dimensions, ScrollView, StyleSheet } from "react-native";
+import RN, { Text, ScrollView, StyleSheet, View, Pressable } from "react-native";
 import Heart from "assets/icons/Heart_Red.svg";
 import Start from "assets/icons/Star.svg";
 import { DoubleColorView } from "~components/containers";
@@ -12,6 +12,7 @@ import { actions, useAppDispatch, useAppSelector } from "~store";
 import * as Dump from "src/components/dump";
 import { StatisticPeriod, GeneralCompositeScreenProps, State } from "~types";
 import { StatusBar } from "expo-status-bar";
+import TreeLine from "~assets/ThreeLine.svg";
 
 const getStartWeek = () => {
 	const date = new Date();
@@ -84,12 +85,6 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 
 	const appDispatch = useAppDispatch();
 
-	React.useEffect(() => {
-		navigation.setOptions({
-			title: nickName,
-		});
-	}, [nickName]);
-
 	return (
 		<DoubleColorView
 			style={styles.background}
@@ -98,6 +93,36 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 				setHeightScreen(layout.height);
 			}}
 		>
+			<View
+				style={{
+					position: "absolute",
+					width: "100%",
+					left: 20,
+					top: -50,
+					right: 0,
+					flexDirection: "row",
+					justifyContent: "space-between",
+					alignItems: "center",
+					paddingHorizontal: 0,
+				}}
+			>
+				<Text style={{ ...gStyle.styles.header, color: "#FFFFFF", width: "auto" }} adjustsFontSizeToFit>
+					{nickName}
+				</Text>
+				<Pressable
+					style={{
+						width: "18%",
+						height: "100%",
+						justifyContent: "center",
+						alignItems: "flex-end",
+					}}
+					onPress={() => {
+						navigation.navigate("Options");
+					}}
+				>
+					<TreeLine />
+				</Pressable>
+			</View>
 			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
 
 			<ScrollView>

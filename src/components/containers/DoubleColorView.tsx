@@ -1,7 +1,12 @@
 /** @format */
 
-import React, { FC, Children, useState, useEffect, useRef } from "react";
-import { LayoutChangeEvent, StyleSheet, useWindowDimensions, View, ViewProps } from "react-native";
+import React, { FC } from "react";
+import { StyleSheet, View, ViewProps } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Constants from "expo-constants";
+import { Path, Svg } from "react-native-svg";
+import { useDimensions } from "@react-native-community/hooks";
 
 export const heightViewPart2 = 42;
 
@@ -14,35 +19,39 @@ const DoubleColorView: FC<DoubleColorViewProps> = props => {
 		onFunctionGetPaddingTop,
 		onLayout,
 	} = props;
-	const { width } = useWindowDimensions();
+	const { window } = useDimensions();
+
 	return (
-		<View style={styles.background} onLayout={onLayout}>
-			<View
-				style={[styles.header, { zIndex: hideElementVioletPart ? 10 : 0 }]}
-				onLayout={event => {
-					if (onFunctionGetPaddingTop) {
-						onFunctionGetPaddingTop(widthComponent => (widthComponent * heightViewPart2) / width + heightViewPart);
-					}
-				}}
-			>
-				<View style={[StyleSheet.absoluteFill]}>
-					{heightViewPart > 0 && <View style={[styles.part1, styles.colorPart, { height: heightViewPart }]} />}
-					<View
-						style={[
-							styles.part2,
-							styles.colorPart,
-							{
-								transform: [
-									{
-										rotate: `${(Math.atan(heightViewPart2 / width) * 180) / Math.PI}deg`,
-									},
-								],
-							},
-						]}
+		<View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+			<StatusBar style="light" backgroundColor={"transparent"} translucent={false} />
+
+			<SafeAreaView style={[styles.background, style]} onLayout={onLayout}>
+				<Svg
+					width={window.width}
+					height={heightViewPart + Constants.statusBarHeight + 55 + heightViewPart2}
+					style={{ zIndex: hideElementVioletPart ? 10 : 0, position: "absolute" }}
+					onLayout={event => {
+						if (onFunctionGetPaddingTop) {
+							onFunctionGetPaddingTop(
+								widthComponent => (widthComponent * heightViewPart2) / window.width + heightViewPart
+							);
+						}
+					}}
+				>
+					<Path
+						d={[
+							"M0 0",
+							`${window.width} 0`,
+							`${window.width} ${heightViewPart + 55 + heightViewPart2}`,
+							`0 ${heightViewPart + 55}`,
+							`0 0z`,
+						].join(" ")}
+						fill="green"
+						stroke={"none"}
 					/>
-				</View>
-			</View>
-			<View style={[style, { flex: 1 }]}>{children}</View>
+				</Svg>
+				{children}
+			</SafeAreaView>
 		</View>
 	);
 };
@@ -56,21 +65,8 @@ export interface DoubleColorViewProps extends ViewProps {
 
 const styles = StyleSheet.create({
 	background: {
-		backgroundColor: "#FFFFFF",
 		flex: 1,
-	},
-	header: {
-		zIndex: 0,
-	},
-	contentContainer: {
-		position: "absolute",
-		width: "100%",
-		height: "100%",
-		top: 0,
-		right: 0,
-	},
-	colorPart: {
-		backgroundColor: "#9765A8",
+		paddingTop: 55,
 	},
 	part1: {
 		width: "100%",

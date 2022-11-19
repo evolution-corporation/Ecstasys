@@ -6,7 +6,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Switch } from "react-native";
 import * as MailComposer from "expo-mail-composer";
 
 import gStyles from "~styles";
-
+import { Screen } from "~components/containers";
 import User from "assets/icons/User.svg";
 import Mail from "assets/icons/Mail.svg";
 import LogOut from "assets/icons/Log_Out.svg";
@@ -19,9 +19,7 @@ import { version } from "package.json";
 const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 	const appDispatch = useAppDispatch();
 	return (
-		<View style={styles.background}>
-			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
-
+		<Screen backgroundColor={"#9765A8"}>
 			<TouchableOpacity
 				style={styles.button}
 				onPress={() => {
@@ -54,7 +52,7 @@ const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 				<Text style={styles.buttonText}>{i18n.t("c9bcb9a8-e59c-4ee5-97f1-94dae753a716")}</Text>
 			</TouchableOpacity>
 			<Text style={{ position: "absolute", bottom: 20, color: "#FFFFFF", right: 0 }}>{version}</Text>
-		</View>
+		</Screen>
 	);
 };
 

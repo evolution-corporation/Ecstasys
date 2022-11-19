@@ -5,18 +5,18 @@ import React, { useCallback, useEffect } from "react";
 import * as RN from "react-native";
 
 import * as Dump from "~components/dump";
-import Tools from "~core";
 
 import Animated, { interpolate, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import i18n from "~i18n";
-import { fontStyle, viewStyle } from "~styles";
+import gStyle, { fontStyle, viewStyle } from "~styles";
 
 import { GeneralCompositeScreenProps, State, StatisticPeriod } from "~types";
 import * as Store from "~store";
 import { useFocusEffect } from "@react-navigation/native";
 import { Converter, Request } from "~api";
-import practice from "src/store/reducers/practice";
-import * as StatusBar from "expo-status-bar";
+import { StatusBar, setStatusBarHidden } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { UserButton } from "~components/dump";
 
 const getStartWeek = () => {
 	const date = new Date();
@@ -99,26 +99,20 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 		);
 	}, []);
 
-	useFocusEffect(
-		useCallback(() => {
-			StatusBar.setStatusBarTranslucent(true);
-			StatusBar.setStatusBarStyle("light");
-		}, [])
-	);
-
 	return (
 		<RN.ScrollView
 			onScroll={({ nativeEvent }) => {
 				if (!!heightGreeting) {
 					let value = 20;
+					let hiddenStatusBar = false;
 					if (nativeEvent.contentOffset.y <= 20) {
+						hiddenStatusBar = false;
 						value = 20;
 					} else if (nativeEvent.contentOffset.y < heightGreeting) {
-						value = nativeEvent.contentOffset.y * 0.3;
-					} else {
-						value = heightGreeting;
+						hiddenStatusBar = true;
+						value = nativeEvent.contentOffset.y * 0.3 - 20;
 					}
-
+					setStatusBarHidden(hiddenStatusBar, "slide");
 					translateGreeting.value = value;
 				}
 			}}
@@ -134,20 +128,19 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 			contentContainerStyle={{ paddingVertical: 50 }}
 			bounces={false}
 		>
-			<StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
+			<StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
 			<Animated.View
 				style={greetingStyle}
 				onLayout={({ nativeEvent: { layout } }) => {
 					setHeightGreeting(layout.height);
 				}}
 			>
-				<RN.ImageBackground source={require("/assets/backgroundMain.png")} style={styles.imageGreeting}>
-					<Dump.UserButton
-						style={styles.userButton}
-						image={image}
-						nickname={nickName}
-						onPress={() => navigation.navigate("Profile")}
-					/>
+				<RN.ImageBackground
+					source={require("/assets/backgroundMain.png")}
+					style={styles.imageGreeting}
+					imageStyle={{ top: -40 }}
+				>
+					<UserButton onPress={() => navigation.navigate("Profile")} style={{ alignSelf: "flex-start", left: 20 }} />
 					<Dump.MessageProfessor
 						greeting={greetingText}
 						message={i18n.t(messageProfessor)}
@@ -156,14 +149,15 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 				</RN.ImageBackground>
 			</Animated.View>
 			<Animated.View
-				style={[viewStyle.white, viewStyle.temple.feed, feedStyle, { minHeight: height, paddingBottom: 75 }]}
+				style={[
+					viewStyle.white,
+					viewStyle.temple.feed,
+					feedStyle,
+					{ minHeight: height, paddingBottom: 75, padding: 20 },
+				]}
 			>
-				<RN.Text style={[fontStyle.title.h3_Roboto, fontStyle.darkLetters]}>
-					{i18n.t("9d0cd47a-0392-4e5c-9573-00642b12f868")}
-				</RN.Text>
-				<RN.Text style={[fontStyle.description.regular, fontStyle.noName1]}>
-					{i18n.t("f292b17c-2295-471e-80cf-f99f6a618701")}
-				</RN.Text>
+				<RN.Text style={styles.nameSection}>{i18n.t("9d0cd47a-0392-4e5c-9573-00642b12f868")}</RN.Text>
+				<RN.Text style={styles.descriptionSection}>{i18n.t("f292b17c-2295-471e-80cf-f99f6a618701")}</RN.Text>
 				{recommendationPractice === null ? null : (
 					<Dump.PracticeCard
 						id={recommendationPractice.id}
@@ -191,8 +185,8 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 				)}
 
 				<Dump.StatisticsMeditation style={viewStyle.margin.mediumV} count={countMeditation} time={timeMeditation} />
-				<RN.Text style={styles.title}>{i18n.t("9d0cd47a-0392-4e5c-9573-00642b12f868")}</RN.Text>
-				<RN.Text style={styles.description}>{i18n.t("f292b17c-2295-471e-80cf-f99f6a618701")}</RN.Text>
+				<RN.Text style={styles.nameSection}>{i18n.t("9d0cd47a-0392-4e5c-9573-00642b12f868")}</RN.Text>
+				<RN.Text style={styles.descriptionSection}>{i18n.t("f292b17c-2295-471e-80cf-f99f6a618701")}</RN.Text>
 				{toDayPopularMeditation !== null ? (
 					<Dump.PracticeCard
 						id={toDayPopularMeditation.id}
@@ -212,7 +206,6 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 								});
 							} else {
 								navigation.navigate("PlayerForPractice", {
-									practiceLength: toDayPopularMeditation.length,
 									selectedPractice: toDayPopularMeditation,
 								});
 							}
@@ -232,6 +225,7 @@ const styles = RN.StyleSheet.create({
 		justifyContent: "flex-start",
 		width: "100%",
 		paddingBottom: 20,
+		paddingTop: 50,
 	},
 	professor: {
 		width: 147,
@@ -243,9 +237,16 @@ const styles = RN.StyleSheet.create({
 		marginTop: 40,
 		alignSelf: "flex-start",
 	},
-
-	title: { ...fontStyle.title.h3_Roboto, ...fontStyle.darkLetters },
-	description: { ...fontStyle.description.regular, ...fontStyle.noName1 },
+	nameSection: {
+		fontSize: 20,
+		color: "#555555",
+		...gStyle.font("400"),
+	},
+	descriptionSection: {
+		fontSize: 14,
+		...gStyle.font("400"),
+		color: "#A0A0A0",
+	},
 });
 
 export default Main;

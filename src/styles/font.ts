@@ -13,7 +13,6 @@ import { Inter_700Bold } from "@expo-google-fonts/inter";
 
 import { Platform, StyleSheet } from "react-native";
 import { FontWeight } from "./type";
-import Colors from "./colors";
 
 export function getFontOption(weight: FontWeight = "normal"): {
 	fontFamily: string;
@@ -55,100 +54,60 @@ const fontFamily = {
 
 export const useCustomFonts = () => useFonts(fontFamily);
 
-const title = StyleSheet.create({
-	/** fontSize: 32, weight: 700 */
-	h1_Iter: {
-		fontFamily: "Inter_700Bold",
+export const styles = StyleSheet.create({
+	title: {
 		fontSize: 32,
+		fontFamily: "Inter_700Bold",
+		lineHeight: 39,
+		width: "100%",
+		textAlign: "left",
+		textAlignVertical: "center",
 	},
-	/** fontSize: 24, weight: 600 */
-	h1_Roboto: {
+	subTitle: {
+		fontSize: 20,
+		fontFamily: Platform.OS === "ios" ? "System" : "Roboto_500Medium",
+		fontWeight: "600",
+		lineHeight: 23.44,
+		width: "100%",
+		textAlign: "center",
+		textAlignVertical: "auto",
+	},
+	header: {
+		//! adjustsFontSizeToFit: true
 		fontSize: 24,
-		...getFontOption("600"),
+		fontFamily: Platform.OS === "ios" ? "System" : "Roboto_700Bold",
+		fontWeight: "600",
+		width: "74%",
+		maxHeight: "100%",
 	},
-	/** fontSize: 20, weight: 700 */
-	h2_Roboto: {
-		fontSize: 20,
-		...getFontOption("700"),
+	description: {
+		//! numberLines 2 or 0
+		fontSize: 16.5,
+		fontFamily: Platform.OS === "ios" ? "System" : "Roboto_400Regular",
+		lineHeight: 23,
+		fontWeight: "400",
 	},
-	/** fontSize: 20, weight: 600 */
-	h2_5_Roboto: {
-		fontSize: 20,
-		...getFontOption("600"),
+	namePractice: {
+		//! adjustsFontSizeToFit: true
+		fontSize: 24,
+		fontFamily: Platform.OS === "ios" ? "System" : "Roboto_700Bold",
+		fontWeight: "600",
+		lineHeight: 28.13,
+		height: 56,
+		textAlignVertical: "center",
 	},
-	/** fontSize: 20, weight: 500 */
-	h2_7_Roboto: {
-		fontSize: 20,
-		...getFontOption("500"),
-	},
-	/** fontSize: 20, weight: 500 */
-	h3_Roboto: {
-		fontSize: 20,
-		...getFontOption("400"),
-	},
-});
-
-const addiction = StyleSheet.create({
-	/** fontSize: 12, weight: 400 */
-	light: {
-		fontSize: 12,
-		...getFontOption("400"),
-	},
-	/** fontSize: 12, weight: 500 */
-	small: {
-		fontSize: 12,
-		...getFontOption("500"),
-	},
-	/** fontSize: 13, weight: 400 */
-	regular: {
-		fontSize: 13,
-		...getFontOption("400"),
-	},
-	/** fontSize: 14, weight: 400 */
-	medium: {
+	text: {
 		fontSize: 14,
-		...getFontOption("400"),
+		fontWeight: "400",
+		lineHeight: 16.41,
+		fontFamily: Platform.OS === "ios" ? "System" : "Roboto_400Regular",
 	},
-	/** fontSize: 14, weight: 400 */
-	semiBold: {
-		fontSize: 16,
-		...getFontOption("400"),
-	},
-});
-
-const description = StyleSheet.create({
-	/** fontSize: 12, weight: 500 */
-	extraLight: {
-		fontSize: 12,
-		...getFontOption("500"),
-	},
-	/** fontSize: 13, weight: 500 */
-	light: {
-		fontSize: 12,
-		...getFontOption("500"),
-	},
-	/** fontSize: 14, weight: 400 */
-	regular: {
-		fontSize: 14,
-		...getFontOption("400"),
-	},
-	/** fontSize: 16, weight: 400 */
-	medium: {
-		fontSize: 16,
-		...getFontOption("400"),
+	name: {
+		fontSize: 20,
+		fontWeight: "600",
+		lineHeight: 23.44,
+		width: "auto",
 	},
 });
 
-const colors = StyleSheet.create({
-	darkLetters: {
-		color: Colors.DarkLetters,
-	},
-	noName1: {
-		color: Colors.noName1,
-	},
-	white: {
-		color: Colors.White,
-	},
-});
-
-export default { title, addiction, description, ...colors };
+export default {};

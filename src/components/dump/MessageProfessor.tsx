@@ -6,6 +6,8 @@ import * as Blur from "@react-native-community/blur";
 import Quote from "/assets/icons/quote.svg";
 import Tools from "~core";
 
+import gStyle from "~styles";
+
 interface Props extends RN.ViewProps {
 	message: string;
 	greeting?: string;
@@ -27,9 +29,8 @@ const MessageProfessor: React.FC<Props> = props => {
 					<Blur.BlurView blurAmount={5} blurType={"light"} style={{ flex: 1 }} blurRadius={25}>
 						<RN.Image
 							source={require("/assets/555700cf-dcb3-42df-9704-13c96936d70d.png")}
-							style={styles.professor}
-							resizeMethod={"scale"}
-							resizeMode={"center"}
+							style={{ width: "100%", height: "100%" }}
+							resizeMode={"contain"}
 						/>
 					</Blur.BlurView>
 				</RN.View>
@@ -49,7 +50,21 @@ const MessageProfessor: React.FC<Props> = props => {
 						<RN.View style={styles.lineBR} key={"rightLine"} />
 					</RN.View>
 
-					{message && <RN.Text style={styles.catchPhrases}>{message}</RN.Text>}
+					{message && (
+						<RN.Text
+							style={{
+								...gStyle.styles.text,
+								color: "#FFFFFF",
+								textAlign: "center",
+								maxHeight: 100,
+								maxWidth: "75%",
+								lineHeight: undefined,
+							}}
+							adjustsFontSizeToFit
+						>
+							{message}
+						</RN.Text>
+					)}
 				</RN.View>
 			</RN.View>
 		</RN.View>
@@ -64,11 +79,6 @@ const styles = StyleSheet.create({
 		justifyContent: "flex-start",
 		width: "100%",
 		paddingBottom: 20,
-	},
-	professor: {
-		width: 147,
-		height: 147,
-		alignSelf: "center",
 	},
 	userButton: {
 		marginLeft: 20,

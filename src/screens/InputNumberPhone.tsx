@@ -5,10 +5,10 @@ import { StyleSheet, View } from "react-native";
 import { useHeaderHeight } from "@react-navigation/elements";
 
 import { ColorButton, NumberInput } from "~components/dump";
+import { Screen } from "~components/containers";
 import i18n from "~i18n";
 
 import type { RootScreenProps } from "~types";
-import { StatusBar } from "expo-status-bar";
 
 const NumberInputScreen: RootScreenProps<"InputNumberPhone"> = ({ navigation }) => {
 	const NumberPhone = useRef<{ numberPhone: string; isValidate: boolean }>({
@@ -25,8 +25,7 @@ const NumberInputScreen: RootScreenProps<"InputNumberPhone"> = ({ navigation }) 
 		}
 	};
 	return (
-		<View style={styles.background}>
-			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
+		<Screen backgroundColor={"#9765A8"} styleScreen={{ paddingTop: 9 }}>
 			<NumberInput
 				onChange={(numberPhone: string, isValidate: boolean) => {
 					NumberPhone.current = { numberPhone, isValidate };
@@ -36,7 +35,7 @@ const NumberInputScreen: RootScreenProps<"InputNumberPhone"> = ({ navigation }) 
 			<ColorButton styleButton={styles.colorButton} onPress={requestSMSCode}>
 				{i18n.t("continue")}
 			</ColorButton>
-		</View>
+		</Screen>
 	);
 };
 
@@ -44,9 +43,7 @@ export default NumberInputScreen;
 
 const styles = StyleSheet.create({
 	background: {
-		paddingHorizontal: 20,
-		backgroundColor: "#9765A8",
-		flex: 1,
+		paddingTop: 54 + 9,
 	},
 	colorButton: {
 		marginTop: 14,

@@ -16,7 +16,6 @@ import { CarouselPractices } from "~components/dump";
 import { actions, useAppDispatch, useAppSelector } from "~store";
 import { Converter, Request } from "~api";
 import { SupportType } from "src/api/types";
-import { StatusBar } from "expo-status-bar";
 import { MeditationOnTheMandala, MeditationOnTheNose } from "src/baseMeditation";
 
 import * as Instruction from "src/instruction";
@@ -113,8 +112,6 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 	};
 	return (
 		<DoubleColorView style={styles.background} heightViewPart={height / 2 - 100}>
-			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
-
 			<ColorButton
 				animationStyle={aStyle.button}
 				styleButton={styles.buttonInstruction}

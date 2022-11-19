@@ -1,11 +1,12 @@
 /** @format */
 
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { RootScreenProps, SubscribeType } from "~types";
 import { WebView } from "react-native-webview";
 import { Request } from "~api";
 import { SupportType } from "src/api/types";
+import { Screen } from "~components/containers";
 
 const Payment: RootScreenProps<"Payment"> = ({ navigation, route }) => {
 	const { selectSubscribe } = route.params;
@@ -27,29 +28,32 @@ const Payment: RootScreenProps<"Payment"> = ({ navigation, route }) => {
 		}
 		if (ty !== undefined) {
 			Request.redirectPaymentURL(ty).then(r => {
+				console.log(r);
 				setDataForRequest(r);
 			});
 		}
 	}, []);
-	if (dataForRequest !== null) {
-		return (
-			<WebView
-				source={dataForRequest}
-				style={{ width: "100%", height: "100%" }}
-				onNavigationStateChange={({ url }) => {
-					if (url === "https://securepay.tinkoff.ru/html/payForm/success.html") {
-						console.log("sus");
-					} else if (url === "https://securepay.tinkoff.ru/html/payForm/fail.html") {
-						console.log("erro");
-					} else {
-						console.log(url);
-					}
-				}}
-			/>
-		);
-	} else {
-		return <View></View>;
-	}
+	return (
+		<Screen backgroundColor={"#9765A8"} paddingHorizontalOff>
+			{dataForRequest !== null ? (
+				<WebView
+					source={dataForRequest}
+					style={{ width: "100%", height: "100%" }}
+					onNavigationStateChange={({ url }) => {
+						if (url === "https://securepay.tinkoff.ru/html/payForm/success.html") {
+							console.log("sus");
+						} else if (url === "https://securepay.tinkoff.ru/html/payForm/fail.html") {
+							console.log("erro");
+						} else {
+							console.log(url);
+						}
+					}}
+				/>
+			) : (
+				<ActivityIndicator color={"#FFF"} />
+			)}
+		</Screen>
+	);
 };
 
 const styles = StyleSheet.create({

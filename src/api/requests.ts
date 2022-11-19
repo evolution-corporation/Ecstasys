@@ -197,7 +197,7 @@ export async function getMeditationById(meditationId: string, firebaseTokenToken
 		throw new RequestError(`getMeditationById: ${await requestServer.text()}`, url, undefined, "GET", "50x");
 	}
 	const json = await requestServer.json();
-	return json as ServerEntities.Meditation;
+	return json.Meditation as ServerEntities.Meditation;
 }
 
 /**
@@ -256,30 +256,20 @@ export async function getSubscribeUserInformation(
 	firebaseTokenToken?: string
 ): Promise<ServerEntities.Subscribe | null> {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	if (false) {
-		const requestServer = await fetch(URL + "subscribe", {
-			headers: {
-				Authorization: firebaseTokenToken,
-				"Content-Type": "application/json",
-			},
-		});
-		if (requestServer.status === 404) {
-			return null;
-		}
-		if (requestServer.status >= 500) {
-			throw new Error(`Server Error in getSubscribeUserInformation: ${await requestServer.text()}`);
-		}
-		const json = await requestServer.json();
-		return json.length as ServerEntities.Subscribe;
-	} else {
-		return {
-			Type: "Month",
-			UserId: "GEdKUP844QdzlStc6rpmnyPEyqJ2",
-			RebillId: -1,
-			WhenSubscribe: "2022-04-30T19:00:00.000Z",
-			RemainingTime: 20,
-		};
+	const requestServer = await fetch(URL + "subscribe", {
+		headers: {
+			Authorization: firebaseTokenToken,
+			"Content-Type": "application/json",
+		},
+	});
+	if (requestServer.status === 404) {
+		return null;
 	}
+	if (requestServer.status >= 500) {
+		throw new Error(`Server Error in getSubscribeUserInformation: ${await requestServer.text()}`);
+	}
+	const json = await requestServer.json();
+	return json.length as ServerEntities.Subscribe;
 }
 
 /**
@@ -313,14 +303,7 @@ export async function getPaymentURL(subscribeType: SupportType.SubscribeType, fi
 
 export async function redirectPaymentURL(subscribeType: SupportType.SubscribeType, firebaseTokenToken?: string) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const url =
-		URL +
-		"payment?type=" +
-		0 +
-		"&needRecurrent=" +
-		(subscribeType === "Week" ? "false" : "true") +
-		"&token=" +
-		firebaseTokenToken;
+	const url = URL + "payment?type=" + 0 + "&needRecurrent=" + (subscribeType === "Week" ? "false" : "true");
 
 	return {
 		uri: url,
@@ -413,18 +396,9 @@ export async function getInformationUser(
 //!
 
 export async function getRecommendationMeditation(firebaseTokenToken?: string) {
-	// return {
-	// 	id: "6387521c-adb7-49b7-8a0f-5882eacc35af",
-	// 	AudioLength: 100000,
-	// 	HasAudio: true,
-	// 	IsSubscribed: false,
-	// 	Name: "123,421",
-	// 	TypeMeditation: "breathtakingPractice",
-	// 	Description: "12313123",
-	// 	Language: "ru",
-	// } as ServerEntities.Meditation;
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
 	const url = URL + "meditation?getIsNotListened=true&countOfMeditations=1";
+
 	const requestServer = await fetch(url, {
 		headers: {
 			Authorization: firebaseTokenToken,

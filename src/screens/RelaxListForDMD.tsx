@@ -1,14 +1,14 @@
 /** @format */
 
 import React, { useCallback, useState } from "react";
-import { Text, StyleSheet, useWindowDimensions, Dimensions } from "react-native";
+import { Text, StyleSheet, useWindowDimensions, Dimensions, View } from "react-native";
 import { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 import Tools from "~core";
 import { GeneralCompositeScreenProps, State, TabNavigatorScreenProps } from "~types";
 var height = Dimensions.get("window").height;
 
-import { ColorButton } from "~components/dump";
+import { ColorButton, UserButton } from "~components/dump";
 import { DoubleColorView } from "~components/containers";
 import i18n from "~i18n";
 import { CarouselPractices } from "~components/dump";
@@ -16,6 +16,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { actions, useAppDispatch } from "~store";
 import { Converter, Request, Storage } from "~api";
 import { StatusBar } from "expo-status-bar";
+import gStyle from "~styles";
 
 const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => {
 	const { height } = useWindowDimensions();
@@ -62,6 +63,25 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 
 	return (
 		<DoubleColorView style={styles.background} heightViewPart={height / 2 - 100}>
+			<View
+				style={{
+					position: "absolute",
+					width: "100%",
+					left: 20,
+					top: -50,
+					right: 0,
+					flexDirection: "row",
+					justifyContent: "space-between",
+					alignItems: "center",
+					zIndex: 1000,
+					paddingHorizontal: 0,
+				}}
+			>
+				<Text style={{ ...gStyle.styles.header, color: "#FFFFFF", width: "auto" }} adjustsFontSizeToFit>
+					{i18n.t("DMD")}
+				</Text>
+				<UserButton onPress={() => navigation.navigate("Profile")} />
+			</View>
 			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
 
 			<ColorButton

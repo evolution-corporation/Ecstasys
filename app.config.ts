@@ -4,7 +4,7 @@ import type { ExpoConfig } from "expo/config";
 import { version } from "./package.json";
 
 function generateConfig(): ExpoConfig {
-	const appName = process.env.APP_VARIANT !== "dev" ? "DMD Meditation" : "DMD Dev";
+	const appName = process.env.APP_VARIANT !== "dev" ? "dmd meditation" : "DMD Dev";
 	const appUrl =
 		process.env.APP_VARIANT !== "dev" ? "com.evodigital.dmdmeditation" : "com.evodigital.dmdmeditation_dev";
 	const apiURL =
@@ -20,7 +20,8 @@ function generateConfig(): ExpoConfig {
 		month: toDay.getMonth() < 10 ? "0" + toDay.getMonth() : toDay.getMonth(),
 		year: toDay.getFullYear(),
 	};
-	const versionCode = Number(`${date.date}${date.month}${date.year}`);
+	let versionCode = Number(`${date.year}${date.month}${date.date}0`);
+	versionCode += 0;
 	return {
 		jsEngine: "hermes",
 		name: appName,
@@ -56,7 +57,7 @@ function generateConfig(): ExpoConfig {
 		},
 		ios: {
 			googleServicesFile: "./GoogleService-Info.plist",
-			bundleIdentifier: appUrl,
+			bundleIdentifier: "com.evodigital.dmdmeditation",
 		},
 		plugins: [
 			"expo-dev-client",

@@ -1,17 +1,18 @@
 /** @format */
 
 import React from "react";
-import { StyleSheet, TextInput, View, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, TextInput, View, Text, TouchableOpacity, Keyboard } from "react-native";
 import { EvilIcons } from "@expo/vector-icons";
 import i18n from "~i18n";
 import gStyle from "~styles";
 
 import { ColorButton, SelectImageButton, NicknameInput } from "~components/dump";
+import { Screen } from "~components/containers";
 import { RootScreenProps } from "~types";
 import { actions, useAppDispatch, useAppSelector } from "~store";
 import { StatusCheck } from "~components/dump/NicknameInput/NicknameBase";
 import { Request } from "~api";
-import { StatusBar } from "expo-status-bar";
+import { useDimensions } from "@react-native-community/hooks";
 
 const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 	const changedData = useAppSelector(store => store.account.changeData);
@@ -19,8 +20,8 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 		if (store.account.currentData === undefined) throw new Error("Not found user");
 		return store.account.currentData;
 	});
+	const [isKeyboardOpen, setIsKeyboardOpen] = React.useState<boolean>(false);
 	const dispatch = useAppDispatch();
-
 	const update = async () => {
 		await dispatch(actions.updateAccount({})).unwrap();
 		navigation.navigate("MessageLog", {
@@ -29,20 +30,34 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 		});
 	};
 
-	return (
-		<View style={styles.background}>
-			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
+	const { window } = useDimensions();
 
+	React.useEffect(() => {
+		const keyboardListenOpen = Keyboard.addListener("keyboardDidShow", () => setIsKeyboardOpen(true));
+		const keyboardListenClose = Keyboard.addListener("keyboardDidHide", () => setIsKeyboardOpen(false));
+		return () => {
+			keyboardListenOpen.remove();
+			keyboardListenClose.remove();
+		};
+	}, []);
+
+	return (
+		<Screen
+			backgroundColor={"#9765A8"}
+			styleScreen={{ justifyContent: "space-between", paddingBottom: isKeyboardOpen ? 5 : 79 }}
+		>
 			<View style={{ width: "100%", alignItems: "center" }}>
-				<SelectImageButton
-					style={styles.selectImage}
-					onChangeImage={base64 => {
-						if (base64) {
-							dispatch(actions.addChangedInformationUser({ image: base64 }));
-						}
-					}}
-					initImage={image}
-				/>
+				{window.height <= 800 && isKeyboardOpen ? null : (
+					<SelectImageButton
+						style={styles.selectImage}
+						onChangeImage={base64 => {
+							if (base64) {
+								dispatch(actions.addChangedInformationUser({ image: base64 }));
+							}
+						}}
+						initImage={image}
+					/>
+				)}
 				<TextInput
 					style={styles.TextInputTransparent}
 					key={"name"}
@@ -90,7 +105,7 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 			<ColorButton styleButton={styles.saveButton} styleText={styles.saveButtonText} onPress={update}>
 				{i18n.t("save")}
 			</ColorButton>
-		</View>
+		</Screen>
 	);
 };
 

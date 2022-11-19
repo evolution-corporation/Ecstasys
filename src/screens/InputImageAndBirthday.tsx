@@ -6,6 +6,7 @@ import React, { useCallback } from "react";
 import { View, StyleSheet, Text, Platform, BackHandler } from "react-native";
 import auth from "@react-native-firebase/auth";
 import i18n from "~i18n";
+import { Screen } from "~components/containers";
 
 import { ColorButton, SelectImageButton, SelectBirthday } from "~components/dump";
 import Tools from "~core";
@@ -50,8 +51,7 @@ const InputImageAndBirthdayScreen: RootScreenProps<"InputImageAndBirthday"> = ({
 	});
 
 	return (
-		<View style={styles.background}>
-			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
+		<Screen styleScreen={{ justifyContent: "space-between", paddingBottom: 20 }}>
 			<View style={{ alignItems: "center" }}>
 				<Text style={styles.helper}>{i18n.t("f22ace97-97e5-4f87-b1b7-c179f1d7e893")}</Text>
 				<SelectImageButton
@@ -70,7 +70,7 @@ const InputImageAndBirthdayScreen: RootScreenProps<"InputImageAndBirthday"> = ({
 				/>
 			</View>
 			<ColorButton onPress={() => registration()}>{i18n.t("01e5182d-f190-4bcb-9668-36a193e18325")}</ColorButton>
-		</View>
+		</Screen>
 	);
 };
 

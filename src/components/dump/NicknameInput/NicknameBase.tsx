@@ -35,6 +35,8 @@ const NicknameInput = forwardRef<Ref, Props>((props, ref) => {
 		defaultValue = "",
 		onEndChange,
 		checkValidateNickname,
+		onFocus,
+		onBlur,
 	} = props;
 	const [statusCheck, setStatusCheck] = useState<StatusCheck>(StatusCheck.AWAIT);
 	const [nickname, setNickname] = useState<string>(defaultValue);
@@ -136,6 +138,8 @@ const NicknameInput = forwardRef<Ref, Props>((props, ref) => {
 					maxLength={16}
 					placeholder={i18n.t("f212a1ac-9688-4671-bbd1-6cbe20662ad7")}
 					autoCapitalize={"none"}
+					onFocus={onFocus}
+					onBlur={onBlur}
 				/>
 				<View style={styles.indicatorImage}>{StatusCheckView}</View>
 			</Animated.View>

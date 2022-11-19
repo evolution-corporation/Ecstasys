@@ -1,11 +1,12 @@
 /** @format */
 
-import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import { CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native";
+import { BottomTabNavigationProp, BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import { CompositeNavigationProp, CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { FC } from "react";
 import type { useAppSelector, useAppDispatch } from "./store";
 import { ImageSourcePropType } from "react-native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 /** Пол пользователя */
 export enum Gender {
@@ -184,6 +185,14 @@ export type TabNavigatorScreenProps<T extends keyof TabNavigatorList> = FC<Botto
 export type GeneralCompositeScreenProps = FC<
 	CompositeScreenProps<BottomTabScreenProps<TabNavigatorList>, BottomTabScreenProps<RootStackList>>
 >;
+
+// export type TabAndProfileCompositeNavigation = CompositeNavigationProp<
+// 	BottomTabNavigationProp<TabNavigatorList, "Main">,
+// 	CompositeNavigationProp<
+// 		BottomTabNavigationProp<TabNavigatorList, "PracticesList">,
+// 		CompositeNavigationProp<BottomTabNavigationProp<TabNavigatorList, "RelaxListForDMD">>
+// 	>
+// >;
 
 export type MeditationPracticesList = {
 	TimerPractices: undefined;

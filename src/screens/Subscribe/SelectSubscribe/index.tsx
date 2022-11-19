@@ -38,17 +38,18 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 	};
 
 	useEffect(() => {
-		if (selectedSubscribeType !== undefined && subscribe !== undefined && selectedSubscribeType !== subscribe.type) {
+		if (
+			(selectedSubscribeType !== null && subscribe !== undefined && selectedSubscribeType !== subscribe.type) ||
+			(subscribe === undefined && selectedSubscribeType !== null)
+		) {
 			_transporteeYButton.value = 0;
 		}
-	}, [selectedSubscribeType]);
-	const appDispatch = useAppDispatch();
+	}, [selectedSubscribeType, subscribe]);
 	const isActiveSubs = (subscribe !== undefined && new Date(subscribe.whenSubscribe) >= new Date()) ?? false;
 
 	const editSubscribe = () => {
 		if (selectedSubscribeType !== null) navigation.navigate("Payment", { selectSubscribe: selectedSubscribeType });
 	};
-
 	return (
 		<DoubleColorView heightViewPart={229} style={styles.background}>
 			<View style={{ alignItems: "center" }}>

@@ -4,7 +4,9 @@ import { useFocusEffect } from "@react-navigation/native";
 import React, { ElementRef, useCallback, useEffect, useRef, useState } from "react";
 import { Text, StyleSheet, View } from "react-native";
 import i18n from "~i18n";
+import { Screen } from "~components/containers";
 
+import gStyle from "~styles";
 import Tools from "~core";
 import type { RootScreenProps } from "~types";
 
@@ -34,7 +36,6 @@ const SMSCodeInputScreen: RootScreenProps<"InputSMSCode"> = ({ route }) => {
 		setStatus(SMSCodeInputInfoShow.loadingIndicator);
 		const start = Date.now();
 		const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
-		console.log("signInWithPhoneNumber", confirm, phoneNumber, Date.now() - start);
 		setConfirm(confirmation);
 		setStatus(SMSCodeInputInfoShow.requestSMS);
 	}, [phoneNumber]);
@@ -46,24 +47,21 @@ const SMSCodeInputScreen: RootScreenProps<"InputSMSCode"> = ({ route }) => {
 	);
 
 	return (
-		<View style={styles.background}>
-			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
-			<Text style={styles.header}>{i18n.t("cfdefbe6-ae49-4e17-8628-bbe46d144418")}</Text>
+		<Screen backgroundColor={"#9765A8"} styleScreen={{ justifyContent: "center", alignItems: "center" }}>
+			<Text
+				style={{ ...gStyle.styles.header, color: "#FFFFFF", height: "auto", textAlign: "center", marginBottom: 20 }}
+			>
+				{i18n.t("cfdefbe6-ae49-4e17-8628-bbe46d144418")}
+			</Text>
 			<SMSCodeInput ref={refSMSCodeInput} autoFocus onEndInput={checkSMSCode} />
 			<SMSCodeInputInfo status={status} style={styles.SMSCodeInputInfoStyle} onPress={requestSMSCode} seconds={160} />
-		</View>
+		</Screen>
 	);
 };
 
 export default SMSCodeInputScreen;
 
 const styles = StyleSheet.create({
-	background: {
-		alignItems: "center",
-		justifyContent: "center",
-		backgroundColor: "#9765A8",
-		flex: 1,
-	},
 	SMSCodeInputInfoStyle: {
 		marginTop: 20,
 	},

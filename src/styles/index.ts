@@ -1,7 +1,7 @@
 /** @format */
 
 import { Platform, ShadowStyleIOS, StyleSheet } from "react-native";
-import fontStyle, { useCustomFonts, getFontOption } from "./font";
+import fontStyle, { useCustomFonts, getFontOption, styles as fontStyles } from "./font";
 import viewStyle from "./view";
 import imageStyle from "./image";
 import colors, { setColorOpacity } from "./colors";
@@ -40,4 +40,7 @@ export default {
 	font: getFontOption,
 	colors,
 	shadows: getShadows,
+	styles: {
+		...fontStyles,
+	},
 };

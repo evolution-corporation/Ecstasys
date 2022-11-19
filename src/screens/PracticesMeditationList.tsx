@@ -13,13 +13,12 @@ import {
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import i18n from "~i18n";
-
+import gStyle from "~styles";
 import { DoubleColorView } from "~components/containers";
 import Tools from "~core";
 import { GeneralCompositeScreenProps, PracticesMeditation } from "~types";
-import { CategoryCard } from "~components/dump";
+import { CategoryCard, UserButton } from "~components/dump";
 import { Request, Storage } from "~api";
-import { StatusBar } from "expo-status-bar";
 import { useFocusEffect } from "@react-navigation/native";
 import * as BaseMeditation from "src/baseMeditation";
 
@@ -48,15 +47,12 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 				Request.getCountMeditationsByType("relaxation").then(count =>
 					setCountPractices(preValue => ({ ...preValue, relaxation: count }))
 				),
-				Request.getCountMeditationsByType("breathtakingPractice").then(count =>
-					setCountPractices(preValue => ({ ...preValue, breathingPractices: count }))
-				),
 				Request.getCountMeditationsByType("directionalVisualizations").then(count =>
 					setCountPractices(preValue => ({ ...preValue, directionalVisualizations: count }))
 				),
 				new Promise(resolve => {
 					setCountPractices(preValue => ({ ...preValue, basic: Object.keys(BaseMeditation).length }));
-					resolve();
+					resolve(undefined);
 				}),
 			]);
 		})();
@@ -81,8 +77,24 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 			}}
 			hideElementVioletPart
 		>
-			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
-
+			<View
+				style={{
+					position: "absolute",
+					width: "100%",
+					left: 0,
+					top: -50,
+					flexDirection: "row",
+					justifyContent: "space-between",
+					alignItems: "center",
+					zIndex: 1000,
+					paddingHorizontal: 20,
+				}}
+			>
+				<Text style={{ ...gStyle.styles.header, color: "#FFFFFF", width: "auto" }} adjustsFontSizeToFit>
+					{i18n.t("c08bb9d1-1769-498e-acf5-8c37c18bed05")}
+				</Text>
+				<UserButton onPress={() => navigation.navigate("Profile")} />
+			</View>
 			<ScrollView
 				contentContainerStyle={[topPaddingContent ? { paddingTop: topPaddingContent } : null, styles.background]}
 				showsVerticalScrollIndicator={false}

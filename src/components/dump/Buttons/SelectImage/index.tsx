@@ -51,12 +51,14 @@ export const SelectImageButton = forwardRef<Ref, SelectImageButtonProps>((props,
 			mediaTypes: ImagePicker.MediaTypeOptions.Images,
 			quality: 0.8,
 		});
-		if (image.cancelled) {
+
+		if (image.canceled || image.assets.length === 0) {
 			setIsLoading(false);
 		} else {
-			setImage(image.uri);
-			if (onChangeImage != undefined && image.base64) {
-				onChangeImage(image.base64);
+			const { uri, base64 } = image.assets[0];
+			setImage(uri);
+			if (onChangeImage != undefined && base64) {
+				onChangeImage(base64);
 			}
 		}
 	}, [statusPermission]);

@@ -7,12 +7,10 @@ import * as SplashScreen from "expo-splash-screen";
 import { Provider } from "react-redux";
 
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import * as Updates from "expo-updates";
 
 import RootRoutes from "./routes";
 import Store, { actions } from "./store";
 import "./TaskManager";
-import * as StatusBar from "expo-status-bar";
 
 if (Platform.OS === "android") {
 	if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -22,8 +20,6 @@ if (Platform.OS === "android") {
 const AppCore = () => {
 	React.useEffect(() => {
 		(async () => {
-			StatusBar.setStatusBarBackgroundColor("#FFFFFF", true);
-			StatusBar.setStatusBarStyle("dark");
 			await SplashScreen.preventAutoHideAsync();
 			try {
 				await Store.dispatch(actions.initialization()).unwrap();

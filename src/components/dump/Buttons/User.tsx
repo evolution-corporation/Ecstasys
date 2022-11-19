@@ -1,41 +1,37 @@
 /** @format */
 
 import React, { FC } from "react";
-import { Image, ViewProps, StyleSheet } from "react-native";
+import { Image, ViewProps, StyleSheet, Pressable, Text } from "react-native";
 
-import Base from "./Base";
+import UserInformation, { WrapperProps as UserInformationProps } from "../../HOC/UserInformation";
 import Tools from "~core";
 
-const UserButton: FC<Props> = props => {
+export const UserButtonUI: FC<Props & UserInformationProps> = props => {
 	const { style, onPress, image, nickname } = props;
-
 	return (
-		<Base
-			styleButton={[style, styles.background]}
-			onPress={onPress}
-			secondItem={<Image source={{ uri: image }} style={styles.image} />}
-			styleText={styles.nickname}
-		>
-			{nickname}
-		</Base>
+		<Pressable style={[{ ...styles.background }, style]} onPress={onPress}>
+			<Image source={{ uri: image }} style={{ height: 38, width: 38, borderRadius: 19 }} />
+
+			<Text style={styles.nickname}>{nickname}</Text>
+		</Pressable>
 	);
 };
 
 interface Props extends ViewProps {
 	onPress?: () => void;
-	image: string;
-	nickname: string;
 }
 
 const styles = StyleSheet.create({
 	background: {
-		borderRadius: 90,
+		borderRadius: 22,
 		backgroundColor: "#FFFFFF",
 		paddingVertical: 3,
 		alignItems: "center",
 		flexDirection: "row",
-
-		paddingRight: 9,
+		padding: 2,
+		paddingRight: 0,
+		height: 44,
+		width: "auto",
 	},
 	image: {
 		width: 38,
@@ -52,4 +48,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default UserButton;
+export default UserInformation<Props>(UserButtonUI);
