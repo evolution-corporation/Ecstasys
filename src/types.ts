@@ -277,6 +277,8 @@ export type RootStackList = {
 	Payment: {
 		selectSubscribe: State.SubscribeType;
 	};
+	ConfirmationSignOut: undefined,
+	InputNameAndSelectGender: undefined
 };
 
 export type RootScreenProps<T extends keyof RootStackList> = FC<NativeStackScreenProps<RootStackList, T>>;

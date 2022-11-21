@@ -62,6 +62,7 @@ const FavoriteMeditationScreen: RootScreenProps<"FavoriteMeditation"> = ({ navig
 							contentContainerStyle={{
 								paddingHorizontal: 20,
 							}}
+							ItemSeparatorComponent={() => <View style={{ width: 27 }}/>}
 						/>
 					</View>
 				))}

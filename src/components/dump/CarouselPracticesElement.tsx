@@ -70,7 +70,7 @@ const CarouselPracticesElement: React.FC<Props> = props => {
 								!["9ce4657e-2d0a-405a-b02f-408dd76cc8f7", "32c996f7-13e6-4604-966d-b96a8bf0e7c3"].includes(
 									practice.id
 								) ? (
-									<IsFavorite practice={practice} />
+									<IsFavorite practice={practice} noShowWereNoFavorite/>
 								) : null}
 							</View>
 						) : (

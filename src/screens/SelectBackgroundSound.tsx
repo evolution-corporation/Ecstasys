@@ -30,12 +30,11 @@ const SelectBackgroundSound: RootScreenProps<"SelectBackgroundSound"> = ({ navig
 
 	const offPlayBackgroundSound = useRef<{ (): Promise<void> } | null>(null);
 
-	const headerHeight = useHeaderHeight();
 
 	return (
 		<View style={styles.background}>
 			{backgroundImage && <Image blurRadius={2} source={backgroundImage} style={styles.background} />}
-			<View style={[styles.contentWrapper, { paddingTop: headerHeight }]}>
+			<View style={[styles.contentWrapper, { paddingTop: 55 }]}>
 				<View style={styles.backgroundSoundList}>
 					{Object.entries(BackgroundSound).map(item => (
 						<Pressable

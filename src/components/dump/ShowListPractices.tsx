@@ -1,6 +1,8 @@
 /** @format */
 
 import React from "react";
+import { StyleProp } from "react-native";
+import { ViewStyle } from "react-native";
 import { View, Text, StyleSheet, FlatList, Pressable, ViewProps, Image } from "react-native";
 import { Practice } from "src/models";
 import core from "~core";
@@ -9,13 +11,15 @@ import { State } from "~types";
 interface Props extends ViewProps {
 	historyPractices: State.Practice[];
 	onPress?: (practice: State.Practice) => void;
+	contentContainerStyle?: StyleProp<ViewStyle>
 }
 
 const ShowListPractices: React.FC<Props> = props => {
-	const { historyPractices, onPress } = props;
+	const { historyPractices, onPress, style,contentContainerStyle  } = props;
 	return (
 		<FlatList
 			data={historyPractices}
+			style={style}
 			renderItem={({ item }) => (
 				<Pressable
 					onPress={() => {
@@ -28,6 +32,7 @@ const ShowListPractices: React.FC<Props> = props => {
 			)}
 			ItemSeparatorComponent={() => <View style={styles.separator} />}
 			horizontal
+			contentContainerStyle={contentContainerStyle}
 			showsHorizontalScrollIndicator={false}
 		/>
 	);
@@ -52,6 +57,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		color: "#3D3D3D",
 		...core.gStyle.font("600"),
+		maxWidth: 140,
 	},
 	separator: {
 		width: 27,

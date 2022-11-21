@@ -3,7 +3,7 @@
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { BackgroundSound } from "src/models/practices";
 import { State } from "~types";
-import { Storage } from "~api";
+import { Converter, Storage, Request } from "~api";
 import type { AsyncThunkConfig } from "../index";
 import { SupportType } from "src/api/types";
 import * as Crypto from "expo-crypto";
@@ -15,7 +15,15 @@ enum PracticeAction {
 	editBackgroundMusic = "practice/editBackgroundMusic",
 	editBackgroundVolume = "practice/editBackgroundVolume",
 	setPractice = "practice/setPractice",
+	getPracticeDay = "practice/getPracticeDay"
 }
+
+export const getPracticeDay = createAsyncThunk<State.Practice | null, void, AsyncThunkConfig>(
+	PracticeAction.getPracticeDay,
+	async () => {
+		return Converter.composePractice(await Request.getRecommendationMeditation())
+	}
+)
 
 export const addFavoritePractice = createAsyncThunk<State.Practice, State.Practice, AsyncThunkConfig>(
 	PracticeAction.addFavorite,

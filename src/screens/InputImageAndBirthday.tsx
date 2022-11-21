@@ -20,7 +20,7 @@ const InputImageAndBirthdayScreen: RootScreenProps<"InputImageAndBirthday"> = ({
 	const SelectImageButtonRef = React.useRef<React.ElementRef<typeof SelectImageButton>>(null);
 	const countBack = React.useRef<number>(0);
 	const registration = async () => {
-		await appDispatch(actions.registrationAccount()).unwrap();
+		await appDispatch(actions.registation()).unwrap();
 		navigation.navigate("Greeting");
 	};
 

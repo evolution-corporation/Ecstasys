@@ -45,7 +45,7 @@ const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 			<TouchableOpacity
 				style={styles.button}
 				onPress={() => {
-					appDispatch(actions.signOutAccount());
+					navigation.navigate("ConfirmationSignOut")
 				}}
 			>
 				<LogOut />

@@ -30,9 +30,15 @@ const InputLoginScreen: RootScreenProps<"InputNickname"> = ({ navigation }) => {
 	const NicknameBaseRef = useRef<ElementRef<typeof NicknameBase>>(null);
 
 	const processing = async (checkedNickname: string, statusCheck: StatusCheck) => {
-		if (statusCheck === StatusCheck.USED) {
-			setVariableNicknameList(await generateNickname(checkedNickname));
+		switch (statusCheck) {
+			case StatusCheck.USED:
+				setVariableNicknameList(await generateNickname(checkedNickname))
+				break;
+			default:
+				setVariableNicknameList([])
+				break;
 		}
+		
 	};
 
 	useFocusEffect(

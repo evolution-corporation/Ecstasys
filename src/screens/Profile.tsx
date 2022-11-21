@@ -13,6 +13,7 @@ import * as Dump from "src/components/dump";
 import { StatisticPeriod, GeneralCompositeScreenProps, State } from "~types";
 import { StatusBar } from "expo-status-bar";
 import TreeLine from "~assets/ThreeLine.svg";
+import { useDimensions } from "@react-native-community/hooks";
 
 const getStartWeek = () => {
 	const date = new Date();
@@ -82,9 +83,8 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 		}
 		return listUnique;
 	});
-
 	const appDispatch = useAppDispatch();
-
+	const { window } = useDimensions()
 	return (
 		<DoubleColorView
 			style={styles.background}
@@ -92,13 +92,12 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 			onLayout={({ nativeEvent: { layout } }) => {
 				setHeightScreen(layout.height);
 			}}
-		>
-			<View
+			scroll
+			headerElement={<View
 				style={{
 					position: "absolute",
 					width: "100%",
 					left: 20,
-					top: -50,
 					right: 0,
 					flexDirection: "row",
 					justifyContent: "space-between",
@@ -122,10 +121,8 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 				>
 					<TreeLine />
 				</Pressable>
-			</View>
-			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
-
-			<ScrollView>
+			</View>}
+		>
 				<Dump.ProfileInformation
 					image={image}
 					displayName={displayName}
@@ -144,7 +141,7 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 				<Dump.SelectTimePeriodStatistic onChangePeriod={setStatisticPeriod} style={{ marginTop: 16 }} />
 				<Dump.StatisticsMeditation count={statisticCount} time={statisticTime} style={{ marginTop: 9 }} />
 				<Dump.ColorWithIconButton
-					icon={<Heart />}
+					icon={<Heart style={{ marginLeft: 20 }}/>}
 					styleButton={[styles.button, { marginTop: 18 }]}
 					styleText={styles.buttonText}
 					onPress={() => {
@@ -154,7 +151,7 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 					{i18n.t("6a85652b-a14f-4545-8058-9cdad43f3de1")}
 				</Dump.ColorWithIconButton>
 				<Dump.ColorWithIconButton
-					icon={<Start />}
+					icon={<Start style={{ marginLeft: 20 }} />}
 					styleButton={styles.button}
 					styleText={styles.buttonText}
 					onPress={() => {
@@ -163,25 +160,25 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 				>
 					{i18n.t("b2f016a6-b60e-4b5f-9cd9-ead2bddaa9d5")}
 				</Dump.ColorWithIconButton>
-				{heightScreen !== null && heightScreen - tabBarHeight > 550 && (
-					<>
-						<RN.Text style={styles.historyText}>{i18n.t("7923b738-2122-408b-af79-caf0b1643cdf")}</RN.Text>
-						<Dump.ShowListPractices
-							historyPractices={historyMeditation}
-							onPress={practice => {
-								appDispatch(actions.setPractice(practice));
-								if (practice.type === "RELAXATION") {
-									navigation.navigate("SelectTimeForRelax", { selectedPractice: practice });
-								} else {
-									navigation.navigate("PlayerForPractice", {
-										selectedPractice: practice,
-									});
-								}
-							}}
-						/>
-					</>
-				)}
-			</ScrollView>
+				{
+					historyMeditation.length > 0 ? <><RN.Text style={styles.historyText}>{i18n.t("7923b738-2122-408b-af79-caf0b1643cdf")}</RN.Text>
+					<Dump.ShowListPractices
+						historyPractices={historyMeditation}
+						onPress={practice => {
+							appDispatch(actions.setPractice(practice));
+							if (practice.type === "RELAXATION") {
+								navigation.navigate("SelectTimeForRelax", { selectedPractice: practice });
+							} else {
+								navigation.navigate("PlayerForPractice", {
+									selectedPractice: practice,
+								});
+							}
+						}}
+						style={{ left: -20, right: -20, width: window.width }}
+						contentContainerStyle={{ padding: 20 }}
+					/></> : null
+				}
+						
 		</DoubleColorView>
 	);
 };

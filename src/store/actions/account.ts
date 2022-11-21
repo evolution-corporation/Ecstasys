@@ -4,7 +4,7 @@ import auth from "@react-native-firebase/auth";
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { Converter, Request, Storage } from "~api";
-import { State } from "~types";
+import { Gender, State } from "~types";
 import type { AsyncThunkConfig } from "../index";
 
 enum AccountAction {
@@ -17,6 +17,7 @@ enum AccountAction {
 	getData = "account/getAccountData",
 	setRegistrationAccountStatus = "account/setRegistrationAccountStatus",
 	getPaymentURLForSubscribe = "account/getPaymentURLForSubscribe",
+	setNotNewUser = "account/setNotNewUser"
 }
 
 interface SetChangedAccountDataParams {
@@ -51,13 +52,24 @@ export const removeChangedInformationUser = createAction(AccountAction.removeCha
 
 export const updateAccount = createAsyncThunk<
 	State.User,
-	{ image?: string; displayName?: string; birthday?: string },
+	{ image?: string; displayName?: string; birthday?: string, gender?: Gender },
 	AsyncThunkConfig
->(AccountAction.saveChangeData, async ({ image, birthday, displayName }, { getState }) => {
+>(AccountAction.saveChangeData, async ({ image, birthday, displayName, gender }, { getState }) => {
 	const changeData = getState().account.changeData;
 	if (image === undefined) image = changeData.image;
 	if (birthday === undefined) birthday = changeData.birthday;
 	if (displayName === undefined) displayName = changeData.displayName;
+	if (gender === undefined ) gender = (() => {switch (changeData.gender) {
+		case "FEMALE":
+			return Gender.FEMALE
+		case "MALE":
+			return Gender.MALE
+		case "OTHER":
+			return Gender.OTHER
+		default:
+			return undefined
+	}
+	})() ;
 	let { nickname, lastCheckNicknameAndResult } = changeData;
 	if (nickname !== undefined) {
 		if (
@@ -104,6 +116,7 @@ export const registrationAccount = createAsyncThunk<State.User, undefined, Async
 			if (user === null) {
 				throw new Error("User Not Create");
 			}
+			
 			return user;
 		} else {
 			throw new Error("nickname is use");
@@ -114,9 +127,14 @@ export const registrationAccount = createAsyncThunk<State.User, undefined, Async
 export const signOutAccount = createAsyncThunk(AccountAction.signOut, async () => {
 	await auth().signOut();
 	await Storage.clear();
-	if ((await GoogleSignin.getCurrentUser()) !== null) {
-		await GoogleSignin.signOut();
+	try {
+		if ((await GoogleSignin.getCurrentUser()) !== null) {
+			await GoogleSignin.signOut();
+		}
+	} catch (error) {
+		console.error(error)
 	}
+	
 });
 
 export const signInAccount = createAsyncThunk<
@@ -140,3 +158,4 @@ export const signInAccount = createAsyncThunk<
 });
 
 export const setRegistrationAccountStatus = createAction(AccountAction.setRegistrationAccountStatus);
+export const setNotNewUser = createAction(AccountAction.setNotNewUser)

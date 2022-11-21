@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { FC } from "react";
-import { StyleSheet, View, ViewProps } from "react-native";
+import { ScrollView, StyleSheet, View, ViewProps } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Constants from "expo-constants";
@@ -18,14 +18,19 @@ const DoubleColorView: FC<DoubleColorViewProps> = props => {
 		hideElementVioletPart = false,
 		onFunctionGetPaddingTop,
 		onLayout,
+		headerElement,
+		scroll = false
 	} = props;
 	const { window } = useDimensions();
 
-	return (
-		<View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
-			<StatusBar style="light" backgroundColor={"transparent"} translucent={false} />
 
+	const mainComponent =  (
+		<View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+			<StatusBar style="light" backgroundColor={"#9765A8"} translucent={false} />
 			<SafeAreaView style={[styles.background, style]} onLayout={onLayout}>
+				{headerElement && (<View style={{ position: 'absolute', zIndex: hideElementVioletPart ? 11 : 1, height: 55, width: "100%" }}>
+				{headerElement}
+				</View>)}
 				<Svg
 					width={window.width}
 					height={heightViewPart + Constants.statusBarHeight + 55 + heightViewPart2}
@@ -46,7 +51,7 @@ const DoubleColorView: FC<DoubleColorViewProps> = props => {
 							`0 ${heightViewPart + 55}`,
 							`0 0z`,
 						].join(" ")}
-						fill="green"
+						fill="#9765A8"
 						stroke={"none"}
 					/>
 				</Svg>
@@ -54,6 +59,8 @@ const DoubleColorView: FC<DoubleColorViewProps> = props => {
 			</SafeAreaView>
 		</View>
 	);
+	return scroll ? <ScrollView style={{ flex: 1, backgroundColor: "#FFFFFF" }} showsVerticalScrollIndicator={false}><StatusBar style="light" backgroundColor={"#9765A8"} translucent={false} />
+	{mainComponent}</ScrollView> : mainComponent
 };
 
 export interface DoubleColorViewProps extends ViewProps {
@@ -61,6 +68,8 @@ export interface DoubleColorViewProps extends ViewProps {
 	hideElementVioletPart?: boolean;
 	getTopPaddingFirstElement?: number;
 	onFunctionGetPaddingTop?: (getPaddingTop: (width: number) => number) => void;
+	headerElement?: JSX.Element
+	scroll?: boolean
 }
 
 const styles = StyleSheet.create({

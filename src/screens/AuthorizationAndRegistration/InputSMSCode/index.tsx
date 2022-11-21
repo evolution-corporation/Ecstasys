@@ -26,7 +26,7 @@ const SMSCodeInputScreen: RootScreenProps<"InputSMSCode"> = ({ route }) => {
 			setStatus(SMSCodeInputInfoShow.loadingIndicator);
 			if (confirm !== null) {
 				await confirm.confirm(code);
-				await appDispatch(actions.signInAccount()).unwrap();
+				await appDispatch(actions.sigIn()).unwrap();
 			}
 		},
 		[confirm]

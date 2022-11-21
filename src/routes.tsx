@@ -13,9 +13,6 @@ import gStyle from "~styles";
 
 import * as Screens from "src/screens";
 
-import { ColorButton, UserButton } from "~components/dump";
-
-import TreeLine from "~assets/ThreeLine.svg";
 
 import MainIconSelected from "assets/icons/HomeSelectedIcon.svg";
 import PracticesIconSelected from "assets/icons/PracticeSelectedIcon.svg";
@@ -28,13 +25,10 @@ import DMDIconNoSelected from "assets/icons/DMDNoSelectedIcon.svg";
 
 import { useAppSelector } from "~store";
 import { RootScreenProps, RootStackList, State, TabNavigatorList } from "~types";
-import { createStackNavigator } from "@react-navigation/stack";
 
-import InfoIcon from "assets/icons/Info.svg";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import ArrowBack from "assets/icons/ArrowBack.svg";
-import Constants from "expo-constants";
 
 const TabNavigator = createBottomTabNavigator<TabNavigatorList>();
 
@@ -67,6 +61,7 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
 				name={"PracticesList"}
 				component={Screens.PracticesList}
 				options={{
+					
 					tabBarIcon: ({ focused }) => (focused ? <PracticesIconSelected /> : <PracticesIconNoSelected />),
 				}}
 			/>
@@ -113,7 +108,7 @@ const RootRoutes: FC = () => {
 						component={Screens.SelectMethodAuthentication}
 						options={{ headerShown: false }}
 					/>
-					<RootNavigation.Screen name={"InputNumberPhone"} component={Screens.InputNumberPhone} />
+					<RootNavigation.Screen name={"InputNumberPhone"} component={Screens.InputNumberPhone} options={{ title: i18n.t("c44c1286-2e08-4c18-ac68-4bae712c26a8") }}/>
 					<RootNavigation.Screen name={"InputSMSCode"} component={Screens.InputSMSCode} options={{ title: "" }} />
 				</>
 			);
@@ -141,7 +136,7 @@ const RootRoutes: FC = () => {
 		default:
 			screenList = (
 				<>
-					<RootNavigation.Screen name={"TabNavigator"} component={TabRoutes} />
+					<RootNavigation.Screen name={"TabNavigator"} component={TabRoutes} options={{ headerShown: false }}/>
 					<RootNavigation.Screen name={"Options"} component={Screens.Options} options={{ title: i18n.t("options") }} />
 					<RootNavigation.Screen
 						name={"FavoriteMeditation"}
@@ -199,8 +194,8 @@ const RootRoutes: FC = () => {
 							title: i18n.t("12ee6d3a-ad58-4c4a-9b87-63645efe9c90"),
 						}}
 					/>
-					<RootNavigation.Screen name={"MessageLog"} component={Screens.MessageLog} />
-					<RootNavigation.Screen name={"IntroPractices"} component={Screens.IntroPractices} />
+					<RootNavigation.Screen name={"MessageLog"} component={Screens.MessageLog} options={{ presentation: "transparentModal", headerShown: false }}/>
+					<RootNavigation.Screen name={"IntroPractices"} component={Screens.IntroPractices} options={{ headerShown: false }}/>
 					<RootNavigation.Screen name={"DMDIntro"} component={Screens.DMDIntro} options={{ headerShown: false }} />
 					<RootNavigation.Screen name={"PlayerForPractice"} component={Screens.PlayerForPractice} />
 					<RootNavigation.Screen name={"SelectSubscribe"} component={Screens.SelectSubscribe} options={{}} />
@@ -238,6 +233,16 @@ const RootRoutes: FC = () => {
 						component={Screens.Payment}
 						options={{ title: i18n.t("35f5ec21-d765-46a5-a33e-ff5b418170fe") }}
 					/>
+					<RootNavigation.Screen
+						name={"ConfirmationSignOut"}
+						component={Screens.ConfirmationSignOut}
+						options={{ presentation: "transparentModal", headerShown: false }}
+					/>
+					<RootNavigation.Screen
+						name={"InputNameAndSelectGender"}
+						component={Screens.InputNameAndSelectGender}
+						options={{ presentation: "transparentModal", headerShown: false }}
+					/>
 				</>
 			);
 	}
@@ -249,7 +254,6 @@ const RootRoutes: FC = () => {
 					<SafeAreaView
 						style={{
 							width: "100%",
-							backgroundColor: "red",
 							position: "absolute",
 							height: 55,
 							alignItems: "center",

@@ -23,11 +23,18 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 	const [isKeyboardOpen, setIsKeyboardOpen] = React.useState<boolean>(false);
 	const dispatch = useAppDispatch();
 	const update = async () => {
+		try {
 		await dispatch(actions.updateAccount({})).unwrap();
 		navigation.navigate("MessageLog", {
 			message: i18n.t("6962d75a-b6cc-4e30-aa87-addabf7450e7"),
 			result: "Resolve",
 		});
+	} catch (error) {
+		navigation.navigate("MessageLog", {
+			message: error instanceof Error ? error.message : 'Упс...',
+			result: "Reject",
+		});
+	}
 	};
 
 	const { window } = useDimensions();

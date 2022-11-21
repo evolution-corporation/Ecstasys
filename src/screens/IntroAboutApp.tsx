@@ -71,8 +71,6 @@ const IntroScreen: RootScreenProps<"IntroAboutApp"> = ({ navigation }) => {
 const styles = StyleSheet.create({
 	skipButton: {
 		fontSize: 16,
-		height: 16,
-		width: 77,
 		opacity: 1,
 		...gStyle.font("400"),
 		color: "rgba(194, 169, 206, 1)",

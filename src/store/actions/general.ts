@@ -12,17 +12,21 @@ import {
 	Roboto_900Black,
 } from "@expo-google-fonts/roboto";
 import { Inter_700Bold } from "@expo-google-fonts/inter";
-import * as Notifications from "expo-notifications";
 
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import { State } from "~types";
 import { Request, Converter, Storage } from "~api";
-import i18n from "~i18n";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { AsyncThunkConfig } from "~store";
+import { registrationAccount, signInAccount  } from './account'
+import { getPracticeDay } from './practice'
 
 enum GeneralAction {
 	initialization = "general/initialization",
+	registation = "general/registraion",
+	signIn = "general/signIn",
+	signOut = "generl/signOut"
 }
 
 export const initialization = createAsyncThunk(GeneralAction.initialization, async (_, {}) => {
@@ -239,3 +243,17 @@ export const initialization = createAsyncThunk(GeneralAction.initialization, asy
 		messageProfessor,
 	};
 });
+
+export const registation = createAsyncThunk<void, undefined, AsyncThunkConfig>(GeneralAction.registation, async (_, { dispatch })=> {
+	const user = await dispatch(registrationAccount()).unwrap()
+	if (user !== null) {
+		dispatch(getPracticeDay())
+	}
+})
+
+export const sigIn = createAsyncThunk<void, undefined, AsyncThunkConfig>(GeneralAction.signIn, async (_, { dispatch })=> {
+	const user = await dispatch(signInAccount()).unwrap()
+	if (user !== null) {
+		dispatch(getPracticeDay())
+	}
+})

@@ -36,3 +36,5 @@ export { default as PlayerMeditationOnTheMandala } from "./PlayerMeditationOnThe
 export { default as SelectTimeForBase } from "./SelectTimeForBase";
 export { default as PlayerMeditationOnTheNose } from "./PlayerMeditationOnTheNose";
 export { default as Payment } from "./Payment";
+export { default as ConfirmationSignOut } from './ConfirmationSignOut'
+export { default as InputNameAndSelectGender } from "./InputNameAndSelectGender"

@@ -5,7 +5,7 @@
 
 import auth from "@react-native-firebase/auth";
 import { RequestError } from "src/Errors";
-import { ServerEntities, SupportType } from "./types";
+import { Gender, ServerEntities, SupportType } from "./types";
 import * as Storage from "./asyncStorage";
 import Constants from "expo-constants";
 
@@ -117,7 +117,7 @@ interface CreateUserParams {
 		@return обновленные данные об пользователе
 	*/
 export async function updateUser(
-	{ birthday, displayName, image, nickname }: UpdateUserParams,
+	{ birthday, displayName, image, nickname, gender }: UpdateUserParams,
 	firebaseTokenToken?: string
 ) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
@@ -126,6 +126,7 @@ export async function updateUser(
 	if (displayName !== undefined) body.push(["DisplayName", displayName]);
 	if (birthday !== undefined) body.push(["Birthday", birthday.toISOString()]);
 	if (image !== undefined) body.push(["Image", image]);
+	if (gender !== undefined) body.push(["Gender", gender])
 	const url = URL + "users";
 	const requestServer = await fetch(url, {
 		method: "PATCH",
@@ -152,6 +153,7 @@ interface UpdateUserParams {
 	displayName?: string;
 	image?: string;
 	birthday?: Date;
+	gender?: Gender
 }
 
 /**

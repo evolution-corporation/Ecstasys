@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { useCallback, useEffect, useRef } from "react";
-import { Image, StyleSheet, View, Text, AppState, ActivityIndicator, Platform } from "react-native";
+import { Image, StyleSheet, View, Text, AppState, ActivityIndicator, Platform, Pressable } from "react-native";
 import Animated from "react-native-reanimated";
 import Headphones from "assets/icons/Headphones_white.svg";
 
@@ -256,14 +256,7 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 		}, [])
 	);
 
-	const openBackgroundSound = React.useCallback(
-		() => () => {
-			navigation.navigate("SelectBackgroundSound", {
-				backgroundImage: { uri: image },
-			});
-		},
-		[image]
-	);
+	
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -316,24 +309,23 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 					/>
 					<View style={styles.timesCodeBox}>
 						<Text style={styles.timeCode} key={"current"}>
-							{i18n.strftime(new Date(currentTime), "%-H:%M:%S")}
+							{i18n.strftime(new Date(currentTime - 5 * 3600 * 1000), "%-H:%M:%S")}
 						</Text>
 						<Text style={styles.timeCode} key={"all"}>
-							{i18n.strftime(new Date(length), "%-H:%M:%S")}
+							{i18n.strftime(new Date(length - 5 * 3600 * 1000), "%-H:%M:%S")}
 						</Text>
 					</View>
-					<ColorButton
-						styleButton={styles.buttonBackgroundSound}
-						styleText={styles.buttonBackgroundText}
-						secondItem={<Headphones style={{ marginRight: 24 }} />}
-						onPress={() => openBackgroundSound()}
-					>
-						{i18n.t(
+					<Pressable style={styles.buttonBackgroundSound} onPress={() => navigation.navigate("SelectBackgroundSound", {
+							backgroundImage: { uri: image },
+						})}>
+					<Headphones style={{ marginRight: 24 }} />
+					<Text style={styles.buttonBackgroundText}>{i18n.t(
 							currentNameBackgroundSound !== null
 								? BackgroundSound[currentNameBackgroundSound].translate
 								: "12ee6d3a-ad58-4c4a-9b87-63645efe9c90"
-						)}
-					</ColorButton>
+						)}</Text>
+					</Pressable>
+				
 				</View>
 			</Animated.View>
 		</View>
@@ -385,9 +377,15 @@ const styles = StyleSheet.create({
 		paddingLeft: 13,
 		marginTop: 17,
 		height: 50,
+		borderRadius: 25,
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center'
 	},
 	buttonBackgroundText: {
 		color: "#FFFFFF",
+		...gStyle.font('500'),
+		fontSize: 14
 	},
 	buttonControl: {
 		backgroundColor: "rgba(61, 61, 61, 0.5)",

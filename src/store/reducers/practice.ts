@@ -73,5 +73,13 @@ export default createReducer<PracticeState>(
 		builder.addCase(Actions.removeFavoritePractice.fulfilled, (state, { payload }) => {
 			state.listPracticesFavorite = [...state.listPracticesFavorite.filter(({ id }) => payload.id !== id)];
 		});
+		builder.addCase(Actions.signOutAccount.fulfilled, (state) => {
+			state.listPracticesListened = [];
+state.listPracticesFavorite = [];
+state.recommendationPracticeToDay = undefined;
+		} )
+		builder.addCase(Actions.getPracticeDay.fulfilled, (state, { payload }) => {
+			if (payload !== null) state.recommendationPracticeToDay = payload;
+		})
 	}
 );

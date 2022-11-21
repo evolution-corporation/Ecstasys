@@ -28,6 +28,7 @@ const getStartWeek = () => {
 const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 	const [toDayPopularMeditation, setTodayPopularMeditation] = React.useState<State.Practice | null>(null);
 	const { height } = RN.useWindowDimensions();
+	const isNewUser = Store.useAppSelector(store => store.account.isNewUser)
 	const [heightGreeting, setHeightGreeting] = React.useState<number | null>(null);
 	//* Данные из глобального состояния
 	const { displayName, image, nickName } = Store.useAppSelector(store => {
@@ -97,6 +98,9 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 		Request.getPopularToDayMeditation().then(practice =>
 			setTodayPopularMeditation(Converter.composePractice(practice))
 		);
+		if (isNewUser) {
+			navigation.navigate('InputNameAndSelectGender')
+		}
 	}, []);
 
 	return (
@@ -112,7 +116,7 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 						hiddenStatusBar = true;
 						value = nativeEvent.contentOffset.y * 0.3 - 20;
 					}
-					setStatusBarHidden(hiddenStatusBar, "slide");
+					// setStatusBarHidden(hiddenStatusBar, "slide");
 					translateGreeting.value = value;
 				}
 			}}
@@ -185,8 +189,8 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 				)}
 
 				<Dump.StatisticsMeditation style={viewStyle.margin.mediumV} count={countMeditation} time={timeMeditation} />
-				<RN.Text style={styles.nameSection}>{i18n.t("9d0cd47a-0392-4e5c-9573-00642b12f868")}</RN.Text>
-				<RN.Text style={styles.descriptionSection}>{i18n.t("f292b17c-2295-471e-80cf-f99f6a618701")}</RN.Text>
+				<RN.Text style={styles.nameSection}>{i18n.t("bbb079ed-25a1-4360-a262-5c1ef0741cbf")}</RN.Text>
+				<RN.Text style={styles.descriptionSection}>{i18n.t("b47177ce-a266-4e2f-ba88-218f93de38a3")}</RN.Text>
 				{toDayPopularMeditation !== null ? (
 					<Dump.PracticeCard
 						id={toDayPopularMeditation.id}
