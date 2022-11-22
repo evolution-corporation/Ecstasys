@@ -46,6 +46,7 @@ const Screen: React.FC<Props> = props => {
 			style={[
 				{ flex: 1, backgroundColor, paddingTop: insets.top + (headerHidden ? 0 : 55) },
 				paddingHorizontalOff ? null : { paddingHorizontal: 20 },
+				styleScreen,
 			]}
 			onLayout={onLayout}
 		>

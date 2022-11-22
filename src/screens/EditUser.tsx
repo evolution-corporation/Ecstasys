@@ -24,17 +24,17 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 	const dispatch = useAppDispatch();
 	const update = async () => {
 		try {
-		await dispatch(actions.updateAccount({})).unwrap();
-		navigation.navigate("MessageLog", {
-			message: i18n.t("6962d75a-b6cc-4e30-aa87-addabf7450e7"),
-			result: "Resolve",
-		});
-	} catch (error) {
-		navigation.navigate("MessageLog", {
-			message: error instanceof Error ? error.message : 'Упс...',
-			result: "Reject",
-		});
-	}
+			await dispatch(actions.updateAccount({})).unwrap();
+			navigation.navigate("MessageLog", {
+				message: i18n.t("6962d75a-b6cc-4e30-aa87-addabf7450e7"),
+				result: "Resolve",
+			});
+		} catch (error) {
+			navigation.navigate("MessageLog", {
+				message: error instanceof Error ? error.message : "Упс...",
+				result: "Reject",
+			});
+		}
 	};
 
 	const { window } = useDimensions();
@@ -117,13 +117,13 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-	background: {
-		paddingHorizontal: 30,
-		justifyContent: "space-between",
-		paddingBottom: 80,
-		backgroundColor: "#9765A8",
-		flex: 1,
-	},
+	// background: {
+	// 	paddingHorizontal: 30,
+	// 	justifyContent: "space-between",
+	// 	paddingBottom: 80,
+	// 	backgroundColor: "#9765A8",
+	// 	flex: 1,
+	// },
 
 	TextInputTransparent: {
 		color: "#FFFFFF",

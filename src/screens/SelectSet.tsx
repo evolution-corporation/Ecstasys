@@ -18,6 +18,7 @@ import { Converter, Request } from "~api";
 import Play from "assets/icons/PlayWhite.svg";
 import { ColorButton } from "~components/dump";
 import { StatusBar } from "expo-status-bar";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 	const { selectedRelax } = route.params;
@@ -38,10 +39,11 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 			})();
 		}, [])
 	);
+	const insets = useSafeAreaInsets();
 
 	return (
 		<DoubleColorView heightViewPart={133}>
-			<View style={styles.header}>
+			<View style={[styles.header, { top: insets.top + 55 }]}>
 				<View style={styles.informationPractice}>
 					<SharedElement id={`practice.item.${selectedRelax.id}`} style={styles.image}>
 						<Image source={{ uri: selectedRelax.image }} style={{ width: "100%", height: "100%", borderRadius: 20 }} />
@@ -102,7 +104,27 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 									<Play width={26} height={26} />
 								</View>
 							) : (
-								<Text style={styles.number}>{index + 1}</Text>
+								<View
+									style={{
+										width: 56,
+										height: 56,
+										borderRadius: 28,
+										backgroundColor: "#E6E6E6",
+										alignItems: "center",
+										justifyContent: "center",
+									}}
+								>
+									<Text
+										style={{
+											color: "#606060",
+											backgroundColor: "#E6E6E6",
+											fontSize: 18,
+											...gStyle.font("600"),
+										}}
+									>
+										{index + 1}
+									</Text>
+								</View>
 							)}
 							<Text style={styles.nameSet}>{item.name}</Text>
 						</View>
@@ -193,7 +215,6 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		zIndex: 11,
 		position: "absolute",
-		top: 0,
 		width: "100%",
 		paddingHorizontal: 20,
 	},

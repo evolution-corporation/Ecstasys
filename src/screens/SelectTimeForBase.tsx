@@ -7,7 +7,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import React, { useCallback, useState } from "react";
 import { useHeaderHeight } from "@react-navigation/elements";
 
-import { Dimensions, Image, StyleSheet, Switch, Text, View } from "react-native";
+import { Dimensions, Image, Platform, StyleSheet, Switch, Text, View } from "react-native";
 import { ColorButton, SelectTime, TextButton } from "~components/dump";
 
 import gStyle from "~styles";
@@ -28,7 +28,9 @@ const SelectTimeForBase: RootScreenProps<"SelectTimeForBase"> = ({ navigation, r
 	const [isNeedVoice, setIsNeedVoice] = React.useState<boolean>(false);
 	useFocusEffect(
 		useCallback(() => {
-			StatusBar.setStatusBarTranslucent(true);
+			if (Platform.OS === "android") {
+				StatusBar.setStatusBarTranslucent(true);
+			}
 			StatusBar.setStatusBarStyle("light");
 			navigation.setOptions({
 				title: selectedPractice.name,
@@ -37,7 +39,6 @@ const SelectTimeForBase: RootScreenProps<"SelectTimeForBase"> = ({ navigation, r
 	);
 	return (
 		<View style={styles.background}>
-			<StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
 			<View style={{ flex: 1, width: "100%" }}>
 				<View style={styles.topContent}>
 					<SharedElement id={`practice.item.${selectedPractice.id}`} style={styles.image}>

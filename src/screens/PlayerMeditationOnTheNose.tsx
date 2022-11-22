@@ -158,7 +158,6 @@ const PlayerMeditationOnTheNose: RootScreenProps<"PlayerMeditationOnTheNose"> = 
 			<SharedElement id={"image"} style={{ width: "100%", height: "100%", position: "absolute" }}>
 				<Image source={require("assets/BaseMeditationImage/Nose.png")} style={{ width: "100%", height: "100%" }} />
 			</SharedElement>
-			<StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
 			<View style={{ flex: 1, paddingHorizontal: 20 }}>
 				<Pressable
 					onPress={() => setIsShowTime(prevState => !prevState)}
@@ -181,22 +180,23 @@ const PlayerMeditationOnTheNose: RootScreenProps<"PlayerMeditationOnTheNose"> = 
 					)}
 				</Pressable>
 				<View style={[styles.timeInfoBox]}>
-					<ColorButton
-						styleButton={styles.buttonBackgroundSound}
-						styleText={styles.buttonBackgroundText}
-						secondItem={<Headphones style={{ marginRight: 24 }} />}
-						onPress={() => {
+					<Pressable
+						style={styles.buttonBackgroundSound}
+						onPress={() =>
 							navigation.navigate("SelectBackgroundSound", {
 								backgroundImage: require("assets/BaseMeditationImage/Nose.png"),
-							});
-						}}
+							})
+						}
 					>
-						{i18n.t(
-							currentNameBackgroundSound !== null
-								? BackgroundSound[currentNameBackgroundSound].translate
-								: "12ee6d3a-ad58-4c4a-9b87-63645efe9c90"
-						)}
-					</ColorButton>
+						<Headphones style={{ marginRight: 24 }} />
+						<Text style={styles.buttonBackgroundText}>
+							{i18n.t(
+								currentNameBackgroundSound !== null
+									? BackgroundSound[currentNameBackgroundSound].translate
+									: "12ee6d3a-ad58-4c4a-9b87-63645efe9c90"
+							)}
+						</Text>
+					</Pressable>
 				</View>
 			</View>
 		</View>
@@ -245,6 +245,10 @@ const styles = StyleSheet.create({
 		paddingRight: 33,
 		paddingLeft: 13,
 		height: 50,
+		borderRadius: 25,
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between",
 	},
 	buttonBackgroundText: {
 		color: "#FFFFFF",

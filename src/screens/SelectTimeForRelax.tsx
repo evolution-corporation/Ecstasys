@@ -26,7 +26,6 @@ const SelectTimeForRelax: RootScreenProps<"SelectTimeForRelax"> = ({ navigation,
 	const selectTime = React.useRef<React.ElementRef<typeof SelectTime>>(null);
 	const [milliseconds, setMilliseconds] = useState<number>(selectedPractice.length);
 	const { window } = useDimensions();
-	const heightHeaded = useHeaderHeight();
 	useFocusEffect(
 		useCallback(() => {
 			if (Platform.OS === "android") {
@@ -47,7 +46,7 @@ const SelectTimeForRelax: RootScreenProps<"SelectTimeForRelax"> = ({ navigation,
 					<SharedElement id={`practice.item.${selectedPractice.id}`} style={styles.image}>
 						<Image source={{ uri: selectedPractice.image }} style={{ width: "100%", height: "100%" }} />
 					</SharedElement>
-					<View style={[styles.imageContent, { paddingTop: heightHeaded, marginTop: insets.top + 55 }]}>
+					<View style={[styles.imageContent, { paddingTop: 55 + insets.top }]}>
 						<LinearGradient style={styles.timeMinutesBox} colors={["#75348B", "#6A2382"]}>
 							<Text style={styles.timeMinutes}>
 								{i18n.t("minute", {

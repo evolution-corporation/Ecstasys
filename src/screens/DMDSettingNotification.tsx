@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { useCallback } from "react";
-import { SafeAreaView, Text, StyleSheet, Image, Pressable, View } from "react-native";
+import { SafeAreaView, Text, StyleSheet, Image, Pressable, View, Platform } from "react-native";
 import { ColorButton, TextButton } from "~components/dump";
 import { actions, useAppDispatch, useAppSelector } from "~store";
 import { RootScreenProps } from "~types";
@@ -14,6 +14,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import * as StatusBar from "expo-status-bar";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useDimensions } from "@react-native-community/hooks";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const DMDSettingNotification: RootScreenProps<"DMDSettingNotification"> = ({ navigation, route }) => {
 	const { selectedRelax } = route.params;
@@ -35,18 +36,19 @@ const DMDSettingNotification: RootScreenProps<"DMDSettingNotification"> = ({ nav
 	const { window } = useDimensions();
 	useFocusEffect(
 		useCallback(() => {
-			StatusBar.setStatusBarTranslucent(true);
+			if (Platform.OS === "android") {
+				StatusBar.setStatusBarTranslucent(true);
+			}
 			StatusBar.setStatusBarStyle("light");
 			navigation.setOptions({
 				title: selectedRelax.name,
 			});
 		}, [])
 	);
+	const insets = useSafeAreaInsets();
 
 	return (
-		<SafeAreaView style={styles.container}>
-			<StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
-
+		<View style={styles.container}>
 			<View style={[styles.imageHeader, { height: heightTopView ?? 0 }]}>
 				<SharedElement id={`practice.item.${selectedRelax.id}`} style={styles.image}>
 					<Image
@@ -54,7 +56,7 @@ const DMDSettingNotification: RootScreenProps<"DMDSettingNotification"> = ({ nav
 						style={{ width: "100%", borderBottomLeftRadius: 20, borderBottomRightRadius: 20, height: "100%" }}
 					/>
 				</SharedElement>
-				<View style={{ marginTop: headerHeight, flex: 1 }}>
+				<View style={{ marginTop: 55 + insets.top, flex: 1 }}>
 					<LinearGradient style={styles.timeMinutesBox} colors={["#75348B", "#6A2382"]}>
 						<Text style={styles.timeMinutes}>
 							{i18n.t("minute", {
@@ -128,7 +130,7 @@ const DMDSettingNotification: RootScreenProps<"DMDSettingNotification"> = ({ nav
 					{i18n.t("79dc5c1b-465a-4ead-bb4b-57fcf88af1d1")}
 				</ColorButton>
 			</View>
-		</SafeAreaView>
+		</View>
 	);
 };
 

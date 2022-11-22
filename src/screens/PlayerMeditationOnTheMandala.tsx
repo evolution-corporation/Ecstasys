@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { useCallback, useEffect, useRef } from "react";
-import { Image, StyleSheet, View, Text, FlatList, Pressable, ImageSourcePropType } from "react-native";
+import { Image, StyleSheet, View, Text, FlatList, Pressable, ImageSourcePropType, Platform } from "react-native";
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
 import * as Notifications from "expo-notifications";
 
@@ -171,7 +171,9 @@ const PlayerMeditationOnTheMandala: RootScreenProps<"PlayerMeditationOnTheMandal
 
 	useFocusEffect(
 		useCallback(() => {
-			StatusBar.setStatusBarTranslucent(true);
+			if (Platform.OS === "android") {
+				StatusBar.setStatusBarTranslucent(true);
+			}
 			StatusBar.setStatusBarStyle("light");
 
 			const circlingMandala = () => {
@@ -187,7 +189,6 @@ const PlayerMeditationOnTheMandala: RootScreenProps<"PlayerMeditationOnTheMandal
 	const { window } = useDimensions();
 	return (
 		<View style={styles.background}>
-			<StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
 			<Pressable
 				onPress={() => setIsShowTime(prevState => !prevState)}
 				style={{
@@ -234,22 +235,23 @@ const PlayerMeditationOnTheMandala: RootScreenProps<"PlayerMeditationOnTheMandal
 					ItemSeparatorComponent={() => <View style={{ width: 29 }} />}
 					contentContainerStyle={{ paddingHorizontal: 20 }}
 				/>
-				<ColorButton
-					styleButton={styles.buttonBackgroundSound}
-					styleText={styles.buttonBackgroundText}
-					secondItem={<Headphones style={{ marginRight: 24 }} />}
-					onPress={() => {
+				<Pressable
+					style={styles.buttonBackgroundSound}
+					onPress={() =>
 						navigation.navigate("SelectBackgroundSound", {
 							backgroundImage: mandala,
-						});
-					}}
+						})
+					}
 				>
-					{i18n.t(
-						currentNameBackgroundSound !== null
-							? BackgroundSound[currentNameBackgroundSound].translate
-							: "12ee6d3a-ad58-4c4a-9b87-63645efe9c90"
-					)}
-				</ColorButton>
+					<Headphones style={{ marginRight: 24 }} />
+					<Text style={styles.buttonBackgroundText}>
+						{i18n.t(
+							currentNameBackgroundSound !== null
+								? BackgroundSound[currentNameBackgroundSound].translate
+								: "12ee6d3a-ad58-4c4a-9b87-63645efe9c90"
+						)}
+					</Text>
+				</Pressable>
 			</View>
 		</View>
 	);
@@ -298,6 +300,10 @@ const styles = StyleSheet.create({
 		paddingRight: 33,
 		paddingLeft: 13,
 		height: 50,
+		borderRadius: 25,
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between",
 	},
 	buttonBackgroundText: {
 		color: "#FFFFFF",

@@ -28,14 +28,14 @@ export interface AccountState {
 		autoPayment: boolean;
 	};
 	status: "REGISTRATION" | "NO_REGISTRATION" | "NO_AUTHENTICATION" | "IS_LOADING";
-	isNewUser: boolean
+	isNewUser: boolean;
 }
 
 export default createReducer<AccountState>(
 	{
 		changeData: {},
 		status: "IS_LOADING",
-		isNewUser: false
+		isNewUser: false,
 	},
 	builder => {
 		builder.addCase(Actions.initialization.fulfilled, (state, { payload }) => {
@@ -77,7 +77,7 @@ export default createReducer<AccountState>(
 					image: user.image,
 					gender: user.gender,
 				};
-				state.isNewUser = true
+				state.isNewUser = false;
 				if (subscribe !== null) {
 					state.subscribe = {
 						autoPayment: subscribe.autoPayment,
@@ -95,18 +95,18 @@ export default createReducer<AccountState>(
 			state.changeData = {};
 			state.uid = undefined;
 			state.subscribe = undefined;
-			state.isNewUser = false
+			state.isNewUser = false;
 		});
 		builder.addCase(Actions.registrationAccount.fulfilled, (state, { payload }) => {
 			state.currentData = payload;
 			state.uid = payload.uid;
 			state.changeData = {};
-			state.isNewUser = true
+			state.isNewUser = true;
 		});
 		builder.addCase(Actions.updateAccount.fulfilled, (state, { payload }) => {
 			state.changeData = {};
 			state.currentData = payload;
-			state.isNewUser = false
+			state.isNewUser = false;
 		});
 		builder.addCase(Actions.removeChangedInformationUser, state => {
 			state.changeData = {};
@@ -120,6 +120,8 @@ export default createReducer<AccountState>(
 		builder.addCase(Actions.setRegistrationAccountStatus, state => {
 			state.status = "REGISTRATION";
 		});
-		builder.addCase(Actions.setNotNewUser, (state) => {state.isNewUser = false})
+		builder.addCase(Actions.setNotNewUser, state => {
+			state.isNewUser = false;
+		});
 	}
 );

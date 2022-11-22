@@ -28,7 +28,6 @@ const FavoriteMeditationScreen: RootScreenProps<"FavoriteMeditation"> = ({ navig
 
 	return (
 		<DoubleColorView style={styles.background} heightViewPart={140}>
-			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
 			<ScrollView showsVerticalScrollIndicator={false}>
 				{typesMeditation.map((typeMeditation, index) => (
 					<View key={typeMeditation} style={styles.favoriteTypeMeditationCard}>
@@ -62,7 +61,7 @@ const FavoriteMeditationScreen: RootScreenProps<"FavoriteMeditation"> = ({ navig
 							contentContainerStyle={{
 								paddingHorizontal: 20,
 							}}
-							ItemSeparatorComponent={() => <View style={{ width: 27 }}/>}
+							ItemSeparatorComponent={() => <View style={{ width: 27 }} />}
 						/>
 					</View>
 				))}

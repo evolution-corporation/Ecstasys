@@ -263,10 +263,10 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 					/>
 					<View style={styles.timesCodeBox}>
 						<Text style={styles.timeCode} key={"current"}>
-							{i18n.strftime(new Date(currentTime), "%-H:%M:%S")}
+							{i18n.strftime(new Date(currentTime - 5 * 3600 * 1000), "%-H:%M:%S")}
 						</Text>
 						<Text style={styles.timeCode} key={"all"}>
-							{i18n.strftime(new Date(allLength), "%-H:%M:%S")}
+							{i18n.strftime(new Date(allLength - 5 * 3600 * 1000), "%-H:%M:%S")}
 						</Text>
 					</View>
 				</View>
