@@ -6,8 +6,9 @@
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useCallback, useState } from "react";
 import { useHeaderHeight } from "@react-navigation/elements";
+import Constants from "expo-constants";
 
-import { Dimensions, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Image, Platform, StyleSheet, Text, View } from "react-native";
 import { ColorButton, SelectTime, TextButton } from "~components/dump";
 
 import gStyle from "~styles";
@@ -18,6 +19,7 @@ import { SharedElement } from "react-navigation-shared-element";
 import * as StatusBar from "expo-status-bar";
 import { useFocusEffect } from "@react-navigation/native";
 import { useDimensions } from "@react-native-community/hooks";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const SelectTimeForRelax: RootScreenProps<"SelectTimeForRelax"> = ({ navigation, route }) => {
 	const { selectedPractice } = route.params;
@@ -27,22 +29,25 @@ const SelectTimeForRelax: RootScreenProps<"SelectTimeForRelax"> = ({ navigation,
 	const heightHeaded = useHeaderHeight();
 	useFocusEffect(
 		useCallback(() => {
-			StatusBar.setStatusBarTranslucent(true);
+			if (Platform.OS === "android") {
+				StatusBar.setStatusBarTranslucent(true);
+			}
 			StatusBar.setStatusBarStyle("light");
 			navigation.setOptions({
 				title: selectedPractice.name,
 			});
 		}, [])
 	);
+	const insets = useSafeAreaInsets();
+
 	return (
 		<View style={styles.background}>
-			<StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
 			<View style={{ flex: 1, width: "100%" }}>
 				<View style={styles.topContent}>
 					<SharedElement id={`practice.item.${selectedPractice.id}`} style={styles.image}>
 						<Image source={{ uri: selectedPractice.image }} style={{ width: "100%", height: "100%" }} />
 					</SharedElement>
-					<View style={[styles.imageContent, { paddingTop: heightHeaded }]}>
+					<View style={[styles.imageContent, { paddingTop: heightHeaded, marginTop: insets.top + 55 }]}>
 						<LinearGradient style={styles.timeMinutesBox} colors={["#75348B", "#6A2382"]}>
 							<Text style={styles.timeMinutes}>
 								{i18n.t("minute", {

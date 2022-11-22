@@ -62,28 +62,29 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 	);
 
 	return (
-		<DoubleColorView style={styles.background} heightViewPart={height / 2 - 100}>
-			<View
-				style={{
-					position: "absolute",
-					width: "100%",
-					left: 20,
-					top: -50,
-					right: 0,
-					flexDirection: "row",
-					justifyContent: "space-between",
-					alignItems: "center",
-					zIndex: 1000,
-					paddingHorizontal: 0,
-				}}
-			>
-				<Text style={{ ...gStyle.styles.header, color: "#FFFFFF", width: "auto" }} adjustsFontSizeToFit>
-					{i18n.t("DMD")}
-				</Text>
-				<UserButton onPress={() => navigation.navigate("Profile")} />
-			</View>
-			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
-
+		<DoubleColorView
+			style={styles.background}
+			heightViewPart={height / 2 - 100}
+			headerElement={
+				<View
+					style={{
+						position: "absolute",
+						width: "100%",
+						left: 20,
+						right: 0,
+						flexDirection: "row",
+						justifyContent: "space-between",
+						alignItems: "center",
+						paddingHorizontal: 0,
+					}}
+				>
+					<Text style={{ ...gStyle.styles.header, color: "#FFFFFF", width: "auto" }} adjustsFontSizeToFit>
+						{i18n.t("DMD")}
+					</Text>
+					<UserButton onPress={() => navigation.navigate("Profile")} />
+				</View>
+			}
+		>
 			<ColorButton
 				animationStyle={aStyle.button}
 				styleButton={styles.buttonInstruction}

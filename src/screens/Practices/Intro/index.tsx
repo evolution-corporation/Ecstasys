@@ -58,8 +58,7 @@ const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation })
 
 	useFocusEffect(
 		useCallback(() => {
-			StatusBar.setStatusBarTranslucent(true);
-			StatusBar.setStatusBarStyle("light");
+			StatusBar.setStatusBarHidden(true, "none");
 		}, [])
 	);
 
@@ -70,7 +69,6 @@ const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation })
 
 	return (
 		<View style={styles.background}>
-			<StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
 			<Animated.View style={[styles.birdProffessor, aStyle.bird]}>
 				<Image source={require("./assets/BirdProfessor.png")} />
 			</Animated.View>

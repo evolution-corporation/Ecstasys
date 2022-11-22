@@ -13,7 +13,6 @@ import gStyle from "~styles";
 
 import * as Screens from "src/screens";
 
-
 import MainIconSelected from "assets/icons/HomeSelectedIcon.svg";
 import PracticesIconSelected from "assets/icons/PracticeSelectedIcon.svg";
 import ProfileIconSelected from "assets/icons/ProfileSelectedIcon.svg";
@@ -26,7 +25,7 @@ import DMDIconNoSelected from "assets/icons/DMDNoSelectedIcon.svg";
 import { useAppSelector } from "~store";
 import { RootScreenProps, RootStackList, State, TabNavigatorList } from "~types";
 
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import ArrowBack from "assets/icons/ArrowBack.svg";
 
@@ -61,7 +60,6 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
 				name={"PracticesList"}
 				component={Screens.PracticesList}
 				options={{
-					
 					tabBarIcon: ({ focused }) => (focused ? <PracticesIconSelected /> : <PracticesIconNoSelected />),
 				}}
 			/>
@@ -108,7 +106,11 @@ const RootRoutes: FC = () => {
 						component={Screens.SelectMethodAuthentication}
 						options={{ headerShown: false }}
 					/>
-					<RootNavigation.Screen name={"InputNumberPhone"} component={Screens.InputNumberPhone} options={{ title: i18n.t("c44c1286-2e08-4c18-ac68-4bae712c26a8") }}/>
+					<RootNavigation.Screen
+						name={"InputNumberPhone"}
+						component={Screens.InputNumberPhone}
+						options={{ title: i18n.t("c44c1286-2e08-4c18-ac68-4bae712c26a8") }}
+					/>
 					<RootNavigation.Screen name={"InputSMSCode"} component={Screens.InputSMSCode} options={{ title: "" }} />
 				</>
 			);
@@ -136,7 +138,7 @@ const RootRoutes: FC = () => {
 		default:
 			screenList = (
 				<>
-					<RootNavigation.Screen name={"TabNavigator"} component={TabRoutes} options={{ headerShown: false }}/>
+					<RootNavigation.Screen name={"TabNavigator"} component={TabRoutes} options={{ headerShown: false }} />
 					<RootNavigation.Screen name={"Options"} component={Screens.Options} options={{ title: i18n.t("options") }} />
 					<RootNavigation.Screen
 						name={"FavoriteMeditation"}
@@ -194,8 +196,16 @@ const RootRoutes: FC = () => {
 							title: i18n.t("12ee6d3a-ad58-4c4a-9b87-63645efe9c90"),
 						}}
 					/>
-					<RootNavigation.Screen name={"MessageLog"} component={Screens.MessageLog} options={{ presentation: "transparentModal", headerShown: false }}/>
-					<RootNavigation.Screen name={"IntroPractices"} component={Screens.IntroPractices} options={{ headerShown: false }}/>
+					<RootNavigation.Screen
+						name={"MessageLog"}
+						component={Screens.MessageLog}
+						options={{ presentation: "transparentModal", headerShown: false }}
+					/>
+					<RootNavigation.Screen
+						name={"IntroPractices"}
+						component={Screens.IntroPractices}
+						options={{ headerShown: false }}
+					/>
 					<RootNavigation.Screen name={"DMDIntro"} component={Screens.DMDIntro} options={{ headerShown: false }} />
 					<RootNavigation.Screen name={"PlayerForPractice"} component={Screens.PlayerForPractice} />
 					<RootNavigation.Screen name={"SelectSubscribe"} component={Screens.SelectSubscribe} options={{}} />
@@ -250,45 +260,51 @@ const RootRoutes: FC = () => {
 	return (
 		<RootNavigation.Navigator
 			screenOptions={{
-				header: ({ route, options, navigation }) => (
-					<SafeAreaView
-						style={{
-							width: "100%",
-							position: "absolute",
-							height: 55,
-							alignItems: "center",
-							flexDirection: "row",
-						}}
-					>
-						<View style={{ width: "13%", height: "100%" }}>
-							{navigation.canGoBack() ? (
-								<Pressable
-									style={{
-										flex: 1,
-										justifyContent: "center",
-										alignItems: "flex-start",
-										paddingLeft: 20,
-									}}
-									onPress={() => navigation.goBack()}
-								>
-									<ArrowBack />
-								</Pressable>
-							) : null}
-						</View>
-						<Text
+				header: ({ route, options, navigation }) => {
+					const insets = useSafeAreaInsets();
+
+					return (
+						<View
 							style={{
-								...gStyle.styles.header,
-								color: "#FFFFFF",
-								textAlignVertical: "center",
-								textAlign: "center",
+								width: "100%",
+								position: "absolute",
+								height: 55,
+								alignItems: "center",
+								flexDirection: "row",
+								backgroundColor: "transparent",
+								top: insets.top,
 							}}
-							adjustsFontSizeToFit
 						>
-							{options.title}
-						</Text>
-						<View>{}</View>
-					</SafeAreaView>
-				),
+							<View style={{ width: "13%", height: "100%" }}>
+								{navigation.canGoBack() ? (
+									<Pressable
+										style={{
+											flex: 1,
+											justifyContent: "center",
+											alignItems: "flex-start",
+											paddingLeft: 20,
+										}}
+										onPress={() => navigation.goBack()}
+									>
+										<ArrowBack />
+									</Pressable>
+								) : null}
+							</View>
+							<Text
+								style={{
+									...gStyle.styles.header,
+									color: "#FFFFFF",
+									textAlignVertical: "center",
+									textAlign: "center",
+								}}
+								adjustsFontSizeToFit
+							>
+								{options.title}
+							</Text>
+							<View>{}</View>
+						</View>
+					);
+				},
 				headerTransparent: true,
 			}}
 		>

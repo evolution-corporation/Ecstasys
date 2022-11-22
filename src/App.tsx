@@ -12,6 +12,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import RootRoutes from "./routes";
 import Store, { actions } from "./store";
 import "./TaskManager";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 GoogleSignin.configure({
 	webClientId: "878799007977-cj3549ni87jre2rmg4eq0hiolp08igh2.apps.googleusercontent.com",
@@ -30,19 +31,20 @@ const AppCore = () => {
 				await Store.dispatch(actions.initialization()).unwrap();
 				await SplashScreen.hideAsync();
 			} catch (error) {
-				console.error(error)
+				console.error(error);
 				if (error instanceof Error) Alert.alert(`Ошибка при загрузке. ${error.name}`, error.message);
 			}
-			
 		})();
 	}, []);
 
 	return (
-		<GestureHandlerRootView style={{ flex: 1 }}>
-			<NavigationContainer>
-				<RootRoutes />
-			</NavigationContainer>
-		</GestureHandlerRootView>
+		<SafeAreaProvider>
+			<GestureHandlerRootView style={{ flex: 1 }}>
+				<NavigationContainer>
+					<RootRoutes />
+				</NavigationContainer>
+			</GestureHandlerRootView>
+		</SafeAreaProvider>
 	);
 };
 

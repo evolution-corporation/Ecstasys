@@ -1,9 +1,10 @@
 /** @format */
 
-import { StatusBar } from "expo-status-bar";
+import { useFocusEffect } from "@react-navigation/native";
+import * as StatusBar from "expo-status-bar";
 import React from "react";
-import { View, Text, StyleSheet, ColorValue, StyleProp, ViewStyle, LayoutChangeEvent } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View, Text, StyleSheet, ColorValue, StyleProp, ViewStyle, LayoutChangeEvent, Platform } from "react-native";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface Props {
 	headerTransparent?: boolean;
@@ -27,24 +28,28 @@ const Screen: React.FC<Props> = props => {
 		paddingHorizontalOff = false,
 		onLayout,
 	} = props;
+
+	useFocusEffect(
+		React.useCallback(() => {
+			if (Platform.OS === "android") {
+				StatusBar.setStatusBarBackgroundColor(headerTransparent ? "transparent" : (backgroundColor as string), false);
+				StatusBar.setStatusBarTranslucent(headerTransparent);
+			}
+			StatusBar.setStatusBarStyle("light");
+			StatusBar.setStatusBarHidden(headerHidden, "none");
+		}, [headerTransparent, backgroundColor, headerHidden])
+	);
+	const insets = useSafeAreaInsets();
+
 	return (
-		<View style={{ flex: 1, backgroundColor }}>
-			<StatusBar
-				style="light"
-				backgroundColor={headerTransparent ? "transparent" : (backgroundColor as string)}
-				hidden={statusBarHidden}
-				translucent={headerTransparent}
-			/>
-			<SafeAreaView
-				style={[
-					styleScreen,
-					{ flex: 1, marginTop: headerHidden ? 0 : 55 },
-					paddingHorizontalOff ? null : { paddingHorizontal: 20 },
-				]}
-				onLayout={onLayout}
-			>
-				{children}
-			</SafeAreaView>
+		<View
+			style={[
+				{ flex: 1, backgroundColor, paddingTop: insets.top + (headerHidden ? 0 : 55) },
+				paddingHorizontalOff ? null : { paddingHorizontal: 20 },
+			]}
+			onLayout={onLayout}
+		>
+			{children}
 		</View>
 	);
 };

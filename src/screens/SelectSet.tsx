@@ -40,9 +40,7 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 	);
 
 	return (
-		<DoubleColorView style={styles.background} heightViewPart={133} hideElementVioletPart>
-			<StatusBar style="light" backgroundColor="#9765A8" hidden={false} />
-
+		<DoubleColorView heightViewPart={133}>
 			<View style={styles.header}>
 				<View style={styles.informationPractice}>
 					<SharedElement id={`practice.item.${selectedRelax.id}`} style={styles.image}>
@@ -137,7 +135,6 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 };
 
 const styles = StyleSheet.create({
-	background: {},
 	informationPractice: {
 		flexDirection: "row",
 		width: "100%",

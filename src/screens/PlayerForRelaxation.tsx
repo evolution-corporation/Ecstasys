@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { useCallback, useEffect, useRef } from "react";
-import { Image, StyleSheet, View, Text, AppState, ActivityIndicator } from "react-native";
+import { Image, StyleSheet, View, Text, AppState, ActivityIndicator, Platform } from "react-native";
 import Animated from "react-native-reanimated";
 import * as Notifications from "expo-notifications";
 
@@ -276,7 +276,9 @@ const PlayerForRelaxation: RootScreenProps<"PlayerForRelaxation"> = ({ navigatio
 
 	useFocusEffect(
 		useCallback(() => {
-			StatusBar.setStatusBarTranslucent(true);
+			if (Platform.OS === "android") {
+				StatusBar.setStatusBarTranslucent(true);
+			}
 			StatusBar.setStatusBarStyle("light");
 			navigation.setOptions({
 				title: selectedPractice.name,

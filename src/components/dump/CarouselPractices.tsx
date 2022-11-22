@@ -101,6 +101,11 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 						if (onChange) onChange(data[index].id);
 					}
 				}}
+				getItemLayout={(data, index) => ({
+					length: styles.elementList.width,
+					offset: styles.elementList.width * index,
+					index,
+				})}
 			/>
 		</View>
 	);

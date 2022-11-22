@@ -19,15 +19,12 @@ const DMDIntro: RootScreenProps<"DMDIntro"> = ({ navigation }) => {
 
 	useFocusEffect(
 		useCallback(() => {
-			StatusBar.setStatusBarTranslucent(true);
-			StatusBar.setStatusBarStyle("light");
+			StatusBar.setStatusBarHidden(true, "none");
 		}, [])
 	);
 
 	return (
 		<View style={styles.background}>
-			<StatusBar.StatusBar hidden />
-
 			<Image source={require("./assets/professor.png")} style={styles.image} />
 			<View style={styles.content}>
 				<Text style={styles.title} adjustsFontSizeToFit>

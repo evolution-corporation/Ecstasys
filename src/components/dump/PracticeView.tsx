@@ -176,9 +176,26 @@ const Card: React.FC<CardProps> = props => {
 					</Text>
 				</View>
 				<View style={cardStyles.footer}>
-					<Text style={cardStyles.timeLength}>
-						{i18n.t(translateIdTime, { count: Math.round(lengthAudio / 60000) })}
-					</Text>
+					<View
+						style={{
+							backgroundColor: "#9765A8",
+							paddingHorizontal: 34,
+							height: 30,
+							borderRadius: 15,
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+					>
+						<Text
+							style={{
+								color: "#FFFFFF",
+								...gStyle.font("600"),
+								fontSize: 13,
+							}}
+						>
+							{i18n.t(translateIdTime, { count: Math.round(lengthAudio / 60000) })}
+						</Text>
+					</View>
 					<View>
 						<Play />
 					</View>

@@ -30,7 +30,6 @@ const SelectBackgroundSound: RootScreenProps<"SelectBackgroundSound"> = ({ navig
 
 	const offPlayBackgroundSound = useRef<{ (): Promise<void> } | null>(null);
 
-
 	return (
 		<View style={styles.background}>
 			{backgroundImage && <Image blurRadius={2} source={backgroundImage} style={styles.background} />}
