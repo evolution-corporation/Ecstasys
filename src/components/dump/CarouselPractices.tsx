@@ -5,6 +5,7 @@ import { StyleSheet, FlatList, ViewProps, Dimensions, ViewToken, ViewabilityConf
 
 import CarouselPracticesElement from "./CarouselPracticesElement";
 import { State } from "~types";
+import { useNavigation } from "@react-navigation/native";
 
 const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 	const { data, style, onChange, onPress } = props;
@@ -39,13 +40,13 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 			if (index === selectedIndex) {
 				if (onPress) onPress(practiceId);
 			} else {
-				refFlatList.current?.scrollToIndex({ index, animated: true, viewPosition: 0.5 });
+				refFlatList.current?.scrollToIndex({ index, animated: false });
 				setSelectedIndex(index);
 			}
 		},
 		[selectedIndex]
 	);
-
+	const navigation = useNavigation()
 	if (widthCarousel <= 300) {
 		return null;
 	}
@@ -69,7 +70,7 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 							practice={item}
 							isSelected={index === selectedIndex}
 							isPermission={item.isPermission}
-							onPress={() => onPressElement(index, item.id)}
+							onPress={() => item.isPermisson ? onPressElement(index, item.id) : navigation.navigate('ByMaySubscribe')}
 							sharedID={`practice.item.${item.id}`}
 						/>
 					</View>
@@ -96,7 +97,7 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 						if (data.length >= 3) {
 							index = 1;
 						}
-						refFlatList.current?.scrollToIndex({ index, animated: true, viewPosition: 0.5 });
+						refFlatList.current?.scrollToIndex({ index, animated: false });
 						setSelectedIndex(index);
 						if (onChange) onChange(data[index].id);
 					}

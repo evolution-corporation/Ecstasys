@@ -264,6 +264,7 @@ export async function getSubscribeUserInformation(
 			"Content-Type": "application/json",
 		},
 	});
+	console.log(requestServer.status)
 	if (requestServer.status === 404) {
 		return null;
 	}
@@ -271,6 +272,7 @@ export async function getSubscribeUserInformation(
 		throw new Error(`Server Error in getSubscribeUserInformation: ${await requestServer.text()}`);
 	}
 	const json = await requestServer.json();
+	console.log(json)
 	return json.length as ServerEntities.Subscribe;
 }
 
@@ -287,9 +289,7 @@ export async function getPaymentURL(subscribeType: SupportType.SubscribeType, fi
 		"payment?type=" +
 		0 +
 		"&needRecurrent=" +
-		(subscribeType === "Week" ? "false" : "true") +
-		"&token=" +
-		firebaseTokenToken;
+		(subscribeType === "Week" ? "false" : "true")
 	const requestServer = await fetch(url, {
 		headers: {
 			Authorization: firebaseTokenToken,

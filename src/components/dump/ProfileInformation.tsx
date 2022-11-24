@@ -24,6 +24,10 @@ interface Props extends RN.ViewProps {
 const ProfileInformation: React.FC<Props> = props => {
 	const { image, displayName, subscribeInformation, onPress, onChangeImage } = props;
 	const isActivateSubscribe = subscribeInformation !== undefined && subscribeInformation.endSubscribe > new Date();
+	const refSelectImage = React.useRef<React.ElementRef<typeof SelectImageButton>>(null)
+	React.useEffect(()=>{
+		refSelectImage.current?.setImage(image)
+	}, [image])
 	return (
 		<RN.View style={styles.container}>
 			{onChangeImage === undefined ? (
@@ -37,6 +41,7 @@ const ProfileInformation: React.FC<Props> = props => {
 				/>
 			) : (
 				<SelectImageButton
+					ref={refSelectImage}
 					initImage={image}
 					onChangeImage={image => {
 						onChangeImage(image);

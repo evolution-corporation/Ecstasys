@@ -78,7 +78,7 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 			hideElementVioletPart
 			headerElement={<View style={{ flex: 1, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row' }}>
 				<Text style={{ ...gStyle.styles.header, color: "#FFF", width: 'auto' }}>{i18n.t("c08bb9d1-1769-498e-acf5-8c37c18bed05")}</Text>
-				<UserButton />
+				<UserButton onPress={() => navigation.navigate("Profile")}/>
 			</View>}
 		>
 			<View

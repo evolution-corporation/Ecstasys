@@ -58,6 +58,7 @@ function generateConfig(): ExpoConfig {
 		ios: {
 			googleServicesFile: "./GoogleService-Info.plist",
 			bundleIdentifier: "com.evodigital.dmdmeditation",
+			buildNumber: versionCode.toString()
 		},
 		plugins: [
 			"expo-dev-client",

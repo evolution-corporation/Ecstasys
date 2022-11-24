@@ -253,6 +253,11 @@ const RootRoutes: FC = () => {
 						component={Screens.InputNameAndSelectGender}
 						options={{ presentation: "transparentModal", headerShown: false }}
 					/>
+					<RootNavigation.Screen
+						name={'ByMaySubscribe'}
+						component={Screens.ByMaySubscribe}
+						options={{ presentation: "transparentModal", headerShown: false }}
+					/>
 				</>
 			);
 	}

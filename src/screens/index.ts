@@ -38,3 +38,4 @@ export { default as PlayerMeditationOnTheNose } from "./PlayerMeditationOnTheNos
 export { default as Payment } from "./Payment";
 export { default as ConfirmationSignOut } from './ConfirmationSignOut'
 export { default as InputNameAndSelectGender } from "./InputNameAndSelectGender"
+export { default as ByMaySubscribe } from './ByMaySubscribe'

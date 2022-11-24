@@ -34,7 +34,7 @@
 				"prebuildCommand": "prebuild"
 			}
 		},
-		"preview-open": {
+		"test": {
 			"distribution": "internal",
 			"channel": "preview",
 			"env": {
@@ -42,8 +42,12 @@
 				"APP_VARIANT": "beta"
 			},
 			"android": {
-				"buildType": "app-bundle",
-				"prebuildCommand": "prebuild "
+				"buildType": "apk",
+				"prebuildCommand": "prebuild"
+			},
+			"ios": {
+				"simulator": true,
+				"prebuildCommand": "prebuild"
 			}
 		},
 		"production": {
