@@ -25,13 +25,14 @@ interface SetChangedAccountDataParams {
 	image?: string;
 	displayName?: string;
 	birthday?: Date;
+	gender?: Gender
 }
 
 export const addChangedInformationUser = createAsyncThunk<
 	State.ChangedUserData,
 	SetChangedAccountDataParams,
 	AsyncThunkConfig
->(AccountAction.setChangedData, async ({ birthday, displayName, image, nickname }) => {
+>(AccountAction.setChangedData, async ({ birthday, displayName, image, nickname, gender }) => {
 	let lastCheckNicknameAndResult: undefined | [Date, boolean];
 	if (nickname !== undefined) {
 		lastCheckNicknameAndResult = [new Date(), (await Request.getUserByNickname(nickname)) === null];
@@ -40,6 +41,7 @@ export const addChangedInformationUser = createAsyncThunk<
 		birthday: birthday !== undefined ? birthday.toISOString() : undefined,
 		displayName,
 		image,
+		gender,
 		nickname: lastCheckNicknameAndResult !== undefined ? nickname : undefined,
 		lastCheckNicknameAndResult:
 			lastCheckNicknameAndResult !== undefined
@@ -70,6 +72,7 @@ export const updateAccount = createAsyncThunk<
 			return undefined
 	}
 	})() ;
+	console.log(gender)
 	let { nickname, lastCheckNicknameAndResult } = changeData;
 	if (nickname !== undefined) {
 		if (

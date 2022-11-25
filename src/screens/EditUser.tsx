@@ -1,18 +1,20 @@
 /** @format */
 
-import React from "react";
-import { StyleSheet, TextInput, View, Text, TouchableOpacity, Keyboard } from "react-native";
+import React, { ElementRef } from "react";
+import { StyleSheet, TextInput, View, Text, TouchableOpacity, Keyboard, Pressable, Modal } from "react-native";
 import { EvilIcons } from "@expo/vector-icons";
 import i18n from "~i18n";
 import gStyle from "~styles";
 
 import { ColorButton, SelectImageButton, NicknameInput } from "~components/dump";
-import { Screen } from "~components/containers";
-import { RootScreenProps } from "~types";
+import { CustomModal, Screen } from "~components/containers";
+import { Gender, RootScreenProps } from "~types";
 import { actions, useAppDispatch, useAppSelector } from "~store";
 import { StatusCheck } from "~components/dump/NicknameInput/NicknameBase";
 import { Request } from "~api";
 import { useDimensions } from "@react-native-community/hooks";
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
+import TheArrow from "~assets/icons/TheArrow_WhiteTop.svg";
 
 const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 	const changedData = useAppSelector(store => store.account.changeData);
@@ -48,6 +50,33 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 		};
 	}, []);
 
+	const customModalRef = React.useRef<ElementRef<typeof CustomModal>>(null);
+
+	const _RigthtBottomRadiusBackground = useSharedValue(15);
+	const _RotateArrow = useSharedValue("180deg");
+
+	const backgroundAnimatedStyle = useAnimatedStyle(() => ({
+		borderBottomRightRadius: withTiming(_RigthtBottomRadiusBackground.value),
+	}));
+
+	const arrowAnimatedStyle = useAnimatedStyle(() => ({
+		transform: [{ rotate: withTiming(_RotateArrow.value) }],
+	}));
+
+	const openList = () => {
+		_RigthtBottomRadiusBackground.value = 0;
+		_RotateArrow.value = "0deg";
+		customModalRef.current?.open();
+	};
+
+	const closeList = () => {
+		_RigthtBottomRadiusBackground.value = 15;
+		_RotateArrow.value = "180deg";
+		customModalRef.current?.close()
+	};
+
+	const [ySelectGender, setYSelectGender] = React.useState<number | null>(null)
+
 	return (
 		<Screen
 			backgroundColor={"#9765A8"}
@@ -65,6 +94,24 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 						initImage={image}
 					/>
 				)}
+				<Animated.View style={[{ width: "100%",
+		height: 45,
+		flexDirection: "row",
+		borderWidth: 1,
+
+		borderRadius: 15,
+
+		backgroundColor: "rgba(240, 242, 238, 0.19)",
+
+		paddingHorizontal: 15,
+
+		borderColor: "rgba(194, 169, 206, 1)",
+
+		marginVertical: 7.5,
+ }, backgroundAnimatedStyle]}
+ onLayout={({ nativeEvent: { layout } })=>{
+	setYSelectGender(layout.height + layout.y + 55)
+}}>
 				<TextInput
 					style={styles.TextInputTransparent}
 					key={"name"}
@@ -74,7 +121,42 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 						dispatch(actions.addChangedInformationUser({ displayName: text }));
 					}}
 					defaultValue={changedData.displayName ?? displayName}
+					
 				/>
+					<Pressable style={{ width: 105, height: '100%', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }} onPress={() => openList()}>
+						<Text style={{ color: '#FFF', fontSize: 13, ...gStyle.font('400'), marginRight: 5 }}>{(changedData.gender ?? gender) === 'FEMALE' ? i18n.t('83dfa634-dd9f-4dce-ab9e-6d6961a296f7') : (changedData.gender ?? gender) === 'MALE' ? i18n.t('8d0002e2-5da2-448f-b9dc-e73352612c41') : i18n.t('7103289f-c425-457d-8b29-f9e0be60c01c') }</Text>
+						<Animated.View style={arrowAnimatedStyle}>
+							<TheArrow />
+						</Animated.View>
+					</Pressable>
+					<CustomModal ref={customModalRef} onClose={() => closeList()}>
+						<View style={{ backgroundColor: "#FFFFFF",
+		borderBottomLeftRadius: 15,
+		borderBottomRightRadius: 15,
+		position: 'absolute',
+		top: ySelectGender ?? 0,
+		right: 20, paddingHorizontal: 20, paddingBottom: 10 }}>
+			{
+				[{ translate:  "83dfa634-dd9f-4dce-ab9e-6d6961a296f7", value: Gender.FEMALE}, { translate: "8d0002e2-5da2-448f-b9dc-e73352612c41", value: Gender.MALE}, { translate: "7103289f-c425-457d-8b29-f9e0be60c01c", value: Gender.OTHER }].map(item => (
+<Pressable style={{ width: '100%', height: 35, justifyContent: 'center', alignItems: 'flex-start' }} key={item.value}>
+								<Text style={{opacity: 0.22,
+		color: "#000000",
+		fontSize: 13,
+		textAlign: "left",
+		...gStyle.font("400")}}
+		onPress={() => {
+			closeList()
+			dispatch(actions.addChangedInformationUser({ gender: item.value }));
+		}}
+		>{i18n.t(item.translate)}</Text>
+							</Pressable>
+				))
+			}
+							
+	
+						</View>
+					</CustomModal>
+				</Animated.View>
 				<NicknameInput
 					defaultValue={nickName}
 					onEndChange={(inputNickName, status) => {
@@ -130,15 +212,7 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 		...gStyle.font("400"),
 		paddingRight: 44,
-		width: "100%",
-		height: 45,
-		flexDirection: "row",
-		borderWidth: 1,
-		borderRadius: 15,
-		backgroundColor: "rgba(240, 242, 238, 0.19)",
-		paddingHorizontal: 15,
-		borderColor: "rgba(194, 169, 206, 1)",
-		marginVertical: 7.5,
+		flex: 1
 	},
 	editNickname: {
 		marginTop: 7.5,
