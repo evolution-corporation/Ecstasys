@@ -1,32 +1,26 @@
 {
-  "extends": "expo/tsconfig.base",
-  "compilerOptions": {
-    "jsx": "react",
-    "strict": true,
-    "baseUrl": "./",
-    "paths": {
-      "~core": ["./src/core/Core"],
-      "~routes/*": ["./src/routes/*"],
-      "~screens/*": ["./src/screens/*"],
-      "~assets/*": ["./assets/*"],
-      "~i18n": ["./src/i18n"],
-      "~styles": ["./src/styles"],
-      "~api/*": ["./src/api/*"],
-      "~components/*": ["./src/components/*"],
-      "~firebase": ["./src/Firebase"],
-      "~constants": ["./src/constants"],
-      "~store/*": ["./src/store/*"],
-      "~store": ["./src/store/index"],
-      "~containers/*": ["./src/containers/*"],
-      "~hooks/*": ["./src/hooks/*"],
-      "~contexts/*": ["./src/contexts/*"],
-      "~HOC/*": ["./src/HOC/*"]
-    },
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/store/store",
-      "./src/routes/routes"
-    ],
-    "experimentalDecorators": true
-  }
+	"extends": "expo/tsconfig.base",
+	"compilerOptions": {
+		"target": "ES5",
+		"jsx": "react",
+		"strict": true,
+		"baseUrl": "./",
+		"paths": {
+			"~core": ["./src/core"],
+			"~routes/*": ["./src/routes/*"],
+			"~assets/*": ["./assets/*"],
+			"~api": ["./src/api"],
+			"~components/*": ["./src/components/*"],
+			"~constants": ["./src/constants"],
+			"~store": ["./src/store"],
+			"~hooks": ["./src/hooks"],
+			"~contexts/*": ["./src/contexts/*"],
+			"~tools": ["./src/tools"],
+			"~types": ["./src/types"],
+			"~i18n": ["./src/i18n"],
+			"~styles": ["./src/styles"]
+		},
+		"typeRoots": ["./node_modules/@types"],
+		"experimentalDecorators": true
+	}
 }

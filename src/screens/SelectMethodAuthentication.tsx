@@ -1,200 +1,184 @@
-import React, { FC, useMemo, useReducer, useState } from "react";
-import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
-import BackgroundGradient from "~containers/BackgroundGradient";
-import Logo from "~assets/icons/LogoApp.svg";
+/** @format */
+
+import React, { useCallback, useEffect, useState } from "react";
+import {
+	ImageBackground,
+	StyleSheet,
+	Text,
+	View,
+	Image,
+	Platform,
+	BackHandler,
+	ActivityIndicator,
+	Linking,
+	Pressable,
+} from "react-native";
+import Swiper from "react-native-swiper";
+import { useBackHandler, useDimensions } from "@react-native-community/hooks";
+
+import Constants from "expo-constants";
+
+import Tools from "~core";
+import GoogleLogo from "~assets/icons/GoogleLogo.svg";
+import { ColorButton, ColorWithIconButton } from "~components/dump";
+import { RootScreenProps } from "~types";
 import i18n from "~i18n";
-import Swiper from "react-native-swiper/src";
-import style, { colors } from "~styles";
-import ColorButton from "~components/ColorButton";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import gStyle from "~styles";
 
-type ElementName = "CarouselText" | "Title" | "Logo";
+import Bird from "assets/icons/BirdWhite.svg";
 
-function useHeightElement(): {
-  heightElement: number;
-  editHeight: (height: number, type: ElementName) => void;
-} {
-  const [heightLogo, setHeightLogo] = useState<number>(80);
-  const [heightText, setHeightText] = useState<number>(72);
-  const [heightTitle, setHeightTitle] = useState<number>(72);
+import auth from "@react-native-firebase/auth";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { actions, useAppDispatch } from "~store";
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { appleAuth } from '@invertase/react-native-apple-authentication';
+import AppleLogo from "~assets/icons/Apple.svg"
 
-  const editHeight = (height: number, type: ElementName) => {
-    switch (type) {
-      case "Logo":
-        setHeightLogo(height);
-        break;
-      case "Title":
-        setHeightTitle(height);
-        break;
-      case "CarouselText":
-        if (heightText < height) {
-          setHeightText(height);
-        }
-        break;
-    }
-  };
+const SelectMethodAuthentication: RootScreenProps<"SelectMethodAuthentication"> = ({ navigation }) => {
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [heightBottomBox, setHeightBottomBox] = useState<number | null>(null);
+	const appDispatch = useAppDispatch();
+	useBackHandler(() => {
+		if (Platform.OS === "android") {
+			BackHandler.exitApp();
+		}
+		return true;
+	});
+	const authWithGoogle = async () => {
+		setIsLoading(true);
+		
+		try {
+			const { idToken, serverAuthCode, user } = await GoogleSignin.signIn();
+			const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+			await auth().signInWithCredential(googleCredential);
+		} catch (error) {
+			if (error instanceof Error) {
+				if (error.message === "Sign in action cancelled") {
+					setIsLoading(false);
+					return;
+				}
+			}
+		}
+		await appDispatch(actions.sigIn()).unwrap();
+	};
 
-  const heightElement = useMemo(
-    () => heightLogo + heightText + heightTitle + 70,
-    [heightLogo, heightText, heightTitle]
-  );
+	const authWithApple = async () => {
+		setIsLoading(true);
+		try {
+			const appleAuthRequestResponse = await appleAuth.performRequest({
+				requestedOperation: appleAuth.Operation.LOGIN,
+			  });
+			  const appleCredential = auth.AppleAuthProvider.credential(appleAuthRequestResponse.identityToken, appleAuthRequestResponse.nonce);
+			  await auth().signInWithCredential(appleCredential);
+		} catch (error) {
+			setIsLoading(false);
+			if (error instanceof Error) {
+				if (error.message === "Sign in action cancelled") {
+					setIsLoading(false);
+					return;
+				}
+			}
+		}
+		await appDispatch(actions.sigIn()).unwrap();
+		
+	}
 
-  return { editHeight, heightElement };
-}
+	const { window } = useDimensions();
 
-const SelectMethodAuthentication: FC<
-  NativeStackScreenProps<
-    AuthorizationStackParamList,
-    "SelectMethodAuthentication"
-  >
-> = ({ navigation }) => {
-  const { width } = useWindowDimensions();
-  const { heightElement, editHeight } = useHeightElement();
-  return (
-    <BackgroundGradient
-      isImage={true}
-      imageName={"sea"}
-      style={styles.background}
-    >
-      <View style={[styles.centralInfo, { height: heightElement }]}>
-        <Logo
-          onLayout={({ nativeEvent: { layout } }) => {
-            editHeight(layout.height, "Logo");
-          }}
-        />
-        <Text
-          style={styles.title}
-          onLayout={({ nativeEvent: { layout } }) => {
-            editHeight(layout.height, "Title");
-          }}
-        >
-          {i18n.t("ff867b49-717d-4611-a2b2-22349439f76f")}
-        </Text>
-        <Swiper
-          horizontal={true}
-          loop={true}
-          autoplay={true}
-          width={width}
-          containerStyle={styles.swiperStyle}
-          dotColor={"#816EBD"}
-          activeDotColor={"#FFFFFF"}
-          showsPagination={true}
-          autoplayTimeout={10}
-        >
-          {[
-            i18n.t("2c4c4afe-0269-4eea-980b-8d73963b8d35"),
-            "text 2",
-            "text, 3",
-            "text 4",
-          ].map((item, index) => (
-            <View
-              key={index.toString()}
-              style={{
-                width: 250,
-                justifyContent: "center",
-                alignItems: "center",
-                alignSelf: "center",
-              }}
-            >
-              <Text
-                style={styles.textCarousel}
-                onLayout={({ nativeEvent: { layout } }) => {
-                  editHeight(layout.height, "CarouselText");
-                }}
-              >
-                {item}
-              </Text>
-            </View>
-          ))}
-        </Swiper>
-      </View>
-      <View style={styles.selectMethod}>
-        <ColorButton
-          type="fullWidth"
-          text={i18n.t("526fba9f-2b69-4fe6-aefd-d491e86e59da")}
-          styleButton={styles.buttonSelect}
-          onPress={() => navigation.navigate("AuthorizationByPhone")}
-        />
-        <ColorButton
-          type="fullWidth"
-          icon={"Google"}
-          text={i18n.t("235a94d8-5deb-460a-bf03-e0e30e93df1b")}
-          styleButton={styles.buttonSelect}
-        />
-        <Text style={styles.textDocument} adjustsFontSizeToFit>
-          {`${i18n.t("4e5aa2a6-29db-44bc-8cf3-96e1ce338442")} `}
-          <Text
-            onPress={() => console.log("open browser")}
-            style={styles.textDocumentBold}
-          >
-            {i18n.getLegalDocument("privacyPolicy")}
-          </Text>
-          {` ${i18n.t("and")} `}
-
-          <Text
-            onPress={() => console.log("open browser")}
-            style={styles.textDocumentBold}
-          >
-            {i18n.getLegalDocument("userAgreement")}
-          </Text>
-          {` ecstasys`}
-        </Text>
-      </View>
-    </BackgroundGradient>
-  );
+	return (
+		<ImageBackground style={{ flex: 1 }} source={require("~assets/rockDrugs.jpg")}>
+			<StatusBar hidden />
+			<SafeAreaView style={{ flex: 1, justifyContent: "space-between" }}>
+				<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+					<Bird />
+				</View>
+				<View style={{ flex: 1, justifyContent: "center" }} collapsable>
+					<Text style={{ ...gStyle.styles.title, color: "#FFFFFF", marginHorizontal: 20 }}>
+						{i18n.t("ff867b49-717d-4611-a2b2-22349439f76f")}
+						{"\n"}
+						<Text style={Tools.gStyle.font("700")}>dmd meditation</Text>
+					</Text>
+					<Swiper
+						width={window.width}
+						containerStyle={{ maxHeight: 160 }}
+						dotColor={"rgba(255, 255, 255, 0.5)"}
+						activeDotColor={"rgba(255, 255, 255, 1)"}
+						paginationStyle={{
+							justifyContent: "flex-start",
+							marginHorizontal: 20,
+						}}
+					>
+						{[
+							{ text: i18n.t("2c4c4afe-0269-4eea-980b-8d73963b8d35") },
+							{ text: i18n.t("7895ddaf-d2b6-4941-b6b3-576d31407534") },
+							{ text: i18n.t("c26411fd-d759-4215-af1f-8bfc62f164d2") },
+							{ text: i18n.t("5d03c5b2-39c8-4889-983f-9d2d268e6226") },
+						].map((item, index) => (
+							<View key={index} style={{ maxHeight: 120, paddingHorizontal: 20 }}>
+								<Text style={{ ...gStyle.styles.description, color: "#FFFFFF" }}>{item.text}</Text>
+							</View>
+						))}
+					</Swiper>
+				</View>
+				<View style={{ flex: 1, justifyContent: "flex-end", paddingHorizontal: 20, paddingBottom: 29 }}>
+					{isLoading ? (
+						<ActivityIndicator color={"#FFFFFF"} size={"large"} />
+					) : (
+						<>
+							<ColorButton
+								styleButton={styles.button}
+								onPress={() => {
+									navigation.navigate("InputNumberPhone");
+								}}
+							>
+								{i18n.t("526fba9f-2b69-4fe6-aefd-d491e86e59da")}
+							</ColorButton>
+							
+							{
+								Platform.OS === 'android' ? <ColorWithIconButton icon={<GoogleLogo />} styleButton={styles.button} onPress={authWithGoogle}>
+								{i18n.t("235a94d8-5deb-460a-bf03-e0e30e93df1b")}
+							</ColorWithIconButton> : Platform.OS === 'ios' ? <ColorWithIconButton icon={<AppleLogo />} styleButton={styles.button} onPress={authWithApple}>
+								{i18n.t("a9f1fa29-cd92-473f-ae6c-dd5429cf9e9a")}
+							</ColorWithIconButton> : null
+							}
+							
+							<View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
+							<Text style={styles.terms}>
+								{i18n.t("4e5aa2a6-29db-44bc-8cf3-96e1ce338442")}{" "}
+								</Text>
+								<Pressable onPress={()=>{Linking.openURL("https://storage.yandexcloud.net/dmdmeditationimage/%D0%BF%D0%BE%D0%BB%D0%B8%D1%82%D0%B8%D0%BA%D0%B0_%D0%BA%D0%BE%D0%BD%D1%84%D0%B8%D0%B4%D0%B5%D0%BD%D1%86%D0%B8%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D1%81%D1%82%D0%B8_%D0%B4%D0%BB%D1%8F.pdf")}} style={{ flex: 0, height: 16, width: 'auto', justifyContent: 'center', alignItems: 'center'}}><Text style={styles.document}>{i18n.t("userAgreement")}</Text></Pressable> 
+								<Text style={styles.terms}>{" "}{i18n.t("and")}{" "}</Text>
+								<Pressable onPress={()=>{Linking.openURL("https://storage.yandexcloud.net/dmdmeditationimage/%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D1%81%D0%BA%D0%BE%D0%B5_%D1%81%D0%BE%D0%B3%D0%BB%D0%B0%D1%88%D0%B5%D0%BD%D0%B8%D0%B5_%D0%B4%D0%BB%D1%8F.pdf")}} style={{ flex: 0, height: 16, width: 'auto', justifyContent: 'center', alignItems: 'center'}}><Text style={styles.document}>{i18n.t("privacyPolicy")}</Text></Pressable> 
+								<Text style={styles.terms}> ecstasys</Text>
+							
+							</View>
+							
+					</>
+					)}
+				</View>
+			</SafeAreaView>
+		</ImageBackground>
+	);
 };
 
 const styles = StyleSheet.create({
-  background: {
-    justifyContent: "flex-end",
-    paddingHorizontal: 20,
-  },
-  swiperStyle: {
-    height: 300,
-  },
-  textCarousel: {
-    color: "#FFFFFF",
-    textAlign: "center",
-    textAlignVertical: "center",
-    fontSize: 16,
-    ...style.getFontOption("400"),
-  },
-  centralInfo: {
-    // position: "absolute",
-    // bottom: "40%",
-    alignItems: "center",
-    justifyContent: "space-between",
-    maxWidth: 250,
-    marginBottom: 50,
-  },
-  title: {
-    width: 250,
-    marginTop: 20,
-    marginBottom: 11,
-    fontSize: 24,
-    color: colors.white,
-    ...style.getFontOption("bold"),
-    textAlign: "center",
-  },
-  selectMethod: {
-    width: "100%",
-  },
-  buttonSelect: {
-    marginVertical: 5,
-  },
-  textDocument: {
-    marginTop: 29,
-    marginBottom: 49,
-    fontSize: 13,
-    color: colors.white,
-    ...style.getFontOption("400"),
-    textAlign: "center",
-    lineHeight: 14,
-  },
-  textDocumentBold: {
-    ...style.getFontOption("700"),
-    // transform: [{ translateY: 1.9 }],
-  },
+	button: {
+		marginVertical: 5,
+	},
+	terms: {
+		fontSize: 13,
+		lineHeight: 16,
+		...Tools.gStyle.font("400"),
+		color: "#FFFFFF",
+		textAlign: "center",
+	},
+	document: {
+		...Tools.gStyle.font("700"),
+		color: "#FFF",
+		fontSize: 13,
+		lineHeight: 16,
+	},
 });
 
 export default SelectMethodAuthentication;

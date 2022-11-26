@@ -1,6 +1,6 @@
-import { registerRootComponent } from 'expo';
+import {
+  registerRootComponent
+} from 'expo';
 import AppCore from './src/App'
-import "./ignoreWarning";
 
-
-registerRootComponent(AppCore);
+registerRootComponent( AppCore )

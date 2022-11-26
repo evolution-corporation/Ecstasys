@@ -1,7 +1,7 @@
 module.exports = function(api) {
   api.cache(true);
   return {
-    presets: ['babel-preset-expo'],
+    presets: ['babel-preset-expo', '@babel/preset-typescript', ['@babel/preset-env', {targets: {node: 'current'}}]],
     plugins: [
       [
         'module-resolver',
@@ -19,21 +19,17 @@ module.exports = function(api) {
             '.json'
           ],
           alias: {
-            '~core': './src/core/Core',
+            '~core': './src/core',
             '~routes': './src/routes',
-            '~screens': './src/screens',
             '~assets': './assets',
-            '~i18n': './src/i18n',
-            '~styles': './src/styles',
             '~api': './src/api',
             '~components': './src/components',
-            '~firebase': './src/Firebase',
-            '~constants': './src/constants',
             '~store': './src/store',
-            '~containers': './src/containers',
+            '~tools': './src/tools',
+            '~types': './src/types',
             '~hooks': './src/hooks',
-            '~contexts': './src/contexts',
-            '~HOC': './src/HOC'
+            '~i18n': './src/i18n',
+            '~styles': './src/styles'
           },
         },
         "@babel/plugin-transform-typescript",

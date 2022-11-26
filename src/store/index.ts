@@ -1,25 +1,36 @@
+/** @format */
+
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import account from "./account";
-import meditation from "./meditation";
+import { Account, FavoritePractices, MessageProfessor, Statistic } from "src/models";
+import reducer from "./reducers";
+export { default as actions } from "./actions";
 
-const createDebugger = require("redux-flipper").default;
-
-const store = configureStore({
-  reducer: {
-    account,
-    meditation,
-  },
-  middleware: (getDefaultMiddleware) =>
-    __DEV__
-      ? getDefaultMiddleware().concat(createDebugger())
-      : getDefaultMiddleware(),
-});
-
-export default store;
+const store = configureStore({ reducer });
 
 export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
 
+export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+
+export type AsyncThunkConfig = {
+	/** return type for `thunkApi.getState` */
+	state: RootState;
+	/** type for `thunkApi.dispatch` */
+	dispatch: typeof store.dispatch;
+	/** type of the `extra` argument for the thunk middleware, which will be passed in as `thunkApi.extra` */
+	extra?: unknown;
+	/** type to be passed into `rejectWithValue`'s first argument that will end up on `rejectedAction.payload` */
+	rejectValue?: { massage: string };
+	/** return type of the `serializeError` option callback */
+	serializedErrorType?: unknown;
+	/** type to be returned from the `getPendingMeta` option callback & merged into `pendingAction.meta` */
+	pendingMeta?: unknown;
+	/** type to be passed into the second argument of `fulfillWithValue` to finally be merged into `fulfilledAction.meta` */
+	fulfilledMeta?: unknown;
+	/** type to be passed into the second argument of `rejectWithValue` to finally be merged into `rejectedAction.meta` */
+	rejectedMeta?: unknown;
+};
+
+export default store;

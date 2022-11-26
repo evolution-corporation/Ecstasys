@@ -1,24 +1,71 @@
 {
-  "cli": {
-    "version": ">= 0.52.0"
-  },
-  "build": {
-    "development": {    
-      "developmentClient": true,
-      "distribution": "internal",
-      "android": {
-        "buildType": "apk"
-      },
-      "env": {
-        "API_URL": "Hello World!"
-      }
-    },
-    "preview": {
-      "distribution": "internal"
-    },
-    "production": {}
-  },
-  "submit": {
-    "production": {}
-  }
+	"cli": {
+		"version": ">=2.1.0"
+	},
+	"build": {
+		"development": {
+			"developmentClient": true,
+			"distribution": "internal",
+			"android": {
+				"buildType": "apk",
+				"prebuildCommand": "prebuild"
+			},
+			"ios": {
+				"simulator": true,
+				"prebuildCommand": "prebuild"
+			},
+			"env": {
+				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
+				"APP_VARIANT": "dev"
+			}
+		},
+		"preview-close": {
+			"distribution": "internal",
+			"channel": "preview",
+			"env": {
+				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
+				"APP_VARIANT": "alpha"
+			},
+			"android": {
+				"buildType": "app-bundle",
+				"prebuildCommand": "prebuild"
+			},
+			"ios": {
+				"prebuildCommand": "prebuild"
+			}
+		},
+		"test": {
+			"distribution": "internal",
+			"channel": "preview",
+			"env": {
+				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
+				"APP_VARIANT": "beta"
+			},
+			"android": {
+				"buildType": "apk",
+				"prebuildCommand": "prebuild"
+			},
+			"ios": {
+				"simulator": true,
+				"prebuildCommand": "prebuild"
+			}
+		},
+		"production": {
+			"channel": "production",
+			"distribution": "store",
+			"env": {
+				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
+				"APP_VARIANT": "prod"
+			},
+			"android": {
+				"prebuildCommand": "prebuild "
+			},
+			"ios": {
+				"prebuildCommand": "prebuild"
+			}
+		}
+	},
+	"submit": {
+		"production": {}
+	}
 }
