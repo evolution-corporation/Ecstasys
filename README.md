@@ -1,4 +1,4 @@
-# dmd meditation
+# ecstasys
 
 ## Установка
 
