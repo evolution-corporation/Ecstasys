@@ -16,7 +16,7 @@ import { CarouselPractices } from "~components/dump";
 import { actions, useAppDispatch, useAppSelector } from "~store";
 import { Converter, Request } from "~api";
 import { SupportType } from "src/api/types";
-import { MeditationOnTheMandala, MeditationOnTheNose } from "src/baseMeditation";
+import { MeditationOnTheMandala, MeditationOnTheNose, PlayerMeditationDot } from "src/baseMeditation";
 
 import * as Instruction from "src/instruction";
 
@@ -35,6 +35,7 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 	const isSubscribe = useAppSelector(store => {
 		if (store.account.subscribe !== undefined) {
 			const endSubscribe = new Date(store.account.subscribe.whenSubscribe);
+			
 			endSubscribe.setDate(
 				endSubscribe.getDate() +
 					(() => {
@@ -84,11 +85,11 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 					...newListPractice.map(item => ({ ...item, isPermission: item.isNeedSubscribe ? isSubscribe : true })),
 				]);
 			} else {
-				setPracticeList([MeditationOnTheMandala, MeditationOnTheNose].map(item => ({ ...item, isPermission: true })));
+				setPracticeList([MeditationOnTheMandala, MeditationOnTheNose, PlayerMeditationDot].map(item => ({ ...item, isPermission: true })));
 			}
 		};
 		init();
-	}, []);
+	}, [isSubscribe]);
 	const onClick = (practiceId: string) => {
 		const practiceIndex = practiceList.findIndex(item => item.id === practiceId);
 		if (practiceIndex !== -1) {
@@ -107,6 +108,8 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 						selectedPractice: practiceList[practiceIndex],
 					});
 				}
+			} else { 
+				navigation.navigate('ByMaySubscribe')
 			}
 		}
 	};

@@ -70,7 +70,7 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 							practice={item}
 							isSelected={index === selectedIndex}
 							isPermission={item.isPermission}
-							onPress={() => item.isPermisson ? onPressElement(index, item.id) : navigation.navigate('ByMaySubscribe')}
+							onPress={() => onPressElement(index, item.id)}
 							sharedID={`practice.item.${item.id}`}
 						/>
 					</View>

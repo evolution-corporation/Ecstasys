@@ -279,7 +279,11 @@ export type RootStackList = {
 	};
 	ConfirmationSignOut: undefined,
 	InputNameAndSelectGender: undefined,
-	ByMaySubscribe: undefined
+	ByMaySubscribe: undefined,
+	PlayerMeditationDot: {
+		isNeedVoice: boolean;
+		practiceLength: number;
+	}
 };
 
 export type RootScreenProps<T extends keyof RootStackList> = FC<NativeStackScreenProps<RootStackList, T>>;

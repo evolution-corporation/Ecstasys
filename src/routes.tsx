@@ -254,9 +254,14 @@ const RootRoutes: FC = () => {
 						options={{ presentation: "transparentModal", headerShown: false }}
 					/>
 					<RootNavigation.Screen
-						name={'ByMaySubscribe'}
+						name={"ByMaySubscribe"}
 						component={Screens.ByMaySubscribe}
 						options={{ presentation: "transparentModal", headerShown: false }}
+					/>
+					<RootNavigation.Screen
+						name={"PlayerMeditationDot"}
+						component={Screens.PlayerMeditationDot}
+						options={{ title: i18n.t("8106b051-caea-44ff-a001-8636d3596275") }}
 					/>
 				</>
 			);

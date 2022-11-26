@@ -53,6 +53,7 @@ export default createReducer<AccountState>(
 						image: user.image,
 						gender: user.gender,
 					};
+					
 					if (subscribe !== null) {
 						state.subscribe = {
 							autoPayment: subscribe.autoPayment,

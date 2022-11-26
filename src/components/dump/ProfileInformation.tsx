@@ -59,7 +59,9 @@ const ProfileInformation: React.FC<Props> = props => {
 
 				<RN.Text style={styles.timeSubscribe}>
 					{isActivateSubscribe
-						? UIText.getSubscribeInformation(subscribeInformation.endSubscribe, subscribeInformation.isAutoPayment)
+						? i18n.t(subscribeInformation.isAutoPayment ? "392fd6e3-9b0c-4673-b1c2-45deeaadd7b1" : "048d71cd-03e2-4c8f-9f29-d2e5e9576a07" , {
+							dateTime: i18n.strftime(new Date(subscribeInformation.endSubscribe), "%d.%m.%Y"),
+						})
 						: i18n.t("indefinitely")}
 				</RN.Text>
 				{onPress && <TextButton onPress={onPress}>{i18n.t("edit")}</TextButton>}

@@ -44,31 +44,33 @@ const SelectTimeForBase: RootScreenProps<"SelectTimeForBase"> = ({ navigation, r
 					<SharedElement id={`practice.item.${selectedPractice.id}`} style={styles.image}>
 						<Image source={selectedPractice.image} style={{ width: "100%", height: "100%" }} />
 					</SharedElement>
-					<View
-						style={{
-							height: 45,
-							alignItems: "center",
-							justifyContent: "space-between",
-							flexDirection: "row",
-							backgroundColor: "#C2A9CE",
-							borderRadius: 15,
-							paddingHorizontal: 9,
-							width: window.width - 52,
-							alignSelf: "center",
-							bottom: -22.5,
-							position: "absolute",
-						}}
-					>
-						<Text style={{ color: "#FFFFFF", fontSize: 14, ...gStyle.font("500") }}>
-							{i18n.t("4cfd0240-f282-4148-a991-4deff19e7028")}
-						</Text>
-						<Switch
-							value={isNeedVoice}
-							onValueChange={setIsNeedVoice}
-							trackColor={{ false: "#9765A8", true: "#9765A8" }}
-							thumbColor={"#FFFFFF"}
-						/>
-					</View>
+					{selectedPractice.id !== "4b134d62-3507-4d35-9168-289fd7c0172b" ? (
+						<View
+							style={{
+								height: 45,
+								alignItems: "center",
+								justifyContent: "space-between",
+								flexDirection: "row",
+								backgroundColor: "#C2A9CE",
+								borderRadius: 15,
+								paddingHorizontal: 9,
+								width: window.width - 52,
+								alignSelf: "center",
+								bottom: -22.5,
+								position: "absolute",
+							}}
+						>
+							<Text style={{ color: "#FFFFFF", fontSize: 14, ...gStyle.font("500") }}>
+								{i18n.t("4cfd0240-f282-4148-a991-4deff19e7028")}
+							</Text>
+							<Switch
+								value={isNeedVoice}
+								onValueChange={setIsNeedVoice}
+								trackColor={{ false: "#9765A8", true: "#9765A8" }}
+								thumbColor={"#FFFFFF"}
+							/>
+						</View>
+					) : null}
 				</View>
 				<Text style={styles.mainText}>{i18n.t("0ca92b30-37c2-4604-a06f-f6f2da9e4985")} </Text>
 			</View>
@@ -98,6 +100,8 @@ const SelectTimeForBase: RootScreenProps<"SelectTimeForBase"> = ({ navigation, r
 							navigation.navigate("PlayerMeditationOnTheMandala", { isNeedVoice, practiceLength: milliseconds });
 						} else if (selectedPractice.id === "9ce4657e-2d0a-405a-b02f-408dd76cc8f7") {
 							navigation.navigate("PlayerMeditationOnTheNose", { isNeedVoice, practiceLength: milliseconds });
+						} else if (selectedPractice.id === "4b134d62-3507-4d35-9168-289fd7c0172b") {
+							navigation.navigate("PlayerMeditationDot", { isNeedVoice, practiceLength: milliseconds });
 						}
 					}}
 				>

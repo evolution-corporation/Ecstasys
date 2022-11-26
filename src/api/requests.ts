@@ -126,7 +126,7 @@ export async function updateUser(
 	if (displayName !== undefined) body.push(["DisplayName", displayName]);
 	if (birthday !== undefined) body.push(["Birthday", birthday.toISOString()]);
 	if (image !== undefined) body.push(["Image", image]);
-	if (gender !== undefined) body.push(["Gender", gender])
+	if (gender !== undefined) body.push(["Gender", gender]);
 	const url = URL + "users";
 	const requestServer = await fetch(url, {
 		method: "PATCH",
@@ -153,7 +153,7 @@ interface UpdateUserParams {
 	displayName?: string;
 	image?: string;
 	birthday?: Date;
-	gender?: Gender
+	gender?: Gender;
 }
 
 /**
@@ -258,13 +258,12 @@ export async function getSubscribeUserInformation(
 	firebaseTokenToken?: string
 ): Promise<ServerEntities.Subscribe | null> {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const requestServer = await fetch(URL + "subscribe", {
+	const requestServer = await fetch(URL + "subscribe/" + false, {
 		headers: {
 			Authorization: firebaseTokenToken,
 			"Content-Type": "application/json",
 		},
 	});
-	console.log(requestServer.status)
 	if (requestServer.status === 404) {
 		return null;
 	}
@@ -272,8 +271,7 @@ export async function getSubscribeUserInformation(
 		throw new Error(`Server Error in getSubscribeUserInformation: ${await requestServer.text()}`);
 	}
 	const json = await requestServer.json();
-	console.log(json)
-	return json.length as ServerEntities.Subscribe;
+	return json as ServerEntities.Subscribe;
 }
 
 /**
@@ -284,12 +282,7 @@ export async function getSubscribeUserInformation(
  */
 export async function getPaymentURL(subscribeType: SupportType.SubscribeType, firebaseTokenToken?: string) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const url =
-		URL +
-		"payment?type=" +
-		0 +
-		"&needRecurrent=" +
-		(subscribeType === "Week" ? "false" : "true")
+	const url = URL + "payment?type=" + 0 + "&needRecurrent=" + (subscribeType === "Week" ? "false" : "true");
 	const requestServer = await fetch(url, {
 		headers: {
 			Authorization: firebaseTokenToken,

@@ -77,6 +77,8 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 
 	const [ySelectGender, setYSelectGender] = React.useState<number | null>(null)
 
+	const [widthSelectGender, setWidthSelectGender] = React.useState<number | null>(null)
+
 	return (
 		<Screen
 			backgroundColor={"#9765A8"}
@@ -123,7 +125,7 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 					defaultValue={changedData.displayName ?? displayName}
 					
 				/>
-					<Pressable style={{ width: 105, height: '100%', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }} onPress={() => openList()}>
+					<Pressable style={{ height: '100%', justifyContent: 'center', alignItems: 'center', flexDirection: 'row', borderLeftColor: "rgba(194, 169, 206, 1)", borderLeftWidth: 1, width: 120 }} onPress={() => openList()}>
 						<Text style={{ color: '#FFF', fontSize: 13, ...gStyle.font('400'), marginRight: 5 }}>{(changedData.gender ?? gender) === 'FEMALE' ? i18n.t('83dfa634-dd9f-4dce-ab9e-6d6961a296f7') : (changedData.gender ?? gender) === 'MALE' ? i18n.t('8d0002e2-5da2-448f-b9dc-e73352612c41') : i18n.t('7103289f-c425-457d-8b29-f9e0be60c01c') }</Text>
 						<Animated.View style={arrowAnimatedStyle}>
 							<TheArrow />
@@ -135,7 +137,12 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 		borderBottomRightRadius: 15,
 		position: 'absolute',
 		top: ySelectGender ?? 0,
-		right: 20, paddingHorizontal: 20, paddingBottom: 10 }}>
+		width: 136,
+		right: 20, paddingHorizontal: 20, paddingBottom: 10 }} onLayout={({ nativeEvent: { layout } })=>{
+			if (widthSelectGender === null) {
+				setWidthSelectGender(layout.width)
+			}
+		}}>
 			{
 				[{ translate:  "83dfa634-dd9f-4dce-ab9e-6d6961a296f7", value: Gender.FEMALE}, { translate: "8d0002e2-5da2-448f-b9dc-e73352612c41", value: Gender.MALE}, { translate: "7103289f-c425-457d-8b29-f9e0be60c01c", value: Gender.OTHER }].map(item => (
 <Pressable style={{ width: '100%', height: 35, justifyContent: 'center', alignItems: 'flex-start' }} key={item.value}>

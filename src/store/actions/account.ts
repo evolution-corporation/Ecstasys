@@ -72,7 +72,6 @@ export const updateAccount = createAsyncThunk<
 			return undefined
 	}
 	})() ;
-	console.log(gender)
 	let { nickname, lastCheckNicknameAndResult } = changeData;
 	if (nickname !== undefined) {
 		if (

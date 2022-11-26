@@ -64,11 +64,11 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 		const endSubscribe = new Date(store.account.subscribe.whenSubscribe);
 		endSubscribe.setDate(
 			endSubscribe.getDate() +
-				(store.account.subscribe.type === "WEEK" ? 7 : store.account.subscribe.type === "MONTH" ? 30 : 90)
+				(store.account.subscribe.type === "WEEK" ? 7 : store.account.subscribe.type === "MONTH" ? 30 : 180)
 		);
 		if (endSubscribe.getTime() >= Date.now())
 			return {
-				endSubscribe: new Date(store.account.subscribe.whenSubscribe),
+				endSubscribe: new Date(endSubscribe),
 				autoPayment: store.account.subscribe.autoPayment,
 			};
 		return null;
@@ -85,6 +85,7 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 	});
 	const appDispatch = useAppDispatch();
 	const { window } = useDimensions()
+	
 	return (
 		<DoubleColorView
 			style={styles.background}
@@ -129,7 +130,7 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 					subscribeInformation={
 						subscribe === null
 							? undefined
-							: { endSubscribe: subscribe.endSubscribe, isAutoPayment: subscribe.autoPayment }
+							: { endSubscribe: subscribe.endSubscribe , isAutoPayment: subscribe.autoPayment }
 					}
 					onPress={() => {
 						navigation.navigate("EditUser");

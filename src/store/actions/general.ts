@@ -19,14 +19,14 @@ import { State } from "~types";
 import { Request, Converter, Storage } from "~api";
 
 import { AsyncThunkConfig } from "~store";
-import { registrationAccount, signInAccount  } from './account'
-import { getPracticeDay } from './practice'
+import { registrationAccount, signInAccount } from "./account";
+import { getPracticeDay } from "./practice";
 
 enum GeneralAction {
 	initialization = "general/initialization",
 	registation = "general/registraion",
 	signIn = "general/signIn",
-	signOut = "generl/signOut"
+	signOut = "generl/signOut",
 }
 
 export const initialization = createAsyncThunk(GeneralAction.initialization, async (_, {}) => {
@@ -157,7 +157,6 @@ export const initialization = createAsyncThunk(GeneralAction.initialization, asy
 					}
 				}
 			}
-
 			return {
 				listPracticesListened: listPracticesListened
 					.map(item => {
@@ -244,16 +243,22 @@ export const initialization = createAsyncThunk(GeneralAction.initialization, asy
 	};
 });
 
-export const registation = createAsyncThunk<void, undefined, AsyncThunkConfig>(GeneralAction.registation, async (_, { dispatch })=> {
-	const user = await dispatch(registrationAccount()).unwrap()
-	if (user !== null) {
-		dispatch(getPracticeDay())
+export const registation = createAsyncThunk<void, undefined, AsyncThunkConfig>(
+	GeneralAction.registation,
+	async (_, { dispatch }) => {
+		const user = await dispatch(registrationAccount()).unwrap();
+		if (user !== null) {
+			dispatch(getPracticeDay());
+		}
 	}
-})
+);
 
-export const sigIn = createAsyncThunk<void, undefined, AsyncThunkConfig>(GeneralAction.signIn, async (_, { dispatch })=> {
-	const user = await dispatch(signInAccount()).unwrap()
-	if (user !== null) {
-		dispatch(getPracticeDay())
+export const sigIn = createAsyncThunk<void, undefined, AsyncThunkConfig>(
+	GeneralAction.signIn,
+	async (_, { dispatch }) => {
+		const user = await dispatch(signInAccount()).unwrap();
+		if (user !== null) {
+			dispatch(getPracticeDay());
+		}
 	}
-})
+);
