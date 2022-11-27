@@ -167,10 +167,24 @@ const Card: React.FC<CardProps> = props => {
 		<Pressable style={[cardStyles.container, style]} onPress={onPress}>
 			<SharedElement id={`practice.item.${id}`} style={cardStyles.imageBackground}>
 				<Image source={{ uri: image }} style={{ flex: 1 }} />
+				<View style={{ backgroundColor: "rgba(0,0,0,0.3)", width: "100%", height: "100%", position: "absolute" }} />
 			</SharedElement>
-			<View style={[viewStyle.temple.card, { width: "100%", height: "100%", position: "absolute" }]}>
-				<View style={cardStyles.textInformation}>
-					<Text style={{ ...gStyle.styles.namePractice, color: "#ffffff" }}>{name}</Text>
+			<View
+				style={[
+					{
+						width: "100%",
+						height: "100%",
+						position: "absolute",
+						borderRadius: 20,
+						paddingHorizontal: 20,
+						paddingBottom: 10,
+						justifyContent: "space-between",
+						alignItems: "stretch",
+					},
+				]}
+			>
+				<View style={[cardStyles.textInformation, { marginTop: 15 }]}>
+					<Text style={{ ...gStyle.styles.namePractice, color: "#ffffff", marginBottom: 3 }}>{name}</Text>
 					<Text style={{ ...gStyle.styles.description, color: "#FFFFFF" }} numberOfLines={2}>
 						{description}
 					</Text>
@@ -179,7 +193,7 @@ const Card: React.FC<CardProps> = props => {
 					<View
 						style={{
 							backgroundColor: "#9765A8",
-							paddingHorizontal: 34,
+							paddingHorizontal: 25,
 							height: 30,
 							borderRadius: 15,
 							justifyContent: "center",
@@ -189,8 +203,8 @@ const Card: React.FC<CardProps> = props => {
 						<Text
 							style={{
 								color: "#FFFFFF",
-								...gStyle.font("600"),
-								fontSize: 13,
+								...gStyle.font("400"),
+								fontSize: 14,
 							}}
 						>
 							{i18n.t(translateIdTime, { count: Math.round(lengthAudio / 60000) })}

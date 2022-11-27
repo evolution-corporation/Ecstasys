@@ -10,7 +10,7 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import RootRoutes from "./routes";
-import Store, { actions } from "./store";
+import Store, { actions, useAppDispatch } from "./store";
 import "./TaskManager";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
@@ -36,7 +36,7 @@ const AppCore = () => {
 			}
 		})();
 	}, []);
-
+	// useAppDispatch()(actions.signOutAccount());
 	return (
 		<SafeAreaProvider>
 			<GestureHandlerRootView style={{ flex: 1 }}>

@@ -76,10 +76,22 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 				setGetPaddingTopFunc({ f: getPaddingTop });
 			}}
 			hideElementVioletPart
-			headerElement={<View style={{ flex: 1, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row' }}>
-				<Text style={{ ...gStyle.styles.header, color: "#FFF", width: 'auto' }}>{i18n.t("c08bb9d1-1769-498e-acf5-8c37c18bed05")}</Text>
-				<UserButton onPress={() => navigation.navigate("Profile")}/>
-			</View>}
+			headerElement={
+				<View
+					style={{
+						flex: 1,
+						paddingHorizontal: 20,
+						alignItems: "center",
+						justifyContent: "space-between",
+						flexDirection: "row",
+					}}
+				>
+					<Text style={{ ...gStyle.styles.header, color: "#FFF", width: "auto" }}>
+						{i18n.t("c08bb9d1-1769-498e-acf5-8c37c18bed05")}
+					</Text>
+					<UserButton onPress={() => navigation.navigate("Profile")} />
+				</View>
+			}
 		>
 			<View
 				style={{
@@ -117,7 +129,7 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 					initialScrollIndex={0}
 					renderItem={({ item }) => (
 						<TouchableOpacity onPress={() => navigation.navigate("PracticeListByType", { typePractices: item.id })}>
-							<View style={{ width: 92, height: 140 }}>
+							<View style={{ width: 110, alignItems: "center" }}>
 								<Image source={item.image} style={styles.imageSmall} />
 								<Text style={styles.textNameSmall} adjustsFontSizeToFit>
 									{i18n.t(item.name)}
@@ -132,7 +144,7 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 					contentContainerStyle={{ paddingHorizontal: 20 }}
 					showsHorizontalScrollIndicator={false}
 				/>
-				<View style={styles.listFull}>
+				<View style={[styles.listFull, { top: -11 }]}>
 					{CategoryMeditation.map((item, index) => {
 						return (
 							<CategoryCard
@@ -158,8 +170,8 @@ const styles = StyleSheet.create({
 		paddingBottom: 20,
 	},
 	imageSmall: {
-		width: 92,
-		height: 92,
+		width: 110,
+		height: 110,
 		borderRadius: 10,
 	},
 	title: {
@@ -170,7 +182,7 @@ const styles = StyleSheet.create({
 	},
 	textNameSmall: {
 		color: "rgba(112, 45, 135, 1)",
-		fontSize: 13,
+		fontSize: 14,
 		textAlign: "center",
 		...Tools.gStyle.font("400"),
 		width: "100%",

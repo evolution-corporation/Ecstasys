@@ -35,7 +35,7 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 	const isSubscribe = useAppSelector(store => {
 		if (store.account.subscribe !== undefined) {
 			const endSubscribe = new Date(store.account.subscribe.whenSubscribe);
-			
+
 			endSubscribe.setDate(
 				endSubscribe.getDate() +
 					(() => {
@@ -85,7 +85,12 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 					...newListPractice.map(item => ({ ...item, isPermission: item.isNeedSubscribe ? isSubscribe : true })),
 				]);
 			} else {
-				setPracticeList([MeditationOnTheMandala, MeditationOnTheNose, PlayerMeditationDot].map(item => ({ ...item, isPermission: true })));
+				setPracticeList(
+					[MeditationOnTheMandala, MeditationOnTheNose, PlayerMeditationDot].map(item => ({
+						...item,
+						isPermission: true,
+					}))
+				);
 			}
 		};
 		init();
@@ -108,8 +113,8 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 						selectedPractice: practiceList[practiceIndex],
 					});
 				}
-			} else { 
-				navigation.navigate('ByMaySubscribe')
+			} else {
+				navigation.navigate("ByMaySubscribe");
 			}
 		}
 	};
@@ -164,12 +169,12 @@ export default PracticeListByType;
 
 const styles = StyleSheet.create({
 	descriptionType: {
-		fontSize: height * 0.018,
+		fontSize: 14, //height * 0.018,
 		...Tools.gStyle.font("400"),
 		textAlign: "center",
 		color: "rgba(255, 255, 255, 0.8)",
-		marginBottom: 17,
-		marginTop: height * 0.0256,
+		marginBottom: 11,
+		marginTop: 11, //height * 0.0256,
 	},
 	background: {
 		paddingHorizontal: 20,

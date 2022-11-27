@@ -46,7 +46,6 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 		},
 		[selectedIndex]
 	);
-	const navigation = useNavigation()
 	if (widthCarousel <= 300) {
 		return null;
 	}
@@ -102,11 +101,11 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 						if (onChange) onChange(data[index].id);
 					}
 				}}
-				getItemLayout={(data, index) => ({
-					length: styles.elementList.width,
-					offset: styles.elementList.width * index,
-					index,
-				})}
+				// getItemLayout={(data, index) => ({
+				// 	length: styles.elementList.width,
+				// 	offset: styles.elementList.width * index,
+				// 	index,
+				// })}
 			/>
 		</View>
 	);

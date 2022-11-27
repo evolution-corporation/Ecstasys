@@ -15,7 +15,7 @@ import { Screen } from "~components/containers";
 
 const IntroScreen: RootScreenProps<"IntroAboutYou"> = ({ navigation }) => {
 	return (
-		<Screen backgroundColor={"#9765A8"} styleScreen={{ justifyContent: "flex-end", paddingBottom: 65 }} headerHidden>
+		<Screen backgroundColor={"#9765A8"} styleScreen={{ justifyContent: "flex-end", paddingBottom: 45 }} headerHidden>
 			<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
 				<Image
 					source={require("assets/BirdIntro.png")}

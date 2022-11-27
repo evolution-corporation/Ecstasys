@@ -28,7 +28,7 @@ const getStartWeek = () => {
 const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 	const [toDayPopularMeditation, setTodayPopularMeditation] = React.useState<State.Practice | null>(null);
 	const { height } = RN.useWindowDimensions();
-	const isNewUser = Store.useAppSelector(store => store.account.isNewUser)
+	const isNewUser = Store.useAppSelector(store => store.account.isNewUser);
 	const [heightGreeting, setHeightGreeting] = React.useState<number | null>(null);
 	//* Данные из глобального состояния
 	const { displayName, image, nickName } = Store.useAppSelector(store => {
@@ -99,7 +99,7 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 			setTodayPopularMeditation(Converter.composePractice(practice))
 		);
 		if (isNewUser) {
-			navigation.navigate('InputNameAndSelectGender')
+			navigation.navigate("InputNameAndSelectGender");
 		}
 	}, []);
 
@@ -140,7 +140,7 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 				}}
 			>
 				<RN.ImageBackground
-					source={require("/assets/backgroundMain.png")}
+					source={require("/assets/djfgm.png")}
 					style={styles.imageGreeting}
 					imageStyle={{ top: -40 }}
 				>
@@ -165,7 +165,7 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 				{recommendationPractice === null ? null : (
 					<Dump.PracticeCard
 						id={recommendationPractice.id}
-						style={{ marginTop: 13 }}
+						style={{ marginTop: 12 }}
 						description={recommendationPractice.description}
 						image={recommendationPractice.image}
 						lengthAudio={recommendationPractice.length}
@@ -194,7 +194,7 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 				{toDayPopularMeditation !== null ? (
 					<Dump.PracticeCard
 						id={toDayPopularMeditation.id}
-						style={{ marginTop: 13 }}
+						style={{ marginTop: 12 }}
 						description={toDayPopularMeditation.description}
 						image={toDayPopularMeditation.image}
 						lengthAudio={toDayPopularMeditation.length}
@@ -245,6 +245,7 @@ const styles = RN.StyleSheet.create({
 		fontSize: 20,
 		color: "#555555",
 		...gStyle.font("400"),
+		marginBottom: 3,
 	},
 	descriptionSection: {
 		fontSize: 14,

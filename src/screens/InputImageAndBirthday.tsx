@@ -96,12 +96,12 @@ const styles = StyleSheet.create({
 		marginVertical: 72,
 	},
 	helper: {
-		marginTop: 20,
-		fontSize: 12,
-		lineHeight: 14,
+		marginTop: 10,
+		fontSize: 14,
+		lineHeight: 16,
 		color: "#E7DDEC",
 		textAlign: "center",
-		...Tools.gStyle.font("500"),
+		...Tools.gStyle.font("400"),
 	},
 });
 

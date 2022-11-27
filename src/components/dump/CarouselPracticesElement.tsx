@@ -70,7 +70,7 @@ const CarouselPracticesElement: React.FC<Props> = props => {
 								!["9ce4657e-2d0a-405a-b02f-408dd76cc8f7", "32c996f7-13e6-4604-966d-b96a8bf0e7c3"].includes(
 									practice.id
 								) ? (
-									<IsFavorite practice={practice} noShowWereNoFavorite/>
+									<IsFavorite practice={practice} noShowWereNoFavorite />
 								) : null}
 							</View>
 						) : (
@@ -83,9 +83,7 @@ const CarouselPracticesElement: React.FC<Props> = props => {
 			</Pressable>
 			{isSelected && (
 				<>
-					<Text style={styles.name} adjustsFontSizeToFit>
-						{practice.name}
-					</Text>
+					<Text style={styles.name}>{practice.name}</Text>
 					<Text style={styles.description} adjustsFontSizeToFit>
 						{practice.description}
 					</Text>
@@ -121,13 +119,13 @@ const styles = StyleSheet.create({
 		...core.gStyle.font("700"),
 		marginTop: 24,
 		marginBottom: 11,
-		maxWidth: 254,
-		height: 39,
+		maxWidth: 238,
+		// height: 39,
 		textAlign: "center",
 	},
 	description: {
 		color: "rgba(64, 64, 64, 0.71)",
-		fontSize: 13,
+		fontSize: 14,
 		...core.gStyle.font("400"),
 		maxWidth: "100%",
 		// maxHeight: 68,

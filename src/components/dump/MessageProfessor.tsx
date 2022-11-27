@@ -35,7 +35,7 @@ const MessageProfessor: React.FC<Props> = props => {
 					</Blur.BlurView>
 				</RN.View>
 				<RN.View style={styles.greetingView}>
-					<RN.Text style={styles.greeting}>{greeting}</RN.Text>
+					{greeting !== undefined ? <RN.Text style={styles.greeting}>{greeting}</RN.Text> : null}
 					<RN.View
 						style={{
 							flexDirection: "row",
@@ -123,6 +123,7 @@ const styles = StyleSheet.create({
 		color: "#FFFFFF",
 		textAlign: "center",
 		...Tools.gStyle.font("700"),
+		marginTop: 10,
 	},
 	greetingView: {
 		alignSelf: "center",

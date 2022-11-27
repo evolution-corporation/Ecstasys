@@ -258,13 +258,14 @@ export async function getSubscribeUserInformation(
 	firebaseTokenToken?: string
 ): Promise<ServerEntities.Subscribe | null> {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
+	console.log(URL + "subscribe/" + false);
 	const requestServer = await fetch(URL + "subscribe/" + false, {
 		headers: {
 			Authorization: firebaseTokenToken,
 			"Content-Type": "application/json",
 		},
 	});
-	if (requestServer.status === 404) {
+	if (requestServer.status === 404 || requestServer.status === 204) {
 		return null;
 	}
 	if (requestServer.status >= 500) {
@@ -384,7 +385,11 @@ export async function getInformationUser(
 	if (uid === undefined) throw new Error("Not found uid");
 	let user: ServerEntities.User | null = null;
 	let subscribe: ServerEntities.Subscribe | null = null;
-	[user, subscribe] = await Promise.all([getUserById(uid), getSubscribeUserInformation()]);
+	// [user, subscribe] = await Promise.all([getUserById(uid), getSubscribeUserInformation()]);
+	user = await getUserById(uid);
+	if (user !== null) {
+		subscribe = await getSubscribeUserInformation();
+	}
 	return [user, subscribe];
 }
 

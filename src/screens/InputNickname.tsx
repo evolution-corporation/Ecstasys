@@ -32,13 +32,12 @@ const InputLoginScreen: RootScreenProps<"InputNickname"> = ({ navigation }) => {
 	const processing = async (checkedNickname: string, statusCheck: StatusCheck) => {
 		switch (statusCheck) {
 			case StatusCheck.USED:
-				setVariableNicknameList(await generateNickname(checkedNickname))
+				setVariableNicknameList(await generateNickname(checkedNickname));
 				break;
 			default:
-				setVariableNicknameList([])
+				setVariableNicknameList([]);
 				break;
 		}
-		
 	};
 
 	useFocusEffect(
@@ -77,6 +76,7 @@ const InputLoginScreen: RootScreenProps<"InputNickname"> = ({ navigation }) => {
 						? StatusCheck.FREE
 						: StatusCheck.USED;
 				}}
+				styleNicknameInputView={{ marginBottom: 5 }}
 			/>
 			{variableNicknameList.length > 0 && (
 				<View style={[styles.variableNicknameList]}>
@@ -94,15 +94,16 @@ const InputLoginScreen: RootScreenProps<"InputNickname"> = ({ navigation }) => {
 					))}
 				</View>
 			)}
-			<Text style={styles.subText}>{i18n.t("f0955b62-3ce1-49d6-bf79-aba68266ef8e")}</Text>
 			<ColorButton
 				onPress={() => {
 					navigation.navigate("InputImageAndBirthday");
 				}}
 				disabled={!resultCheckNickname}
+				styleButton={{ marginTop: 9 }}
 			>
 				{i18n.t("continue")}
 			</ColorButton>
+			<Text style={styles.subText}>{i18n.t("f0955b62-3ce1-49d6-bf79-aba68266ef8e")}</Text>
 		</Screen>
 	);
 };
@@ -120,11 +121,13 @@ const styles = StyleSheet.create({
 		lineHeight: 20,
 		textAlign: "center",
 		color: "#E7DDEC",
+		marginTop: 4,
 		...Tools.gStyle.font("400"),
 	},
 	variableNicknameList: {
 		backgroundColor: "#FFFFFF",
 		borderRadius: 20,
+		marginTop: 9,
 	},
 	variableNicknameRow: {
 		flexDirection: "row",

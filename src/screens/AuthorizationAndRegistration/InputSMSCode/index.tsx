@@ -34,7 +34,6 @@ const SMSCodeInputScreen: RootScreenProps<"InputSMSCode"> = ({ route }) => {
 
 	const requestSMSCode = useCallback(async () => {
 		setStatus(SMSCodeInputInfoShow.loadingIndicator);
-		const start = Date.now();
 		const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
 		setConfirm(confirmation);
 		setStatus(SMSCodeInputInfoShow.requestSMS);
@@ -43,6 +42,9 @@ const SMSCodeInputScreen: RootScreenProps<"InputSMSCode"> = ({ route }) => {
 	useFocusEffect(
 		useCallback(() => {
 			requestSMSCode();
+			auth().onAuthStateChanged(user => {
+				if (user !== null) appDispatch(actions.sigIn()).unwrap();
+			});
 		}, [phoneNumber])
 	);
 

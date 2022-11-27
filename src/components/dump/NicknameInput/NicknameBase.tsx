@@ -143,7 +143,7 @@ const NicknameInput = forwardRef<Ref, Props>((props, ref) => {
 				/>
 				<View style={styles.indicatorImage}>{StatusCheckView}</View>
 			</Animated.View>
-			<Text style={styles.errorMessage}>{StatusCheckText}</Text>
+			{StatusCheckText !== null ? <Text style={styles.errorMessage}>{StatusCheckText}</Text> : null}
 		</>
 	);
 });
@@ -185,6 +185,7 @@ const styles = StyleSheet.create({
 	errorMessage: {
 		fontSize: 13,
 		lineHeight: 16,
+		marginTop: 4,
 		...gStyle.font("400"),
 		textAlign: "center",
 		color: "#E7DDEC",

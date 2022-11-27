@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { useCallback, useEffect, useState } from "react";
-import { StyleSheet, Text, Image, View, Dimensions } from "react-native";
+import { StyleSheet, Text, Image, View, Dimensions, Pressable } from "react-native";
 import Animated from "react-native-reanimated";
 
 import { TextButton } from "~components/dump";
@@ -62,15 +62,19 @@ const GreetingScreen: RootScreenProps<"Greeting"> = ({ navigation }) => {
 				<Bird colorBird={aStyles._colorBird} />
 			</Animated.View>
 			<View style={styles.text}>
-				<Animated.Text style={[aStyles.title, styles.title]}>{text.title}</Animated.Text>
+				<Animated.Text style={[aStyles.title, styles.title, { width: isShowSkipButton ? "80%" : "100%" }]}>
+					{text.title}
+				</Animated.Text>
 				<Animated.Text style={[aStyles.description, styles.description]} adjustsFontSizeToFit>
 					{text.description}
 				</Animated.Text>
 				<View style={styles.menuButton}>
 					{isShowSkipButton ? (
-						<TextButton onPress={() => appDispatch(actions.setRegistrationAccountStatus())}>
-							{i18n.t("skip")}
-						</TextButton>
+						<Pressable onPress={() => appDispatch(actions.setRegistrationAccountStatus())}>
+							<Text style={{ fontSize: 16, opacity: 1, ...gStyle.font("400"), color: "rgba(194, 169, 206, 1)" }}>
+								{i18n.t("skip")}
+							</Text>
+						</Pressable>
 					) : (
 						<ArrowButton onPress={() => prevPage()} color={"#9765A8"} />
 					)}
@@ -88,7 +92,7 @@ const GreetingScreen: RootScreenProps<"Greeting"> = ({ navigation }) => {
 const styles = StyleSheet.create({
 	background: {
 		flex: 1,
-		paddingBottom: 25,
+		paddingBottom: 0,
 	},
 	professor: {
 		position: "absolute",
@@ -104,23 +108,27 @@ const styles = StyleSheet.create({
 		zIndex: -1,
 	},
 	title: {
-		fontSize: 32,
-		textAlign: "left",
-		fontFamily: "Inter_700Bold",
+		...gStyle.styles.title,
+		color: "#FFF",
+		// fontSize: 32,
+		// textAlign: "left",
+		// fontFamily: "Inter_700Bold",
 		width: "82%",
 	},
 	description: {
-		fontSize: 20,
-		...gStyle.font("400"),
+		...gStyle.styles.description,
 		color: "#404040",
-		opacity: 0.71,
-		marginVertical: 26,
-		maxHeight: "60%",
+		// fontSize: 20,
+		// ...gStyle.font("400"),
+		// color: "#404040",
+		// opacity: 0.71,
+		marginVertical: 20,
+		// maxHeight: "60%",
 	},
 	text: {
 		flex: 2,
 		paddingHorizontal: 20,
-		marginBottom: 25,
+		marginBottom: 45,
 		justifyContent: "flex-end",
 	},
 	menuButton: {

@@ -131,7 +131,7 @@ const RootRoutes: FC = () => {
 						}}
 					/>
 
-					<RootNavigation.Screen name={"Greeting"} component={Screens.Greeting} />
+					<RootNavigation.Screen name={"Greeting"} component={Screens.Greeting} options={{ headerShown: false }} />
 				</>
 			);
 			break;
@@ -278,7 +278,7 @@ const RootRoutes: FC = () => {
 							style={{
 								width: "100%",
 								position: "absolute",
-								height: 55,
+								height: 50,
 								alignItems: "center",
 								flexDirection: "row",
 								backgroundColor: "transparent",
