@@ -55,7 +55,7 @@ const fontFamily = {
 export const useCustomFonts = () => useFonts(fontFamily);
 
 export const styles = StyleSheet.create({
-	title: {
+	Title: {
 		fontSize: 32,
 		fontFamily: "Inter_700Bold",
 		lineHeight: 39,
@@ -63,7 +63,7 @@ export const styles = StyleSheet.create({
 		textAlign: "left",
 		textAlignVertical: "center",
 	},
-	subTitle: {
+	SubTitle: {
 		fontSize: 20,
 		fontFamily: Platform.OS === "ios" ? "System" : "Roboto_500Medium",
 		fontWeight: "600",
@@ -72,7 +72,7 @@ export const styles = StyleSheet.create({
 		textAlign: "center",
 		textAlignVertical: "auto",
 	},
-	header: {
+	Header: {
 		//! adjustsFontSizeToFit: true
 		fontSize: 24,
 		fontFamily: Platform.OS === "ios" ? "System" : "Roboto_700Bold",
@@ -80,14 +80,14 @@ export const styles = StyleSheet.create({
 		width: "74%",
 		maxHeight: "100%",
 	},
-	description: {
+	Description: {
 		//! numberLines 2 or 0
 		fontSize: 16.5,
 		fontFamily: Platform.OS === "ios" ? "System" : "Roboto_400Regular",
 		lineHeight: 23,
 		fontWeight: "400",
 	},
-	namePractice: {
+	NamePractice: {
 		//! adjustsFontSizeToFit: true
 		fontSize: 24,
 		fontFamily: Platform.OS === "ios" ? "System" : "Roboto_700Bold",
@@ -96,17 +96,11 @@ export const styles = StyleSheet.create({
 		height: 56,
 		textAlignVertical: "center",
 	},
-	text: {
+	Text: {
 		fontSize: 14,
 		fontWeight: "400",
 		lineHeight: 16.41,
 		fontFamily: Platform.OS === "ios" ? "System" : "Roboto_400Regular",
-	},
-	name: {
-		fontSize: 20,
-		fontWeight: "600",
-		lineHeight: 23.44,
-		width: "auto",
 	},
 });
 

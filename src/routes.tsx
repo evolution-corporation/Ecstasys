@@ -302,7 +302,7 @@ const RootRoutes: FC = () => {
 							</View>
 							<Text
 								style={{
-									...gStyle.styles.header,
+									...gStyle.styles.Header,
 									color: "#FFFFFF",
 									textAlignVertical: "center",
 									textAlign: "center",

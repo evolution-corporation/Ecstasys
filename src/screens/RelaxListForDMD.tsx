@@ -78,7 +78,7 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 						paddingHorizontal: 0,
 					}}
 				>
-					<Text style={{ ...gStyle.styles.header, color: "#FFFFFF", width: "auto" }} adjustsFontSizeToFit>
+					<Text style={{ ...gStyle.styles.Header, color: "#FFFFFF", width: "auto" }} adjustsFontSizeToFit>
 						{i18n.t("DMD")}
 					</Text>
 					<UserButton onPress={() => navigation.navigate("Profile")} />

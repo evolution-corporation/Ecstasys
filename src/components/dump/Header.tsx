@@ -37,7 +37,7 @@ export function getHeader(
 				if (options?.title === undefined) throw new Error("Not Found Title");
 				return (
 					<SafeAreaView style={headerStyle}>
-						<Text style={{ ...gStyle.styles.header, color: "#FFFFFF", width: "auto" }} adjustsFontSizeToFit>
+						<Text style={{ ...gStyle.styles.Header, color: "#FFFFFF", width: "auto" }} adjustsFontSizeToFit>
 							{options.title}
 						</Text>
 						<UserButton onPress={() => navigation.navigate("Profile")} />
@@ -81,7 +81,7 @@ export function getHeader(
 						</View>
 						<Text
 							style={{
-								...gStyle.styles.header,
+								...gStyle.styles.Header,
 								color: "#FFFFFF",
 								textAlignVertical: "center",
 								textAlign: "center",
@@ -104,7 +104,7 @@ export function getHeader(
 				});
 				return (
 					<SafeAreaView style={headerStyle}>
-						<Text style={{ ...gStyle.styles.header, color: "#FFFFFF" }}>{nickname}</Text>
+						<Text style={{ ...gStyle.styles.Header, color: "#FFFFFF" }}>{nickname}</Text>
 						<Pressable
 							style={{ width: "18%", height: "100%", justifyContent: "center", alignItems: "flex-end" }}
 							onPress={() => {

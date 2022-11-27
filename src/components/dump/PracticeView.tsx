@@ -170,8 +170,8 @@ const Card: React.FC<CardProps> = props => {
 			</SharedElement>
 			<View style={[viewStyle.temple.card, { width: "100%", height: "100%", position: "absolute" }]}>
 				<View style={cardStyles.textInformation}>
-					<Text style={{ ...gStyle.styles.namePractice, color: "#ffffff" }}>{name}</Text>
-					<Text style={{ ...gStyle.styles.description, color: "#FFFFFF" }} numberOfLines={2}>
+					<Text style={{ ...gStyle.styles.NamePractice, color: "#ffffff" }}>{name}</Text>
+					<Text style={{ ...gStyle.styles.Description, color: "#FFFFFF" }} numberOfLines={2}>
 						{description}
 					</Text>
 				</View>

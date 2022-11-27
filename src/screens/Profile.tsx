@@ -84,8 +84,8 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 		return listUnique;
 	});
 	const appDispatch = useAppDispatch();
-	const { window } = useDimensions()
-	
+	const { window } = useDimensions();
+
 	return (
 		<DoubleColorView
 			style={styles.background}
@@ -94,75 +94,78 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 				setHeightScreen(layout.height);
 			}}
 			scroll
-			headerElement={<View
-				style={{
-					position: "absolute",
-					width: "100%",
-					left: 20,
-					right: 0,
-					flexDirection: "row",
-					justifyContent: "space-between",
-					alignItems: "center",
-					paddingHorizontal: 0,
+			headerElement={
+				<View
+					style={{
+						position: "absolute",
+						width: "100%",
+						left: 20,
+						right: 0,
+						flexDirection: "row",
+						justifyContent: "space-between",
+						alignItems: "center",
+						paddingHorizontal: 0,
+					}}
+				>
+					<Text style={{ ...gStyle.styles.Header, color: "#FFFFFF", width: "auto" }} adjustsFontSizeToFit>
+						{nickName}
+					</Text>
+					<Pressable
+						style={{
+							width: "18%",
+							height: "100%",
+							justifyContent: "center",
+							alignItems: "flex-end",
+						}}
+						onPress={() => {
+							navigation.navigate("Options");
+						}}
+					>
+						<TreeLine />
+					</Pressable>
+				</View>
+			}
+		>
+			<Dump.ProfileInformation
+				image={image}
+				displayName={displayName}
+				subscribeInformation={
+					subscribe === null
+						? undefined
+						: { endSubscribe: subscribe.endSubscribe, isAutoPayment: subscribe.autoPayment }
+				}
+				onPress={() => {
+					navigation.navigate("EditUser");
+				}}
+				onChangeImage={image => {
+					appDispatch(actions.updateAccount({ image }));
+				}}
+			/>
+			<Dump.SelectTimePeriodStatistic onChangePeriod={setStatisticPeriod} style={{ marginTop: 16 }} />
+			<Dump.StatisticsMeditation count={statisticCount} time={statisticTime} style={{ marginTop: 9 }} />
+			<Dump.ColorWithIconButton
+				icon={<Heart style={{ marginLeft: 20 }} />}
+				styleButton={[styles.button, { marginTop: 18 }]}
+				styleText={styles.buttonText}
+				onPress={() => {
+					navigation.navigate("FavoriteMeditation");
 				}}
 			>
-				<Text style={{ ...gStyle.styles.header, color: "#FFFFFF", width: "auto" }} adjustsFontSizeToFit>
-					{nickName}
-				</Text>
-				<Pressable
-					style={{
-						width: "18%",
-						height: "100%",
-						justifyContent: "center",
-						alignItems: "flex-end",
-					}}
-					onPress={() => {
-						navigation.navigate("Options");
-					}}
-				>
-					<TreeLine />
-				</Pressable>
-			</View>}
-		>
-				<Dump.ProfileInformation
-					image={image}
-					displayName={displayName}
-					subscribeInformation={
-						subscribe === null
-							? undefined
-							: { endSubscribe: subscribe.endSubscribe , isAutoPayment: subscribe.autoPayment }
-					}
-					onPress={() => {
-						navigation.navigate("EditUser");
-					}}
-					onChangeImage={image => {
-						appDispatch(actions.updateAccount({ image }));
-					}}
-				/>
-				<Dump.SelectTimePeriodStatistic onChangePeriod={setStatisticPeriod} style={{ marginTop: 16 }} />
-				<Dump.StatisticsMeditation count={statisticCount} time={statisticTime} style={{ marginTop: 9 }} />
-				<Dump.ColorWithIconButton
-					icon={<Heart style={{ marginLeft: 20 }}/>}
-					styleButton={[styles.button, { marginTop: 18 }]}
-					styleText={styles.buttonText}
-					onPress={() => {
-						navigation.navigate("FavoriteMeditation");
-					}}
-				>
-					{i18n.t("6a85652b-a14f-4545-8058-9cdad43f3de1")}
-				</Dump.ColorWithIconButton>
-				<Dump.ColorWithIconButton
-					icon={<Start style={{ marginLeft: 20 }} />}
-					styleButton={styles.button}
-					styleText={styles.buttonText}
-					onPress={() => {
-						navigation.navigate("SelectSubscribe");
-					}}
-				>
-					{i18n.t("b2f016a6-b60e-4b5f-9cd9-ead2bddaa9d5")}
-				</Dump.ColorWithIconButton>
-				{
-					historyMeditation.length > 0 ? <><RN.Text style={styles.historyText}>{i18n.t("7923b738-2122-408b-af79-caf0b1643cdf")}</RN.Text>
+				{i18n.t("6a85652b-a14f-4545-8058-9cdad43f3de1")}
+			</Dump.ColorWithIconButton>
+			<Dump.ColorWithIconButton
+				icon={<Start style={{ marginLeft: 20 }} />}
+				styleButton={styles.button}
+				styleText={styles.buttonText}
+				onPress={() => {
+					navigation.navigate("SelectSubscribe");
+				}}
+			>
+				{i18n.t("b2f016a6-b60e-4b5f-9cd9-ead2bddaa9d5")}
+			</Dump.ColorWithIconButton>
+			{historyMeditation.length > 0 ? (
+				<>
+					<RN.Text style={styles.historyText}>{i18n.t("7923b738-2122-408b-af79-caf0b1643cdf")}</RN.Text>
 					<Dump.ShowListPractices
 						historyPractices={historyMeditation}
 						onPress={practice => {
@@ -177,9 +180,9 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 						}}
 						style={{ left: -20, right: -20, width: window.width }}
 						contentContainerStyle={{ padding: 20 }}
-					/></> : null
-				}
-						
+					/>
+				</>
+			) : null}
 		</DoubleColorView>
 	);
 };

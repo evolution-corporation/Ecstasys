@@ -35,7 +35,7 @@ const IntroScreen: RootScreenProps<"IntroAboutApp"> = ({ navigation }) => {
 					}}
 				/>
 			</View>
-			<Text style={{ ...gStyle.styles.title, color: "#3D3D3D" }}>
+			<Text style={{ ...gStyle.styles.Title, color: "#3D3D3D" }}>
 				{i18n.t("ff867b49-717d-4611-a2b2-22349439f76f")}
 				{"\n"}
 				<Text style={[{ color: "#9765A8" }]} onTextLayout={({ nativeEvent: { lines } }) => console.log(lines)}>
@@ -43,7 +43,7 @@ const IntroScreen: RootScreenProps<"IntroAboutApp"> = ({ navigation }) => {
 				</Text>
 			</Text>
 
-			<Text style={{ ...gStyle.styles.description, color: "#404040", marginVertical: 20 }}>
+			<Text style={{ ...gStyle.styles.Description, color: "#404040", marginVertical: 20 }}>
 				{i18n.t("74547c57-8c9a-48d5-afd0-de9521e37c29")}
 			</Text>
 			<View style={styles.menuButton}>

@@ -49,7 +49,7 @@ const SMSCodeInputScreen: RootScreenProps<"InputSMSCode"> = ({ route }) => {
 	return (
 		<Screen backgroundColor={"#9765A8"} styleScreen={{ justifyContent: "center", alignItems: "center" }}>
 			<Text
-				style={{ ...gStyle.styles.header, color: "#FFFFFF", height: "auto", textAlign: "center", marginBottom: 20 }}
+				style={{ ...gStyle.styles.Header, color: "#FFFFFF", height: "auto", textAlign: "center", marginBottom: 20 }}
 			>
 				{i18n.t("cfdefbe6-ae49-4e17-8628-bbe46d144418")}
 			</Text>

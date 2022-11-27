@@ -1,0 +1,15 @@
+root: true
+settings:
+  w
+plugins:
+  - "eslint-plugin-import"
+  - "eslint-plugin-react"
+  - "eslint-plugin-react-native"
+parser: "@typescript-eslint/parser"
+ignorePatterns: ["src/**/*.test.ts"]
+rules: 
+    array-callback-return: error
+    constructor-super: error
+    for-direction: error
+
+

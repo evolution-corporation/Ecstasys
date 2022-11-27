@@ -1,27 +1,6 @@
 /** @format */
 
-import { ColorValue } from "react-native";
-
-export default {
-	StrokePanel: "#C2A9CE",
-	TextOnTheBackground: "#E7DDEC",
-	White: "#FFFFFF",
-	DarkLetters: "#555555",
-	black: "#000000",
-	WhiteGlass: "rgba(255, 255, 255, 0.2)",
-	WhiteBrightGlass: "rgba(255, 255, 255, 0.8)",
-	gray: "#3D3D3D",
-	DarkGlass: "rgba(0, 0,0 ,0.2)",
-	orange: "#FF5C00",
-	grayGlass: "rgba(240, 242, 238, 0.19)",
-	violet: "#702D87",
-	noName1: "#A0A0A0",
-	skin: "#FEEBED",
-	perano: "#A7A9E0",
-	carbon: "#3D3D3D",
-	moreViolet: "#9765A8",
-	moreGray: "rgba(64, 64, 64, 0.71)",
-};
+import { ColorValue, StyleSheet } from "react-native";
 
 export function setColorOpacity(color: ColorValue, opacity: number = 0.5) {
 	let r: number | undefined = undefined;
@@ -50,3 +29,74 @@ export function setColorOpacity(color: ColorValue, opacity: number = 0.5) {
 	if (typeof b === "undefined") b = 0;
 	return `rgba(${r}, ${g}, ${b}, ${o})`;
 }
+
+export const Colors = {
+	primary: "#9765A8",
+	second: "#F3F3F3",
+	WHITE: "#FFFFFF",
+	GRAY: "#3D3D3D",
+	YELLOW: "#FBBC05",
+	TRACING: "#C2A9CE",
+	TEXT_BACKGROUND: "#E7DDEC",
+	DARK_LETTERS: "#555555",
+	GREEN: "#8BBA47",
+	ORANGE: "#FF5C00",
+	VIOLET: "#702D87",
+	WHITE_GLASS: "rgba(255, 255, 255, 0.2)",
+	BLACK: "#000000",
+	HOME: "#9E9E9E",
+	ANOTHER_PURPLE: "#9765A8",
+};
+
+type ColorsType = typeof Colors;
+
+export default StyleSheet.create({
+	...Object.fromEntries(
+		Object.entries(Colors).map(([name, color]: [string, ColorValue]) => ["text" + name, { color }])
+	),
+	textPrimary: {
+		color: Colors.primary,
+	},
+	textSecond: {
+		color: Colors.second,
+	},
+	textWhite: {
+		color: Colors.WHITE,
+	},
+	textGray: {
+		color: Colors.GRAY,
+	},
+	textYellow: {
+		color: Colors.YELLOW,
+	},
+	textTracing: {
+		color: Colors.TRACING,
+	},
+	textTextBackground: {
+		color: Colors.TEXT_BACKGROUND,
+	},
+	textDarkLetters: {
+		color: Colors.DARK_LETTERS,
+	},
+	textGreen: {
+		color: Colors.GREEN,
+	},
+	textOrange: {
+		color: Colors.ORANGE,
+	},
+	textViolet: {
+		color: Colors.VIOLET,
+	},
+	textWhiteGlass: {
+		color: Colors.WHITE_GLASS,
+	},
+	textBlack: {
+		color: Colors.BLACK,
+	},
+	textHome: {
+		color: Colors.HOME,
+	},
+	textAnotherPurple: {
+		color: Colors.ANOTHER_PURPLE,
+	},
+});
