@@ -12,35 +12,44 @@ import {
 import { Inter_700Bold } from "@expo-google-fonts/inter";
 
 import { Platform, StyleSheet } from "react-native";
-import { FontWeight } from "./type";
 
-export function getFontOption(weight: FontWeight = "normal"): {
+import Fonts from "config/fonts.json";
+
+export type FontWeight = "normal" | "bold" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900";
+export interface FontStyle {
 	fontFamily: string;
 	fontWeight?: FontWeight;
-} {
+}
+export const getFontOption = (weight: FontWeight = "normal") => {
 	if (Platform.OS == "android") {
 		switch (weight) {
 			case "100":
-			case "200":
+			case "200": {
 				return { fontFamily: "Roboto_100Thin" };
-			case "300":
+			}
+			case "300": {
 				return { fontFamily: "Roboto_300Light" };
-			case "400":
+			}
+			case "400": {
 				return { fontFamily: "Roboto_400Regular" };
+			}
 			case "500":
-			case "normal":
+			case "normal": {
 				return { fontFamily: "Roboto_500Medium" };
+			}
 			case "600":
 			case "700":
-			case "bold":
+			case "bold": {
 				return { fontFamily: "Roboto_700Bold" };
+			}
 			case "800":
-			case "900":
+			case "900": {
 				return { fontFamily: "Roboto_900Black" };
+			}
 		}
 	}
-	return { fontFamily: "System", fontWeight: weight };
-}
+	return { fontFamily: "System", fontWeight: weight } as FontStyle;
+};
 
 const fontFamily = {
 	Roboto_100Thin,
@@ -104,4 +113,15 @@ export const styles = StyleSheet.create({
 	},
 });
 
-export default {};
+export default () => {
+	const fontsStylesAtArray: [string, object][] = Object.entries(Fonts)
+	for (const fontStyleOptionIndex in fontsStylesAtArray) {
+		const [nameStyle, valueStyle] = fontsStylesAtArray[fontStyleOptionIndex];
+		const fontsStylesAtArray[fontStyleOptionIndex] = [nameStyle, Object.fromEntries(Object.entries(valueStyle).map(([nameField, valueField]) => {
+			if (nameField === 'fontFamily' && valueField === 'System') {
+				return []
+			}
+			return [nameField, valueField]
+		}))]
+	}
+};

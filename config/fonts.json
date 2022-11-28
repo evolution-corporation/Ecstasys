@@ -1,0 +1,49 @@
+{
+	"Title": {
+		"fontSize": 32,
+		"fontFamily": "Inter_700Bold",
+		"lineHeight": 39,
+		"width": "100%",
+		"textAlign": "left",
+		"textAlignVertical": "center"
+	},
+	"SubTitle": {
+		"fontSize": 20,
+		"fontFamily": "System",
+		"fontWeight": "600",
+		"lineHeight": 23.44,
+		"width": "100%",
+		"textAlign": "center",
+		"textAlignVertical": "auto"
+	},
+	"Header": {
+		"fontSize": 24,
+		"fontFamily": "System",
+		"fontWeight": "600",
+		"width": "74%",
+		"maxHeight": "100%",
+		"adjustsFontSizeToFit": true
+	},
+	"Description": {
+		"fontSize": 16.5,
+		"fontFamily": "System",
+		"lineHeight": 23,
+		"fontWeight": "400",
+		"numberLines": [0, 2]
+	},
+	"NamePractice": {
+		"fontSize": 24,
+		"fontFamily": "System",
+		"fontWeight": "600",
+		"lineHeight": 28.13,
+		"height": 56,
+		"textAlignVertical": "center",
+		"adjustsFontSizeToFit": true
+	},
+	"Text": {
+		"fontSize": 14,
+		"fontWeight": "400",
+		"lineHeight": 16.41,
+		"fontFamily": "System"
+	}
+}

@@ -1,15 +1,15 @@
 root: true
-settings:
-  w
+parserOptions:
+  project: "tsconfig.json"
 plugins:
-  - "eslint-plugin-import"
-  - "eslint-plugin-react"
-  - "eslint-plugin-react-native"
-parser: "@typescript-eslint/parser"
-ignorePatterns: ["src/**/*.test.ts"]
-rules: 
-    array-callback-return: error
-    constructor-super: error
-    for-direction: error
-
-
+  - "@typescript-eslint"
+  - "prettier"
+  - "unicorn"
+  - "import"
+extends:
+  - "airbnb-typescript/base"
+  - "plugin:@typescript-eslint/recommended"
+  - "plugin:unicorn/recommended"
+  # - "plugin:prettier/recommended"
+  - "prettier"
+  # - "prettier/@typescript-eslint"

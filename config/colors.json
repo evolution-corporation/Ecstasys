@@ -1,0 +1,17 @@
+{
+	"primary": "#9765A8",
+	"second": "#F3F3F3",
+	"WHITE": "#FFFFFF",
+	"GRAY": "#3D3D3D",
+	"YELLOW": "#FBBC05",
+	"TRACING": "#C2A9CE",
+	"TEXT_BACKGROUND": "#E7DDEC",
+	"DARK_LETTERS": "#555555",
+	"GREEN": "#8BBA47",
+	"ORANGE": "#FF5C00",
+	"VIOLET": "#702D87",
+	"WHITE_GLASS": "rgba(255, 255, 255, 0.2)",
+	"BLACK": "#000000",
+	"HOME": "#9E9E9E",
+	"ANOTHER_PURPLE": "#9765A8"
+}
