@@ -7,12 +7,7 @@ function generateConfig(): ExpoConfig {
 	const appName = process.env.APP_VARIANT !== "dev" ? "dmd meditation" : "DMD Dev";
 	const appUrl =
 		process.env.APP_VARIANT !== "dev" ? "com.evodigital.dmdmeditation" : "com.evodigital.dmdmeditation_dev";
-	const apiURL =
-		process.env.APP_VARIANT === "prod"
-			? "api.evodigital.one"
-			: process.env.APP_VARIANT === "beta"
-			? "beta.api.evodigital.one"
-			: "dev.api.evodigital.one";
+	const apiURL = process.env.APP_VARIANT === "prod" ? "api.evodigital.one" : "dev.api.evodigital.one";
 
 	const toDay = new Date();
 	const date = {
@@ -58,7 +53,7 @@ function generateConfig(): ExpoConfig {
 		ios: {
 			googleServicesFile: "./GoogleService-Info.plist",
 			bundleIdentifier: "com.evodigital.dmdmeditation",
-			buildNumber: versionCode.toString()
+			buildNumber: versionCode.toString(),
 		},
 		plugins: [
 			"expo-dev-client",

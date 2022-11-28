@@ -7,6 +7,9 @@ declare module "*.svg" {
 	export default content;
 }
 
+namespace GlobalStyle {
+	export let Sheet: { [name: string]: object };
+}
 /**
  * Интерфейс модели аккаунта который используется в Redux
  */
@@ -129,5 +132,3 @@ declare interface AccountRedux {
 //   month: StatisticMeditation;
 //   all: StatisticMeditation;
 // };
-
-declare var HermesInternal: boolean;
