@@ -8,11 +8,15 @@ declare module "*.svg" {
 }
 
 namespace globalThis {
+	import type I18n from "src/i18n/i18n-custom";
 	export let GlobalStyleSheet: { [name: string]: object };
+	export let i18n: typeof I18n;
 }
 
 namespace global {
+	import type I18n from "src/i18n/i18n-custom";
 	export let GlobalStyleSheet: { [name: string]: object };
+	export let i18n: typeof I18n;
 }
 
 declare interface String {

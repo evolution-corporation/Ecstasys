@@ -1,5 +1,6 @@
 import Colors from "config/colors.json";
 import Fonts from "config/fonts.json";
+import { getNameStyleForText } from "./create-color-sheet";
 
 export interface ParametersMixingFontStyle {
 	color?: keyof typeof Colors;
@@ -13,6 +14,6 @@ export default (parameters: ParametersMixingFontStyle) => {
 	}
 	return {
 		...GlobalStyleSheet[font],
-		...GlobalStyleSheet[`text${color.toPascalCase()}`],
+		...GlobalStyleSheet[getNameStyleForText(color)],
 	};
 };

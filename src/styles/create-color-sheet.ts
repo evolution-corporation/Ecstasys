@@ -21,3 +21,9 @@ export default () => {
 	}
 	return Object.fromEntries(colorStylesAtArray);
 };
+
+export const colorNameInclude = (name: string) => Object.keys(Colors).includes(name);
+
+export const getNameStyleForText = (name: keyof typeof Colors) => `text${name.toPascalCase()}`;
+
+export const getNameStyleForLayout = (name: keyof typeof Colors) => `background${name.toPascalCase()}`;
