@@ -1,5 +1,3 @@
-/** @format */
-
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React from "react";
 import { View, Text, StyleSheet, Pressable, StyleProp, ViewStyle } from "react-native";

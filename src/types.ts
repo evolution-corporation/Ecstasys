@@ -66,6 +66,14 @@ export enum StatisticPeriod {
 	ALL = "ALL",
 }
 
+export interface UserInformation {
+	displayName?: string;
+	nickname: string;
+	birthday: Date;
+	image: ImageSourcePropType;
+	gender: Gender;
+}
+
 // состояния
 export namespace State {
 	export type Gender = "MALE" | "FEMALE" | "OTHER";
@@ -277,13 +285,13 @@ export type RootStackList = {
 	Payment: {
 		selectSubscribe: State.SubscribeType;
 	};
-	ConfirmationSignOut: undefined,
-	InputNameAndSelectGender: undefined,
-	ByMaySubscribe: undefined,
+	ConfirmationSignOut: undefined;
+	InputNameAndSelectGender: undefined;
+	ByMaySubscribe: undefined;
 	PlayerMeditationDot: {
 		isNeedVoice: boolean;
 		practiceLength: number;
-	}
+	};
 };
 
 export type RootScreenProps<T extends keyof RootStackList> = FC<NativeStackScreenProps<RootStackList, T>>;

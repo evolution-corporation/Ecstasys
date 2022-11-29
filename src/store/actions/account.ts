@@ -17,20 +17,20 @@ enum AccountAction {
 	getData = "account/getAccountData",
 	setRegistrationAccountStatus = "account/setRegistrationAccountStatus",
 	getPaymentURLForSubscribe = "account/getPaymentURLForSubscribe",
-	setNotNewUser = "account/setNotNewUser"
+	setNotNewUser = "account/setNotNewUser",
 }
 
-interface SetChangedAccountDataParams {
+export interface SetChangedAccountDataParameters {
 	nickname?: string;
 	image?: string;
 	displayName?: string;
 	birthday?: Date;
-	gender?: Gender
+	gender?: Gender;
 }
 
 export const addChangedInformationUser = createAsyncThunk<
 	State.ChangedUserData,
-	SetChangedAccountDataParams,
+	SetChangedAccountDataParameters,
 	AsyncThunkConfig
 >(AccountAction.setChangedData, async ({ birthday, displayName, image, nickname, gender }) => {
 	let lastCheckNicknameAndResult: undefined | [Date, boolean];
@@ -38,15 +38,15 @@ export const addChangedInformationUser = createAsyncThunk<
 		lastCheckNicknameAndResult = [new Date(), (await Request.getUserByNickname(nickname)) === null];
 	}
 	return {
-		birthday: birthday !== undefined ? birthday.toISOString() : undefined,
+		birthday: birthday === undefined ? undefined : birthday.toISOString(),
 		displayName,
 		image,
 		gender,
-		nickname: lastCheckNicknameAndResult !== undefined ? nickname : undefined,
+		nickname: lastCheckNicknameAndResult === undefined ? undefined : nickname,
 		lastCheckNicknameAndResult:
-			lastCheckNicknameAndResult !== undefined
-				? [lastCheckNicknameAndResult[0].toISOString(), lastCheckNicknameAndResult[1]]
-				: undefined,
+			lastCheckNicknameAndResult === undefined
+				? undefined
+				: [lastCheckNicknameAndResult[0].toISOString(), lastCheckNicknameAndResult[1]],
 	};
 });
 
@@ -54,24 +54,26 @@ export const removeChangedInformationUser = createAction(AccountAction.removeCha
 
 export const updateAccount = createAsyncThunk<
 	State.User,
-	{ image?: string; displayName?: string; birthday?: string, gender?: Gender },
+	{ image?: string; displayName?: string; birthday?: string; gender?: Gender },
 	AsyncThunkConfig
 >(AccountAction.saveChangeData, async ({ image, birthday, displayName, gender }, { getState }) => {
 	const changeData = getState().account.changeData;
 	if (image === undefined) image = changeData.image;
 	if (birthday === undefined) birthday = changeData.birthday;
 	if (displayName === undefined) displayName = changeData.displayName;
-	if (gender === undefined ) gender = (() => {switch (changeData.gender) {
-		case "FEMALE":
-			return Gender.FEMALE
-		case "MALE":
-			return Gender.MALE
-		case "OTHER":
-			return Gender.OTHER
-		default:
-			return undefined
-	}
-	})() ;
+	if (gender === undefined)
+		gender = (() => {
+			switch (changeData.gender) {
+				case "FEMALE":
+					return Gender.FEMALE;
+				case "MALE":
+					return Gender.MALE;
+				case "OTHER":
+					return Gender.OTHER;
+				default:
+					return undefined;
+			}
+		})();
 	let { nickname, lastCheckNicknameAndResult } = changeData;
 	if (nickname !== undefined) {
 		if (
@@ -118,7 +120,7 @@ export const registrationAccount = createAsyncThunk<State.User, undefined, Async
 			if (user === null) {
 				throw new Error("User Not Create");
 			}
-			
+
 			return user;
 		} else {
 			throw new Error("nickname is use");
@@ -134,9 +136,8 @@ export const signOutAccount = createAsyncThunk(AccountAction.signOut, async () =
 			await GoogleSignin.signOut();
 		}
 	} catch (error) {
-		console.error(error)
+		console.error(error);
 	}
-	
 });
 
 export const signInAccount = createAsyncThunk<
@@ -160,4 +161,4 @@ export const signInAccount = createAsyncThunk<
 });
 
 export const setRegistrationAccountStatus = createAction(AccountAction.setRegistrationAccountStatus);
-export const setNotNewUser = createAction(AccountAction.setNotNewUser)
+export const setNotNewUser = createAction(AccountAction.setNotNewUser);
