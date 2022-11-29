@@ -1,5 +1,3 @@
-/** @format */
-
 import { TextStyle } from "react-native";
 
 import getFontOption from "./get-font-option";

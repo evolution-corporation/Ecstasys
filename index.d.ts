@@ -7,9 +7,20 @@ declare module "*.svg" {
 	export default content;
 }
 
-namespace GlobalStyle {
-	export let Sheet: { [name: string]: object };
+namespace globalThis {
+	export let GlobalStyleSheet: { [name: string]: object };
 }
+
+namespace global {
+	export let GlobalStyleSheet: { [name: string]: object };
+}
+
+declare interface String {
+	toPascalCase: () => void;
+}
+
+// declare String.toPascalCase :;
+
 /**
  * Интерфейс модели аккаунта который используется в Redux
  */
