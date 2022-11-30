@@ -1,112 +1,61 @@
 /** @format */
 
 import { createReducer } from "@reduxjs/toolkit";
-import { State } from "~types";
+import { AccountStatus } from "src/enum";
+import { Serialization, SubscribeInformation, UserInformation } from "~types";
 
 import Actions from "../actions";
 
 export interface AccountState {
-	uid?: string;
-	currentData?: {
-		displayName?: string;
-		image: string;
-		birthday: string;
-		nickName: string;
-		gender: "MALE" | "FEMALE" | "OTHER";
+	current?: Serialization<UserInformation>;
+	changeData: Omit<Partial<Serialization<UserInformation>>, "id" | "nickname"> & {
+		nickname?: Serialization<{ value: string; timeLastCheck: Date }>;
 	};
-	changeData: {
-		nickname?: string;
-		image?: string;
-		displayName?: string;
-		birthday?: string;
-		gender?: "MALE" | "FEMALE" | "OTHER";
-		lastCheckNicknameAndResult?: [string, boolean];
-	};
-	subscribe?: {
-		type: "WEEK" | "MONTH" | "HALF_YEAR";
-		whenSubscribe: string;
-		autoPayment: boolean;
-	};
-	status: "REGISTRATION" | "NO_REGISTRATION" | "NO_AUTHENTICATION" | "IS_LOADING";
-	isNewUser: boolean;
+	statusAuthentication?: AccountStatus;
+	isLoading: boolean;
+	subscribe?: Serialization<SubscribeInformation>;
+	isNewUser?: boolean;
 }
 
 export default createReducer<AccountState>(
 	{
 		changeData: {},
-		status: "IS_LOADING",
-		isNewUser: false,
+		isLoading: true,
 	},
 	builder => {
-		builder.addCase(Actions.initialization.fulfilled, (state, { payload }) => {
-			if (payload.account === null) {
-				state.status = "NO_AUTHENTICATION";
-			} else {
-				const { user, subscribe, id } = payload.account;
-				state.uid = id;
-				if (user !== null) {
-					state.status = "REGISTRATION";
-					state.currentData = {
-						nickName: user.nickName,
-						birthday: user.birthday,
-						displayName: user.displayName,
-						image: user.image,
-						gender: user.gender,
-					};
-					
-					if (subscribe !== null) {
-						state.subscribe = {
-							autoPayment: subscribe.autoPayment,
-							type: subscribe.type,
-							whenSubscribe: subscribe.whenSubscribe,
-						};
-					}
-				} else {
-					state.status = "NO_REGISTRATION";
-				}
+		builder.addCase(Actions.initializationAccount.fulfilled, (state, { payload }) => {
+			const { subscribe, user, status } = payload;
+			state.current = user?.toSerialization();
+			state.subscribe = subscribe?.toSerialization();
+			state.statusAuthentication = status;
+			state.isLoading = false;
+			if (status === AccountStatus.NO_REGISTRATION || status === AccountStatus.REGISTRATION) {
+				state.isNewUser = status === AccountStatus.NO_REGISTRATION;
 			}
 		});
 		builder.addCase(Actions.signInAccount.fulfilled, (state, { payload }) => {
-			const { user, subscribe, id } = payload;
-			state.uid = id;
-			if (user !== null) {
-				state.status = "REGISTRATION";
-				state.currentData = {
-					nickName: user.nickName,
-					birthday: user.birthday,
-					displayName: user.displayName,
-					image: user.image,
-					gender: user.gender,
-				};
-				state.isNewUser = false;
-				if (subscribe !== null) {
-					state.subscribe = {
-						autoPayment: subscribe.autoPayment,
-						type: subscribe.type,
-						whenSubscribe: subscribe.whenSubscribe,
-					};
-				}
-			} else {
-				state.status = "NO_REGISTRATION";
-			}
+			const { user, subscribe } = payload;
+			state.statusAuthentication = user ? AccountStatus.REGISTRATION : AccountStatus.NO_REGISTRATION;
+			state.current = user?.toSerialization();
+			state.isNewUser = !!user;
+			state.subscribe = subscribe?.toSerialization();
 		});
-		builder.addCase(Actions.signOutAccount.fulfilled, (state, { payload }) => {
-			state.status = "NO_AUTHENTICATION";
-			state.currentData = undefined;
+		builder.addCase(Actions.signOutAccount.fulfilled, state => {
+			state.statusAuthentication = AccountStatus.NO_AUTHENTICATION;
+			state.current = undefined;
 			state.changeData = {};
-			state.uid = undefined;
 			state.subscribe = undefined;
-			state.isNewUser = false;
+			state.isNewUser = undefined;
 		});
 		builder.addCase(Actions.registrationAccount.fulfilled, (state, { payload }) => {
-			state.currentData = payload;
-			state.uid = payload.uid;
+			state.current = payload.toSerialization();
 			state.changeData = {};
 			state.isNewUser = true;
+			state.statusAuthentication = AccountStatus.REGISTRATION;
 		});
 		builder.addCase(Actions.updateAccount.fulfilled, (state, { payload }) => {
 			state.changeData = {};
-			state.currentData = payload;
+			state.current = payload.toSerialization();
 			state.isNewUser = false;
 		});
 		builder.addCase(Actions.removeChangedInformationUser, state => {
@@ -114,12 +63,18 @@ export default createReducer<AccountState>(
 		});
 		builder.addCase(Actions.addChangedInformationUser.fulfilled, (state, { payload }) => {
 			state.changeData = {
-				...Object.fromEntries(Object.entries(state.changeData).filter(([key, value]) => value !== undefined)),
-				...Object.fromEntries(Object.entries(payload).filter(([key, value]) => value !== undefined)),
+				birthday: payload.birthday === undefined ? undefined : payload.birthday.toISOString(),
+				displayName: payload.displayName,
+				gender: payload.gender,
+				image: payload.image,
+				nickname:
+					payload.nickname !== undefined && payload.lastCheckNicknameAndResult !== undefined
+						? { value: payload.nickname, timeLastCheck: payload.lastCheckNicknameAndResult.toISOString() }
+						: undefined,
 			};
 		});
 		builder.addCase(Actions.setRegistrationAccountStatus, state => {
-			state.status = "REGISTRATION";
+			state.statusAuthentication = AccountStatus.REGISTRATION;
 		});
 		builder.addCase(Actions.setNotNewUser, state => {
 			state.isNewUser = false;

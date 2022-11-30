@@ -24,7 +24,7 @@ import { getPracticeDay } from "./practice";
 
 enum GeneralAction {
 	initialization = "general/initialization",
-	registation = "general/registraion",
+	registration = "general/registration",
 	signIn = "general/signIn",
 	signOut = "generl/signOut",
 }
@@ -244,7 +244,7 @@ export const initialization = createAsyncThunk(GeneralAction.initialization, asy
 });
 
 export const registation = createAsyncThunk<void, undefined, AsyncThunkConfig>(
-	GeneralAction.registation,
+	GeneralAction.registration,
 	async (_, { dispatch }) => {
 		const user = await dispatch(registrationAccount()).unwrap();
 		if (user !== null) {

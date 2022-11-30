@@ -61,11 +61,20 @@ export namespace ServerEntities {
 		/** Сообщение пользователя, которое он оставил на своей странице */
 		readonly Status?: string;
 		/** Название к какой группе относится пользователь */
-		readonly Role: SupportType.Role;
+		readonly Role: "ADMIN" | "USER";
 		/** Пол пользователя который он указал */
-		readonly Gender: SupportType.Gender;
+		readonly Gender: "MALE" | "FEMALE" | "OTHER";
 		/** Категория к деятельности пользователя, которую он указал */
-		readonly Category: SupportType.Category;
+		readonly Category:
+			| "NULL"
+			| "BLOGGER"
+			| "COMMUNITY"
+			| "ORGANIZATION"
+			| "EDITOR"
+			| "WRITER"
+			| "GARDENER"
+			| "FLOWER_MAN"
+			| "PHOTOGRAPHER";
 		/** Дата регистрации пользователя */
 		readonly DateTimeRegistration: string;
 		/** Есть ли у пользователя изображение профиля */

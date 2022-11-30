@@ -7,7 +7,6 @@ import { State } from "~types";
 import Actions from "../actions";
 
 export interface PracticeState {
-	currentPractice?: State.Practice;
 	paramsPractice: {
 		currentNameBackgroundSound: null | keyof typeof BackgroundSound;
 		currentVolumeBackgroundSound: number;
@@ -73,13 +72,13 @@ export default createReducer<PracticeState>(
 		builder.addCase(Actions.removeFavoritePractice.fulfilled, (state, { payload }) => {
 			state.listPracticesFavorite = [...state.listPracticesFavorite.filter(({ id }) => payload.id !== id)];
 		});
-		builder.addCase(Actions.signOutAccount.fulfilled, (state) => {
+		builder.addCase(Actions.signOutAccount.fulfilled, state => {
 			state.listPracticesListened = [];
-state.listPracticesFavorite = [];
-state.recommendationPracticeToDay = undefined;
-		} )
+			state.listPracticesFavorite = [];
+			state.recommendationPracticeToDay = undefined;
+		});
 		builder.addCase(Actions.getPracticeDay.fulfilled, (state, { payload }) => {
 			if (payload !== null) state.recommendationPracticeToDay = payload;
-		})
+		});
 	}
 );

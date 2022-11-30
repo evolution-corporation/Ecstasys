@@ -5,45 +5,31 @@
  * @data data данные которые возвращает сервер
  */
 
-import { State } from "~types";
+import { Gender, SubscribeType } from "src/enum";
+import { CanSerialization, State, SubscribeInformation } from "~types";
 import { ServerEntities } from "./types";
 
-export function composeUser(data: ServerEntities.User | null): State.User | null {
-	if (data === null) return null;
-	let image = "https://storage.yandexcloud.net/dmdmeditationimage/users/NoUserImage.png";
-	if (data.PhotoId) image = "https://storage.yandexcloud.net/dmdmeditationimage/users/" + data.PhotoId + ".png";
-	return {
-		uid: data.Id,
-		birthday: data.Birthday,
-		displayName: data.DisplayName,
-		image: image,
-		gender: data.Gender,
-		nickName: data.NickName,
-	};
-}
+export const toSubscribe = (
+	data: ServerEntities.Subscribe
+): SubscribeInformation & CanSerialization<SubscribeInformation> => {
+	const type: SubscribeType =
+		data.Type === "Month" ? SubscribeType.MONTH : data.Type === "Month6" ? SubscribeType.HALF_YEAR : SubscribeType.WEEK;
+	const autoPayment = data.RebillId === -1;
+	const whenSubscribe = new Date(data.WhenSubscribe);
 
-export function composeSubscribe(data: ServerEntities.Subscribe | null): State.Subscribe | null {
-	if (data === null) return null;
-	let type: State.SubscribeType;
-	switch (data.Type) {
-		case "Week":
-			type = "WEEK";
-			break;
-		case "Month":
-			type = "MONTH";
-			break;
-		case "Month6":
-			type = "HALF_YEAR";
-			break;
-	}
 	return {
-		type: type,
-		autoPayment: data.RebillId === -1,
-		whenSubscribe: data.WhenSubscribe,
+		type,
+		autoPayment,
+		whenSubscribe,
+		toSerialization: () => ({
+			autoPayment,
+			type,
+			whenSubscribe: whenSubscribe.toISOString(),
+		}),
 	};
-}
+};
 
-export function composePractice(data: ServerEntities.Meditation | null): State.Practice | null {
+export const toPractice = (data: ServerEntities.Meditation) => {
 	if (data === null) {
 		return null;
 	} else {
@@ -85,7 +71,7 @@ export function composePractice(data: ServerEntities.Meditation | null): State.P
 			length: data.AudioLength,
 		};
 	}
-}
+};
 
 export function composeSet(data: (ServerEntities.Meditation & { TypeMeditation: "Set" }) | null): State.Set | null {
 	if (data === null) {

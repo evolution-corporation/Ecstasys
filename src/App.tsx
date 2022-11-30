@@ -11,21 +11,17 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import RootRoutes from "./routes";
 import Store, { actions } from "./store";
-import "./TaskManager";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-
-import useCustomFonts from "src/styles/use-custom-fonts";
-import mixingFontStyle from "./styles/mixing-font-style";
 
 GoogleSignin.configure({
 	webClientId: "878799007977-cj3549ni87jre2rmg4eq0hiolp08igh2.apps.googleusercontent.com",
 });
 
-if (Platform.OS === "android") {
-	if (UIManager.setLayoutAnimationEnabledExperimental) {
-		UIManager.setLayoutAnimationEnabledExperimental(true);
-	}
-}
+// if (Platform.OS === "android") {
+// 	if (UIManager.setLayoutAnimationEnabledExperimental) {
+// 		UIManager.setLayoutAnimationEnabledExperimental(true);
+// 	}
+// }
 const AppCore = () => {
 	React.useEffect(() => {
 		(async () => {

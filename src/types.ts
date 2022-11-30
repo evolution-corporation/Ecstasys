@@ -7,56 +7,14 @@ import { FC } from "react";
 import type { useAppSelector, useAppDispatch } from "./store";
 import { ImageSourcePropType } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { Gender, PracticesMeditation, SubscribeType } from "./enum";
 
-/** Пол пользователя */
-export enum Gender {
-	/** Мужской */
-	MALE = "MALE",
-	/** Женский */
-	FEMALE = "FEMALE",
-	/** Другой/неопределенно */
-	OTHER = "OTHER",
-}
-
-/** Тип подписки пользователя строковой формат */
-export enum SubscribeType {
-	/** Пробная подписка в длинною 7 дней */
-	WEEK = "WEEK",
-	/** Подписка при которой будет происходить ежемесячное списание средств */
-	MONTH = "MONTH",
-	/** Подписка при которой будет происходить списание средств раз в 6 месяцев */
-	HALF_YEAR = "HALF_YEAR",
-}
-
-/** Практики медитаций поддерживаемы приложением */
-export enum PracticesMeditation {
-	/** Релаксации */
-	RELAXATION = "relaxation",
-	/** Дыхательные практики */
-	BREATHING_PRACTICES = "breathingPractices",
-	/** Практики направленной визуализации */
-	DIRECTIONAL_VISUALIZATIONS = "directionalVisualizations",
-	/** Танцевальные практики */
-	DANCE_PSYCHOTECHNICS = "dancePsychotechnics",
-	/** Практики базовой медитации */
-	BASIC = "basic",
-}
 /** Список экранов с приветствием */
 export enum GreetingScreen {
 	INTRO = "Intro",
 	GREETING = "Greeting",
 	DESCRIPTION_PRACTICES = "DescriptionPractices",
 	DESCRIPTION_DMD = "DescriptionDMD",
-}
-
-/** Статус авторизации аккаунта в приложении */
-export enum AccountStatus {
-	/** Данные пользователя найдены в системе Evolution и в Firebase */
-	REGISTRATION,
-	/** Данные пользователя не найдены в системе Evolution, но его данные найдены в Firebase */
-	NO_REGISTRATION,
-	/** Данные пользователя не найдены в системе Evolution и в Firebase */
-	NO_AUTHENTICATION,
 }
 
 // !
@@ -70,65 +28,61 @@ export interface UserInformation {
 	displayName?: string;
 	nickname: string;
 	birthday: Date;
-	image: ImageSourcePropType;
+	image?: string;
 	gender: Gender;
+	id: string;
 }
+
+export interface SubscribeInformation {
+	type: SubscribeType;
+	whenSubscribe: Date;
+	autoPayment: boolean;
+}
+
+export interface PracticeInformation {
+	id: string;
+	description: string;
+	name: string;
+	instruction: {
+		id: string;
+		title: string;
+		description: string;
+		body: { text: string }[];
+	};
+	image: string;
+	type: PracticesMeditation;
+	audio?: string;
+	isNeedSubscribe: boolean;
+	length: number;
+}
+
+export interface DMDInformation {
+	id: string;
+	name: string;
+	audio: string;
+	isNeedSubscribe: boolean;
+	length: number;
+}
+
+export type Serialization<Type> = {
+	[Property in keyof Type]: Type[Property] extends Date
+		? string
+		: Type[Property] extends number
+		? number
+		: Type[Property] extends object
+		? Serialization<Type[Property]>
+		: Type[Property];
+};
 
 // состояния
 export namespace State {
-	export type Gender = "MALE" | "FEMALE" | "OTHER";
-	export type AccountStatus = "REGISTRATION" | "NO_REGISTRATION" | "NO_AUTHENTICATION";
-	export type PracticesMeditation =
-		| "BASIC"
-		| "BREATHING_PRACTICES"
-		| "DANCE_PSYCHOTECHNICS"
-		| "DIRECTIONAL_VISUALIZATIONS"
-		| "RELAXATION";
-	export type SubscribeType = "WEEK" | "MONTH" | "HALF_YEAR";
-	export interface User {
-		/** Уникальный идентификатор пользователя в Firebase */
-		readonly uid: string;
-		/**	Отображаемое имя пользователя */
-		readonly displayName?: string;
-		/** Ссылка на изображения пользователя */
-		readonly image: string;
-		/** Дата рождения пользователя */
-		readonly birthday: string;
-		/** Уникальное имя пользователя */
-		readonly nickName: string;
-		/** Пол пользователя */
-		readonly gender: Gender;
-	}
-	export interface Account {
-		/** Уникальный идентификатор пользователя в системе */
-		readonly uid?: string;
-		/** Статус авторизации пользователя */
-		readonly status: AccountStatus;
-		/** Пользовательские данные аккаунта */
-		readonly userData?: User;
-		/** Измененные, но не сохраненные пользователем данные */
-		readonly changeUserData: ChangedUserData;
-		//!
-		readonly subscribe: State.Subscribe | null;
-	}
 	export interface Instruction {
 		readonly id: string;
 		readonly title: string;
 		readonly description: string;
 		readonly body: { text: string }[];
 	}
-	export interface ChangedUserData {
-		/** Обновленное уникальное имя пользователя */
-		readonly nickname?: string;
-		/** Новое изображения пользователя в Base64 */
-		readonly image?: string;
-		/** Новое отображаемое имя пользователя */
-		readonly displayName?: string;
-		/** Обновленная дата рождения пользователя */
-		readonly birthday?: string;
-		/** Когда был проверка вернула успешный результат nickname на валидность */
-		readonly lastCheckNicknameAndResult?: [string, boolean];
-	}
+
 	export interface Practice {
 		id: string;
 		description: string;
@@ -295,3 +249,13 @@ export type RootStackList = {
 };
 
 export type RootScreenProps<T extends keyof RootStackList> = FC<NativeStackScreenProps<RootStackList, T>>;
+
+export type CanSerialization<T> = {
+	toSerialization: () => Serialization<T>;
+};
+
+declare global {
+	interface String {
+		toPascalCase: () => string;
+	}
+}

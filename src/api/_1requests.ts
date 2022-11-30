@@ -8,153 +8,13 @@ import { RequestError } from "src/Errors";
 import { Gender, ServerEntities, SupportType } from "./types";
 import * as Storage from "./asyncStorage";
 import Constants from "expo-constants";
+import { Serialization, UserInformation } from "~types";
+
+import { composeUser } from "./converter";
 
 const { extra } = Constants.manifest ?? {};
 const { apiURL } = extra;
 const URL = "http://" + apiURL + "/";
-/**
- * Получает FirebaseToken пользователя
- * @returns FirebaseToken пользователя
- */
-async function getFirebaseToken(firebaseToken: string | undefined) {
-	if (firebaseToken === undefined) {
-		const tokenSaved = await Storage.getToken();
-		if (tokenSaved === null) {
-			const firebaseUser = auth().currentUser;
-			if (firebaseUser !== null) {
-				const { token, expirationTime } = await firebaseUser.getIdTokenResult(true);
-				firebaseToken = await Storage.saveToken(token, new Date(expirationTime));
-			}
-		} else {
-			firebaseToken = tokenSaved;
-		}
-	}
-	if (firebaseToken === undefined) {
-		throw new Error("User token not found");
-	}
-	return firebaseToken;
-}
-/**
- *	Возвращает пользователя по ID
- *	@param userId id пользователя данне которого необходимо получить
- *	@param firebaseTokenToken FirebaseToken пользователя от имени которого происходит запрос
- *	@return данные об пользователе которые хранятся на сервере, если он найден иначе null
- */
-export async function getUserById(userId: string, firebaseTokenToken?: string): Promise<ServerEntities.User | null> {
-	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const url = URL + "users?id=" + userId;
-	const requestServer = await fetch(url, {
-		method: "GET",
-		headers: {
-			Authorization: firebaseTokenToken,
-			"Content-Type": "application/json",
-		},
-	});
-	if (requestServer.status === 404) {
-		return null;
-	}
-	if (requestServer.status >= 500) {
-		throw new RequestError(`getUserById: ${await requestServer.text()}`, url, undefined, "GET", "50x");
-	}
-	const json = await requestServer.json();
-	return json as ServerEntities.User;
-}
-
-/**
- *	Отправляет запрос на создание пользователя серверу
- *	@param obj параметры функции
- *	@param obj.nickName уникальное имя пользователя
- *	@param obj.birthday дата рождения пользователя
- *	@param obj.image изображение пользователя
- *	@param firebaseTokenToken FirebaseToken пользователя от имени которого происходит запрос
- *	@return данные об новом пользователе
- */
-export async function createUser({ birthday, nickname, image }: CreateUserParams, firebaseTokenToken?: string) {
-	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const url = URL + "users";
-	const requestServer = await fetch(url, {
-		method: "POST",
-		headers: {
-			Authorization: firebaseTokenToken,
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify({
-			NickName: nickname,
-			Birthday: birthday.toISOString(),
-			Image: image,
-		}),
-	});
-	if (requestServer.status >= 500) {
-		throw new RequestError(
-			`createUser: ${await requestServer.text()}`,
-			url,
-			JSON.stringify({
-				NickName: nickname,
-				Birthday: birthday.toISOString(),
-				Image: image,
-			}),
-			"POST",
-			"50x"
-		);
-	}
-	const json = await requestServer.json();
-	return json as ServerEntities.User;
-}
-interface CreateUserParams {
-	readonly nickname: string;
-	readonly birthday: Date;
-	readonly image?: string;
-}
-
-/**
-		Отправляет запрос на обновление данных пользователя серверу
-		@param obj параметры функции
-		@param obj.nickname обновленный уникальное имя пользователя
-		@param obj.displayName обновленное имя пользователя
-		@param obj.birthday обновленная дата рождения пользователя
-		@param obj.image обновленное изображение пользователя
-		@param firebaseTokenToken FirebaseToken пользователя от имени которого происходит запрос
-		@return обновленные данные об пользователе
-	*/
-export async function updateUser(
-	{ birthday, displayName, image, nickname, gender }: UpdateUserParams,
-	firebaseTokenToken?: string
-) {
-	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const body: [string, any][] = [];
-	if (nickname !== undefined) body.push(["NickName", nickname]);
-	if (displayName !== undefined) body.push(["DisplayName", displayName]);
-	if (birthday !== undefined) body.push(["Birthday", birthday.toISOString()]);
-	if (image !== undefined) body.push(["Image", image]);
-	if (gender !== undefined) body.push(["Gender", gender]);
-	const url = URL + "users";
-	const requestServer = await fetch(url, {
-		method: "PATCH",
-		headers: {
-			Authorization: firebaseTokenToken,
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify(Object.fromEntries(body)),
-	});
-	if (requestServer.status >= 500) {
-		throw new RequestError(
-			`updateUser: ${await requestServer.text()}`,
-			url,
-			JSON.stringify(Object.fromEntries(body)),
-			"PATCH",
-			"50x"
-		);
-	}
-	const json = await requestServer.json();
-	return json as ServerEntities.User;
-}
-interface UpdateUserParams {
-	nickname?: string;
-	displayName?: string;
-	image?: string;
-	birthday?: Date;
-	gender?: Gender;
-}
 
 /**
  * Возвращает популярную медитацию за сутки
@@ -254,24 +114,23 @@ export async function getCountMeditationsByType(
  * @param firebaseTokenToken FirebaseToken пользователя от имени которого происходит запрос
  * @return Данные об подписке пользователя
  */
-export async function getSubscribeUserInformation(
-	firebaseTokenToken?: string
-): Promise<ServerEntities.Subscribe | null> {
-	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const requestServer = await fetch(URL + "subscribe/" + false, {
-		headers: {
-			Authorization: firebaseTokenToken,
-			"Content-Type": "application/json",
-		},
-	});
-	if (requestServer.status === 404) {
-		return null;
+export async function getSubscribeUserInformation(options: { signal?: AbortSignal } = {}) {
+	try {
+		const requestServer = await getRequest("subscribe/" + false, options.signal);
+		if (requestServer.status === 404) {
+			return;
+		}
+		if (requestServer.status >= 500) {
+			throw new Error(`Server Error in getSubscribeUserInformation: ${await requestServer.text()}`);
+		}
+
+		return await requestServer.toSubscribe();
+	} catch (error) {
+		if (error instanceof Error && error.name == "AbortError") {
+		} else {
+			throw error;
+		}
 	}
-	if (requestServer.status >= 500) {
-		throw new Error(`Server Error in getSubscribeUserInformation: ${await requestServer.text()}`);
-	}
-	const json = await requestServer.json();
-	return json as ServerEntities.Subscribe;
 }
 
 /**
@@ -314,35 +173,6 @@ export async function redirectPaymentURL(subscribeType: SupportType.SubscribeTyp
  * @param firebaseTokenToken FirebaseToken пользователя от имени которого происходит запрос
  * @return Информация об пользователе или null если пользователь с таким nickname не найден
  */
-export async function getUserByNickname(
-	nickname: string,
-	options: { firebaseTokenToken?: string; signal?: AbortSignal } = {}
-) {
-	const firebaseTokenToken = await getFirebaseToken(options.firebaseTokenToken);
-	const url = URL + "nickname?nickname=" + nickname;
-	try {
-		const requestServer = await fetch(url, {
-			headers: {
-				Authorization: firebaseTokenToken,
-				"Content-Type": "application/json",
-			},
-			signal: options.signal,
-		});
-		if (requestServer.status === 404) {
-			return null;
-		}
-		if (requestServer.status >= 500) {
-			throw new RequestError(`getUserByNickname: ${await requestServer.text()}`, url, undefined, "GET", "50x");
-		}
-		const json = await requestServer.json();
-		return json.length as ServerEntities.User;
-	} catch (error) {
-		if (error instanceof Error && error.name == "AbortError") {
-		} else {
-			throw error;
-		}
-	}
-}
 
 //!
 export async function checkAccess() {
