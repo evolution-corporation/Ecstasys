@@ -8,9 +8,15 @@ import Tools from "~core";
 
 import Check from "./assets/Check.svg";
 import i18n from "~i18n";
+import { actions, useAppDispatch } from "~store";
 
-const ResultSubscribeScreen = ({ route = { params: { status: "Edit" } } }) => {
+const ResultSubscribeScreen = ({ route = { params: { status: "Edit" } }, navigation }) => {
 	const { params } = route;
+	const appDispatch = useAppDispatch();
+	React.useEffect(() => {
+		appDispatch(actions.getSubs());
+	}, []);
+
 	return (
 		<View style={styles.background}>
 			<View style={{ flex: 1 }} />
@@ -39,7 +45,13 @@ const ResultSubscribeScreen = ({ route = { params: { status: "Edit" } } }) => {
 			</View>
 
 			<View style={styles.bottomBlock}>
-				<ColorButton styleText={styles.colorButtonText} styleButton={styles.colorButton}>
+				<ColorButton
+					styleText={styles.colorButtonText}
+					styleButton={styles.colorButton}
+					onPress={() => {
+						navigation.navigate("TabNavigator");
+					}}
+				>
 					{i18n.t("ready")}
 				</ColorButton>
 			</View>

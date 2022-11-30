@@ -1,6 +1,7 @@
 /** @format */
 
 import { createReducer } from "@reduxjs/toolkit";
+import { Converter } from "~api";
 import { State } from "~types";
 
 import Actions from "../actions";
@@ -53,7 +54,7 @@ export default createReducer<AccountState>(
 						image: user.image,
 						gender: user.gender,
 					};
-					
+
 					if (subscribe !== null) {
 						state.subscribe = {
 							autoPayment: subscribe.autoPayment,
@@ -123,6 +124,9 @@ export default createReducer<AccountState>(
 		});
 		builder.addCase(Actions.setNotNewUser, state => {
 			state.isNewUser = false;
+		});
+		builder.addCase(Actions.getSubs.fulfilled, (state, { payload }) => {
+			state.subscribe = Converter.composeSubscribe(payload) ?? undefined;
 		});
 	}
 );

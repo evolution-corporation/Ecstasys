@@ -41,7 +41,7 @@ const SelectTimeForRelax: RootScreenProps<"SelectTimeForRelax"> = ({ navigation,
 
 	return (
 		<View style={styles.background}>
-			<View style={{ flex: 1, width: "100%" }}>
+			<View style={{ width: "100%", height: Dimensions.get("window").height - 420 - 55 }}>
 				<View style={styles.topContent}>
 					<SharedElement id={`practice.item.${selectedPractice.id}`} style={styles.image}>
 						<Image source={{ uri: selectedPractice.image }} style={{ width: "100%", height: "100%" }} />
@@ -56,21 +56,29 @@ const SelectTimeForRelax: RootScreenProps<"SelectTimeForRelax"> = ({ navigation,
 						</LinearGradient>
 					</View>
 				</View>
+			</View>
+			<View
+				style={{
+					width: window.width,
+					height: 420,
+					justifyContent: "flex-start",
+					paddingHorizontal: 20,
+				}}
+			>
 				<Text style={styles.mainText}>
 					{i18n.t("e233a33c-3f87-4695-b7ac-29d57ff11ad2")}{" "}
 					<Text style={styles.boldMainText}>{i18n.t("399ca325-5376-44e1-8767-f07451e209e8")}</Text>
 				</Text>
-			</View>
-			<View style={{ width: window.width, height: 420, justifyContent: "flex-end", paddingHorizontal: 20 }}>
-				<SelectTime
-					ref={selectTime}
-					start={[Math.floor(selectedPractice.length / 60000), Math.floor((selectedPractice.length % 60000) / 1000)]}
-					end={[25, 0]}
-					style={{ alignSelf: "center" }}
-					onChange={([minute, second]) => {
-						setMilliseconds((minute * 60 + second) * 1000);
-					}}
-				/>
+				<View style={{ justifyContent: "center", flex: 1, alignItems: "center" }}>
+					<SelectTime
+						ref={selectTime}
+						start={[Math.floor(selectedPractice.length / 60000), Math.floor((selectedPractice.length % 60000) / 1000)]}
+						end={[25, 0]}
+						onChange={([minute, second]) => {
+							setMilliseconds((minute * 60 + second) * 1000);
+						}}
+					/>
+				</View>
 				<TextButton
 					styleText={styles.resetDefault}
 					onPress={() => {
@@ -160,6 +168,6 @@ const styles = StyleSheet.create({
 		color: "#C2A9CE",
 		fontSize: 12,
 		...gStyle.font("500"),
-		marginBottom: 10,
+		marginBottom: 32,
 	},
 });

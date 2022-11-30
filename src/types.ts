@@ -277,13 +277,16 @@ export type RootStackList = {
 	Payment: {
 		selectSubscribe: State.SubscribeType;
 	};
-	ConfirmationSignOut: undefined,
-	InputNameAndSelectGender: undefined,
-	ByMaySubscribe: undefined,
+	ConfirmationSignOut: undefined;
+	InputNameAndSelectGender: undefined;
+	ByMaySubscribe: undefined;
 	PlayerMeditationDot: {
 		isNeedVoice: boolean;
 		practiceLength: number;
-	}
+	};
+	ResultSubscribeScreen: {
+		status: "Edit" | "Designations";
+	};
 };
 
 export type RootScreenProps<T extends keyof RootStackList> = FC<NativeStackScreenProps<RootStackList, T>>;

@@ -182,11 +182,7 @@ const PlayerMeditationOnTheNose: RootScreenProps<"PlayerMeditationOnTheNose"> = 
 				<View style={[styles.timeInfoBox]}>
 					<Pressable
 						style={styles.buttonBackgroundSound}
-						onPress={() =>
-							navigation.navigate("SelectBackgroundSound", {
-								backgroundImage: require("assets/BaseMeditationImage/Nose.png"),
-							})
-						}
+						onPress={() => navigation.navigate("SelectBackgroundSound", {})}
 					>
 						<Headphones style={{ marginRight: 24 }} />
 						<Text style={styles.buttonBackgroundText}>

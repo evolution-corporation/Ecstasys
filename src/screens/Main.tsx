@@ -140,7 +140,7 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 				}}
 			>
 				<RN.ImageBackground
-					source={require("/assets/djfgm.png")}
+					source={require("assets/mount-kilimanjaro-g2cd7e043a_19202.png")}
 					style={styles.imageGreeting}
 					imageStyle={{ top: -40 }}
 				>

@@ -299,7 +299,12 @@ export async function getPaymentURL(subscribeType: SupportType.SubscribeType, fi
 
 export async function redirectPaymentURL(subscribeType: SupportType.SubscribeType, firebaseTokenToken?: string) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const url = URL + "payment?type=" + 0 + "&needRecurrent=" + (subscribeType === "Week" ? "false" : "true");
+	const url =
+		URL +
+		"payment?type=" +
+		(subscribeType === "Week" ? 0 : subscribeType === "Month" ? 1 : 2) +
+		"&needRecurrent=" +
+		(subscribeType === "Week" ? "false" : "true");
 
 	return {
 		uri: url,
@@ -414,4 +419,25 @@ export async function getRecommendationMeditation(firebaseTokenToken?: string) {
 
 	const json = (await requestServer.json())[0];
 	return json as ServerEntities.Meditation;
+}
+
+export async function getSubscribeUserInformationSubs(
+	firebaseTokenToken?: string
+): Promise<ServerEntities.Subscribe | null> {
+	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
+	console.log(URL + "subscribe/" + false);
+	const requestServer = await fetch(URL + "subscribe/" + true, {
+		headers: {
+			Authorization: firebaseTokenToken,
+			"Content-Type": "application/json",
+		},
+	});
+	if (requestServer.status === 404 || requestServer.status === 204) {
+		return null;
+	}
+	if (requestServer.status >= 500) {
+		throw new Error(`Server Error in getSubscribeUserInformation: ${await requestServer.text()}`);
+	}
+	const json = await requestServer.json();
+	return json as ServerEntities.Subscribe;
 }

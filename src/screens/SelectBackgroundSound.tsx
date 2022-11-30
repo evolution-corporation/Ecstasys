@@ -33,7 +33,12 @@ const SelectBackgroundSound: RootScreenProps<"SelectBackgroundSound"> = ({ navig
 	return (
 		<View style={styles.background}>
 			{backgroundImage && <Image blurRadius={2} source={backgroundImage} style={styles.background} />}
-			<View style={[styles.contentWrapper, { paddingTop: 55 }]}>
+			<View
+				style={[
+					styles.contentWrapper,
+					{ paddingTop: 55, backgroundColor: backgroundImage ? "rgba(0, 0, 0, 0.6)" : undefined },
+				]}
+			>
 				<View style={styles.backgroundSoundList}>
 					{Object.entries(BackgroundSound).map(item => (
 						<Pressable
@@ -89,17 +94,18 @@ const styles = StyleSheet.create({
 		width: "100%",
 		height: "100%",
 		position: "absolute",
+		backgroundColor: "#9765A8",
 	},
 	contentWrapper: {
 		width: "100%",
 		height: "100%",
-		backgroundColor: "rgba(0, 0, 0, 0.6)",
 		justifyContent: "space-between",
 		paddingBottom: 30,
 		paddingHorizontal: 20,
 	},
 	backgroundSoundList: {
 		flexDirection: "row",
+		paddingTop: 20,
 	},
 	iconBackgroundSound: {
 		borderRadius: 20,

@@ -2,7 +2,7 @@
 
 import React, { ElementRef, useCallback, useRef, useState } from "react";
 import { StyleSheet, Text, View, Image, Button, Pressable, Dimensions } from "react-native";
-import Animated from "react-native-reanimated";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import Swiper from "react-native-swiper";
 import i18n from "~i18n";
 
@@ -20,25 +20,25 @@ import { Storage } from "~api";
 const swiperContent = [
 	{
 		name: "relaxation",
-		title: "relaxation",
+		title: "0af6a319-a325-44d1-a454-5f3e1133d3f4",
 		text: "7b205d68-98a8-4f07-8a4c-347fe65a0961",
 		image: require("./assets/relax.png"),
 	},
 	{
 		name: "visualizations",
-		title: "directionalVisualizations",
+		title: "6b062117-66f9-4d99-a609-e0eafc69d42f",
 		text: "0808c3b7-8eda-403a-8b7d-515aa50c7723",
 		image: require("./assets/Visualizations.png"),
 	},
 	{
 		name: "breath",
-		title: "6190a615-02b9-4860-91bd-f2d94c0a8849",
+		title: "6c54f2fa-93eb-495c-a51b-039aee5cfcd1",
 		text: "0894c96e-83bf-4c27-b498-c3d6b51251b5",
 		image: require("./assets/breath.png"),
 	},
 	{
 		name: "base",
-		title: "baseMeditation",
+		title: "48832a25-622d-4251-b147-ea6ebd134632",
 		text: "4cb7de64-0c26-4200-af9d-0e2cb533760c",
 		image: require("./assets/base.png"),
 	},
@@ -51,11 +51,9 @@ const swiperContent = [
 ];
 
 const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation }) => {
-	const { aStyle, firstPage, twoPage } = useAnimation();
 	const [isGreeting, setIsGreeting] = useState<boolean>(true);
-	const refSwiper = useRef<ElementRef<typeof Swiper>>(null);
-	const indexSwiper = useRef<number>(0);
 
+	const [indexSelect, setSelectedIndex] = React.useState<number>(0);
 	useFocusEffect(
 		useCallback(() => {
 			StatusBar.setStatusBarHidden(true, "none");
@@ -69,49 +67,53 @@ const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation })
 
 	return (
 		<View style={styles.background}>
-			<Animated.View style={[styles.birdProffessor, aStyle.bird]}>
-				<Image source={require("./assets/BirdProfessor.png")} />
-			</Animated.View>
-			{isGreeting && <View style={{ flex: 2 }} />}
-			<View style={{ flex: 1 }}>
-				{isGreeting ? (
-					<>
-						<Text style={styles.title}>{i18n.t("3410ac11-a61b-49f7-b7e4-3bbc2998f1c2")}</Text>
-						<Text style={styles.text}>{i18n.t("42ccdb27-d3ef-4a77-89bf-89138155211e")}</Text>
-					</>
-				) : (
-					<Swiper
-						dotColor={"rgba(231, 221, 236, 0.5))"}
-						activeDotColor={"#E7DDEC"}
-						loop={false}
-						ref={refSwiper}
-						onIndexChanged={index => {
-							indexSwiper.current = index;
-						}}
-					>
-						{swiperContent.map(item => (
-							<View key={item.name} style={styles.card}>
-								<Image source={item.image} style={styles.logoCategory} />
-								<Text style={[styles.titleCategory, item.name === "dmd" ? { width: 400 } : null]}>
-									{i18n.t(item.title)}
-								</Text>
+			{isGreeting ? null : (
+				<Image
+					source={require("./assets/Vector403.png")}
+					style={{
+						position: "absolute",
+						width: Dimensions.get("window").width,
+						bottom: 0,
+						height: (795 / 1125) * Dimensions.get("window").width,
+					}}
+					resizeMode={"contain"}
+				/>
+			)}
+			{isGreeting ? (
+				<View style={{ flex: 1 }}>
+					<View style={{ flex: 1 }}>
+						<Image source={require("./assets/BirdProfessor.png")} style={{ width: "100%", height: "100%" }} />
+					</View>
+					<Text style={styles.title}>{i18n.t("3410ac11-a61b-49f7-b7e4-3bbc2998f1c2")}</Text>
+					<Text style={styles.text}>{i18n.t("42ccdb27-d3ef-4a77-89bf-89138155211e")}</Text>
+				</View>
+			) : (
+				<View style={{ flex: 1 }}>
+					{
+						swiperContent.map(item => (
+							<Animated.View key={item.name} style={styles.card} entering={FadeIn} exiting={FadeOut}>
+								<View style={{ flex: 1, width: "100%" }}>
+									<Image source={item.image} style={styles.logoCategory} />
+								</View>
+								<Text style={[styles.titleCategory]}>{i18n.t(item.title)}</Text>
 								<Text style={styles.textCategory}>{i18n.t(item.text)}</Text>
-							</View>
-						))}
-					</Swiper>
-				)}
-			</View>
+							</Animated.View>
+						))[indexSelect]
+					}
+				</View>
+			)}
+
 			<View style={styles.buttonControl}>
 				{isGreeting ? (
 					<TextButton onPress={() => end()}>{i18n.t("skip")}</TextButton>
 				) : (
 					<Pressable
+						style={{ width: 40, height: 40, justifyContent: "center", alignItems: "center" }}
 						onPress={() => {
-							if (indexSwiper.current === 0) {
-								firstPage();
-								setIsGreeting(true);
+							if (indexSelect > 0) {
+								setSelectedIndex(prev => prev - 1);
 							} else {
-								refSwiper.current?.scrollBy(-1);
+								setIsGreeting(true);
 							}
 						}}
 					>
@@ -123,14 +125,11 @@ const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation })
 					styleButton={styles.buttonNext}
 					onPress={() => {
 						if (isGreeting) {
-							twoPage();
 							setIsGreeting(false);
+						} else if (indexSelect < swiperContent.length - 1) {
+							setSelectedIndex(prev => prev + 1);
 						} else {
-							if (indexSwiper.current + 1 < swiperContent.length) {
-								refSwiper.current?.scrollBy(1);
-							} else {
-								end();
-							}
+							end();
 						}
 					}}
 				/>
@@ -171,6 +170,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		width: "100%",
 		alignSelf: "center",
+		alignItems: "center",
 		justifyContent: "space-between",
 		marginTop: 45,
 		paddingHorizontal: 20,
@@ -183,9 +183,11 @@ const styles = StyleSheet.create({
 	},
 	logoCategory: {
 		width: "100%",
+		height: "100%",
 	},
 	card: {
 		alignItems: "center",
+		flex: 1,
 	},
 	titleCategory: {
 		color: "#3D3D3D",
@@ -193,7 +195,6 @@ const styles = StyleSheet.create({
 		fontFamily: "Inter_700Bold",
 		marginVertical: 16,
 		textAlign: "center",
-		width: 180,
 	},
 	textCategory: {
 		color: "rgba(64, 64, 64, 0.71)",

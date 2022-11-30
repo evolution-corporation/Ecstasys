@@ -63,7 +63,13 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 				<Pressable
 					style={{ top: -6, marginLeft: 15 }}
 					onPress={() => {
-						setSelectedSetIndex(Math.floor(Math.random() * setList.length));
+						const index = Math.floor(Math.random() * setList.length);
+						if (height >= 800) {
+							setSelectedSetIndex(index);
+						} else {
+							appDispatch(actions.setSetForDMD(setList[index]));
+							navigation.navigate("DMDSettingNotification", { selectedRelax });
+						}
 					}}
 				>
 					<LinearGradient colors={["#75348B", "#6A2382"]} style={styles.randomButton}>

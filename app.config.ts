@@ -21,7 +21,7 @@ function generateConfig(): ExpoConfig {
 		year: toDay.getFullYear(),
 	};
 	let versionCode = Number(`${date.year}${date.month}${date.date}0`);
-	versionCode += 0;
+	versionCode += 2;
 	return {
 		jsEngine: "hermes",
 		name: appName,
@@ -58,7 +58,7 @@ function generateConfig(): ExpoConfig {
 		ios: {
 			googleServicesFile: "./GoogleService-Info.plist",
 			bundleIdentifier: "com.evodigital.dmdmeditation",
-			buildNumber: versionCode.toString()
+			buildNumber: versionCode.toString(),
 		},
 		plugins: [
 			"expo-dev-client",

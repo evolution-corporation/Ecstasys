@@ -237,11 +237,7 @@ const PlayerMeditationOnTheMandala: RootScreenProps<"PlayerMeditationOnTheMandal
 				/>
 				<Pressable
 					style={styles.buttonBackgroundSound}
-					onPress={() =>
-						navigation.navigate("SelectBackgroundSound", {
-							backgroundImage: mandala,
-						})
-					}
+					onPress={() => navigation.navigate("SelectBackgroundSound", {})}
 				>
 					<Headphones style={{ marginRight: 24 }} />
 					<Text style={styles.buttonBackgroundText}>

@@ -27,7 +27,7 @@ export const IsFavorite: React.FC<Props> = props => {
 };
 
 export function OnFavoritePractice(WrapperComponent: React.FC<Props>) {
-	return (props: { practice: State.Practice, noShowWereNoFavorite?: boolean } & ViewProps) => {
+	return (props: { practice: State.Practice; noShowWereNoFavorite?: boolean } & ViewProps) => {
 		const { practice, style, noShowWereNoFavorite = false } = props;
 		const isFavorite = useAppSelector(
 			store => store.practice.listPracticesFavorite.findIndex(({ id }) => practice.id === id) !== -1
@@ -40,8 +40,9 @@ export function OnFavoritePractice(WrapperComponent: React.FC<Props>) {
 				appDispatch(actions.addFavoritePractice(practice));
 			}
 		};
-
-		return noShowWereNoFavorite && !isFavorite ? null : <WrapperComponent isFavorite={isFavorite} onPress={changeResult} style={style} />;
+		return noShowWereNoFavorite && !isFavorite ? null : (
+			<WrapperComponent isFavorite={isFavorite} onPress={changeResult} style={style} />
+		);
 	};
 }
 

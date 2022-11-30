@@ -4,7 +4,7 @@ import React from "react";
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { RootScreenProps, SubscribeType } from "~types";
 import { WebView } from "react-native-webview";
-import { Request } from "~api";
+import { Converter, Request } from "~api";
 import { SupportType } from "src/api/types";
 import { Screen } from "~components/containers";
 
@@ -28,24 +28,33 @@ const Payment: RootScreenProps<"Payment"> = ({ navigation, route }) => {
 		}
 		if (ty !== undefined) {
 			Request.redirectPaymentURL(ty).then(r => {
-				console.log(r);
 				setDataForRequest(r);
 			});
 		}
+
+		// Request.getSubscribeUserInformationSubs().then(r => {
+		// 	const b = Converter.composeSubscribe(r);
+		// 	console.log(b);
+		// });
 	}, []);
 	return (
 		<Screen backgroundColor={"#9765A8"} paddingHorizontalOff>
 			{dataForRequest !== null ? (
 				<WebView
 					source={dataForRequest}
+					useWebView2
+					onLoad={({ nativeEvent: { url, mainDocumentURL } }) => {
+						console.log(url, mainDocumentURL);
+					}}
 					style={{ width: "100%", height: "100%" }}
 					onNavigationStateChange={({ url }) => {
-						if (url === "https://securepay.tinkoff.ru/html/payForm/success.html") {
-							console.log("sus");
-						} else if (url === "https://securepay.tinkoff.ru/html/payForm/fail.html") {
-							console.log("erro");
-						} else {
-							console.log(url);
+						console.log(url);
+						if (url.includes("https://evodigital.one/success")) {
+							navigation.navigate("ResultSubscribeScreen", { status: "Designations" });
+						} else if (url.includes("https://evodigital.one/fail")) {
+							navigation.navigate("ResultSubscribeScreen", { status: "Fail" });
+						} else if (url.includes("https://evodigital.one/")) {
+							navigation.goBack();
 						}
 					}}
 				/>

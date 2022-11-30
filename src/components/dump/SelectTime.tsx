@@ -33,7 +33,7 @@ const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
 		const _seconds: Array<{ text: string | null; value: number }> = [];
 
 		for (
-			let i = selectedIndexMinute === 2 ? start[1] : 0;
+			let i = selectedIndexMinute === 0 ? start[1] : 0;
 			i <= (selectedIndexMinute === minutes.length - 1 ? end[1] : 59);
 			i++
 		) {
@@ -43,12 +43,16 @@ const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
 	}, [start, end, selectedIndexMinute]);
 
 	const _viewabilityConfig = React.useRef<ViewabilityConfig>({
-		// viewAreaCoveragePercentThreshold: 100,
-		itemVisiblePercentThreshold: 100,
+		viewAreaCoveragePercentThreshold: 100,
+		//itemVisiblePercentThreshold: 100,
 		waitForInteraction: false,
 	}).current;
 
 	const _onViewableItemsChangedMinute = React.useRef(({ viewableItems }: { viewableItems: ViewToken[] }) => {
+		console.log(
+			viewableItems.length,
+			viewableItems.map(item => item.item)
+		);
 		if (viewableItems.length > 0) {
 			const mediumIndex = Math.floor(viewableItems.length / 2);
 			if (viewableItems[mediumIndex].index !== null) {
@@ -110,7 +114,7 @@ const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
 				viewabilityConfig={_viewabilityConfig}
 				onViewableItemsChanged={_onViewableItemsChangedMinute}
 				contentContainerStyle={{
-					paddingTop: styles.numberGeneral.height * 2,
+					paddingTop: styles.numberGeneral.height,
 					paddingBottom: styles.numberGeneral.height,
 				}}
 				style={[styles.selected, { left: 0 }]}
@@ -145,7 +149,7 @@ const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
 				viewabilityConfig={_viewabilityConfig}
 				onViewableItemsChanged={_onViewableItemsChangedSecond}
 				contentContainerStyle={{
-					paddingTop: styles.numberGeneral.height * 2,
+					paddingTop: styles.numberGeneral.height,
 					paddingBottom: styles.numberGeneral.height,
 				}}
 				style={[styles.selected, { right: 0 }]}
@@ -165,11 +169,11 @@ const styles = StyleSheet.create({
 	container: {
 		alignItems: "center",
 		height: "100%",
-		maxHeight: 250,
+		maxHeight: 162,
 		justifyContent: "center",
 		flexDirection: "row",
 		width: 200,
-		overflow: "hidden",
+		// overflow: "hidden",
 	},
 	numberGeneral: {
 		width: 54,
@@ -196,10 +200,10 @@ const styles = StyleSheet.create({
 	},
 	selected: {
 		width: 60,
-		top: -55,
+		top: -0,
 		bottom: -55,
 		position: "absolute",
-		height: 220,
+		height: 160,
 	},
 });
 

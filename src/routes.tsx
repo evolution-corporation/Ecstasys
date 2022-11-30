@@ -32,6 +32,8 @@ import ArrowBack from "assets/icons/ArrowBack.svg";
 const TabNavigator = createBottomTabNavigator<TabNavigatorList>();
 
 const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
+	const insets = useSafeAreaInsets();
+
 	return (
 		<TabNavigator.Navigator
 			screenOptions={{
@@ -45,6 +47,7 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
 					flex: 0,
 					paddingHorizontal: 40,
 					maxWidth: Dimensions.get("window").width / 4,
+					marginBottom: insets.bottom,
 				},
 				headerShown: false,
 			}}
@@ -258,6 +261,7 @@ const RootRoutes: FC = () => {
 						component={Screens.ByMaySubscribe}
 						options={{ presentation: "transparentModal", headerShown: false }}
 					/>
+					<RootNavigation.Screen name={"ResultSubscribeScreen"} component={Screens.ResultSubscribe} />
 					<RootNavigation.Screen
 						name={"PlayerMeditationDot"}
 						component={Screens.PlayerMeditationDot}
@@ -311,7 +315,7 @@ const RootRoutes: FC = () => {
 							>
 								{options.title}
 							</Text>
-							<View>{}</View>
+							<View>{options.headerRight !== undefined ? options.headerRight({}) : null}</View>
 						</View>
 					);
 				},

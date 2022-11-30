@@ -5,7 +5,7 @@ import { Image, StyleSheet, View, Text, AppState, ActivityIndicator, Platform, P
 import Animated from "react-native-reanimated";
 import Headphones from "assets/icons/Headphones_white.svg";
 
-import { TimeLine, PlayerControl, ColorButton } from "~components/dump";
+import { TimeLine, PlayerControl, ColorButton, IsFavorite } from "~components/dump";
 
 import { RootScreenProps } from "~types";
 
@@ -167,6 +167,9 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 			}
 		};
 		init();
+		navigation.setOptions({
+			headerRight: () => <IsFavorite practice={selectedPractice} />,
+		});
 		return () => {
 			Promise.all([
 				new Promise(resolve =>
@@ -256,8 +259,6 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 		}, [])
 	);
 
-	
-
 	return (
 		<View style={{ flex: 1 }}>
 			<StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
@@ -269,7 +270,7 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 					style={{ width: "100%", height: "100%" }}
 				/>
 			</SharedElement>
-			<Animated.View style={[styles.background]}>
+			<View style={[styles.background]}>
 				<View style={styles.panelControlContainer}>
 					{statusPractice === StatusPractice.Loading ? (
 						<ActivityIndicator color={"#FFFFFF"} size={"large"} />
@@ -315,19 +316,26 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 							{i18n.strftime(new Date(length - 5 * 3600 * 1000), "%-H:%M:%S")}
 						</Text>
 					</View>
-					<Pressable style={styles.buttonBackgroundSound} onPress={() => navigation.navigate("SelectBackgroundSound", {
-							backgroundImage: { uri: image },
-						})}>
-					<Headphones style={{ marginRight: 24 }} />
-					<Text style={styles.buttonBackgroundText}>{i18n.t(
-							currentNameBackgroundSound !== null
-								? BackgroundSound[currentNameBackgroundSound].translate
-								: "12ee6d3a-ad58-4c4a-9b87-63645efe9c90"
-						)}</Text>
+					<Pressable
+						style={styles.buttonBackgroundSound}
+						onPress={() =>
+							navigation.navigate("SelectBackgroundSound", {
+								backgroundImage: { uri: image },
+							})
+						}
+					>
+						<Headphones style={{ marginRight: 24 }} />
+						<Text style={styles.buttonBackgroundText}>
+							{i18n.t(
+								currentNameBackgroundSound !== null
+									? BackgroundSound[currentNameBackgroundSound].translate
+									: "12ee6d3a-ad58-4c4a-9b87-63645efe9c90"
+							)}
+						</Text>
 					</Pressable>
-				
 				</View>
-			</Animated.View>
+			</View>
+			<Animated.View></Animated.View>
 		</View>
 	);
 };
@@ -378,14 +386,14 @@ const styles = StyleSheet.create({
 		marginTop: 17,
 		height: 50,
 		borderRadius: 25,
-		flexDirection: 'row',
-		justifyContent: 'center',
-		alignItems: 'center'
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
 	},
 	buttonBackgroundText: {
 		color: "#FFFFFF",
-		...gStyle.font('500'),
-		fontSize: 14
+		...gStyle.font("500"),
+		fontSize: 14,
 	},
 	buttonControl: {
 		backgroundColor: "rgba(61, 61, 61, 0.5)",

@@ -13,7 +13,7 @@ import { DoubleColorView } from "~components/containers";
 import i18n from "~i18n";
 import { CarouselPractices } from "~components/dump";
 import { useFocusEffect } from "@react-navigation/native";
-import { actions, useAppDispatch } from "~store";
+import { actions, useAppDispatch, useAppSelector } from "~store";
 import { Converter, Request, Storage } from "~api";
 import { StatusBar } from "expo-status-bar";
 import gStyle from "~styles";
@@ -29,21 +29,44 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 			opacity: withTiming(opacityButton.value),
 		})),
 	};
+	const isSubscribe = useAppSelector(store => {
+		if (store.account.subscribe !== undefined) {
+			const endSubscribe = new Date(store.account.subscribe.whenSubscribe);
 
+			endSubscribe.setDate(
+				endSubscribe.getDate() +
+					(() => {
+						switch (store.account.subscribe.type) {
+							case "WEEK":
+								return 7;
+							case "MONTH":
+								return 30;
+							case "HALF_YEAR":
+								return 180;
+							default:
+								return 0;
+						}
+					})()
+			);
+			return endSubscribe.getTime() > Date.now();
+		} else {
+			return false;
+		}
+	});
 	useFocusEffect(
 		useCallback(() => {
 			(async () => {
 				const newListPractice = (await Request.getMeditationsByType("relaxation"))
 					.map(practice => Converter.composePractice(practice))
 					.filter(practice => practice !== null) as State.Practice[];
-				setPracticeList(newListPractice);
+				setPracticeList(newListPractice.map(item => ({ ...item, isPermission: isSubscribe })));
 			})();
 		}, [])
 	);
 
 	const onClick = (practiceId: string) => {
 		const practiceIndex = practiceList.findIndex(item => item.id === practiceId);
-		if (practiceIndex !== -1 && practiceList[practiceIndex].type === "RELAXATION") {
+		if (practiceIndex !== -1 && practiceList[practiceIndex].type === "RELAXATION" && isSubscribe) {
 			dispatch(actions.setOptionForDMD(practiceList[practiceIndex]));
 			navigation.navigate("SelectSet", { selectedRelax: practiceList[practiceIndex] });
 		}

@@ -72,12 +72,12 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 	const closeList = () => {
 		_RigthtBottomRadiusBackground.value = 15;
 		_RotateArrow.value = "180deg";
-		customModalRef.current?.close()
+		customModalRef.current?.close();
 	};
 
-	const [ySelectGender, setYSelectGender] = React.useState<number | null>(null)
+	const [ySelectGender, setYSelectGender] = React.useState<number | null>(null);
 
-	const [widthSelectGender, setWidthSelectGender] = React.useState<number | null>(null)
+	const [widthSelectGender, setWidthSelectGender] = React.useState<number | null>(null);
 
 	return (
 		<Screen
@@ -96,71 +96,108 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 						initImage={image}
 					/>
 				)}
-				<Animated.View style={[{ width: "100%",
-		height: 45,
-		flexDirection: "row",
-		borderWidth: 1,
+				<Animated.View
+					style={[
+						{
+							width: "100%",
+							height: 45,
+							flexDirection: "row",
+							borderWidth: 1,
 
-		borderRadius: 15,
+							borderRadius: 15,
 
-		backgroundColor: "rgba(240, 242, 238, 0.19)",
+							backgroundColor: "rgba(240, 242, 238, 0.19)",
 
-		paddingHorizontal: 15,
+							paddingHorizontal: 15,
 
-		borderColor: "rgba(194, 169, 206, 1)",
+							borderColor: "rgba(194, 169, 206, 1)",
 
-		marginVertical: 7.5,
- }, backgroundAnimatedStyle]}
- onLayout={({ nativeEvent: { layout } })=>{
-	setYSelectGender(layout.height + layout.y + 55)
-}}>
-				<TextInput
-					style={styles.TextInputTransparent}
-					key={"name"}
-					placeholder={i18n.t("b89f2757-8b5e-4a08-b8f8-1bbe87834f3e")}
-					placeholderTextColor={"rgba(231, 221, 236, 1)"}
-					onChangeText={text => {
-						dispatch(actions.addChangedInformationUser({ displayName: text }));
+							marginVertical: 7.5,
+						},
+						backgroundAnimatedStyle,
+					]}
+					onLayout={({ nativeEvent: { layout } }) => {
+						setYSelectGender(layout.height + layout.y + 55);
 					}}
-					defaultValue={changedData.displayName ?? displayName}
-					
-				/>
-					<Pressable style={{ height: '100%', justifyContent: 'center', alignItems: 'center', flexDirection: 'row', borderLeftColor: "rgba(194, 169, 206, 1)", borderLeftWidth: 1, width: 120 }} onPress={() => openList()}>
-						<Text style={{ color: '#FFF', fontSize: 13, ...gStyle.font('400'), marginRight: 5 }}>{(changedData.gender ?? gender) === 'FEMALE' ? i18n.t('83dfa634-dd9f-4dce-ab9e-6d6961a296f7') : (changedData.gender ?? gender) === 'MALE' ? i18n.t('8d0002e2-5da2-448f-b9dc-e73352612c41') : i18n.t('7103289f-c425-457d-8b29-f9e0be60c01c') }</Text>
+				>
+					<TextInput
+						style={styles.TextInputTransparent}
+						key={"name"}
+						placeholder={i18n.t("b89f2757-8b5e-4a08-b8f8-1bbe87834f3e")}
+						placeholderTextColor={"rgba(231, 221, 236, 1)"}
+						onChangeText={text => {
+							dispatch(actions.addChangedInformationUser({ displayName: text }));
+						}}
+						defaultValue={changedData.displayName ?? displayName}
+					/>
+					<Pressable
+						style={{
+							height: "100%",
+							justifyContent: "center",
+							alignItems: "center",
+							flexDirection: "row",
+							borderLeftColor: "rgba(194, 169, 206, 1)",
+							borderLeftWidth: 1,
+							width: 120,
+						}}
+						onPress={() => openList()}
+					>
+						<Text style={{ color: "#FFF", fontSize: 13, ...gStyle.font("400"), marginRight: 5 }}>
+							{(changedData.gender ?? gender) === "FEMALE"
+								? i18n.t("83dfa634-dd9f-4dce-ab9e-6d6961a296f7")
+								: (changedData.gender ?? gender) === "MALE"
+								? i18n.t("8d0002e2-5da2-448f-b9dc-e73352612c41")
+								: i18n.t("7103289f-c425-457d-8b29-f9e0be60c01c")}
+						</Text>
 						<Animated.View style={arrowAnimatedStyle}>
 							<TheArrow />
 						</Animated.View>
 					</Pressable>
 					<CustomModal ref={customModalRef} onClose={() => closeList()}>
-						<View style={{ backgroundColor: "#FFFFFF",
-		borderBottomLeftRadius: 15,
-		borderBottomRightRadius: 15,
-		position: 'absolute',
-		top: ySelectGender ?? 0,
-		width: 136,
-		right: 20, paddingHorizontal: 20, paddingBottom: 10 }} onLayout={({ nativeEvent: { layout } })=>{
-			if (widthSelectGender === null) {
-				setWidthSelectGender(layout.width)
-			}
-		}}>
-			{
-				[{ translate:  "83dfa634-dd9f-4dce-ab9e-6d6961a296f7", value: Gender.FEMALE}, { translate: "8d0002e2-5da2-448f-b9dc-e73352612c41", value: Gender.MALE}, { translate: "7103289f-c425-457d-8b29-f9e0be60c01c", value: Gender.OTHER }].map(item => (
-<Pressable style={{ width: '100%', height: 35, justifyContent: 'center', alignItems: 'flex-start' }} key={item.value}>
-								<Text style={{opacity: 0.22,
-		color: "#000000",
-		fontSize: 13,
-		textAlign: "left",
-		...gStyle.font("400")}}
-		onPress={() => {
-			closeList()
-			dispatch(actions.addChangedInformationUser({ gender: item.value }));
-		}}
-		>{i18n.t(item.translate)}</Text>
-							</Pressable>
-				))
-			}
-							
-	
+						<View
+							style={{
+								backgroundColor: "#FFFFFF",
+								borderBottomLeftRadius: 15,
+								borderBottomRightRadius: 15,
+								position: "absolute",
+								top: ySelectGender ?? 0,
+								width: 136,
+								right: 20,
+								paddingHorizontal: 20,
+								paddingBottom: 10,
+							}}
+							onLayout={({ nativeEvent: { layout } }) => {
+								if (widthSelectGender === null) {
+									setWidthSelectGender(layout.width);
+								}
+							}}
+						>
+							{[
+								{ translate: "83dfa634-dd9f-4dce-ab9e-6d6961a296f7", value: Gender.FEMALE },
+								{ translate: "8d0002e2-5da2-448f-b9dc-e73352612c41", value: Gender.MALE },
+								{ translate: "7103289f-c425-457d-8b29-f9e0be60c01c", value: Gender.OTHER },
+							].map(item => (
+								<Pressable
+									style={{
+										width: "100%",
+										height: 35,
+										justifyContent: "center",
+										alignItems: "flex-start",
+										marginTop: 15,
+									}}
+									key={item.value}
+								>
+									<Text
+										style={{ opacity: 0.22, color: "#000000", fontSize: 13, textAlign: "left", ...gStyle.font("400") }}
+										onPress={() => {
+											closeList();
+											dispatch(actions.addChangedInformationUser({ gender: item.value }));
+										}}
+									>
+										{i18n.t(item.translate)}
+									</Text>
+								</Pressable>
+							))}
 						</View>
 					</CustomModal>
 				</Animated.View>
@@ -219,7 +256,7 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 		...gStyle.font("400"),
 		paddingRight: 44,
-		flex: 1
+		flex: 1,
 	},
 	editNickname: {
 		marginTop: 7.5,

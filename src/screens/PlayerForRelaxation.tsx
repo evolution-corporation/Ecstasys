@@ -1,12 +1,12 @@
 /** @format */
 
 import React, { useCallback, useEffect, useRef } from "react";
-import { Image, StyleSheet, View, Text, AppState, ActivityIndicator, Platform } from "react-native";
+import { Image, StyleSheet, View, Text, AppState, ActivityIndicator, Platform, Pressable } from "react-native";
 import Animated from "react-native-reanimated";
 import * as Notifications from "expo-notifications";
 
 import Tools from "~core";
-import { TimeLine, PlayerControl, ColorButton } from "~components/dump";
+import { TimeLine, PlayerControl, ColorButton, IsFavorite } from "~components/dump";
 
 import { RootScreenProps } from "~types";
 import BackgroundSound from "src/backgroundSound";
@@ -139,7 +139,9 @@ const PlayerForRelaxation: RootScreenProps<"PlayerForRelaxation"> = ({ navigatio
 		// 		pause();
 		// 	}
 		// });
-
+		navigation.setOptions({
+			headerRight: () => <IsFavorite practice={selectedPractice} />,
+		});
 		return () => {
 			audioVoice.getStatusAsync().then(status => {
 				if (status.isLoaded) audioVoice.stopAsync();
@@ -348,23 +350,23 @@ const PlayerForRelaxation: RootScreenProps<"PlayerForRelaxation"> = ({ navigatio
 							{i18n.strftime(new Date(practiceLength), "%M:%S")}
 						</Text>
 					</View>
-
-					<ColorButton
-						styleButton={styles.buttonBackgroundSound}
-						styleText={styles.buttonBackgroundText}
-						secondItem={<Headphones style={{ marginRight: 24 }} />}
-						onPress={() => {
+					<Pressable
+						style={styles.buttonBackgroundSound}
+						onPress={() =>
 							navigation.navigate("SelectBackgroundSound", {
 								backgroundImage: { uri: practiceState.image },
-							});
-						}}
+							})
+						}
 					>
-						{i18n.t(
-							currentNameBackgroundSound !== null
-								? BackgroundSound[currentNameBackgroundSound].translate
-								: "12ee6d3a-ad58-4c4a-9b87-63645efe9c90"
-						)}
-					</ColorButton>
+						<Headphones style={{ marginRight: 24 }} />
+						<Text style={styles.buttonBackgroundText}>
+							{i18n.t(
+								currentNameBackgroundSound !== null
+									? BackgroundSound[currentNameBackgroundSound].translate
+									: "12ee6d3a-ad58-4c4a-9b87-63645efe9c90"
+							)}
+						</Text>
+					</Pressable>
 				</View>
 			</Animated.View>
 		</View>
@@ -412,7 +414,12 @@ const styles = StyleSheet.create({
 		backgroundColor: "rgba(255, 255, 255, 0.5)",
 		paddingRight: 33,
 		paddingLeft: 13,
+		marginTop: 17,
 		height: 50,
+		borderRadius: 25,
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
 	},
 	buttonBackgroundText: {
 		color: "#FFFFFF",

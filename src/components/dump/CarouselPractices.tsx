@@ -96,7 +96,7 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 						if (data.length >= 3) {
 							index = 1;
 						}
-						refFlatList.current?.scrollToIndex({ index, animated: false });
+						refFlatList.current?.scrollToIndex({ index, animated: false, viewOffset: widthCarousel - 254 });
 						setSelectedIndex(index);
 						if (onChange) onChange(data[index].id);
 					}
