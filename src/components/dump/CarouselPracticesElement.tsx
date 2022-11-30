@@ -54,7 +54,13 @@ const CarouselPracticesElement: React.FC<Props> = props => {
 						<Image source={{ uri: practice.image }} style={styles.image} />
 					)}
 
-					<View style={[styles.backgroundImage, { justifyContent: isPermission ? "flex-end" : "center" }]}>
+					<View
+						style={[
+							styles.backgroundImage,
+							{ justifyContent: isPermission ? "flex-end" : "center" },
+							isPermission ? null : { backgroundColor: "rgba(0,0,0,0.55)" },
+						]}
+					>
 						{isPermission ? (
 							<View style={styles.imageFooter}>
 								{practice.length > 0 ? (
@@ -140,14 +146,12 @@ const styles = StyleSheet.create({
 		width: 110,
 		height: 110,
 		borderRadius: 55,
-		backgroundColor: "rgba(0,0,0, 0.5)",
 		alignItems: "center",
 		justifyContent: "center",
 	},
 	backgroundImage: {
 		width: "100%",
 		height: "100%",
-		backgroundColor: "rgba(0,0,0,0.35)",
 		borderRadius: 28,
 		paddingHorizontal: 18,
 		paddingBottom: 18,
