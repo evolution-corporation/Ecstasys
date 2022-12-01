@@ -94,10 +94,22 @@ const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation })
 				runOnJS(next)();
 			}
 		});
-
+	const dots = (
+		<Svg height={9} width={swiperContent.length * 9 + (swiperContent.length - 1) * 9} style={{ alignSelf: "center" }}>
+			{new Array(swiperContent.length).fill(null).map((_, index) => (
+				<Circle
+					r={4.5}
+					fill={indexSelect === index ? "rgb(151,101,168)" : "rgba(231, 221, 236, 1)"}
+					x={4.5 + index * 18}
+					y={4.5}
+					key={`${index}_key`}
+				/>
+			))}
+		</Svg>
+	);
 	return (
 		<View style={styles.background}>
-			{isGreeting ? null : (
+			{isGreeting || Dimensions.get("window").height <= 800 ? null : (
 				<Image
 					source={require("./assets/Vector403.png")}
 					style={{
@@ -110,49 +122,53 @@ const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation })
 				/>
 			)}
 			{isGreeting ? (
-				<View style={{ flex: 1 }}>
-					<View style={{ flex: 1 }}>
+				<View style={{ flex: 1, justifyContent: "space-between" }}>
+					<View style={{ height: "70%", width: "100%" }}>
 						<Image source={require("./assets/BirdProfessor.png")} style={{ width: "100%", height: "100%" }} />
 					</View>
-					<Text style={styles.title}>{i18n.t("3410ac11-a61b-49f7-b7e4-3bbc2998f1c2")}</Text>
-					<Text style={styles.text}>{i18n.t("42ccdb27-d3ef-4a77-89bf-89138155211e")}</Text>
+					<View>
+						<Text style={styles.title}>{i18n.t("3410ac11-a61b-49f7-b7e4-3bbc2998f1c2")}</Text>
+						<Text
+							style={[styles.text, Dimensions.get("window").height < 800 ? { maxHeight: 90 } : { lineHeight: 23.1 }]}
+							adjustsFontSizeToFit={Dimensions.get("window").height < 800}
+						>
+							{i18n.t("42ccdb27-d3ef-4a77-89bf-89138155211e")}
+						</Text>
+					</View>
 				</View>
 			) : (
 				<GestureDetector gesture={gesture}>
-					<View style={{ justifyContent: "space-between", flex: 1, marginBottom: "30%" }}>
+					<View style={{ justifyContent: "space-between", flex: 1 }}>
 						{
 							swiperContent.map(item => (
 								<Animated.View key={item.name} style={styles.card} entering={FadeIn} exiting={FadeOut}>
-									<View style={{ width: "100%", maxHeight: "60%" }}>
-										<Image source={item.image} style={styles.logoCategory} resizeMode={"contain"} />
+									<View style={styles.logoCategory}>
+										<Image source={item.image} style={{ width: "100%", height: "100%" }} resizeMode={"contain"} />
 									</View>
 									<Text style={[styles.titleCategory]}>{i18n.t(item.title)}</Text>
 									<Text style={styles.textCategory}>{i18n.t(item.text)}</Text>
 								</Animated.View>
 							))[indexSelect]
 						}
-						<Svg
-							height={9}
-							width={swiperContent.length * 9 + (swiperContent.length - 1) * 9}
-							style={{ alignSelf: "center" }}
+						<View
+							style={{
+								alignItems: "center",
+								flex: 1,
+								justifyContent: "flex-start",
+								paddingTop: 15,
+							}}
 						>
-							{new Array(swiperContent.length).fill(null).map((_, index) => (
-								<Circle
-									r={4.5}
-									fill={indexSelect === index ? "red" : "rgba(231, 221, 236, 1)"}
-									x={4.5 + index * 18}
-									y={4.5}
-									key={`${index}_key`}
-								/>
-							))}
-						</Svg>
+							{Dimensions.get("window").height > 800 ? dots : null}
+						</View>
 					</View>
 				</GestureDetector>
 			)}
 
 			<View style={styles.buttonControl}>
 				{isGreeting ? (
-					<TextButton onPress={() => end()}>{i18n.t("skip")}</TextButton>
+					<Pressable onPress={() => end()}>
+						<Text style={styles.skipButton}>{i18n.t("skip")}</Text>
+					</Pressable>
 				) : (
 					<Pressable
 						style={{ width: 40, height: 40, justifyContent: "center", alignItems: "center" }}
@@ -167,6 +183,7 @@ const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation })
 						<ArrowLeft />
 					</Pressable>
 				)}
+				{Dimensions.get("window").height <= 800 && !isGreeting ? dots : null}
 				<ColorButton
 					secondItem={<Arrow />}
 					styleButton={styles.buttonNext}
@@ -195,6 +212,12 @@ const styles = StyleSheet.create({
 		paddingBottom: 50,
 		backgroundColor: "#FFFFFF",
 	},
+	skipButton: {
+		fontSize: 16,
+		opacity: 1,
+		...gStyle.font("400"),
+		color: "rgba(194, 169, 206, 1)",
+	},
 	birdProffessor: {
 		position: "absolute",
 		left: 0,
@@ -210,9 +233,9 @@ const styles = StyleSheet.create({
 		color: "#3d3d3d",
 		marginHorizontal: 20,
 		fontSize: 16.5,
-		lineHeight: 23.1,
 		...gStyle.font("400"),
 		marginTop: 20,
+		marginBottom: 20,
 	},
 	buttonControl: {
 		flexDirection: "row",
@@ -220,7 +243,7 @@ const styles = StyleSheet.create({
 		alignSelf: "center",
 		alignItems: "center",
 		justifyContent: "space-between",
-		marginTop: 20,
+		marginTop: 0,
 		paddingHorizontal: 20,
 	},
 	buttonNext: {
@@ -230,8 +253,8 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 	},
 	logoCategory: {
-		width: "100%",
-		height: "100%",
+		width: Dimensions.get("window").width,
+		height: (Dimensions.get("window").width / 340) * 375,
 	},
 	card: {
 		alignItems: "center",
@@ -240,7 +263,7 @@ const styles = StyleSheet.create({
 		color: "#3D3D3D",
 		fontSize: 24,
 		fontFamily: "Inter_700Bold",
-		marginVertical: 16,
+		marginVertical: 10,
 		textAlign: "center",
 	},
 	textCategory: {
@@ -250,6 +273,6 @@ const styles = StyleSheet.create({
 		...gStyle.font("400"),
 		textAlign: "center",
 		marginHorizontal: 20,
-		backgroundColor: "red",
+		height: 110,
 	},
 });
