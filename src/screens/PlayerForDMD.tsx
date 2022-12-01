@@ -60,7 +60,6 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 			if (statusDMD === Status.Loading) {
 				await Promise.all([
 					new Promise(async (resolve, reject) => {
-						console.log(audioSetURL);
 						await audioSet.loadAsync({ uri: audioSetURL }, { progressUpdateIntervalMillis: 100 });
 						audioOption.setOnPlaybackStatusUpdate(status => {
 							if (status.isLoaded) {

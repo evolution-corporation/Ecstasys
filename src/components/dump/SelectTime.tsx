@@ -49,10 +49,7 @@ const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
 	}).current;
 
 	const _onViewableItemsChangedMinute = React.useRef(({ viewableItems }: { viewableItems: ViewToken[] }) => {
-		console.log(
-			viewableItems.length,
-			viewableItems.map(item => item.item)
-		);
+
 		if (viewableItems.length > 0) {
 			const mediumIndex = Math.floor(viewableItems.length / 2);
 			if (viewableItems[mediumIndex].index !== null) {

@@ -124,7 +124,6 @@ const SelectColor: React.FC<SelectColorProps> = props => {
 	});
 
 	const lineGesture = Gesture.Pan().onFinalize(({ x }) => {
-		console.log(x);
 		runOnJS(setBrightness)((2 * x) / size - 1);
 	});
 
