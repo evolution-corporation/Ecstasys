@@ -20,8 +20,6 @@ const price = {
 };
 
 const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation }) => {
-	const subscribe = useAppSelector(store => store.account.subscribe);
-
 	const [selectedSubscribeType, setSelectedSubscribeType] = useState<SubscribeType | null>(null);
 
 	// const modalRef = useRef<ElementRef<typeof CustomModal>>(null);
@@ -37,16 +35,43 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 		})),
 	};
 
+	const [isActiveSubs, subscribeEnd, isAutoPayment, subsType] = useAppSelector(store => {
+		if (store.account.subscribe !== undefined) {
+			const endSubscribe = new Date(store.account.subscribe.whenSubscribe);
+
+			endSubscribe.setDate(
+				endSubscribe.getDate() +
+					(() => {
+						switch (store.account.subscribe.type) {
+							case "WEEK":
+								return 7;
+							case "MONTH":
+								return 30;
+							case "HALF_YEAR":
+								return 180;
+							default:
+								return 0;
+						}
+					})()
+			);
+			return [
+				endSubscribe.getTime() > Date.now(),
+				endSubscribe,
+				store.account.subscribe.autoPayment,
+				store.account.subscribe.type,
+			];
+		} else {
+			return [false, null, null, null];
+		}
+	});
 	useEffect(() => {
 		if (
-			(selectedSubscribeType !== null && subscribe !== undefined && selectedSubscribeType !== subscribe.type) ||
-			(subscribe === undefined && selectedSubscribeType !== null)
+			(selectedSubscribeType !== null && selectedSubscribeType !== subsType) ||
+			(subsType === null && selectedSubscribeType !== null)
 		) {
 			_transporteeYButton.value = 0;
 		}
-	}, [selectedSubscribeType, subscribe]);
-	const isActiveSubs = (subscribe !== undefined && new Date(subscribe.whenSubscribe) >= new Date()) ?? false;
-
+	}, [selectedSubscribeType, subsType]);
 	const editSubscribe = () => {
 		if (selectedSubscribeType !== null) navigation.navigate("Payment", { selectSubscribe: selectedSubscribeType });
 	};
@@ -57,19 +82,16 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 				<AntDesign name="star" size={24} color={"#FBBC05"} />
 				<Text style={styles.TitlePremium}>Premium</Text>
 				<Text style={styles.currentMeditationInfo}>
-					{subscribe && new Date(subscribe.whenSubscribe) >= new Date()
-						? i18n.t(
-								subscribe.autoPayment ? "392fd6e3-9b0c-4673-b1c2-45deeaadd7b1" : "048d71cd-03e2-4c8f-9f29-d2e5e9576a07",
-								{
-									datemtime: i18n.strftime(new Date(subscribe.whenSubscribe), "%d%m%Y"),
-								}
-						  )
+					{subscribeEnd && isAutoPayment !== null && subscribeEnd >= new Date()
+						? i18n.t(isAutoPayment ? "392fd6e3-9b0c-4673-b1c2-45deeaadd7b1" : "048d71cd-03e2-4c8f-9f29-d2e5e9576a07", {
+								dateTime: i18n.strftime(subscribeEnd, "%d.%m.%Y"),
+						  })
 						: i18n.t("636763b2-80fc-4bd3-84ac-63c21cd34d77")}
 				</Text>
 				<SubscribeCard
 					image={require("./assets/pillow.png")}
 					isSelected={selectedSubscribeType === SubscribeType.MONTH}
-					isUsed={isActiveSubs && subscribe?.type === "MONTH"}
+					isUsed={isActiveSubs && subsType === "MONTH"}
 					onPress={() => setSelectedSubscribeType(SubscribeType.MONTH)}
 					price={price.month_1}
 					stylesContent={{
@@ -85,15 +107,15 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 						bottom: i18n.t("4415fe5e-bd86-41b1-91ca-5b20c685172b"),
 					}}
 					onCancelSubscribe={() => {}}
-					isShowCancelButton={subscribe?.autoPayment ?? false}
+					isShowCancelButton={isAutoPayment ?? false}
 				/>
-				{isActiveSubs && subscribe?.type === "MONTH" && (
+				{isActiveSubs && subsType === "MONTH" && (
 					<Text style={styles.offerToChangeSubscribeType}>{i18n.t("b6f80560-6ba6-4646-821a-a03ca72acb74")}</Text>
 				)}
 				<SubscribeCard
 					image={require("./assets/armchair.png")}
 					isSelected={selectedSubscribeType === SubscribeType.HALF_YEAR}
-					isUsed={isActiveSubs && subscribe?.type === "HALF_YEAR"}
+					isUsed={isActiveSubs && subsType === "HALF_YEAR"}
 					onPress={() => setSelectedSubscribeType(SubscribeType.HALF_YEAR)}
 					price={price.month_6}
 					stylesContent={{
@@ -103,11 +125,27 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 					mainColor={"#FFFFFF"}
 					countMonth={6}
 					secondElement={
-						<Text style={styles.benefitPrice}>
-							{i18n.t("5b805945-9f3f-41df-a6c5-3d7d9747a118", {
-								percent: Math.ceil(100 - (price.month_6 / (price.month_1 * 6)) * 100),
-							})}
-						</Text>
+						<View
+							style={{
+								backgroundColor: "#FFFFFF",
+								paddingHorizontal: 27,
+								paddingVertical: 7,
+								borderRadius: 15,
+								marginTop: 12,
+							}}
+						>
+							<Text
+								style={{
+									color: "#FBBC05",
+									fontSize: 13,
+									...gStyle.font("600"),
+								}}
+							>
+								{i18n.t("5b805945-9f3f-41df-a6c5-3d7d9747a118", {
+									percent: Math.ceil(100 - (price.month_6 / (price.month_1 * 6)) * 100),
+								})}
+							</Text>
+						</View>
 					}
 					textPrice={{
 						top: i18n.t("56b57ad2-f5f3-4f05-9f43-55d2edb25bdf", {
@@ -117,7 +155,7 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 					}}
 					onCancelSubscribe={() => {}}
 					// TODO: Navigation
-					isShowCancelButton={subscribe?.autoPayment ?? false}
+					isShowCancelButton={isAutoPayment ?? false}
 				/>
 			</View>
 			<ColorButton
@@ -169,6 +207,7 @@ const styles = StyleSheet.create({
 		color: "#FFFFFF",
 		fontSize: 20,
 		...gStyle.font("600"),
+		marginBottom: 10,
 	},
 
 	price: {
@@ -202,6 +241,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		...gStyle.font("400"),
 		width: "80%",
+		marginBottom: 10,
 	},
 
 	isHaveSubscribe: {
@@ -222,6 +262,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		...gStyle.font("600"),
 		textAlign: "center",
+		marginVertical: 20,
 	},
 
 	benefitPrice: {

@@ -213,7 +213,11 @@ const RootRoutes: FC = () => {
 					/>
 					<RootNavigation.Screen name={"DMDIntro"} component={Screens.DMDIntro} options={{ headerShown: false }} />
 					<RootNavigation.Screen name={"PlayerForPractice"} component={Screens.PlayerForPractice} />
-					<RootNavigation.Screen name={"SelectSubscribe"} component={Screens.SelectSubscribe} options={{}} />
+					<RootNavigation.Screen
+						name={"SelectSubscribe"}
+						component={Screens.SelectSubscribe}
+						options={{ title: i18n.t("b7ea21ef-8f8b-4dbb-9845-74a32a475e6b") }}
+					/>
 					<RootNavigation.Screen
 						name={"PlayerMeditationOnTheMandala"}
 						component={Screens.PlayerMeditationOnTheMandala}
