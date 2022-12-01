@@ -43,12 +43,8 @@ const Payment: RootScreenProps<"Payment"> = ({ navigation, route }) => {
 				<WebView
 					source={dataForRequest}
 					useWebView2
-					onLoad={({ nativeEvent: { url, mainDocumentURL } }) => {
-						console.log(url, mainDocumentURL);
-					}}
 					style={{ width: "100%", height: "100%" }}
 					onNavigationStateChange={({ url }) => {
-						console.log(url);
 						if (url.includes("https://evodigital.one/success")) {
 							navigation.navigate("ResultSubscribeScreen", { status: "Designations" });
 						} else if (url.includes("https://evodigital.one/fail")) {

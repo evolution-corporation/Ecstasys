@@ -259,7 +259,6 @@ export async function getSubscribeUserInformation(
 	firebaseTokenToken?: string
 ): Promise<ServerEntities.Subscribe | null> {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	console.log(URL + "subscribe/" + false);
 	const requestServer = await fetch(URL + "subscribe/" + false, {
 		headers: {
 			Authorization: firebaseTokenToken,
@@ -426,7 +425,6 @@ export async function getSubscribeUserInformationSubs(
 	firebaseTokenToken?: string
 ): Promise<ServerEntities.Subscribe | null> {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	console.log(URL + "subscribe/" + false);
 	const requestServer = await fetch(URL + "subscribe/" + true, {
 		headers: {
 			Authorization: firebaseTokenToken,
