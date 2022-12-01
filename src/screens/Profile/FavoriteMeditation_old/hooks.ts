@@ -33,7 +33,6 @@ export function useFavoriteMeditation() {
 				setTypesMeditation([..._typesMeditation]);
 			}
 		};
-		init().catch(console.error);
 	}, [setListFavoriteMeditation]);
 
 	return { listFavoriteMeditation, typesMeditation };

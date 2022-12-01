@@ -32,7 +32,6 @@ const AppCore = () => {
 				await Store.dispatch(actions.initialization()).unwrap();
 				await SplashScreen.hideAsync();
 			} catch (error) {
-				console.error(error);
 				if (error instanceof Error) Alert.alert(`Ошибка при загрузке. ${error.name}`, error.message);
 			}
 		})();

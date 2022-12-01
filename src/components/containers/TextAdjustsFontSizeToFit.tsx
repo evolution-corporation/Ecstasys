@@ -55,7 +55,6 @@ const TextAdjustsFontSizeToFit: FC<TextAdjustsFontSizeToFitProps> = props => {
 						//   for (let line of lines) {
 						//     if (width <= line.width) width = line.width;
 						//   }
-						//   console.log(width, heigth, fontSize);
 						//   editFontSize(width, heigth);
 						// }}
 						onLayout={({ nativeEvent: { layout } }) => {
