@@ -79,7 +79,6 @@ const FavoriteMeditation: FC<FavoriteMeditationProps> = (props) => {
       }
     };
 
-    init().catch(console.error);
   }, [setIsFavorite]);
 
   if (!IsFavorite && !displayWhenNotFavorite) return null;

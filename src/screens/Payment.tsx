@@ -34,7 +34,6 @@ const Payment: RootScreenProps<"Payment"> = ({ navigation, route }) => {
 
 		// Request.getSubscribeUserInformationSubs().then(r => {
 		// 	const b = Converter.composeSubscribe(r);
-		// 	console.log(b);
 		// });
 	}, []);
 	return (
