@@ -98,6 +98,7 @@ export async function createUser({ birthday, nickname, image }: CreateUserParams
 		);
 	}
 	const json = await requestServer.json();
+
 	return json as ServerEntities.User;
 }
 interface CreateUserParams {

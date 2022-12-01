@@ -60,6 +60,7 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 			if (statusDMD === Status.Loading) {
 				await Promise.all([
 					new Promise(async (resolve, reject) => {
+						console.log(audioSetURL);
 						await audioSet.loadAsync({ uri: audioSetURL }, { progressUpdateIntervalMillis: 100 });
 						audioOption.setOnPlaybackStatusUpdate(status => {
 							if (status.isLoaded) {
@@ -204,8 +205,8 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 	};
 	useFocusEffect(
 		useCallback(() => {
-			StatusBar.setStatusBarTranslucent(true);
-			StatusBar.setStatusBarStyle("light");
+			// StatusBar.setStatusBarTranslucent(true);
+			// StatusBar.setStatusBarStyle("light");
 			navigation.setOptions({
 				title: selectedRelax.name,
 			});
@@ -213,8 +214,6 @@ const PlayerForDMD: RootScreenProps<"PlayerForDMD"> = ({ navigation, route }) =>
 	);
 	return (
 		<View style={{ flex: 1 }}>
-			<StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
-
 			<SharedElement id={`practice.item.${selectedRelax.id}`} style={styles.imageBackground}>
 				<Image
 					source={{

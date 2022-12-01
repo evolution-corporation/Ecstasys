@@ -251,8 +251,8 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 	};
 	useFocusEffect(
 		useCallback(() => {
-			StatusBar.setStatusBarTranslucent(true);
-			StatusBar.setStatusBarStyle("light");
+			// StatusBar.setStatusBarTranslucent(true);
+			// StatusBar.setStatusBarStyle("light");
 			navigation.setOptions({
 				title: name,
 			});
@@ -261,7 +261,6 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 
 	return (
 		<View style={{ flex: 1 }}>
-			<StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
 			<SharedElement id={`practice.item.${id}`} style={styles.imageBackground}>
 				<Image
 					source={{

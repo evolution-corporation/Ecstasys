@@ -14,8 +14,9 @@ import {
 } from "react-native";
 import Tools from "~core";
 import i18n from "~i18n";
+import gStyle from "~styles";
 
-import Headphones from "assets/icons/Headphones_white.svg";
+import Headphones from "assets/icons/Headphones_gray.svg";
 
 interface Props extends ViewProps {
 	onPress?: () => void;
@@ -46,18 +47,14 @@ const CategoryCard: React.FC<Props> = props => {
 					resizeMethod={"scale"}
 				/>
 				<View style={styles.information}>
-					<Text style={styles.name} adjustsFontSizeToFit>
-						{name}
-					</Text>
+					<Text style={styles.name}>{name}</Text>
 					<View
 						style={{
 							flexDirection: "row",
 							justifyContent: "space-between",
 						}}
 					>
-						<Text style={styles.description} adjustsFontSizeToFit>
-							{description}
-						</Text>
+						<Text style={styles.description}>{description}</Text>
 						<View style={{ alignItems: "center", width: 100 }}>
 							<Headphones />
 							{count === null ? (
@@ -85,18 +82,20 @@ const styles = StyleSheet.create({
 		borderRadius: 20,
 		justifyContent: "flex-start",
 		overflow: "hidden",
-		backgroundColor: "#9765A8",
+		backgroundColor: "#FFFFFF",
+		...gStyle.shadows(1, 1),
+		shadowColor: "rgba(0,0,0,0.7)",
 	},
 	name: {
-		color: "#FFFFFF",
+		color: "#3d3d3d",
 		fontSize: 20,
 		...Tools.gStyle.font("600"),
 		marginBottom: 5,
-		backgroundColor: "#9765A8",
+		backgroundColor: "#fff",
 	},
 	information: {
 		marginTop: -40,
-		backgroundColor: "#9765A8",
+		backgroundColor: "#fff",
 		borderTopLeftRadius: 20,
 		borderTopRightRadius: 20,
 		paddingHorizontal: 19,
@@ -108,14 +107,14 @@ const styles = StyleSheet.create({
 	},
 	description: {
 		fontSize: 14,
-		width: "60%",
+		width: "70%",
 		maxHeight: 53,
-		color: "#FFFFFF",
+		color: "#3d3d3d",
 		...Tools.gStyle.font("400"),
 	},
 	countMeditation: {
 		fontSize: 12,
-		color: "#FFFFFF",
+		color: "#3d3d3d",
 		...Tools.gStyle.font("400"),
 		textAlign: "center",
 		textAlignVertical: "center",

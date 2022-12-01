@@ -77,6 +77,7 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 				//* Разбивка на страницы
 				snapToInterval={254}
 				pagingEnabled
+				// initialScrollIndex={data.length >= 3 ? 1 : 0}
 				decelerationRate={0.98}
 				disableIntervalMomentum
 				//* визуальные настройки
@@ -92,13 +93,16 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 				onLayout={() => {
 					if (!isFlatListRender.current) {
 						isFlatListRender.current = true;
-						let index = 0;
-						if (data.length >= 3) {
-							index = 1;
-						}
-						refFlatList.current?.scrollToIndex({ index, animated: false, viewOffset: widthCarousel - 254 });
-						setSelectedIndex(index);
-						if (onChange) onChange(data[index].id);
+						// let index = 0;
+						// if (data.length >= 3) {
+						// 	index = 1;
+						// }
+						// setTimeout(() => {
+						// 	refFlatList.current?.scrollToIndex({ index, animated: false, viewOffset: widthCarousel - 254 });
+
+						// 	setSelectedIndex(index);
+						// 	if (onChange) onChange(data[index].id);
+						// }, 0);
 					}
 				}}
 				// getItemLayout={(data, index) => ({
@@ -106,6 +110,7 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 				// 	offset: styles.elementList.width * index,
 				// 	index,
 				// })}
+				onScrollToIndexFailed={() => alert("ERRRRROR jhfdakvhdbfahjsbdsaljbfldhafdjsblhasjblfahjdsbf")}
 			/>
 		</View>
 	);

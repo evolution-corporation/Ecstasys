@@ -9,7 +9,7 @@ import Animated, {
 	useSharedValue,
 	withTiming,
 } from "react-native-reanimated";
-import Arrow from "assets/icons/Chevron_Down.svg";
+import Arrow from "assets/icons/Arrow/Chevron_Down.svg";
 import Tools from "~core";
 import i18n from "~i18n";
 
@@ -45,21 +45,21 @@ const SelectTimePeriodStatistic: React.FC<Props> = props => {
 	} = {
 		WEEK: useAnimatedStyle(() => ({
 			opacity: withTiming(animationValue.WEEK.value),
-			fontSize: interpolate(animationValue.WEEK.value, [0.6, 1], [12, 14]),
+			fontSize: interpolate(animationValue.WEEK.value, [0.6, 1], [14, 14]),
 		})),
 		MONTH: useAnimatedStyle(() => ({
 			opacity: withTiming(animationValue.MONTH.value),
-			fontSize: interpolate(animationValue.MONTH.value, [0.6, 1], [12, 14]),
+			fontSize: interpolate(animationValue.MONTH.value, [0.6, 1], [14, 14]),
 		})),
 		ALL: useAnimatedStyle(() => ({
 			opacity: withTiming(animationValue.ALL.value),
-			fontSize: interpolate(animationValue.ALL.value, [0.6, 1], [12, 14]),
+			fontSize: interpolate(animationValue.ALL.value, [0.6, 1], [14, 14]),
 		})),
 	};
 	const positionArrow = useSharedValue(0);
 
 	const positionArrowStyle = useAnimatedStyle(() => ({
-		transform: [{ translateX: withTiming(positionArrow.value) }, { scale: 2 }],
+		transform: [{ translateX: withTiming(positionArrow.value) }],
 	}));
 
 	// ---

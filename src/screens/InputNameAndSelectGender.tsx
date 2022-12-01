@@ -48,7 +48,7 @@ const InputNameAndSelectGender: RootScreenProps<"InputNameAndSelectGender"> = ({
 	);
 
 	return (
-		<View style={{ flex: 1 }}>
+		<View style={{ width: Dimensions.get("window").width, height: Dimensions.get("window").height }}>
 			<Pressable style={{ flexGrow: 1, backgroundColor: "rgba(0, 0, 0, 0.8)" }} onPress={() => navigation.goBack()} />
 			<View style={{ position: "absolute", bottom: 0, width: "100%" }}>
 				{Dimensions.get("window").height >= 800 ? (
@@ -75,7 +75,8 @@ const InputNameAndSelectGender: RootScreenProps<"InputNameAndSelectGender"> = ({
 					<Text style={{ color: "rgba(64, 64, 64, 0.71)", fontSize: 14, ...gStyle.font("400"), marginTop: 11 }}>
 						{i18n.t("0078afc8-9ad7-4b4f-8444-cb35110aba7b")}
 					</Text>
-					<Pressable
+
+					<TextInput
 						style={{
 							backgroundColor: "rgba(240, 242, 238, 0.19)",
 							borderWidth: 1,
@@ -87,29 +88,15 @@ const InputNameAndSelectGender: RootScreenProps<"InputNameAndSelectGender"> = ({
 							marginBottom: 11,
 							alignItems: "center",
 							justifyContent: "center",
-						}}
-						onPress={() => {
-							refTextInput.current?.focus();
-						}}
-					>
-						<Text
-							style={{
-								color: "#9765A8",
-								fontSize: 20,
-								...gStyle.font("700"),
-							}}
-						>
-							"{name}"
-						</Text>
-					</Pressable>
-					<TextInput
-						style={{
-							display: "none",
+							color: "#9765A8",
+							fontSize: 20,
+							...gStyle.font("700"),
+							textAlign: "center",
 						}}
 						onChangeText={setName}
 						ref={refTextInput}
 					/>
-					{isKeyboardOpen ? null : (
+					{false ? null : (
 						<>
 							<Text style={{ color: "rgba(64, 64, 64, 0.71)", fontSize: 14, ...gStyle.font("400") }}>
 								{i18n.t("053bda9d-5b61-47f8-b21e-56eec313d0cd")}

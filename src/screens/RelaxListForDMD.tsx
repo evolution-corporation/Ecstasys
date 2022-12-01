@@ -61,7 +61,7 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 					.filter(practice => practice !== null) as State.Practice[];
 				setPracticeList(newListPractice.map(item => ({ ...item, isPermission: isSubscribe })));
 			})();
-		}, [])
+		}, [isSubscribe])
 	);
 
 	const onClick = (practiceId: string) => {
@@ -101,9 +101,7 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 						paddingHorizontal: 0,
 					}}
 				>
-					<Text style={{ ...gStyle.styles.header, color: "#FFFFFF", width: "auto" }} adjustsFontSizeToFit>
-						{i18n.t("DMD")}
-					</Text>
+					<Text style={{ ...gStyle.styles.header, color: "#FFFFFF", width: "auto" }}>{i18n.t("DMD")}</Text>
 					<UserButton onPress={() => navigation.navigate("Profile")} />
 				</View>
 			}

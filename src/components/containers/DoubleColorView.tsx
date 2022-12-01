@@ -27,12 +27,12 @@ const DoubleColorView: FC<DoubleColorViewProps> = props => {
 
 	useFocusEffect(
 		React.useCallback(() => {
-			if (Platform.OS === "android") {
-				StatusBar.setStatusBarBackgroundColor("#9765A8", false);
-				StatusBar.setStatusBarTranslucent(false);
-			}
-			StatusBar.setStatusBarStyle("light");
-			StatusBar.setStatusBarHidden(false, "none");
+			// if (Platform.OS === "android") {
+			// 	StatusBar.setStatusBarBackgroundColor("#9765A8", false);
+			// 	StatusBar.setStatusBarTranslucent(false);
+			// }
+			// StatusBar.setStatusBarStyle("light");
+			// StatusBar.setStatusBarHidden(false, "none");
 		}, [])
 	);
 	const insets = useSafeAreaInsets();
@@ -53,7 +53,7 @@ const DoubleColorView: FC<DoubleColorViewProps> = props => {
 			)}
 			<Svg
 				width={window.width}
-				height={heightViewPart + Constants.statusBarHeight + 55 + heightViewPart2 + insets.top}
+				height={heightViewPart + Constants.statusBarHeight * 0 + 55 + heightViewPart2 + insets.top}
 				style={{ zIndex: hideElementVioletPart ? 10 : 0, position: "absolute" }}
 				onLayout={event => {
 					if (onFunctionGetPaddingTop) {

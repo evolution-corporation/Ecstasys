@@ -130,8 +130,8 @@ const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigatio
 
 	useFocusEffect(
 		useCallback(() => {
-			StatusBar.setStatusBarTranslucent(true);
-			StatusBar.setStatusBarStyle("light");
+			// StatusBar.setStatusBarTranslucent(true);
+			// StatusBar.setStatusBarStyle("light");
 		}, [])
 	);
 	const [color, setColor] = React.useState<ColorValue>("rgb(134, 201, 39)");

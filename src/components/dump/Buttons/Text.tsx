@@ -22,7 +22,6 @@ const TextButton: React.FC<TextButton> = props => {
 					},
 					styleText,
 				]}
-				adjustsFontSizeToFit
 			>
 				{children}
 			</Text>

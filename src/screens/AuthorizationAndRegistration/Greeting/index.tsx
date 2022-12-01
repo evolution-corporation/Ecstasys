@@ -47,14 +47,14 @@ const GreetingScreen: RootScreenProps<"Greeting"> = ({ navigation }) => {
 	}, []);
 	useFocusEffect(
 		useCallback(() => {
-			StatusBar.setStatusBarTranslucent(true);
-			StatusBar.setStatusBarStyle("light");
+			// StatusBar.setStatusBarTranslucent(true);
+			// StatusBar.setStatusBarStyle("light");
 		}, [])
 	);
 
 	return (
 		<Animated.View style={[aStyles.background, styles.background]}>
-			<StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
+			{/* <StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} /> */}
 			<Animated.View style={[aStyles.professor, styles.professor]}>
 				<Image source={require("./assets/professor.png")} />
 			</Animated.View>
@@ -65,9 +65,7 @@ const GreetingScreen: RootScreenProps<"Greeting"> = ({ navigation }) => {
 				<Animated.Text style={[aStyles.title, styles.title, { width: isShowSkipButton ? "80%" : "100%" }]}>
 					{text.title}
 				</Animated.Text>
-				<Animated.Text style={[aStyles.description, styles.description]} adjustsFontSizeToFit>
-					{text.description}
-				</Animated.Text>
+				<Animated.Text style={[aStyles.description, styles.description]}>{text.description}</Animated.Text>
 				<View style={styles.menuButton}>
 					{isShowSkipButton ? (
 						<Pressable onPress={() => appDispatch(actions.setRegistrationAccountStatus())}>

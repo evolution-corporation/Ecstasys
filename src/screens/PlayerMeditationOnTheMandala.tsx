@@ -171,10 +171,10 @@ const PlayerMeditationOnTheMandala: RootScreenProps<"PlayerMeditationOnTheMandal
 
 	useFocusEffect(
 		useCallback(() => {
-			if (Platform.OS === "android") {
-				StatusBar.setStatusBarTranslucent(true);
-			}
-			StatusBar.setStatusBarStyle("light");
+			// if (Platform.OS === "android") {
+			// 	StatusBar.setStatusBarTranslucent(true);
+			// }
+			// StatusBar.setStatusBarStyle("light");
 
 			const circlingMandala = () => {
 				rotateMandala.value = withRepeat(

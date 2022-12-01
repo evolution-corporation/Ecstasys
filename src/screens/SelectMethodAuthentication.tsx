@@ -90,7 +90,7 @@ const SelectMethodAuthentication: RootScreenProps<"SelectMethodAuthentication"> 
 
 	return (
 		<ImageBackground style={{ flex: 1 }} source={require("~assets/mo-PtTbluAisCg-unsplash.png")}>
-			<StatusBar hidden />
+			{/* <StatusBar hidden /> */}
 			<SafeAreaView style={{ flex: 1, justifyContent: "space-between" }}>
 				<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
 					<Bird />

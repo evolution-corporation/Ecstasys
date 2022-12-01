@@ -93,7 +93,6 @@ export const styles = StyleSheet.create({
 		fontFamily: Platform.OS === "ios" ? "System" : "Roboto_700Bold",
 		fontWeight: "600",
 		lineHeight: 28.13,
-		maxHeight: 56,
 		textAlignVertical: "center",
 	},
 	text: {

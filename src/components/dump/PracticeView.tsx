@@ -78,12 +78,8 @@ const CarouselElement: React.FC<CarouselElementProps> = props => {
 			</Pressable>
 			{isSelected && (
 				<>
-					<Text style={CarouselElementStyles.name} adjustsFontSizeToFit>
-						{name}
-					</Text>
-					<Text style={CarouselElementStyles.description} adjustsFontSizeToFit>
-						{description}
-					</Text>
+					<Text style={CarouselElementStyles.name}>{name}</Text>
+					<Text style={CarouselElementStyles.description}>{description}</Text>
 				</>
 			)}
 		</View>
@@ -184,7 +180,9 @@ const Card: React.FC<CardProps> = props => {
 				]}
 			>
 				<View style={[cardStyles.textInformation, { marginTop: 15 }]}>
-					<Text style={{ ...gStyle.styles.namePractice, color: "#ffffff", marginBottom: 3 }}>{name}</Text>
+					<Text style={{ ...gStyle.styles.namePractice, color: "#ffffff", marginBottom: 3 }} numberOfLines={2}>
+						{name}
+					</Text>
 					<Text style={{ ...gStyle.styles.description, color: "#FFFFFF" }} numberOfLines={2}>
 						{description}
 					</Text>

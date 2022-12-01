@@ -39,15 +39,17 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
 			screenOptions={{
 				tabBarShowLabel: false,
 				tabBarStyle: {
-					height: 75,
+					minHeight: 75 + insets.bottom,
 					width: "100%",
 					alignItems: "center",
+					justifyContent: "center",
+					// paddingBottom: insets.bottom,
 				},
 				tabBarItemStyle: {
 					flex: 0,
 					paddingHorizontal: 40,
+
 					maxWidth: Dimensions.get("window").width / 4,
-					marginBottom: insets.bottom,
 				},
 				headerShown: false,
 			}}
@@ -312,6 +314,7 @@ const RootRoutes: FC = () => {
 									textAlign: "center",
 								}}
 								adjustsFontSizeToFit
+								numberOfLines={2}
 							>
 								{options.title}
 							</Text>

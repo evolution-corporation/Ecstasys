@@ -31,12 +31,12 @@ const Screen: React.FC<Props> = props => {
 
 	useFocusEffect(
 		React.useCallback(() => {
-			if (Platform.OS === "android") {
-				StatusBar.setStatusBarBackgroundColor(headerTransparent ? "transparent" : (backgroundColor as string), false);
-				StatusBar.setStatusBarTranslucent(headerTransparent);
-			}
-			StatusBar.setStatusBarStyle("light");
-			StatusBar.setStatusBarHidden(headerHidden, "none");
+			// if (Platform.OS === "android") {
+			// 	StatusBar.setStatusBarBackgroundColor(headerTransparent ? "transparent" : (backgroundColor as string), false);
+			// 	StatusBar.setStatusBarTranslucent(headerTransparent);
+			// }
+			// StatusBar.setStatusBarStyle("light");
+			// StatusBar.setStatusBarHidden(headerHidden, "none");
 		}, [headerTransparent, backgroundColor, headerHidden])
 	);
 	const insets = useSafeAreaInsets();

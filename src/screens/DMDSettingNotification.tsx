@@ -36,10 +36,10 @@ const DMDSettingNotification: RootScreenProps<"DMDSettingNotification"> = ({ nav
 	const { window } = useDimensions();
 	useFocusEffect(
 		useCallback(() => {
-			if (Platform.OS === "android") {
-				StatusBar.setStatusBarTranslucent(true);
-			}
-			StatusBar.setStatusBarStyle("light");
+			// if (Platform.OS === "android") {
+			// 	StatusBar.setStatusBarTranslucent(true);
+			// }
+			// StatusBar.setStatusBarStyle("light");
 			navigation.setOptions({
 				title: selectedRelax.name,
 			});
@@ -206,6 +206,7 @@ const styles = StyleSheet.create({
 	},
 	row: {
 		flexDirection: "row",
+		alignItems: "center",
 	},
 	timeMinutes: {
 		color: "#FFFFFF",

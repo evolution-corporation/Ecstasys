@@ -32,6 +32,7 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 				result: "Resolve",
 			});
 		} catch (error) {
+			console.log(error);
 			navigation.navigate("MessageLog", {
 				message: error instanceof Error ? error.message : "Упс...",
 				result: "Reject",
@@ -221,7 +222,7 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 					}}
 				/>
 				<TouchableOpacity
-					style={styles.inputBirthday}
+					style={[styles.inputBirthday, { marginTop: 15 }]}
 					onPress={() => {
 						navigation.navigate("EditUserBirthday");
 					}}

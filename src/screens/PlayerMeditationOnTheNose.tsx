@@ -148,8 +148,8 @@ const PlayerMeditationOnTheNose: RootScreenProps<"PlayerMeditationOnTheNose"> = 
 
 	useFocusEffect(
 		useCallback(() => {
-			StatusBar.setStatusBarTranslucent(true);
-			StatusBar.setStatusBarStyle("light");
+			// StatusBar.setStatusBarTranslucent(true);
+			// StatusBar.setStatusBarStyle("light");
 		}, [])
 	);
 	const { window } = useDimensions();

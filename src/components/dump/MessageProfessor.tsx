@@ -60,7 +60,6 @@ const MessageProfessor: React.FC<Props> = props => {
 								maxWidth: "75%",
 								lineHeight: undefined,
 							}}
-							adjustsFontSizeToFit
 						>
 							{message}
 						</RN.Text>

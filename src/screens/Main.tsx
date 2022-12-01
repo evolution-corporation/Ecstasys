@@ -17,6 +17,7 @@ import { Converter, Request } from "~api";
 import { StatusBar, setStatusBarHidden } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { UserButton } from "~components/dump";
+import { useAppSelector } from "~store";
 
 const getStartWeek = () => {
 	const date = new Date();
@@ -44,6 +45,7 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 			listPracticesListenedWeek.reduce((value, item) => value + item.msListened, 0),
 		];
 	});
+
 	const [messageProfessor, greeting] = Store.useAppSelector(store => {
 		if (store.style.messageProfessor === undefined) throw new Error("not found Message By Professor");
 		const lastUpdate = new Date(store.style.messageProfessor.dateTimeLastUpdate);
@@ -64,25 +66,40 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 		return [store.style.messageProfessor.idMessage, greetingDay];
 	});
 	const recommendationPractice = Store.useAppSelector(store => store.practice.recommendationPracticeToDay ?? null);
-	const isSubscribe = Store.useAppSelector(store => {
-		if (store.account.subscribe === undefined) return false;
-		const endSubscribe = new Date(store.account.subscribe.whenSubscribe);
-		endSubscribe.setDate(
-			endSubscribe.getDate() +
-				(store.account.subscribe.type === "WEEK" ? 7 : store.account.subscribe.type === "MONTH" ? 30 : 90)
-		);
-		return endSubscribe.getTime() >= Date.now();
+	const isSubscribe = useAppSelector(store => {
+		if (store.account.subscribe !== undefined) {
+			const endSubscribe = new Date(store.account.subscribe.whenSubscribe);
+
+			endSubscribe.setDate(
+				endSubscribe.getDate() +
+					(() => {
+						switch (store.account.subscribe.type) {
+							case "WEEK":
+								return 7;
+							case "MONTH":
+								return 30;
+							case "HALF_YEAR":
+								return 180;
+							default:
+								return 0;
+						}
+					})()
+			);
+			return endSubscribe.getTime() > Date.now();
+		} else {
+			return false;
+		}
 	});
 	const dispatch = Store.useAppDispatch();
 	//* -----------
 	const translateGreeting = useSharedValue(0);
 	const greetingStyle = useAnimatedStyle(() => ({
-		transform: [{ translateY: translateGreeting.value }],
+		// transform: [{ translateY: translateGreeting.value }],
 	}));
 
 	const feedStyle = useAnimatedStyle(() => ({
-		borderTopLeftRadius: interpolate(translateGreeting.value, [20, 100], [20, 0]),
-		borderTopRightRadius: interpolate(translateGreeting.value, [20, 100], [20, 0]),
+		// borderTopLeftRadius: interpolate(translateGreeting.value, [20, 100], [20, 0]),
+		// borderTopRightRadius: interpolate(translateGreeting.value, [20, 100], [20, 0]),
 	}));
 
 	const greetingText = React.useMemo(() => {
@@ -108,12 +125,12 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 			onScroll={({ nativeEvent }) => {
 				if (!!heightGreeting) {
 					let value = 20;
-					let hiddenStatusBar = false;
+					// let hiddenStatusBar = false;
 					if (nativeEvent.contentOffset.y <= 20) {
-						hiddenStatusBar = false;
+						// hiddenStatusBar = false;
 						value = 20;
 					} else if (nativeEvent.contentOffset.y < heightGreeting) {
-						hiddenStatusBar = true;
+						// hiddenStatusBar = true;
 						value = nativeEvent.contentOffset.y * 0.3 - 20;
 					}
 					// setStatusBarHidden(hiddenStatusBar, "slide");
@@ -132,7 +149,7 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 			contentContainerStyle={{ paddingVertical: 50 }}
 			bounces={false}
 		>
-			<StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
+			{/* <StatusBar style="light" hidden={false} translucent backgroundColor={undefined} /> */}
 			<Animated.View
 				style={greetingStyle}
 				onLayout={({ nativeEvent: { layout } }) => {
@@ -157,7 +174,14 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 					viewStyle.white,
 					viewStyle.temple.feed,
 					feedStyle,
-					{ minHeight: height, paddingBottom: 75, padding: 20 },
+					{
+						// minHeight: height,
+						paddingBottom: 80,
+						padding: 20,
+						borderTopLeftRadius: 20,
+						borderTopRightRadius: 20,
+						top: -20,
+					},
 				]}
 			>
 				<RN.Text style={styles.nameSection}>{i18n.t("9d0cd47a-0392-4e5c-9573-00642b12f868")}</RN.Text>
@@ -171,18 +195,22 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 						lengthAudio={recommendationPractice.length}
 						name={recommendationPractice.name}
 						typePractice={recommendationPractice.type}
-						isPermission={recommendationPractice.isNeedSubscribe && isSubscribe}
+						isPermission={recommendationPractice.isNeedSubscribe ? isSubscribe : true}
 						onPress={() => {
-							dispatch(Store.actions.setPractice(recommendationPractice));
+							if (recommendationPractice.isNeedSubscribe ? isSubscribe : true) {
+								dispatch(Store.actions.setPractice(recommendationPractice));
 
-							if (recommendationPractice.type === "RELAXATION") {
-								navigation.navigate("SelectTimeForRelax", {
-									selectedPractice: recommendationPractice,
-								});
+								if (recommendationPractice.type === "RELAXATION") {
+									navigation.navigate("SelectTimeForRelax", {
+										selectedPractice: recommendationPractice,
+									});
+								} else {
+									navigation.navigate("PlayerForPractice", {
+										selectedPractice: recommendationPractice,
+									});
+								}
 							} else {
-								navigation.navigate("PlayerForPractice", {
-									selectedPractice: recommendationPractice,
-								});
+								navigation.navigate("ByMaySubscribe");
 							}
 						}}
 					/>
@@ -229,7 +257,7 @@ const styles = RN.StyleSheet.create({
 		justifyContent: "flex-start",
 		width: "100%",
 		paddingBottom: 20,
-		paddingTop: 50,
+		paddingTop: 70,
 	},
 	professor: {
 		width: 147,

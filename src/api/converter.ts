@@ -92,7 +92,7 @@ export function composeSet(data: (ServerEntities.Meditation & { TypeMeditation: 
 		return null;
 	} else {
 		if (data.AudioId === undefined) throw new Error("Not Found AudioID");
-		let audio = "https://storage.yandexcloud.net/dmdmeditatonaudio/" + data.AudioId + ".mp3";
+		let audio = "https://storage.yandexcloud.net/dmdmeditatonaudio/" + data.AudioId;
 
 		return {
 			id: data.Id,

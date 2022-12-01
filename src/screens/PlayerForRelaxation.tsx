@@ -278,10 +278,10 @@ const PlayerForRelaxation: RootScreenProps<"PlayerForRelaxation"> = ({ navigatio
 
 	useFocusEffect(
 		useCallback(() => {
-			if (Platform.OS === "android") {
-				StatusBar.setStatusBarTranslucent(true);
-			}
-			StatusBar.setStatusBarStyle("light");
+			// if (Platform.OS === "android") {
+			// 	StatusBar.setStatusBarTranslucent(true);
+			// }
+			// StatusBar.setStatusBarStyle("light");
 			navigation.setOptions({
 				title: selectedPractice.name,
 			});
@@ -289,7 +289,6 @@ const PlayerForRelaxation: RootScreenProps<"PlayerForRelaxation"> = ({ navigatio
 	);
 	return (
 		<View style={{ flex: 1 }}>
-			<StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} />
 			<SharedElement id={`practice.item.${selectedPractice.id}`} style={styles.imageBackground}>
 				<Image
 					source={{

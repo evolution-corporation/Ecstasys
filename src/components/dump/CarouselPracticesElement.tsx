@@ -90,9 +90,7 @@ const CarouselPracticesElement: React.FC<Props> = props => {
 			{isSelected && (
 				<>
 					<Text style={styles.name}>{practice.name}</Text>
-					<Text style={styles.description} adjustsFontSizeToFit>
-						{practice.description}
-					</Text>
+					<Text style={styles.description}>{practice.description}</Text>
 				</>
 			)}
 		</View>

@@ -106,7 +106,7 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 					paddingHorizontal: 20,
 				}}
 			>
-				<Text style={{ ...gStyle.styles.header, color: "#FFFFFF", width: "auto" }} adjustsFontSizeToFit>
+				<Text style={{ ...gStyle.styles.header, color: "#FFFFFF", width: "auto" }}>
 					{i18n.t("c08bb9d1-1769-498e-acf5-8c37c18bed05")}
 				</Text>
 				<UserButton onPress={() => navigation.navigate("Profile")} />
@@ -131,9 +131,7 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 						<TouchableOpacity onPress={() => navigation.navigate("PracticeListByType", { typePractices: item.id })}>
 							<View style={{ width: 110, alignItems: "center" }}>
 								<Image source={item.image} style={styles.imageSmall} />
-								<Text style={styles.textNameSmall} adjustsFontSizeToFit>
-									{i18n.t(item.name)}
-								</Text>
+								<Text style={styles.textNameSmall}>{i18n.t(item.name)}</Text>
 							</View>
 						</TouchableOpacity>
 					)}
@@ -181,7 +179,7 @@ const styles = StyleSheet.create({
 		alignSelf: "flex-start",
 	},
 	textNameSmall: {
-		color: "rgba(112, 45, 135, 1)",
+		color: "#3d3d3d",
 		fontSize: 14,
 		textAlign: "center",
 		...Tools.gStyle.font("400"),

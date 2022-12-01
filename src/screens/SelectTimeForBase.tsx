@@ -28,10 +28,10 @@ const SelectTimeForBase: RootScreenProps<"SelectTimeForBase"> = ({ navigation, r
 	const [isNeedVoice, setIsNeedVoice] = React.useState<boolean>(false);
 	useFocusEffect(
 		useCallback(() => {
-			if (Platform.OS === "android") {
-				StatusBar.setStatusBarTranslucent(true);
-			}
-			StatusBar.setStatusBarStyle("light");
+			// if (Platform.OS === "android") {
+			// 	StatusBar.setStatusBarTranslucent(true);
+			// }
+			// StatusBar.setStatusBarStyle("light");
 			navigation.setOptions({
 				title: selectedPractice.name,
 			});

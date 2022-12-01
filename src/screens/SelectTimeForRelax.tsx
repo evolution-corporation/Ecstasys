@@ -28,10 +28,10 @@ const SelectTimeForRelax: RootScreenProps<"SelectTimeForRelax"> = ({ navigation,
 	const { window } = useDimensions();
 	useFocusEffect(
 		useCallback(() => {
-			if (Platform.OS === "android") {
-				StatusBar.setStatusBarTranslucent(true);
-			}
-			StatusBar.setStatusBarStyle("light");
+			// if (Platform.OS === "android") {
+			// 	StatusBar.setStatusBarTranslucent(true);
+			// }
+			// StatusBar.setStatusBarStyle("light");
 			navigation.setOptions({
 				title: selectedPractice.name,
 			});
