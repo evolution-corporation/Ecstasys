@@ -12,7 +12,7 @@ const EditUserBirthday: RootScreenProps<"EditUserBirthday"> = ({ navigation }) =
 	const { height, width } = useWindowDimensions();
 	const position = useRef<Animated.Value>(new Animated.Value(0)).current;
 
-	const { birthday, setValue } = useUserInformation();
+	const { birthday, setValue } = useUserInformation(true, false);
 
 	const [contentSizeHeight, setContentSizeHeight] = useState<number | null>(null);
 	const nextBirthday = useRef<Date | null>(null);

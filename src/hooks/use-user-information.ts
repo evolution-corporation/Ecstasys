@@ -12,7 +12,7 @@ export interface ReturnUserInformationHook extends CurrentData {
 	isLoading: boolean;
 }
 
-const useUserInformation = (usingChangeData = true): ReturnUserInformationHook => {
+const useUserInformation = (usingChangeData = true, clearUnmount = true): ReturnUserInformationHook => {
 	const [isLoading, setIsLoading] = React.useState(false);
 	const userData = useAppSelector(store => {
 		if (store.account.currentData === undefined)
@@ -40,11 +40,22 @@ const useUserInformation = (usingChangeData = true): ReturnUserInformationHook =
 		return;
 	};
 
+	const clearChangedValue = async () => {
+		appDispatch(actions.removeChangedInformationUser());
+	};
+
+	React.useEffect(() => {
+		return () => {
+			if (clearUnmount) clearChangedValue();
+		};
+	}, []);
+
 	return {
 		...userData,
 		upload,
 		setValue,
 		isLoading,
+		clearChangedValue,
 	};
 };
 

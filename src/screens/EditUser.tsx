@@ -33,7 +33,19 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 	const { window } = useDimensions();
 
 	const update = async () => {
-		await upload();
+		try {
+			await upload();
+			navigation.navigate("MessageLog", {
+				message: i18n.t("6962d75a-b6cc-4e30-aa87-addabf7450e7"),
+				result: "Resolve",
+			});
+		} catch (error) {
+			console.log(error);
+			navigation.navigate("MessageLog", {
+				message: !!error.message ? error.message : "Упс...",
+				result: "Reject",
+			});
+		}
 	};
 
 	React.useEffect(() => {
@@ -177,13 +189,13 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 										marginTop: 15,
 									}}
 									key={item.value}
+									onPress={() => {
+										closeList();
+										setValue({ gender: item.value });
+									}}
 								>
 									<Text
 										style={{ opacity: 0.22, color: "#000000", fontSize: 13, textAlign: "left", ...gStyle.font("400") }}
-										onPress={() => {
-											closeList();
-											setValue({ gender: item.value });
-										}}
 									>
 										{i18n.t(item.translate)}
 									</Text>
