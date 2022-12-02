@@ -6,15 +6,17 @@ import { State } from "~types";
 
 import Actions from "../actions";
 
+export interface CurrentData {
+	displayName?: string;
+	image: string;
+	birthday: string;
+	nickName: string;
+	gender: "MALE" | "FEMALE" | "OTHER";
+}
+
 export interface AccountState {
 	uid?: string;
-	currentData?: {
-		displayName?: string;
-		image: string;
-		birthday: string;
-		nickName: string;
-		gender: "MALE" | "FEMALE" | "OTHER";
-	};
+	currentData?: CurrentData;
 	changeData: {
 		nickname?: string;
 		image?: string;

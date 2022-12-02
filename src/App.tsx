@@ -6,7 +6,6 @@ import { Alert, Platform, UIManager, View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { Provider } from "react-redux";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import RootRoutes from "./routes";
@@ -14,6 +13,8 @@ import Store, { actions, useAppDispatch } from "./store";
 import "./TaskManager";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
+
+import "./function-toolbox";
 
 GoogleSignin.configure({
 	webClientId: "878799007977-cj3549ni87jre2rmg4eq0hiolp08igh2.apps.googleusercontent.com",

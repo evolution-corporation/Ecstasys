@@ -21,6 +21,8 @@ import { useFocusEffect } from "@react-navigation/native";
 import * as StatusBar from "expo-status-bar";
 import * as BasePractice from "src/baseMeditation";
 import { useDimensions } from "@react-native-community/hooks";
+import useIsActivateSubscribe from "src/hooks/use-is-activate-subscribe";
+import { developmentConfig } from "src/read-config";
 
 enum StatusPractice {
 	Loading,
@@ -55,29 +57,31 @@ const PlayerMeditationOnTheMandala: RootScreenProps<"PlayerMeditationOnTheMandal
 	const [isShowTime, setIsShowTime] = React.useState(true);
 	const timerTask = React.useRef<ReturnType<typeof initializationTimer> | null>(null);
 	const appDispatch = useAppDispatch();
-	const isSubscribe = useAppSelector(store => {
-		if (store.account.subscribe !== undefined) {
-			const endSubscribe = new Date(store.account.subscribe.whenSubscribe);
-			endSubscribe.setDate(
-				endSubscribe.getDate() +
-					(() => {
-						switch (store.account.subscribe.type) {
-							case "WEEK":
-								return 7;
-							case "MONTH":
-								return 30;
-							case "HALF_YEAR":
-								return 180;
-							default:
-								return 0;
-						}
-					})()
-			);
-			return endSubscribe.getTime() > Date.now();
-		} else {
-			return false;
-		}
-	});
+	const isSubscribe = developmentConfig("customHook")
+		? useIsActivateSubscribe()
+		: useAppSelector(store => {
+				if (store.account.subscribe !== undefined) {
+					const endSubscribe = new Date(store.account.subscribe.whenSubscribe);
+					endSubscribe.setDate(
+						endSubscribe.getDate() +
+							(() => {
+								switch (store.account.subscribe.type) {
+									case "WEEK":
+										return 7;
+									case "MONTH":
+										return 30;
+									case "HALF_YEAR":
+										return 180;
+									default:
+										return 0;
+								}
+							})()
+					);
+					return endSubscribe.getTime() > Date.now();
+				} else {
+					return false;
+				}
+		  });
 	const [startTimer, stopTimer] = React.useRef([
 		() => {
 			timerTask.current = initializationTimer(() => {

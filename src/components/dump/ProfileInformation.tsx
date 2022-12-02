@@ -9,6 +9,8 @@ import * as UIText from "../UIText";
 import i18n from "~i18n";
 
 import SelectImageButton from "./Buttons/SelectImage";
+import useIsActivateSubscribe from "src/hooks/use-is-activate-subscribe";
+import { developmentConfig } from "src/read-config";
 
 interface Props extends RN.ViewProps {
 	displayName?: string;
@@ -23,11 +25,17 @@ interface Props extends RN.ViewProps {
 
 const ProfileInformation: React.FC<Props> = props => {
 	const { image, displayName, subscribeInformation, onPress, onChangeImage } = props;
-	const isActivateSubscribe = subscribeInformation !== undefined && subscribeInformation.endSubscribe > new Date();
-	const refSelectImage = React.useRef<React.ElementRef<typeof SelectImageButton>>(null)
-	React.useEffect(()=>{
-		refSelectImage.current?.setImage(image)
-	}, [image])
+	const isActivateSubscribe = developmentConfig("customHook")
+		? useIsActivateSubscribe()
+		: subscribeInformation !== undefined && subscribeInformation.endSubscribe > new Date();
+	const refSelectImage = React.useRef<React.ElementRef<typeof SelectImageButton>>(null);
+	React.useEffect(() => {
+		refSelectImage.current?.setImage(image);
+	}, [image]);
+	const refSelectImage = React.useRef<React.ElementRef<typeof SelectImageButton>>(null);
+	React.useEffect(() => {
+		refSelectImage.current?.setImage(image);
+	}, [image]);
 	return (
 		<RN.View style={styles.container}>
 			{onChangeImage === undefined ? (
@@ -59,9 +67,14 @@ const ProfileInformation: React.FC<Props> = props => {
 
 				<RN.Text style={styles.timeSubscribe}>
 					{isActivateSubscribe
-						? i18n.t(subscribeInformation.isAutoPayment ? "392fd6e3-9b0c-4673-b1c2-45deeaadd7b1" : "048d71cd-03e2-4c8f-9f29-d2e5e9576a07" , {
-							dateTime: i18n.strftime(new Date(subscribeInformation.endSubscribe), "%d.%m.%Y"),
-						})
+						? i18n.t(
+								subscribeInformation.isAutoPayment
+									? "392fd6e3-9b0c-4673-b1c2-45deeaadd7b1"
+									: "048d71cd-03e2-4c8f-9f29-d2e5e9576a07",
+								{
+									dateTime: i18n.strftime(new Date(subscribeInformation.endSubscribe), "%d.%m.%Y"),
+								}
+						  )
 						: i18n.t("indefinitely")}
 				</RN.Text>
 				{onPress && <TextButton onPress={onPress}>{i18n.t("edit")}</TextButton>}

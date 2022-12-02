@@ -20,7 +20,7 @@ enum AccountAction {
 	setNotNewUser = "account/setNotNewUser",
 }
 
-interface SetChangedAccountDataParams {
+export interface SetChangedAccountDataParams {
 	nickname?: string;
 	image?: string;
 	displayName?: string;

@@ -18,6 +18,8 @@ import { StatusBar, setStatusBarHidden } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { UserButton } from "~components/dump";
 import { useAppSelector } from "~store";
+import useIsActivateSubscribe from "src/hooks/use-is-activate-subscribe";
+import { developmentConfig } from "src/read-config";
 
 const getStartWeek = () => {
 	const date = new Date();
@@ -66,30 +68,33 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 		return [store.style.messageProfessor.idMessage, greetingDay];
 	});
 	const recommendationPractice = Store.useAppSelector(store => store.practice.recommendationPracticeToDay ?? null);
-	const isSubscribe = useAppSelector(store => {
-		if (store.account.subscribe !== undefined) {
-			const endSubscribe = new Date(store.account.subscribe.whenSubscribe);
+	const isSubscribe = developmentConfig("customHook")
+		? useIsActivateSubscribe()
+		: useAppSelector(store => {
+				if (store.account.subscribe !== undefined) {
+					const endSubscribe = new Date(store.account.subscribe.whenSubscribe);
 
-			endSubscribe.setDate(
-				endSubscribe.getDate() +
-					(() => {
-						switch (store.account.subscribe.type) {
-							case "WEEK":
-								return 7;
-							case "MONTH":
-								return 30;
-							case "HALF_YEAR":
-								return 180;
-							default:
-								return 0;
-						}
-					})()
-			);
-			return endSubscribe.getTime() > Date.now();
-		} else {
-			return false;
-		}
-	});
+					endSubscribe.setDate(
+						endSubscribe.getDate() +
+							(() => {
+								switch (store.account.subscribe.type) {
+									case "WEEK":
+										return 7;
+									case "MONTH":
+										return 30;
+									case "HALF_YEAR":
+										return 180;
+									default:
+										return 0;
+								}
+							})()
+					);
+					return endSubscribe.getTime() > Date.now();
+				} else {
+					return false;
+				}
+		  });
+
 	const dispatch = Store.useAppDispatch();
 	//* -----------
 	const translateGreeting = useSharedValue(0);
