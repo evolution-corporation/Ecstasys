@@ -14,9 +14,11 @@ import { actions, useAppDispatch } from "~store";
 import { RootScreenProps } from "~types";
 import { convertedImageURLInBase64 } from "~tools";
 import { StatusBar } from "expo-status-bar";
+import useUserInformation from "src/hooks/use-user-information";
 
 const InputImageAndBirthdayScreen: RootScreenProps<"InputImageAndBirthday"> = ({ navigation }) => {
 	const appDispatch = useAppDispatch();
+
 	const SelectImageButtonRef = React.useRef<React.ElementRef<typeof SelectImageButton>>(null);
 	const countBack = React.useRef<number>(0);
 	const registration = async () => {

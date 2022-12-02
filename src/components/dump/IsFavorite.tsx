@@ -2,10 +2,10 @@
 
 import React from "react";
 import { ViewProps, Pressable, ViewStyle, StyleSheet, StyleProp } from "react-native";
-import { actions, useAppDispatch, useAppSelector } from "~store";
 import { State } from "~types";
 import RedHeart from "assets/icons/Heart_Red.svg";
 import HeartTransparent from "assets/icons/Heart_Transparent.svg";
+import useIsFavoriteMeditation from "src/hooks/use-is-favorite-meditation";
 
 interface Props {
 	onPress: () => void;
@@ -29,17 +29,8 @@ export const IsFavorite: React.FC<Props> = props => {
 export function OnFavoritePractice(WrapperComponent: React.FC<Props>) {
 	return (props: { practice: State.Practice; noShowWereNoFavorite?: boolean } & ViewProps) => {
 		const { practice, style, noShowWereNoFavorite = false } = props;
-		const isFavorite = useAppSelector(
-			store => store.practice.listPracticesFavorite.findIndex(({ id }) => practice.id === id) !== -1
-		);
-		const appDispatch = useAppDispatch();
-		const changeResult = () => {
-			if (isFavorite) {
-				appDispatch(actions.removeFavoritePractice(practice));
-			} else {
-				appDispatch(actions.addFavoritePractice(practice));
-			}
-		};
+		const [isFavorite, changeResult] = useIsFavoriteMeditation(practice);
+
 		return noShowWereNoFavorite && !isFavorite ? null : (
 			<WrapperComponent isFavorite={isFavorite} onPress={changeResult} style={style} />
 		);

@@ -13,12 +13,13 @@ import { DoubleColorView } from "~components/containers";
 import i18n from "~i18n";
 import DescriptionPrentices from "assets/descriptionPrentices.json";
 import { CarouselPractices } from "~components/dump";
-import { actions, useAppDispatch, useAppSelector } from "~store";
+import { actions, useAppDispatch } from "~store";
 import { Converter, Request } from "~api";
 import { SupportType } from "src/api/types";
 import { MeditationOnTheMandala, MeditationOnTheNose, PlayerMeditationDot } from "src/baseMeditation";
 
 import * as Instruction from "src/instruction";
+import useIsActivateSubscribe from "src/hooks/use-is-activate-subscribe";
 
 const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navigation }) => {
 	const { typePractices } = route.params;
@@ -32,30 +33,7 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 			opacity: withTiming(opacityButton.value),
 		})),
 	};
-	const isSubscribe = useAppSelector(store => {
-		if (store.account.subscribe !== undefined) {
-			const endSubscribe = new Date(store.account.subscribe.whenSubscribe);
-
-			endSubscribe.setDate(
-				endSubscribe.getDate() +
-					(() => {
-						switch (store.account.subscribe.type) {
-							case "WEEK":
-								return 7;
-							case "MONTH":
-								return 30;
-							case "HALF_YEAR":
-								return 180;
-							default:
-								return 0;
-						}
-					})()
-			);
-			return endSubscribe.getTime() > Date.now();
-		} else {
-			return false;
-		}
-	});
+	const isSubscribe = useIsActivateSubscribe();
 
 	React.useLayoutEffect(() => {
 		navigation.setOptions({ title: i18n.t(typePractices) });

@@ -20,7 +20,7 @@ enum AccountAction {
 	setNotNewUser = "account/setNotNewUser",
 }
 
-interface SetChangedAccountDataParams {
+export interface SetChangedAccountDataParams {
 	nickname?: string;
 	image?: string;
 	displayName?: string;
@@ -84,11 +84,13 @@ export const updateAccount = createAsyncThunk<
 			lastCheckNicknameAndResult = [new Date().toISOString(), isFree];
 		}
 	}
+
 	const user = Converter.composeUser(
 		await Request.updateUser({
 			birthday: birthday !== undefined ? new Date(birthday) : undefined,
 			displayName,
 			image,
+			gender,
 			nickname:
 				nickname !== undefined && lastCheckNicknameAndResult !== undefined && lastCheckNicknameAndResult[1]
 					? nickname

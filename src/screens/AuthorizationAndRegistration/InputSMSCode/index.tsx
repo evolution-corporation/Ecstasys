@@ -17,6 +17,7 @@ import { actions, useAppDispatch } from "~store";
 
 const SMSCodeInputScreen: RootScreenProps<"InputSMSCode"> = ({ route }) => {
 	const { phoneNumber } = route.params;
+
 	const refSMSCodeInput = useRef<ElementRef<typeof SMSCodeInput>>(null);
 	const [status, setStatus] = useState<SMSCodeInputInfoShow>(SMSCodeInputInfoShow.requestSMS);
 	const [confirm, setConfirm] = useState<FirebaseAuthTypes.ConfirmationResult | null>(null);

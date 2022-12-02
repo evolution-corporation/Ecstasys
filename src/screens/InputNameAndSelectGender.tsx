@@ -9,12 +9,12 @@ import { actions, useAppDispatch } from "~store";
 import gStyle from "~styles";
 import { Gender, RootScreenProps } from "~types";
 import auth from "@react-native-firebase/auth";
+import useUserInformation from "src/hooks/use-user-information";
 
 const InputNameAndSelectGender: RootScreenProps<"InputNameAndSelectGender"> = ({ navigation }) => {
-	const [name, setName] = React.useState<string>("");
 	const refTextInput = React.useRef<TextInput>(null);
-	const [gender, setGender] = React.useState<Gender>(Gender.OTHER);
-	const dispatch = useAppDispatch();
+	const { gender, setValue, upload } = useUserInformation();
+
 	const [isKeyboardOpen, setIsKeyboardOpen] = React.useState<boolean>(false);
 
 	React.useEffect(() => {
@@ -28,7 +28,7 @@ const InputNameAndSelectGender: RootScreenProps<"InputNameAndSelectGender"> = ({
 
 	const save = async () => {
 		try {
-			await dispatch(actions.updateAccount({ displayName: name, gender })).unwrap();
+			await upload();
 			navigation.goBack();
 		} catch (error) {
 			navigation.navigate("MessageLog", {
@@ -42,7 +42,7 @@ const InputNameAndSelectGender: RootScreenProps<"InputNameAndSelectGender"> = ({
 		React.useCallback(() => {
 			const user = auth().currentUser;
 			if (!!user && !!user.displayName) {
-				setName(user.displayName);
+				setValue({ displayName: user.displayName });
 			}
 		}, [])
 	);
@@ -93,7 +93,7 @@ const InputNameAndSelectGender: RootScreenProps<"InputNameAndSelectGender"> = ({
 							...gStyle.font("700"),
 							textAlign: "center",
 						}}
-						onChangeText={setName}
+						onChangeText={text => setValue({ displayName: text })}
 						ref={refTextInput}
 					/>
 					{false ? null : (
@@ -105,7 +105,7 @@ const InputNameAndSelectGender: RootScreenProps<"InputNameAndSelectGender"> = ({
 								<Pressable
 									style={{ flex: 1, alignItems: "center" }}
 									onPress={() => {
-										setGender(Gender.MALE);
+										setValue({ gender: Gender.MALE });
 									}}
 								>
 									<Image source={require("assets/man.png")} style={{ flex: 1 }} resizeMode={"contain"} />
@@ -119,7 +119,7 @@ const InputNameAndSelectGender: RootScreenProps<"InputNameAndSelectGender"> = ({
 									<Pressable
 										style={[styles.generalButton, gender === Gender.OTHER ? { backgroundColor: "#9765A8" } : null]}
 										onPress={() => {
-											setGender(Gender.OTHER);
+											setValue({ gender: Gender.OTHER });
 										}}
 									>
 										<View
@@ -133,7 +133,7 @@ const InputNameAndSelectGender: RootScreenProps<"InputNameAndSelectGender"> = ({
 								<Pressable
 									style={{ flex: 1, alignItems: "center" }}
 									onPress={() => {
-										setGender(Gender.FEMALE);
+										setValue({ gender: Gender.FEMALE });
 									}}
 								>
 									<Image source={require("assets/fam.png")} style={{ flex: 1 }} resizeMode={"contain"} />

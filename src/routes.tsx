@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { FC, memo } from "react";
-import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Pressable, StyleSheet, Text, View, ActivityIndicator } from "react-native";
 
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 
@@ -22,12 +22,12 @@ import PracticesIconNoSelected from "assets/icons/PracticeNoSelectedIcon.svg";
 import ProfileIconNoSelected from "assets/icons/ProfileNoSelectedIcon.svg";
 import DMDIconNoSelected from "assets/icons/DMDNoSelectedIcon.svg";
 
-import { useAppSelector } from "~store";
 import { RootScreenProps, RootStackList, State, TabNavigatorList } from "~types";
 
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import ArrowBack from "assets/icons/ArrowBack.svg";
+import useAccountStatus from "./hooks/use-account-status";
 
 const TabNavigator = createBottomTabNavigator<TabNavigatorList>();
 
@@ -89,11 +89,10 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
 const RootNavigation = createSharedElementStackNavigator<RootStackList>();
 
 const RootRoutes: FC = () => {
-	const accountStatus = useAppSelector(store => store.account.status);
-	if (accountStatus === "IS_LOADING") return null;
+	const accountStatus = useAccountStatus();
 	let screenList;
 	switch (accountStatus) {
-		case "NO_AUTHENTICATION":
+		case "NO_AUTHENTICATION": {
 			screenList = (
 				<>
 					<RootNavigation.Screen
@@ -120,7 +119,8 @@ const RootRoutes: FC = () => {
 				</>
 			);
 			break;
-		case "NO_REGISTRATION":
+		}
+		case "NO_REGISTRATION": {
 			screenList = (
 				<>
 					<RootNavigation.Screen
@@ -140,7 +140,20 @@ const RootRoutes: FC = () => {
 				</>
 			);
 			break;
-		default:
+		}
+		case "IS_LOADING": {
+			return (
+				<RootNavigation.Screen
+					name={"Loading"}
+					component={() => (
+						<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+							<ActivityIndicator />
+						</View>
+					)}
+				/>
+			);
+		}
+		default: {
 			screenList = (
 				<>
 					<RootNavigation.Screen name={"TabNavigator"} component={TabRoutes} options={{ headerShown: false }} />
@@ -275,6 +288,7 @@ const RootRoutes: FC = () => {
 					/>
 				</>
 			);
+		}
 	}
 
 	return (

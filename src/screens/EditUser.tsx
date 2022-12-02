@@ -9,37 +9,44 @@ import gStyle from "~styles";
 import { ColorButton, SelectImageButton, NicknameInput } from "~components/dump";
 import { CustomModal, Screen } from "~components/containers";
 import { Gender, RootScreenProps } from "~types";
-import { actions, useAppDispatch, useAppSelector } from "~store";
+import { actions, useAppDispatch } from "~store";
 import { StatusCheck } from "~components/dump/NicknameInput/NicknameBase";
 import { Request } from "~api";
 import { useDimensions } from "@react-native-community/hooks";
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
 import TheArrow from "~assets/icons/TheArrow_WhiteTop.svg";
+import useUserInformation from "src/hooks/use-user-information";
 
 const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
-	const changedData = useAppSelector(store => store.account.changeData);
-	const { displayName, birthday, gender, image, nickName } = useAppSelector(store => {
-		if (store.account.currentData === undefined) throw new Error("Not found user");
-		return store.account.currentData;
-	});
-	const [isKeyboardOpen, setIsKeyboardOpen] = React.useState<boolean>(false);
+	const customModalRef = React.useRef<ElementRef<typeof CustomModal>>(null);
+
+	const closeList = () => {
+		_RigthtBottomRadiusBackground.value = 15;
+		_RotateArrow.value = "180deg";
+		customModalRef.current?.close();
+	};
+	const { birthday, gender, image, isLoading, nickName, setValue, upload, displayName } = useUserInformation();
 	const dispatch = useAppDispatch();
+
+	const [isKeyboardOpen, setIsKeyboardOpen] = React.useState<boolean>(false);
+
+	const { window } = useDimensions();
+
 	const update = async () => {
 		try {
-			await dispatch(actions.updateAccount({})).unwrap();
+			await upload();
 			navigation.navigate("MessageLog", {
 				message: i18n.t("6962d75a-b6cc-4e30-aa87-addabf7450e7"),
 				result: "Resolve",
 			});
 		} catch (error) {
+			console.log(error);
 			navigation.navigate("MessageLog", {
-				message: error instanceof Error ? error.message : "Упс...",
+				message: !!error.message ? error.message : "Упс...",
 				result: "Reject",
 			});
 		}
 	};
-
-	const { window } = useDimensions();
 
 	React.useEffect(() => {
 		const keyboardListenOpen = Keyboard.addListener("keyboardDidShow", () => setIsKeyboardOpen(true));
@@ -49,8 +56,6 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 			keyboardListenClose.remove();
 		};
 	}, []);
-
-	const customModalRef = React.useRef<ElementRef<typeof CustomModal>>(null);
 
 	const _RigthtBottomRadiusBackground = useSharedValue(15);
 	const _RotateArrow = useSharedValue("180deg");
@@ -69,12 +74,6 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 		customModalRef.current?.open();
 	};
 
-	const closeList = () => {
-		_RigthtBottomRadiusBackground.value = 15;
-		_RotateArrow.value = "180deg";
-		customModalRef.current?.close();
-	};
-
 	const [ySelectGender, setYSelectGender] = React.useState<number | null>(null);
 
 	const [widthSelectGender, setWidthSelectGender] = React.useState<number | null>(null);
@@ -90,7 +89,7 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 						style={styles.selectImage}
 						onChangeImage={base64 => {
 							if (base64) {
-								dispatch(actions.addChangedInformationUser({ image: base64 }));
+								setValue({ image: base64 });
 							}
 						}}
 						initImage={image}
@@ -120,16 +119,18 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 						setYSelectGender(layout.height + layout.y + 55);
 					}}
 				>
-					<TextInput
-						style={styles.TextInputTransparent}
-						key={"name"}
-						placeholder={i18n.t("b89f2757-8b5e-4a08-b8f8-1bbe87834f3e")}
-						placeholderTextColor={"rgba(231, 221, 236, 1)"}
-						onChangeText={text => {
-							dispatch(actions.addChangedInformationUser({ displayName: text }));
-						}}
-						defaultValue={changedData.displayName ?? displayName}
-					/>
+					{
+						<TextInput
+							style={styles.TextInputTransparent}
+							key={"name"}
+							placeholder={i18n.t("b89f2757-8b5e-4a08-b8f8-1bbe87834f3e")}
+							placeholderTextColor={"rgba(231, 221, 236, 1)"}
+							onChangeText={text => {
+								setValue({ displayName: text });
+							}}
+							defaultValue={displayName}
+						/>
+					}
 					<Pressable
 						style={{
 							height: "100%",
@@ -142,13 +143,15 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 						}}
 						onPress={() => openList()}
 					>
-						<Text style={{ color: "#FFF", fontSize: 13, ...gStyle.font("400"), marginRight: 5 }}>
-							{(changedData.gender ?? gender) === "FEMALE"
-								? i18n.t("83dfa634-dd9f-4dce-ab9e-6d6961a296f7")
-								: (changedData.gender ?? gender) === "MALE"
-								? i18n.t("8d0002e2-5da2-448f-b9dc-e73352612c41")
-								: i18n.t("7103289f-c425-457d-8b29-f9e0be60c01c")}
-						</Text>
+						{
+							<Text style={{ color: "#FFF", fontSize: 13, ...gStyle.font("400"), marginRight: 5 }}>
+								{gender === "FEMALE"
+									? i18n.t("83dfa634-dd9f-4dce-ab9e-6d6961a296f7")
+									: gender === "MALE"
+									? i18n.t("8d0002e2-5da2-448f-b9dc-e73352612c41")
+									: i18n.t("7103289f-c425-457d-8b29-f9e0be60c01c")}
+							</Text>
+						}
 						<Animated.View style={arrowAnimatedStyle}>
 							<TheArrow />
 						</Animated.View>
@@ -186,13 +189,13 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 										marginTop: 15,
 									}}
 									key={item.value}
+									onPress={() => {
+										closeList();
+										setValue({ gender: item.value });
+									}}
 								>
 									<Text
 										style={{ opacity: 0.22, color: "#000000", fontSize: 13, textAlign: "left", ...gStyle.font("400") }}
-										onPress={() => {
-											closeList();
-											dispatch(actions.addChangedInformationUser({ gender: item.value }));
-										}}
 									>
 										{i18n.t(item.translate)}
 									</Text>
@@ -201,37 +204,34 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 						</View>
 					</CustomModal>
 				</Animated.View>
-				<NicknameInput
-					defaultValue={nickName}
-					onEndChange={(inputNickName, status) => {
-						if (status === StatusCheck.FREE) {
-							Request.reservationNickname(inputNickName);
-						}
-					}}
-					styleNicknameInputView={styles.editNickname}
-					checkValidateNickname={async (inputNickName: string) => {
-						if (nickName !== inputNickName) {
-							return (await dispatch(actions.addChangedInformationUser({ nickname: inputNickName })).unwrap())
-								.lastCheckNicknameAndResult?.[1] ?? false
-								? StatusCheck.FREE
-								: StatusCheck.USED;
-						} else {
-							return StatusCheck.AWAIT;
-						}
-					}}
-				/>
+				{
+					<NicknameInput
+						defaultValue={nickName}
+						onEndChange={(inputNickName, status) => {
+							if (status === StatusCheck.FREE) {
+								Request.reservationNickname(inputNickName);
+							}
+						}}
+						styleNicknameInputView={styles.editNickname}
+						checkValidateNickname={async (inputNickName: string) => {
+							if (nickName !== inputNickName) {
+								return (await dispatch(actions.addChangedInformationUser({ nickname: inputNickName })).unwrap())
+									.lastCheckNicknameAndResult?.[1] ?? false
+									? StatusCheck.FREE
+									: StatusCheck.USED;
+							} else {
+								return StatusCheck.AWAIT;
+							}
+						}}
+					/>
+				}
 				<TouchableOpacity
 					style={[styles.inputBirthday, { marginTop: 15 }]}
 					onPress={() => {
 						navigation.navigate("EditUserBirthday");
 					}}
 				>
-					<Text style={styles.inputBirthdayText}>
-						{i18n.strftime(
-							changedData.birthday === undefined ? new Date(birthday) : new Date(changedData.birthday),
-							"%d.%m.%Y"
-						)}
-					</Text>
+					<Text style={styles.inputBirthdayText}>{i18n.strftime(new Date(birthday), "%d.%m.%Y")}</Text>
 					<EvilIcons name="pencil" size={24} color="#FFFFFF" />
 				</TouchableOpacity>
 			</View>

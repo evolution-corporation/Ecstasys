@@ -14,6 +14,7 @@ import { StatisticPeriod, GeneralCompositeScreenProps, State } from "~types";
 import { StatusBar } from "expo-status-bar";
 import TreeLine from "~assets/ThreeLine.svg";
 import { useDimensions } from "@react-native-community/hooks";
+import useStaticPractice, { TimePeriod } from "src/hooks/use-statistics-practice";
 
 const getStartWeek = () => {
 	const date = new Date();
@@ -32,32 +33,14 @@ const getStartMonth = () => {
 const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 	//* local state
 	const tabBarHeight = useBottomTabBarHeight();
-	const [statisticPeriod, setStatisticPeriod] = React.useState<StatisticPeriod>(StatisticPeriod.MONTH);
+	const [statisticPeriod, setStatisticPeriod] = React.useState<TimePeriod>(TimePeriod.month);
 	const [heightScreen, setHeightScreen] = React.useState<number | null>(null);
 	//* global state
 	const { displayName, image, nickName } = useAppSelector(store => {
 		if (store.account.currentData === undefined) throw new Error("Not found user");
 		return store.account.currentData;
 	});
-	const [statisticCount, statisticTime] = useAppSelector(store => {
-		let listPracticesListened: {
-			dateListen: string;
-			msListened: number;
-			practice: State.Practice;
-		}[] = [];
-		if (statisticPeriod === StatisticPeriod.WEEK) {
-			listPracticesListened = store.practice.listPracticesListened.filter(
-				item => new Date(item.dateListen) >= getStartWeek()
-			);
-		} else if (statisticPeriod === StatisticPeriod.MONTH) {
-			listPracticesListened = store.practice.listPracticesListened.filter(
-				item => new Date(item.dateListen) >= getStartMonth()
-			);
-		} else {
-			listPracticesListened = store.practice.listPracticesListened;
-		}
-		return [listPracticesListened.length, listPracticesListened.reduce((value, item) => value + item.msListened, 0)];
-	});
+	const { length: statisticCount, timeLength: statisticTime } = useStaticPractice(statisticPeriod);
 
 	const subscribe = useAppSelector(store => {
 		if (store.account.subscribe === undefined) return null;
@@ -139,7 +122,22 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 					appDispatch(actions.updateAccount({ image }));
 				}}
 			/>
-			<Dump.SelectTimePeriodStatistic onChangePeriod={setStatisticPeriod} style={{ marginTop: 16 }} />
+			<Dump.SelectTimePeriodStatistic
+				onChangePeriod={time => {
+					switch (time) {
+						case StatisticPeriod.ALL: {
+							setStatisticPeriod(TimePeriod.all);
+						}
+						case StatisticPeriod.MONTH: {
+							setStatisticPeriod(TimePeriod.month);
+						}
+						case StatisticPeriod.WEEK: {
+							setStatisticPeriod(TimePeriod.week);
+						}
+					}
+				}}
+				style={{ marginTop: 16 }}
+			/>
 			<Dump.StatisticsMeditation count={statisticCount} time={statisticTime} style={{ marginTop: 9 }} />
 			<Dump.ColorWithIconButton
 				icon={<Heart style={{ marginLeft: 20 }} />}

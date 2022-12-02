@@ -1,56 +1,71 @@
 /** @format */
 
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import * as RN from "react-native";
 
-import * as Dump from "~components/dump";
+import * as Dump from "src/components/dump";
 
-import Animated, { interpolate, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import i18n from "~i18n";
-import gStyle, { fontStyle, viewStyle } from "~styles";
+import gStyle, { viewStyle } from "~styles";
 
-import { GeneralCompositeScreenProps, State, StatisticPeriod } from "~types";
+import { GeneralCompositeScreenProps } from "~types";
 import * as Store from "~store";
-import { useFocusEffect } from "@react-navigation/native";
-import { Converter, Request } from "~api";
-import { StatusBar, setStatusBarHidden } from "expo-status-bar";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { UserButton } from "~components/dump";
-import { useAppSelector } from "~store";
+import useIsActivateSubscribe from "src/hooks/use-is-activate-subscribe";
+import useUserInformation from "src/hooks/use-user-information";
+import usePopularPractice from "src/hooks/use-popular-practice";
+import useRecommendationPractice from "src/hooks/use-recomendation-practice";
+import useStaticPractice, { TimePeriod } from "src/hooks/use-statistics-practice";
+import useIsNewUser from "src/hooks/use-is-new-user";
 
-const getStartWeek = () => {
-	const date = new Date();
-	date.setHours(0, 0, 0, 0);
-	date.setDate(date.getDate() - date.getDay());
-	return date;
-};
+const styles = RN.StyleSheet.create({
+	image: {
+		backgroundColor: "rgba(0, 0, 0, 0.2)",
+	},
+	imageGreeting: {
+		justifyContent: "flex-start",
+		width: "100%",
+		paddingBottom: 20,
+		paddingTop: 70,
+	},
+	professor: {
+		width: 147,
+		height: 147,
+		alignSelf: "center",
+	},
+	userButton: {
+		marginLeft: 20,
+		marginTop: 40,
+		alignSelf: "flex-start",
+	},
+	nameSection: {
+		fontSize: 20,
+		color: "#555555",
+		...gStyle.font("400"),
+		marginBottom: 3,
+	},
+	descriptionSection: {
+		fontSize: 14,
+		...gStyle.font("400"),
+		color: "#A0A0A0",
+	},
+});
 
 const Main: GeneralCompositeScreenProps = ({ navigation }) => {
-	const [toDayPopularMeditation, setTodayPopularMeditation] = React.useState<State.Practice | null>(null);
-	const { height } = RN.useWindowDimensions();
-	const isNewUser = Store.useAppSelector(store => store.account.isNewUser);
-	const [heightGreeting, setHeightGreeting] = React.useState<number | null>(null);
+	const [toDayPopularMeditation, ,] = usePopularPractice();
+	const isNewUser = useIsNewUser();
+	const [heightGreeting, setHeightGreeting] = React.useState<number>();
 	//* Данные из глобального состояния
-	const { displayName, image, nickName } = Store.useAppSelector(store => {
-		if (store.account.currentData === undefined) throw new Error("Not Found User Data");
-		return store.account.currentData;
-	});
-	const [countMeditation, timeMeditation] = Store.useAppSelector(store => {
-		const listPracticesListenedWeek = store.practice.listPracticesListened.filter(
-			item => new Date(item.dateListen) >= getStartWeek()
-		);
-		return [
-			listPracticesListenedWeek.length,
-			listPracticesListenedWeek.reduce((value, item) => value + item.msListened, 0),
-		];
-	});
+	const { displayName } = useUserInformation();
+
+	const { length: countMeditation, timeLength: timeMeditation } = useStaticPractice(TimePeriod.week);
 
 	const [messageProfessor, greeting] = Store.useAppSelector(store => {
 		if (store.style.messageProfessor === undefined) throw new Error("not found Message By Professor");
 		const lastUpdate = new Date(store.style.messageProfessor.dateTimeLastUpdate);
 		const hours = lastUpdate.getHours();
-		let greetingDay: string | null;
+		let greetingDay: string | undefined;
 		if (hours >= 0 && hours < 6) {
 			greetingDay = "06c305e9-2d05-4465-a0bf-8baa0de88baf";
 		} else if (hours >= 6 && hours < 12) {
@@ -60,37 +75,14 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 		} else {
 			greetingDay = "52a1a44e-d621-4d55-b0df-b21ddea89872";
 		}
-		if (Date.now() - lastUpdate.getTime() > 300000) {
-			greetingDay = null;
+		if (Date.now() - lastUpdate.getTime() > 300_000) {
+			greetingDay = undefined;
 		}
 		return [store.style.messageProfessor.idMessage, greetingDay];
 	});
-	const recommendationPractice = Store.useAppSelector(store => store.practice.recommendationPracticeToDay ?? null);
-	const isSubscribe = useAppSelector(store => {
-		if (store.account.subscribe !== undefined) {
-			const endSubscribe = new Date(store.account.subscribe.whenSubscribe);
+	const recommendationPractice = useRecommendationPractice();
+	const isSubscribe = useIsActivateSubscribe();
 
-			endSubscribe.setDate(
-				endSubscribe.getDate() +
-					(() => {
-						switch (store.account.subscribe.type) {
-							case "WEEK":
-								return 7;
-							case "MONTH":
-								return 30;
-							case "HALF_YEAR":
-								return 180;
-							default:
-								return 0;
-						}
-					})()
-			);
-			return endSubscribe.getTime() > Date.now();
-		} else {
-			return false;
-		}
-	});
-	const dispatch = Store.useAppDispatch();
 	//* -----------
 	const translateGreeting = useSharedValue(0);
 	const greetingStyle = useAnimatedStyle(() => ({
@@ -112,9 +104,6 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 	}, [displayName, greeting]);
 
 	useEffect(() => {
-		Request.getPopularToDayMeditation().then(practice =>
-			setTodayPopularMeditation(Converter.composePractice(practice))
-		);
 		if (isNewUser) {
 			navigation.navigate("InputNameAndSelectGender");
 		}
@@ -161,7 +150,10 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 					style={styles.imageGreeting}
 					imageStyle={{ top: -40 }}
 				>
-					<UserButton onPress={() => navigation.navigate("Profile")} style={{ alignSelf: "flex-start", left: 20 }} />
+					<Dump.UserButton
+						onPress={() => navigation.navigate("Profile")}
+						style={{ alignSelf: "flex-start", left: 20 }}
+					/>
 					<Dump.MessageProfessor
 						greeting={greetingText}
 						message={i18n.t(messageProfessor)}
@@ -186,7 +178,7 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 			>
 				<RN.Text style={styles.nameSection}>{i18n.t("9d0cd47a-0392-4e5c-9573-00642b12f868")}</RN.Text>
 				<RN.Text style={styles.descriptionSection}>{i18n.t("f292b17c-2295-471e-80cf-f99f6a618701")}</RN.Text>
-				{recommendationPractice === null ? null : (
+				{recommendationPractice && (
 					<Dump.PracticeCard
 						id={recommendationPractice.id}
 						style={{ marginTop: 12 }}
@@ -219,7 +211,7 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 				<Dump.StatisticsMeditation style={viewStyle.margin.mediumV} count={countMeditation} time={timeMeditation} />
 				<RN.Text style={styles.nameSection}>{i18n.t("bbb079ed-25a1-4360-a262-5c1ef0741cbf")}</RN.Text>
 				<RN.Text style={styles.descriptionSection}>{i18n.t("b47177ce-a266-4e2f-ba88-218f93de38a3")}</RN.Text>
-				{toDayPopularMeditation !== null ? (
+				{toDayPopularMeditation && (
 					<Dump.PracticeCard
 						id={toDayPopularMeditation.id}
 						style={{ marginTop: 12 }}
@@ -243,43 +235,10 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 							}
 						}}
 					/>
-				) : null}
+				)}
 			</Animated.View>
 		</RN.ScrollView>
 	);
 };
-
-const styles = RN.StyleSheet.create({
-	image: {
-		backgroundColor: "rgba(0, 0, 0, 0.2)",
-	},
-	imageGreeting: {
-		justifyContent: "flex-start",
-		width: "100%",
-		paddingBottom: 20,
-		paddingTop: 70,
-	},
-	professor: {
-		width: 147,
-		height: 147,
-		alignSelf: "center",
-	},
-	userButton: {
-		marginLeft: 20,
-		marginTop: 40,
-		alignSelf: "flex-start",
-	},
-	nameSection: {
-		fontSize: 20,
-		color: "#555555",
-		...gStyle.font("400"),
-		marginBottom: 3,
-	},
-	descriptionSection: {
-		fontSize: 14,
-		...gStyle.font("400"),
-		color: "#A0A0A0",
-	},
-});
 
 export default Main;

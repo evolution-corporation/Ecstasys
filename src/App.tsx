@@ -6,7 +6,6 @@ import { Alert, Platform, UIManager, View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { Provider } from "react-redux";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import RootRoutes from "./routes";

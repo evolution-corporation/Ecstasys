@@ -6,20 +6,15 @@ import { ColorButton, SelectBirthday } from "~components/dump";
 import Tools from "~core";
 import { RootScreenProps } from "~types";
 import i18n from "~i18n";
-import { actions, useAppDispatch, useAppSelector } from "~store";
+import useUserInformation from "src/hooks/use-user-information";
 
 const EditUserBirthday: RootScreenProps<"EditUserBirthday"> = ({ navigation }) => {
 	const { height, width } = useWindowDimensions();
 	const position = useRef<Animated.Value>(new Animated.Value(0)).current;
-	const [changeBirthday, currentBirthday] = useAppSelector(store => [
-		store.account.changeData.birthday,
-		store.account.currentData?.birthday,
-	]);
-	if (currentBirthday === undefined) {
-		throw new Error("Not found current Birthday!");
-	}
+
+	const { birthday, setValue } = useUserInformation(true, false);
+
 	const [contentSizeHeight, setContentSizeHeight] = useState<number | null>(null);
-	const dispatch = useAppDispatch();
 	const nextBirthday = useRef<Date | null>(null);
 	const horizontalPaddingContent = useRef<{
 		left: number;
@@ -106,13 +101,13 @@ const EditUserBirthday: RootScreenProps<"EditUserBirthday"> = ({ navigation }) =
 							right: width - padding,
 						};
 					}}
-					init={new Date(changeBirthday ?? currentBirthday)}
+					init={new Date(birthday)}
 				/>
 				<ColorButton
 					styleButton={styles.button}
 					onPress={() => {
 						if (nextBirthday.current) {
-							dispatch(actions.addChangedInformationUser({ birthday: nextBirthday.current }));
+							setValue({ birthday: nextBirthday.current ?? undefined });
 							navigation.goBack();
 						}
 					}}
