@@ -32,10 +32,7 @@ const ProfileInformation: React.FC<Props> = props => {
 	React.useEffect(() => {
 		refSelectImage.current?.setImage(image);
 	}, [image]);
-	const refSelectImage = React.useRef<React.ElementRef<typeof SelectImageButton>>(null);
-	React.useEffect(() => {
-		refSelectImage.current?.setImage(image);
-	}, [image]);
+
 	return (
 		<RN.View style={styles.container}>
 			{onChangeImage === undefined ? (

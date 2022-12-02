@@ -6,8 +6,7 @@ import { actions, useAppDispatch, useAppSelector } from "src/store/index";
 import { CurrentData } from "src/store/reducers/account";
 import { Gender } from "~types";
 
-export interface ReturnUserInformationHook {
-	currentInformation: CurrentData;
+export interface ReturnUserInformationHook extends CurrentData {
 	upload: () => Promise<void>;
 	setValue: (parameters: SetChangedAccountDataParams) => Promise<void>;
 	isLoading: boolean;
@@ -42,7 +41,7 @@ const useUserInformation = (usingChangeData = true): ReturnUserInformationHook =
 	};
 
 	return {
-		currentInformation: userData,
+		...userData,
 		upload,
 		setValue,
 		isLoading,

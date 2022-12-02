@@ -20,6 +20,7 @@ import { UserButton } from "~components/dump";
 import { useAppSelector } from "~store";
 import useIsActivateSubscribe from "src/hooks/use-is-activate-subscribe";
 import { developmentConfig } from "src/read-config";
+import useUserInformation from "src/hooks/use-user-information";
 
 const getStartWeek = () => {
 	const date = new Date();
@@ -34,10 +35,8 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 	const isNewUser = Store.useAppSelector(store => store.account.isNewUser);
 	const [heightGreeting, setHeightGreeting] = React.useState<number | null>(null);
 	//* Данные из глобального состояния
-	const { displayName, image, nickName } = Store.useAppSelector(store => {
-		if (store.account.currentData === undefined) throw new Error("Not Found User Data");
-		return store.account.currentData;
-	});
+	const { displayName, image, nickName } = useUserInformation();
+
 	const [countMeditation, timeMeditation] = Store.useAppSelector(store => {
 		const listPracticesListenedWeek = store.practice.listPracticesListened.filter(
 			item => new Date(item.dateListen) >= getStartWeek()

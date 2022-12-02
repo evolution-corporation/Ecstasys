@@ -14,8 +14,6 @@ import "./TaskManager";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 
-import "./function-toolbox";
-
 GoogleSignin.configure({
 	webClientId: "878799007977-cj3549ni87jre2rmg4eq0hiolp08igh2.apps.googleusercontent.com",
 });
