@@ -18,7 +18,7 @@ export { default as DMDIntro } from "./Practices/IntroDMD";
 export { default as Instruction } from "./Practices/Instruction";
 export { default as FavoriteMeditation } from "./Profile/FavoriteMeditation_old";
 export { default as Options } from "./Options";
-export { default as Main } from "./Main";
+export { default as Main } from "./main";
 export { default as Profile } from "./Profile";
 export { default as PracticesList } from "./PracticesMeditationList";
 export { default as PlayerForRelaxation } from "./PlayerForRelaxation";
@@ -36,7 +36,7 @@ export { default as PlayerMeditationOnTheMandala } from "./PlayerMeditationOnThe
 export { default as SelectTimeForBase } from "./SelectTimeForBase";
 export { default as PlayerMeditationOnTheNose } from "./PlayerMeditationOnTheNose";
 export { default as Payment } from "./Payment";
-export { default as ConfirmationSignOut } from './ConfirmationSignOut'
-export { default as InputNameAndSelectGender } from "./InputNameAndSelectGender"
-export { default as ByMaySubscribe } from './ByMaySubscribe'
-export { default as PlayerMeditationDot } from "./PlayerMeditationDot"
+export { default as ConfirmationSignOut } from "./ConfirmationSignOut";
+export { default as InputNameAndSelectGender } from "./InputNameAndSelectGender";
+export { default as ByMaySubscribe } from "./ByMaySubscribe";
+export { default as PlayerMeditationDot } from "./PlayerMeditationDot";

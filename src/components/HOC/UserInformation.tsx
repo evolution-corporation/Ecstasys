@@ -1,7 +1,7 @@
 /** @format */
 
 import React from "react";
-import { useAppSelector } from "~store";
+import useUserInformation from "src/hooks/use-user-information";
 
 export interface WrapperProps {
 	image?: string;
@@ -15,18 +15,9 @@ export default function <T>(
 	usingChangeData: boolean = false
 ): React.FC<T> {
 	return (props: T) => {
-		const { birthday, displayName, image, nickname } = useAppSelector(store => {
-			if (store.account.currentData === undefined) throw new Error("Максимально информативная ошибка");
-			const changeData = usingChangeData ? store.account.changeData : null;
-			return {
-				displayName: changeData?.displayName ?? store.account.currentData.displayName,
-				nickname: changeData?.nickname ?? store.account.currentData.nickName,
-				birthday: changeData?.birthday ?? store.account.currentData.birthday,
-				image: changeData?.image ?? store.account.currentData.image,
-			};
-		});
+		const { birthday, displayName, image, nickName } = useUserInformation();
 		return (
-			<WrapperComponent {...props} birthday={birthday} displayName={displayName} image={image} nickname={nickname} />
+			<WrapperComponent {...props} birthday={birthday} displayName={displayName} image={image} nickname={nickName} />
 		);
 	};
 }

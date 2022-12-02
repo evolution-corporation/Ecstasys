@@ -15,7 +15,6 @@ import { Request } from "~api";
 import { useDimensions } from "@react-native-community/hooks";
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
 import TheArrow from "~assets/icons/TheArrow_WhiteTop.svg";
-import { developmentConfig } from "src/read-config";
 import useUserInformation from "src/hooks/use-user-information";
 
 const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
