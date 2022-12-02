@@ -9,7 +9,7 @@ import gStyle from "~styles";
 import { ColorButton, SelectImageButton, NicknameInput } from "~components/dump";
 import { CustomModal, Screen } from "~components/containers";
 import { Gender, RootScreenProps } from "~types";
-import { actions, useAppDispatch, useAppSelector } from "~store";
+import { actions, useAppDispatch } from "~store";
 import { StatusCheck } from "~components/dump/NicknameInput/NicknameBase";
 import { Request } from "~api";
 import { useDimensions } from "@react-native-community/hooks";

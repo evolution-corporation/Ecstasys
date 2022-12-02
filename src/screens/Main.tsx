@@ -17,6 +17,7 @@ import useUserInformation from "src/hooks/use-user-information";
 import usePopularPractice from "src/hooks/use-popular-practice";
 import useRecommendationPractice from "src/hooks/use-recomendation-practice";
 import useStaticPractice, { TimePeriod } from "src/hooks/use-statistics-practice";
+import useIsNewUser from "src/hooks/use-is-new-user";
 
 const styles = RN.StyleSheet.create({
 	image: {
@@ -53,7 +54,7 @@ const styles = RN.StyleSheet.create({
 
 const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 	const [toDayPopularMeditation, ,] = usePopularPractice();
-	const isNewUser = Store.useAppSelector(store => store.account.isNewUser);
+	const isNewUser = useIsNewUser();
 	const [heightGreeting, setHeightGreeting] = React.useState<number>();
 	//* Данные из глобального состояния
 	const { displayName } = useUserInformation();

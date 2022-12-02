@@ -6,7 +6,6 @@ import { ColorButton, SelectBirthday } from "~components/dump";
 import Tools from "~core";
 import { RootScreenProps } from "~types";
 import i18n from "~i18n";
-import { actions, useAppDispatch, useAppSelector } from "~store";
 import useUserInformation from "src/hooks/use-user-information";
 
 const EditUserBirthday: RootScreenProps<"EditUserBirthday"> = ({ navigation }) => {
