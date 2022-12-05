@@ -1,13 +1,11 @@
 /** @format */
 
 import React from "react";
-import ViewPadding from "src/components/layouts/view-padding";
+import ViewPadding, { ViewPaddingProperty } from "src/components/layouts/view-padding";
 
 export enum Direction {
-	TopBottom,
-	BottomTop,
-	LeftRight,
-	RightLeft,
+	Horizontal,
+	Vertical,
 }
 
 const fullingPaddingList = (paddings: number[], count: number) => {
@@ -22,6 +20,17 @@ const fullingPaddingList = (paddings: number[], count: number) => {
 	return paddingList;
 };
 
+export interface VerticalProperty {
+	top: number;
+	bottom: number;
+}
+
+export interface HorizontalProperty {
+	left: number;
+	right: number;
+}
+
+export type DirectionProperty = VerticalProperty | HorizontalProperty;
 export interface ViewPaddingListProperties {
 	children: JSX.Element | JSX.Element[];
 	paddings: number | number[];
@@ -33,8 +42,9 @@ const ViewPaddingList: React.FC<ViewPaddingListProperties> = property => {
 	const { children, paddings, ifStrongCount, direction } = property;
 	const paddingList: number[] = [];
 	const countChildren = React.Children.count(children);
+	const countPadding = countChildren + 1;
 	if (ifStrongCount) {
-		if (Array.isArray(paddings) && countChildren !== paddings.length + 1) {
+		if (Array.isArray(paddings) && countPadding !== paddings.length) {
 			throw new Error(
 				`Количество отспутоп должно равнять кол-во потомков + 1: ${React.Children.count(children)} / ${
 					paddings.length + 1
@@ -46,13 +56,31 @@ const ViewPaddingList: React.FC<ViewPaddingListProperties> = property => {
 			);
 		}
 	}
-	paddingList.push(...fullingPaddingList(typeof paddings === "number" ? [paddings] : paddings, countChildren + 1));
-	const paddingsProps = paddingList.map((padding, index) =>
-		direction === Direction.TopBottom || direction === Direction.BottomTop
-			? { top: index === 0 ? padding : padding / 2, bottom: index === paddingList.length - 1 ? padding : padding / 2 }
-			: { left: index === 0 ? padding : padding / 2, right: index === paddingList.length - 1 ? padding : padding / 2 }
-	);
-	const content = React.Children.map(children, (component, index) => <ViewPadding>{component}</ViewPadding>);
+	if (Array.isArray(paddings) && paddings.length === countPadding) {
+		paddingList.push(...paddings);
+	} else {
+		paddingList.push(...fullingPaddingList(typeof paddings === "number" ? [paddings] : paddings, countPadding));
+	}
+
+	const paddingsProperties: DirectionProperty[] = [];
+	for (let ElementIndex = 0; ElementIndex < countChildren; ElementIndex++) {
+		const start = paddingList[ElementIndex] / (ElementIndex === 0 ? 1 : 2);
+		const end = paddingList[ElementIndex + 1] / (ElementIndex === countChildren - 1 ? 1 : 2);
+		const propertyContentElement =
+			direction === Direction.Vertical
+				? {
+						top: start,
+						bottom: end,
+				  }
+				: {
+						left: start,
+						right: end,
+				  };
+		paddingsProperties.push(propertyContentElement);
+	}
+	const content = React.Children.map(children, (component, index) => (
+		<ViewPadding {...paddingsProperties[index]}>{component}</ViewPadding>
+	));
 	return <>{content}</>;
 };
 
