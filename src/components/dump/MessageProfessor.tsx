@@ -53,7 +53,7 @@ const MessageProfessor: React.FC<Props> = props => {
 					{message && (
 						<RN.Text
 							style={{
-								...gStyle.styles.text,
+								...gStyle.styles.default,
 								color: "#FFFFFF",
 								textAlign: "center",
 								maxHeight: 100,

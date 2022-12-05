@@ -18,7 +18,7 @@ export { default as DMDIntro } from "./Practices/IntroDMD";
 export { default as Instruction } from "./Practices/Instruction";
 export { default as FavoriteMeditation } from "./Profile/FavoriteMeditation_old";
 export { default as Options } from "./Options";
-export { default as Main } from "./main";
+export { default as Main } from "./Main";
 export { default as Profile } from "./Profile";
 export { default as PracticesList } from "./PracticesMeditationList";
 export { default as PlayerForRelaxation } from "./PlayerForRelaxation";

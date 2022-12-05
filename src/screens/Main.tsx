@@ -18,6 +18,9 @@ import usePopularPractice from "src/hooks/use-popular-practice";
 import useRecommendationPractice from "src/hooks/use-recomendation-practice";
 import useStaticPractice, { TimePeriod } from "src/hooks/use-statistics-practice";
 import useIsNewUser from "src/hooks/use-is-new-user";
+import ViewFullSpace from "~components/layouts/view-full-space";
+import ViewFullWidth, { Direction } from "~components/layouts/view-full-width";
+import TitleAndSubTitle from "~components/Text/title-and-sub-title";
 
 const styles = RN.StyleSheet.create({
 	image: {
@@ -53,7 +56,7 @@ const styles = RN.StyleSheet.create({
 });
 
 const Main: GeneralCompositeScreenProps = ({ navigation }) => {
-	const [toDayPopularMeditation, ,] = usePopularPractice();
+	const [toDayPopularMeditation, , isLoadingPopularPractice] = usePopularPractice();
 	const isNewUser = useIsNewUser();
 	const [heightGreeting, setHeightGreeting] = React.useState<number>();
 	//* Данные из глобального состояния
@@ -89,11 +92,6 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 		// transform: [{ translateY: translateGreeting.value }],
 	}));
 
-	const feedStyle = useAnimatedStyle(() => ({
-		// borderTopLeftRadius: interpolate(translateGreeting.value, [20, 100], [20, 0]),
-		// borderTopRightRadius: interpolate(translateGreeting.value, [20, 100], [20, 0]),
-	}));
-
 	const greetingText = React.useMemo(() => {
 		let _greetingText: string | undefined;
 		if (greeting !== null) _greetingText = i18n.t(greeting);
@@ -108,6 +106,84 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 			navigation.navigate("InputNameAndSelectGender");
 		}
 	}, []);
+
+	const RecommendationPracticeBlock = !!recommendationPractice ? (
+		<>
+			<TitleAndSubTitle
+				title={i18n.t("9d0cd47a-0392-4e5c-9573-00642b12f868")}
+				subtitle={i18n.t("f292b17c-2295-471e-80cf-f99f6a618701")}
+				styleTitle={styles.nameSection}
+				styleSubTitle={styles.descriptionSection}
+			/>
+			<Dump.PracticeCard
+				id={recommendationPractice.id}
+				style={{ marginTop: 12 }}
+				description={recommendationPractice.description}
+				image={recommendationPractice.image}
+				lengthAudio={recommendationPractice.length}
+				name={recommendationPractice.name}
+				typePractice={recommendationPractice.type}
+				isPermission={recommendationPractice.isNeedSubscribe ? isSubscribe : true}
+				onPress={() => {
+					if (recommendationPractice.isNeedSubscribe ? isSubscribe : true) {
+						if (recommendationPractice.type === "RELAXATION") {
+							navigation.navigate("SelectTimeForRelax", {
+								selectedPractice: recommendationPractice,
+							});
+						} else {
+							navigation.navigate("PlayerForPractice", {
+								selectedPractice: recommendationPractice,
+							});
+						}
+					} else {
+						navigation.navigate("ByMaySubscribe");
+					}
+				}}
+			/>
+		</>
+	) : (
+		<></>
+	);
+
+	const PopularPracticeBlock =
+		!!toDayPopularMeditation || (!toDayPopularMeditation && isLoadingPopularPractice) ? (
+			<>
+				<TitleAndSubTitle
+					title={i18n.t("bbb079ed-25a1-4360-a262-5c1ef0741cbf")}
+					subtitle={i18n.t("b47177ce-a266-4e2f-ba88-218f93de38a3")}
+					styleTitle={styles.nameSection}
+					styleSubTitle={styles.descriptionSection}
+				/>
+
+				{toDayPopularMeditation ? (
+					<Dump.PracticeCard
+						id={toDayPopularMeditation.id}
+						style={{ marginTop: 12 }}
+						description={toDayPopularMeditation.description}
+						image={toDayPopularMeditation.image}
+						lengthAudio={toDayPopularMeditation.length}
+						name={toDayPopularMeditation.name}
+						typePractice={toDayPopularMeditation.type}
+						isPermission={toDayPopularMeditation.isNeedSubscribe && isSubscribe}
+						onPress={() => {
+							if (toDayPopularMeditation.type === "RELAXATION") {
+								navigation.navigate("SelectTimeForRelax", {
+									selectedPractice: toDayPopularMeditation,
+								});
+							} else {
+								navigation.navigate("PlayerForPractice", {
+									selectedPractice: toDayPopularMeditation,
+								});
+							}
+						}}
+					/>
+				) : (
+					<RN.ActivityIndicator />
+				)}
+			</>
+		) : (
+			<></>
+		);
 
 	return (
 		<RN.ScrollView
@@ -138,7 +214,6 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 			contentContainerStyle={{ paddingVertical: 50 }}
 			bounces={false}
 		>
-			{/* <StatusBar style="light" hidden={false} translucent backgroundColor={undefined} /> */}
 			<Animated.View
 				style={greetingStyle}
 				onLayout={({ nativeEvent: { layout } }) => {
@@ -165,77 +240,19 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 				style={[
 					viewStyle.white,
 					viewStyle.temple.feed,
-					feedStyle,
 					{
 						// minHeight: height,
 						paddingBottom: 80,
-						padding: 20,
-						borderTopLeftRadius: 20,
-						borderTopRightRadius: 20,
 						top: -20,
+						paddingTop: 20,
 					},
 				]}
 			>
-				<RN.Text style={styles.nameSection}>{i18n.t("9d0cd47a-0392-4e5c-9573-00642b12f868")}</RN.Text>
-				<RN.Text style={styles.descriptionSection}>{i18n.t("f292b17c-2295-471e-80cf-f99f6a618701")}</RN.Text>
-				{recommendationPractice && (
-					<Dump.PracticeCard
-						id={recommendationPractice.id}
-						style={{ marginTop: 12 }}
-						description={recommendationPractice.description}
-						image={recommendationPractice.image}
-						lengthAudio={recommendationPractice.length}
-						name={recommendationPractice.name}
-						typePractice={recommendationPractice.type}
-						isPermission={recommendationPractice.isNeedSubscribe ? isSubscribe : true}
-						onPress={() => {
-							if (recommendationPractice.isNeedSubscribe ? isSubscribe : true) {
-								dispatch(Store.actions.setPractice(recommendationPractice));
-
-								if (recommendationPractice.type === "RELAXATION") {
-									navigation.navigate("SelectTimeForRelax", {
-										selectedPractice: recommendationPractice,
-									});
-								} else {
-									navigation.navigate("PlayerForPractice", {
-										selectedPractice: recommendationPractice,
-									});
-								}
-							} else {
-								navigation.navigate("ByMaySubscribe");
-							}
-						}}
-					/>
-				)}
-
-				<Dump.StatisticsMeditation style={viewStyle.margin.mediumV} count={countMeditation} time={timeMeditation} />
-				<RN.Text style={styles.nameSection}>{i18n.t("bbb079ed-25a1-4360-a262-5c1ef0741cbf")}</RN.Text>
-				<RN.Text style={styles.descriptionSection}>{i18n.t("b47177ce-a266-4e2f-ba88-218f93de38a3")}</RN.Text>
-				{toDayPopularMeditation && (
-					<Dump.PracticeCard
-						id={toDayPopularMeditation.id}
-						style={{ marginTop: 12 }}
-						description={toDayPopularMeditation.description}
-						image={toDayPopularMeditation.image}
-						lengthAudio={toDayPopularMeditation.length}
-						name={toDayPopularMeditation.name}
-						typePractice={toDayPopularMeditation.type}
-						isPermission={toDayPopularMeditation.isNeedSubscribe && isSubscribe}
-						onPress={() => {
-							dispatch(Store.actions.setPractice(toDayPopularMeditation));
-
-							if (toDayPopularMeditation.type === "RELAXATION") {
-								navigation.navigate("SelectTimeForRelax", {
-									selectedPractice: toDayPopularMeditation,
-								});
-							} else {
-								navigation.navigate("PlayerForPractice", {
-									selectedPractice: toDayPopularMeditation,
-								});
-							}
-						}}
-					/>
-				)}
+				<ViewFullWidth direction={Direction.TopBottom} standardHorizontalPadding>
+					{RecommendationPracticeBlock}
+					<Dump.StatisticsMeditation style={viewStyle.margin.mediumV} count={countMeditation} time={timeMeditation} />
+					{PopularPracticeBlock}
+				</ViewFullWidth>
 			</Animated.View>
 		</RN.ScrollView>
 	);

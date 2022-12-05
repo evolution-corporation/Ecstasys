@@ -1,81 +1,58 @@
 /** @format */
 
 import React from "react";
-import { View, Pressable, Text, Image } from "react-native";
+import { Image } from "react-native";
 import i18n from "~i18n";
 import { RootScreenProps } from "~types";
-import gStyle from "~styles";
 import { ColorButton } from "~components/dump";
-import Close from "assets/Menu/Close_MD.svg";
+import ScreenModal from "~components/containers/screen-modal";
+import { useDimensions } from "@react-native-community/hooks";
+import CloseCross from "~components/Elements/close-cross";
+import HeaderText from "~components/Text/header-text";
+import DefaultText from "~components/Text/default-text";
+import DescriptionText, { TextAlign } from "~components/Text/description-text";
+import CustomPartText from "~components/Text/custom-part-text";
 
 const ByMaySubscribe: RootScreenProps<"ByMaySubscribe"> = ({ navigation }) => {
+	const { window } = useDimensions();
 	return (
-		<Pressable
-			style={{
-				flex: 1,
-				backgroundColor: "rgba(0, 0, 0, 0.5)",
-				justifyContent: "center",
+		<ScreenModal
+			styleContentBlock={{
+				backgroundColor: "#FFF",
+				borderRadius: 20,
 				alignItems: "center",
-				padding: 20,
+				paddingHorizontal: 39,
+				paddingTop: 47,
+				paddingBottom: 30,
+				width: window.width - 50,
 			}}
-			onPress={() => {
-				navigation.goBack();
-			}}
+			styleNoContentElement={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
 		>
-			<View
-				style={{
-					backgroundColor: "#FFF",
-					borderRadius: 20,
-					alignItems: "center",
-					paddingHorizontal: 39,
-					paddingTop: 47,
-					paddingBottom: 30,
-					width: "100%",
+			<CloseCross />
+			<HeaderText>{i18n.t("c6422cd6-c99d-4bbb-a537-238e5e751c01")}</HeaderText>
+			<DefaultText color="rgba(64, 64, 64, 0.71)" style={{ textAlign: "center" }}>
+				{i18n.t("e505cf76-d64a-4152-86b0-f81b41c9035f")}
+			</DefaultText>
+			<Image
+				source={require("assets/sofaMan.png")}
+				style={{ height: 90, width: "100%", marginVertical: 19 }}
+				resizeMode={"contain"}
+			/>
+			<DescriptionText color={"#9765A8"} textAlign={TextAlign.Center}>
+				<CustomPartText fontWeight="500">{i18n.t("e9abbcbe-6d0b-46b6-a777-dc3e73a3dbac")}</CustomPartText>
+				{i18n.t("3d2b0890-e1e2-4abe-9fa1-a2bc531e38b6")}
+			</DescriptionText>
+
+			<ColorButton
+				styleButton={{ backgroundColor: "#C2A9CE", paddingHorizontal: 25, marginTop: 48 }}
+				styleText={{ color: "#FFF" }}
+				onPress={() => {
+					navigation.navigate("SelectSubscribe");
 				}}
 			>
-				<Pressable
-					style={{ position: "absolute", top: 10, right: 10 }}
-					onPress={() => {
-						navigation.goBack();
-					}}
-				>
-					<Close />
-				</Pressable>
-				<Text
-					style={{
-						color: "#3D3D3D",
-						fontSize: 20,
-						...gStyle.font("700"),
-						textAlign: "center",
-						marginBottom: 24,
-						width: "90%",
-					}}
-				>
-					{i18n.t("c6422cd6-c99d-4bbb-a537-238e5e751c01")}
-				</Text>
-				<Text style={{ color: "rgba(64, 64, 64, 0.71)", fontSize: 14, ...gStyle.font("400"), textAlign: "center" }}>
-					{i18n.t("e505cf76-d64a-4152-86b0-f81b41c9035f")}
-				</Text>
-				<Image
-					source={require("assets/sofaMan.png")}
-					style={{ height: 90, width: "100%", marginVertical: 19 }}
-					resizeMode={"contain"}
-				/>
-				<Text style={{ color: "#9765A8", fontSize: 16, ...gStyle.font("500"), textAlign: "center", width: 161 }}>
-					<Text style={{ ...gStyle.font("400") }}>{i18n.t("e9abbcbe-6d0b-46b6-a777-dc3e73a3dbac")}</Text>{" "}
-					{i18n.t("3d2b0890-e1e2-4abe-9fa1-a2bc531e38b6")}
-				</Text>
-				<ColorButton
-					styleButton={{ backgroundColor: "#C2A9CE", paddingHorizontal: 25, marginTop: 48 }}
-					styleText={{ color: "#FFF" }}
-					onPress={() => {
-						navigation.navigate("SelectSubscribe");
-					}}
-				>
-					{i18n.t("Arrange")}
-				</ColorButton>
-			</View>
-		</Pressable>
+				{i18n.t("Arrange")}
+			</ColorButton>
+		</ScreenModal>
 	);
 };
 
