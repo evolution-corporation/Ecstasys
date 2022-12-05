@@ -20,6 +20,7 @@ import useStaticPractice, { TimePeriod } from "src/hooks/use-statistics-practice
 import useIsNewUser from "src/hooks/use-is-new-user";
 import ViewFullSpace from "~components/layouts/view-full-space";
 import ViewFullWidth, { Direction } from "~components/layouts/view-full-width";
+import TitleAndSubTitle from "~components/Text/title-and-sub-title";
 
 const styles = RN.StyleSheet.create({
 	image: {
@@ -108,9 +109,12 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 
 	const RecommendationPracticeBlock = !!recommendationPractice ? (
 		<>
-			<RN.Text style={styles.nameSection}>{i18n.t("9d0cd47a-0392-4e5c-9573-00642b12f868")}</RN.Text>
-			<RN.Text style={styles.descriptionSection}>{i18n.t("f292b17c-2295-471e-80cf-f99f6a618701")}</RN.Text>
-
+			<TitleAndSubTitle
+				title={i18n.t("9d0cd47a-0392-4e5c-9573-00642b12f868")}
+				subtitle={i18n.t("f292b17c-2295-471e-80cf-f99f6a618701")}
+				styleTitle={styles.nameSection}
+				styleSubTitle={styles.descriptionSection}
+			/>
 			<Dump.PracticeCard
 				id={recommendationPractice.id}
 				style={{ marginTop: 12 }}
@@ -144,8 +148,13 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 	const PopularPracticeBlock =
 		!!toDayPopularMeditation || (!toDayPopularMeditation && isLoadingPopularPractice) ? (
 			<>
-				<RN.Text style={styles.nameSection}>{i18n.t("bbb079ed-25a1-4360-a262-5c1ef0741cbf")}</RN.Text>
-				<RN.Text style={styles.descriptionSection}>{i18n.t("b47177ce-a266-4e2f-ba88-218f93de38a3")}</RN.Text>
+				<TitleAndSubTitle
+					title={i18n.t("bbb079ed-25a1-4360-a262-5c1ef0741cbf")}
+					subtitle={i18n.t("b47177ce-a266-4e2f-ba88-218f93de38a3")}
+					styleTitle={styles.nameSection}
+					styleSubTitle={styles.descriptionSection}
+				/>
+
 				{toDayPopularMeditation ? (
 					<Dump.PracticeCard
 						id={toDayPopularMeditation.id}
