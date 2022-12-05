@@ -10,6 +10,7 @@ export interface ReturnUserInformationHook extends CurrentData {
 	upload: () => Promise<void>;
 	setValue: (parameters: SetChangedAccountDataParams) => Promise<void>;
 	isLoading: boolean;
+	clearChangedValue: () => Promise<void>;
 }
 
 const useUserInformation = (usingChangeData = true, clearUnmount = true): ReturnUserInformationHook => {
