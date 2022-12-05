@@ -17,7 +17,7 @@ const HeaderText: React.FC<HeaderTextProperty> = property => {
 				fontSize: 20,
 				fontFamily: Platform.OS === "ios" ? "System" : "Roboto_500Medium",
 				fontWeight: "600",
-				lineHeight: 23.44,
+				// lineHeight: 23.44,
 				width: "100%",
 				textAlign: "center",
 				textAlignVertical: "auto",
