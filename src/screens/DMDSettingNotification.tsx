@@ -15,37 +15,35 @@ import * as StatusBar from "expo-status-bar";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useDimensions } from "@react-native-community/hooks";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import useTimeNotificationDMD, { TimeSegments } from "src/hooks/use-time-notification-dmd";
+import ViewPaddingList, { Direction } from "~components/containers/view-padding-list";
+import DescriptionText from "~components/Text/description-text";
+import CustomPartText from "~components/Text/custom-part-text";
+import ViewTimeDMDTimeSegments from "~components/dump/view-time-dmd-time-segments";
 
 const DMDSettingNotification: RootScreenProps<"DMDSettingNotification"> = ({ navigation, route }) => {
-	const { selectedRelax } = route.params;
+	const { selectedRelax, selectSet } = route.params;
 	const [image, name] = useAppSelector(store => [
 		store.DMD.option?.image ??
 			"https://storage.yandexcloud.net/dmdmeditationimage/meditations/404-not-found-error-page-examples.png",
 		store.DMD.set?.name ?? "404",
 	]);
-	const [activate, option, random, lengthSet] = useAppSelector(store => [
-		store.DMD.configuratorNotification.activate,
-		store.DMD.configuratorNotification.option ?? 0,
-		store.DMD.configuratorNotification.random,
-		store.DMD.set?.length ?? 0,
-	]);
-	const headerHeight = useHeaderHeight();
-	const dispatch = useAppDispatch();
-
+	const [, setTimeNotification] = useTimeNotificationDMD();
 	const [heightTopView, setHeightTopView] = React.useState<number | null>(null);
 	const { window } = useDimensions();
 	useFocusEffect(
 		useCallback(() => {
-			// if (Platform.OS === "android") {
-			// 	StatusBar.setStatusBarTranslucent(true);
-			// }
-			// StatusBar.setStatusBarStyle("light");
 			navigation.setOptions({
 				title: selectedRelax.name,
 			});
 		}, [])
 	);
 	const insets = useSafeAreaInsets();
+
+	const resetTimeSegments = () => {
+		setTimeNotification(TimeSegments.ActiveBreathing, 0);
+		setTimeNotification(TimeSegments.SpontaneousBreathing, 0);
+	};
 
 	return (
 		<View style={styles.container}>
@@ -60,7 +58,7 @@ const DMDSettingNotification: RootScreenProps<"DMDSettingNotification"> = ({ nav
 					<LinearGradient style={styles.timeMinutesBox} colors={["#75348B", "#6A2382"]}>
 						<Text style={styles.timeMinutes}>
 							{i18n.t("minute", {
-								count: Math.floor((lengthSet + selectedRelax.length) / 60000),
+								count: Math.floor((selectSet.length + selectedRelax.length) / 60000),
 							})}
 						</Text>
 					</LinearGradient>
@@ -69,66 +67,29 @@ const DMDSettingNotification: RootScreenProps<"DMDSettingNotification"> = ({ nav
 			<View
 				style={styles.footer}
 				onLayout={({ nativeEvent: { layout } }) => {
-					if (heightTopView === null) setHeightTopView(window.height - layout.height);
+					setHeightTopView(window.height - layout.height);
 				}}
 			>
-				<Text style={styles.description}>
-					{i18n.t("efbd27b4-4e3c-4cfe-8328-0e085d16167e")}
-					{"\n"}
-					<Text style={styles.help}>{i18n.t("375f84c6-7680-438c-96fd-62b9eb0b25ed")}</Text>
-				</Text>
-				<View>
-					<View key={"options"} style={styles.containerTime}>
-						<Text style={styles.containerTimeText}>1. {i18n.t("489177eb-1aa7-4fb7-9963-8abfe4cbf63e")}</Text>
-						<Text style={styles.containerTimeText}>{i18n.strftime(new Date(option), "%M:%S")}</Text>
-					</View>
-					<Pressable
-						key={"activate"}
-						style={[styles.containerTime, styles.containerTimeMiddle]}
-						onPress={() => navigation.navigate("DMDSelectTimeBright", { type: "activate" })}
-					>
-						<Text style={styles.containerTimeText}>2. {i18n.t("a3278599-1f56-437e-9dec-878f88e33abe")}</Text>
-						<View style={styles.row}>
-							<Text style={styles.containerTimeText}>{i18n.strftime(new Date(activate), "%M:%S")}</Text>
-							<ArrowDown />
-						</View>
-					</Pressable>
-					<Pressable
-						key={"random"}
-						style={[styles.containerTime, styles.containerTimeMiddle]}
-						onPress={() => navigation.navigate("DMDSelectTimeBright", { type: "random" })}
-					>
-						<Text style={styles.containerTimeText}>3. {i18n.t("d08f1ccf-6c67-41bc-afff-f65373c7b00c")}</Text>
-						<View style={styles.row}>
-							<Text style={styles.containerTimeText}>{i18n.strftime(new Date(random), "%M:%S")}</Text>
-							<ArrowDown />
-						</View>
-					</Pressable>
-					<View key={"free"} style={styles.containerTime}>
-						<Text style={styles.containerTimeText}>4. {i18n.t("5031cd30-0010-42e1-8d47-7516d63e2a6a")}</Text>
-						<Text style={styles.containerTimeText}>
-							{i18n.strftime(new Date(lengthSet - activate - random), "%M:%S")}
-						</Text>
-					</View>
-					<TextButton
-						style={styles.backDefault}
-						onPress={() => {
-							dispatch(actions.setTimeConfiguratorForDMD({ type: "action", value: 0 }));
-							dispatch(actions.setTimeConfiguratorForDMD({ type: "random", value: 0 }));
-						}}
-					>
+				<ViewPaddingList paddings={[25, 22, 11, 32, 52]} direction={Direction.Vertical}>
+					<DescriptionText>
+						{i18n.t("efbd27b4-4e3c-4cfe-8328-0e085d16167e")}
+						{"\n"}
+						<CustomPartText fontWeight="600">{i18n.t("375f84c6-7680-438c-96fd-62b9eb0b25ed")}</CustomPartText>
+					</DescriptionText>
+					<ViewTimeDMDTimeSegments />
+					<TextButton styleText={styles.backDefault} onPress={() => resetTimeSegments()}>
 						{i18n.t("d61edffc-4710-4707-9ddc-3576780004fc")}
 					</TextButton>
-				</View>
-				<ColorButton
-					styleButton={styles.meditationButton}
-					styleText={styles.meditationButtonText}
-					onPress={() => {
-						navigation.navigate("PlayerForDMD", { selectedRelax });
-					}}
-				>
-					{i18n.t("79dc5c1b-465a-4ead-bb4b-57fcf88af1d1")}
-				</ColorButton>
+					<ColorButton
+						styleButton={styles.meditationButton}
+						styleText={styles.meditationButtonText}
+						onPress={() => {
+							navigation.navigate("PlayerForDMD", { selectedRelax });
+						}}
+					>
+						{i18n.t("79dc5c1b-465a-4ead-bb4b-57fcf88af1d1")}
+					</ColorButton>
+				</ViewPaddingList>
 			</View>
 		</View>
 	);
@@ -157,7 +118,6 @@ const styles = StyleSheet.create({
 		color: "#3D3D3D",
 		...gStyle.font("400"),
 		lineHeight: 17,
-		marginBottom: 22,
 	},
 	help: {
 		...gStyle.font("600"),
@@ -165,8 +125,7 @@ const styles = StyleSheet.create({
 	footer: {
 		width: "100%",
 		paddingHorizontal: 20,
-		paddingTop: 25,
-		paddingBottom: 50,
+
 		justifyContent: "space-between",
 	},
 	containerTime: {
@@ -190,12 +149,10 @@ const styles = StyleSheet.create({
 		backgroundColor: "#9765A8",
 	},
 	backDefault: {
-		color: "#C2A9CE",
+		color: "#9765A8",
 		fontSize: 12,
 		...gStyle.font("500"),
 		alignSelf: "center",
-		marginTop: 11,
-		marginBottom: 20,
 	},
 	meditationButton: {
 		backgroundColor: "#9765A8",

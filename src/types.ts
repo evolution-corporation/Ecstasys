@@ -241,6 +241,7 @@ export type RootStackList = {
 	};
 	DMDSettingNotification: {
 		selectedRelax: State.Practice & { type: "RELAXATION" };
+		selectSet: State.Set;
 	};
 	SelectBackgroundSound: {
 		backgroundImage?: ImageSourcePropType;

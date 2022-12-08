@@ -3,6 +3,7 @@
 import { useDimensions } from "@react-native-community/hooks";
 import React from "react";
 import { View, Text, StyleSheet, Pressable, FlatList } from "react-native";
+import useTimeNotificationDMD, { TimeSegments } from "src/hooks/use-time-notification-dmd";
 import ScreenModal, { PositionContentBlock } from "~components/containers/screen-modal";
 import { ColorButton, SelectTime } from "~components/dump";
 import i18n from "~i18n";
@@ -12,11 +13,19 @@ import { RootScreenProps } from "~types";
 const DMDSelectTimeBright: RootScreenProps<"DMDSelectTimeBright"> = ({ navigation, route }) => {
 	const { type } = route.params;
 	const { window } = useDimensions();
-	const value = useAppSelector(store =>
-		type === "activate" ? store.DMD.configuratorNotification.activate : store.DMD.configuratorNotification.random
-	);
+	const isActive = type === "activate";
+
+	const [timeSegments, setTimeNotification] = useTimeNotificationDMD();
+
+	const value = isActive ? timeSegments.activeBreathing : timeSegments.spontaneousBreathing;
 	const selectTime = React.useRef<number>(value);
-	const dispatch = useAppDispatch();
+
+	const saveTime = () => {
+		setTimeNotification(
+			isActive ? TimeSegments.ActiveBreathing : TimeSegments.SpontaneousBreathing,
+			selectTime.current
+		);
+	};
 
 	return (
 		<ScreenModal
@@ -43,12 +52,7 @@ const DMDSelectTimeBright: RootScreenProps<"DMDSelectTimeBright"> = ({ navigatio
 				styleButton={styles.button}
 				styleText={styles.buttonText}
 				onPress={() => {
-					dispatch(
-						actions.setTimeConfiguratorForDMD({
-							type: type === "activate" ? "action" : "random",
-							value: selectTime.current,
-						})
-					);
+					saveTime();
 					navigation.goBack();
 				}}
 			>

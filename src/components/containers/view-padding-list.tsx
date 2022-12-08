@@ -64,8 +64,10 @@ const ViewPaddingList: React.FC<ViewPaddingListProperties> = property => {
 
 	const paddingsProperties: DirectionProperty[] = [];
 	for (let ElementIndex = 0; ElementIndex < countChildren; ElementIndex++) {
-		const start = paddingList[ElementIndex] / (ElementIndex === 0 ? 1 : 2);
-		const end = paddingList[ElementIndex + 1] / (ElementIndex === countChildren - 1 ? 1 : 2);
+		let start = paddingList[ElementIndex] / (ElementIndex === 0 ? 1 : 2);
+		let end = paddingList[ElementIndex + 1] / (ElementIndex === countChildren - 1 ? 1 : 2);
+		start = ElementIndex === 0 && typeof paddings === "number" ? 0 : start;
+		end = ElementIndex === countChildren - 1 && typeof paddings === "number" ? 0 : end;
 		const propertyContentElement =
 			direction === Direction.Vertical
 				? {
