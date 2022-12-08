@@ -107,6 +107,11 @@ export const styles = StyleSheet.create({
 		lineHeight: 23.44,
 		width: "auto",
 	},
+	elementSimple: {
+		fontSize: 13,
+		fontFamily: Platform.OS === "ios" ? "System" : "Roboto_700Bold",
+		fontWeight: "600",
+	},
 });
 
 export default {};

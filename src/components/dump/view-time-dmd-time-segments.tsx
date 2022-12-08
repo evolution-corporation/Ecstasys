@@ -9,7 +9,6 @@ import useSizeElement from "src/hooks/use-size-element";
 import useTimeNotificationDMD, { TimeSegments } from "src/hooks/use-time-notification-dmd";
 import ViewPaddingList, { Direction } from "~components/containers/view-padding-list";
 import i18n from "~i18n";
-import { RootStackList } from "~types";
 import ElementTimeDMDSegment from "./element-time-dmd-segment";
 
 export interface ViewTimeDMDTimeSegmentsProperties {
@@ -20,7 +19,6 @@ const ViewTimeDMDTimeSegments: React.FC<ViewTimeDMDTimeSegmentsProperties> = pro
 	const navigation = useNavigation();
 	const [timeSegments] = useTimeNotificationDMD();
 	const [elementSize, changeElementSize] = useSizeElement();
-	console.log(elementSize);
 	let indexElementTimeDMDSegment = 1;
 	const getIndexElementTimeDMDSegment = () => indexElementTimeDMDSegment++;
 

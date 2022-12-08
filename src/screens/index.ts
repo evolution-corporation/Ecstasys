@@ -24,7 +24,7 @@ export { default as PracticesList } from "./PracticesMeditationList";
 export { default as PlayerForRelaxation } from "./PlayerForRelaxation";
 export { default as SelectBackgroundSound } from "./SelectBackgroundSound";
 export { default as PlayerForDMD } from "./PlayerForDMD";
-export { default as DMDSettingNotification } from "./DMDSettingNotification";
+export { default as DMDSettingNotification } from "./dmd-setting-notification";
 export { default as DMDSelectTimeBright } from "./dmd-select-time-bright";
 export { default as MessageLog } from "./MessageLog";
 export { default as RelaxListForDMD } from "./RelaxListForDMD";

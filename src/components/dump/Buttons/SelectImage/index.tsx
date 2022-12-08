@@ -13,17 +13,17 @@ import * as ImagePicker from "expo-image-picker";
 
 import PhotoIcon from "./assets/PhotoIcon.svg";
 
-interface SelectImageButtonProps extends TouchableOpacityProps {
+interface SelectImageButtonProperties extends TouchableOpacityProps {
 	onChangeImage?: { (image: string): void };
 	initImage?: string;
 }
 
-interface Ref {
+interface Reference {
 	setImage: (image: string) => void;
 }
 
-export const SelectImageButton = forwardRef<Ref, SelectImageButtonProps>((props, ref) => {
-	const { onChangeImage, initImage } = props;
+export const SelectImageButton = forwardRef<Reference, SelectImageButtonProperties>((properties, reference) => {
+	const { onChangeImage, initImage } = properties;
 	const [isLoading, setIsLoading] = useState<boolean>();
 	const [image, setImage] = useState<string | null>(initImage ?? null);
 
@@ -63,7 +63,7 @@ export const SelectImageButton = forwardRef<Ref, SelectImageButtonProps>((props,
 		}
 	}, [statusPermission]);
 
-	useImperativeHandle(ref, () => ({
+	useImperativeHandle(reference, () => ({
 		setImage: image => {
 			setImage(image);
 		},
@@ -71,8 +71,21 @@ export const SelectImageButton = forwardRef<Ref, SelectImageButtonProps>((props,
 
 	return (
 		<TouchableOpacity
-			{...props}
-			style={[props.style, { overflow: "hidden", alignItems: "center", justifyContent: "center" }]}
+			{...properties}
+			style={[
+				properties.style,
+				{
+					overflow: "hidden",
+					alignItems: "center",
+					justifyContent: "center",
+					height: 92,
+					width: 92,
+					borderRadius: 46,
+					borderColor: "#FFFFFF",
+					borderWidth: 3,
+					backgroundColor: "#E7DDEC",
+				},
+			]}
 			onPress={() => {
 				openPhotoLibrary();
 			}}

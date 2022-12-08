@@ -7,12 +7,7 @@ import { actions, useAppDispatch, useAppSelector } from "~store";
 import { RootScreenProps } from "~types";
 import i18n from "~i18n";
 import gStyle from "~styles";
-import ArrowDown from "assets/icons/Chevron_Down.svg";
-import { SharedElement } from "react-navigation-shared-element";
-import { LinearGradient } from "expo-linear-gradient";
 import { useFocusEffect } from "@react-navigation/native";
-import * as StatusBar from "expo-status-bar";
-import { useHeaderHeight } from "@react-navigation/elements";
 import { useDimensions } from "@react-native-community/hooks";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useTimeNotificationDMD, { TimeSegments } from "src/hooks/use-time-notification-dmd";
@@ -20,25 +15,23 @@ import ViewPaddingList, { Direction } from "~components/containers/view-padding-
 import DescriptionText from "~components/Text/description-text";
 import CustomPartText from "~components/Text/custom-part-text";
 import ViewTimeDMDTimeSegments from "~components/dump/view-time-dmd-time-segments";
+import ImageMeditationWitTimeTop from "~components/dump/image-meditation-with-time-top";
+import DateTime from "src/global/class/date-time";
+import SmallPlay from "assets/icons/SmallPlay.svg";
+import ElementSimpleText from "~components/Text/element-simple-text";
+import ViewRow from "~components/layouts/view-row";
+import useSizeElement from "src/hooks/use-size-element";
 
 const DMDSettingNotification: RootScreenProps<"DMDSettingNotification"> = ({ navigation, route }) => {
 	const { selectedRelax, selectSet } = route.params;
-	const [image, name] = useAppSelector(store => [
-		store.DMD.option?.image ??
-			"https://storage.yandexcloud.net/dmdmeditationimage/meditations/404-not-found-error-page-examples.png",
-		store.DMD.set?.name ?? "404",
-	]);
+
 	const [, setTimeNotification] = useTimeNotificationDMD();
-	const [heightTopView, setHeightTopView] = React.useState<number | null>(null);
+	const [sizeBottomPart, setSizeBottomPart] = useSizeElement();
+
 	const { window } = useDimensions();
-	useFocusEffect(
-		useCallback(() => {
-			navigation.setOptions({
-				title: selectedRelax.name,
-			});
-		}, [])
-	);
-	const insets = useSafeAreaInsets();
+	const sizeTopPart = sizeBottomPart
+		? { height: window.height - sizeBottomPart?.height, width: window.width }
+		: undefined;
 
 	const resetTimeSegments = () => {
 		setTimeNotification(TimeSegments.ActiveBreathing, 0);
@@ -47,29 +40,27 @@ const DMDSettingNotification: RootScreenProps<"DMDSettingNotification"> = ({ nav
 
 	return (
 		<View style={styles.container}>
-			<View style={[styles.imageHeader, { height: heightTopView ?? 0 }]}>
-				<SharedElement id={`practice.item.${selectedRelax.id}`} style={styles.image}>
-					<Image
-						source={{ uri: image }}
-						style={{ width: "100%", borderBottomLeftRadius: 20, borderBottomRightRadius: 20, height: "100%" }}
+			{sizeTopPart ? (
+				<View style={[styles.imageHeader, { height: sizeTopPart.height }]}>
+					<ImageMeditationWitTimeTop
+						id={`practice.item.${selectedRelax.id}`}
+						image={{ uri: selectedRelax.image }}
+						time={new DateTime(selectSet.length + selectedRelax.length)}
+						bottomContent={
+							<ViewRow>
+								<ViewPaddingList paddings={[0, 6, 0]} direction={Direction.Horizontal}>
+									<SmallPlay />
+									<ElementSimpleText color={"#FFF"}>{selectSet.name}</ElementSimpleText>
+								</ViewPaddingList>
+							</ViewRow>
+						}
 					/>
-				</SharedElement>
-				<View style={{ marginTop: 55 + insets.top, flex: 1 }}>
-					<LinearGradient style={styles.timeMinutesBox} colors={["#75348B", "#6A2382"]}>
-						<Text style={styles.timeMinutes}>
-							{i18n.t("minute", {
-								count: Math.floor((selectSet.length + selectedRelax.length) / 60000),
-							})}
-						</Text>
-					</LinearGradient>
 				</View>
-			</View>
-			<View
-				style={styles.footer}
-				onLayout={({ nativeEvent: { layout } }) => {
-					setHeightTopView(window.height - layout.height);
-				}}
-			>
+			) : (
+				<View />
+			)}
+
+			<View style={styles.footer} onLayout={({ nativeEvent: { layout } }) => setSizeBottomPart(layout)}>
 				<ViewPaddingList paddings={[25, 22, 11, 32, 52]} direction={Direction.Vertical}>
 					<DescriptionText>
 						{i18n.t("efbd27b4-4e3c-4cfe-8328-0e085d16167e")}
