@@ -1,11 +1,11 @@
 /** @format */
 
 import React, { ElementRef } from "react";
-import { StyleSheet, TextInput, View, Text, TouchableOpacity, Keyboard, Pressable, Modal } from "react-native";
+import { StyleSheet, TextInput, View, Text, TouchableOpacity, Keyboard, Pressable, Modal, Button } from "react-native";
 import i18n from "~i18n";
 import gStyle from "~styles";
 
-import { ColorButton, SelectImageButton, NicknameInput } from "~components/dump";
+import { ColorButton, SelectImageButton, NicknameInput, TextButton } from "~components/dump";
 import { CustomModal, Screen } from "~components/containers";
 import { Gender, RootScreenProps } from "~types";
 import { actions, useAppDispatch } from "~store";
@@ -22,7 +22,7 @@ import ViewUserChange from "~components/containers/view-user-change";
 const SelectWithDropList = WithDropList<Gender>();
 
 const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
-	const { birthday, gender, image, isLoading, nickName, setValue, upload, displayName } = useUserInformation();
+	const { birthday, gender, image, nickName, setValue, upload, displayName } = useUserInformation();
 	const nameSelectedGender =
 		gender === "FEMALE"
 			? i18n.t("83dfa634-dd9f-4dce-ab9e-6d6961a296f7")
@@ -31,8 +31,6 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 			: i18n.t("7103289f-c425-457d-8b29-f9e0be60c01c");
 
 	const [isKeyboardOpen, setIsKeyboardOpen] = React.useState<boolean>(false);
-
-	const { window } = useDimensions();
 
 	const update = async () => {
 		try {
@@ -64,7 +62,6 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 			keyboardListenClose.remove();
 		};
 	}, []);
-
 	return (
 		<Screen
 			backgroundColor={"#9765A8"}
@@ -81,6 +78,11 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 						}}
 						initImage={image}
 					/>
+					{/* <Pressable onPress={() => {  }}>
+						<DefaultText color={"#C2A9CE"} style={{ alignSelf: "center" }}>
+							{i18n.t("634c0283-1657-42ca-b25a-482dd5c7f439")}
+						</DefaultText>
+					</Pressable> */}
 					<ViewUserChange animatedStyle={animatedStyleSelectGender}>
 						<TextInput
 							placeholder={i18n.t("b89f2757-8b5e-4a08-b8f8-1bbe87834f3e")}
@@ -105,7 +107,7 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 							onChange={selectedGender => {
 								setValue({ gender: selectedGender });
 							}}
-							rightBorderDropList={-15}
+							rightBorderDropList={-14}
 							onClose={() => {
 								borderBottomRightRadiusSelectGender.value = 20;
 							}}
@@ -138,9 +140,9 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 							}}
 						/>
 					</ViewUserChange>
-					<Pressable>
+					<Pressable onPress={() => navigation.navigate("EditUserBirthday")}>
 						<ViewUserChange>
-							<DefaultText>{i18n.strftime(new Date(birthday), "")}</DefaultText>
+							<DefaultText color={"#FFF"}>{i18n.strftime(new Date(birthday), "%d.%m.%Y")}</DefaultText>
 						</ViewUserChange>
 					</Pressable>
 				</ViewPaddingList>

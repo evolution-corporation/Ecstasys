@@ -3,7 +3,7 @@
 import { useDimensions } from "@react-native-community/hooks";
 import Constants from "expo-constants";
 import React from "react";
-import { Pressable, StyleProp, View, ViewStyle } from "react-native";
+import { Pressable, StyleProp, useWindowDimensions, View, ViewStyle } from "react-native";
 import Animated, { max, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import DefaultText from "~components/Text/default-text";
 import CustomModal from "./CustomModal";
@@ -29,23 +29,22 @@ function createDropList<T>() {
 		const viewReference = React.useRef<View>(null);
 
 		const [layoutList, setLayoutList] = React.useState<{ y: number; left?: number; right?: number }>();
+
+		const rotateChevron = useSharedValue("180deg");
 		const { window } = useDimensions();
-
-		const rotateChevron = useSharedValue("0deg");
-
 		const chevronStyle = useAnimatedStyle(() => ({
 			transform: [{ rotate: withTiming(rotateChevron.value) }],
 		}));
 
 		const open = async () => {
 			if (onOpen) onOpen();
-			rotateChevron.value = "180deg";
+			rotateChevron.value = "0deg";
 			customModalReference.current?.open();
 		};
 
 		const close = async () => {
 			if (onClose) onClose();
-			rotateChevron.value = "0deg";
+			rotateChevron.value = "180deg";
 			customModalReference.current?.close();
 		};
 
@@ -65,7 +64,29 @@ function createDropList<T>() {
 			);
 		});
 		return (
-			<View>
+			<View
+				ref={viewReference}
+				onLayout={({ nativeEvent: { layout } }) => {
+					setImmediate(() =>
+						viewReference.current?.measureInWindow((x, y, width, height) => {
+							let left: undefined | number;
+							let right: undefined | number;
+							if (leftBorderDropList !== undefined) {
+								left = x + (x - layout.x) + 3 + leftBorderDropList;
+							}
+							if (rightBorderDropList !== undefined) {
+								console.log(Math.abs(x - window.width));
+								right = window.width - (x + width + (x - layout.x) + 4) + rightBorderDropList;
+							}
+							setLayoutList({
+								y: y + height / 2,
+								left,
+								right,
+							});
+						})
+					);
+				}}
+			>
 				<Pressable onPress={() => open()}>
 					<View
 						style={[
@@ -77,20 +98,6 @@ function createDropList<T>() {
 							},
 							style,
 						]}
-						ref={viewReference}
-						onLayout={() => {
-							setImmediate(() =>
-								viewReference.current?.measure((_fx, _fy, width, height, x, y) => {
-									console.log(y, height, Constants.statusBarHeight);
-									setLayoutList({
-										y: y - Constants.statusBarHeight / 2 + 2,
-										left: leftBorderDropList === undefined ? undefined : x + leftBorderDropList,
-										right:
-											rightBorderDropList === undefined ? undefined : window.width - x - width + rightBorderDropList,
-									});
-								})
-							);
-						}}
 					>
 						<ViewPaddingList direction={Direction.Horizontal} paddings={[10, 5, 0]}>
 							{children}
