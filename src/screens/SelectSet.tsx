@@ -68,7 +68,7 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 							setSelectedSetIndex(index);
 						} else {
 							appDispatch(actions.setSetForDMD(setList[index]));
-							navigation.navigate("DMDSettingNotification", { selectedRelax });
+							navigation.navigate("DMDSettingNotification", { selectedRelax, selectSet: setList[index] });
 						}
 					}}
 				>
@@ -91,7 +91,7 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 								setSelectedSetIndex(index);
 							} else {
 								appDispatch(actions.setSetForDMD(setList[index]));
-								navigation.navigate("DMDSettingNotification", { selectedRelax });
+								navigation.navigate("DMDSettingNotification", { selectedRelax, selectSet: setList[index] });
 							}
 						}}
 					>
@@ -151,7 +151,7 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 					onPress={() => {
 						if (selectedSetIndex !== null) {
 							appDispatch(actions.setSetForDMD(setList[selectedSetIndex]));
-							navigation.navigate("DMDSettingNotification", { selectedRelax });
+							navigation.navigate("DMDSettingNotification", { selectedRelax, selectSet: setList[selectedSetIndex] });
 						}
 					}}
 				>

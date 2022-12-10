@@ -182,7 +182,13 @@ const RootRoutes: FC = () => {
 						// 	return [`practice.item.${id}`];
 						// }}
 					/>
-					<RootNavigation.Screen name={"DMDSettingNotification"} component={Screens.DMDSettingNotification} />
+					<RootNavigation.Screen
+						name={"DMDSettingNotification"}
+						component={Screens.DMDSettingNotification}
+						options={({ route: { params } }) => ({
+							title: params.selectedRelax.name,
+						})}
+					/>
 					<RootNavigation.Screen
 						name={"DMDSelectTimeBright"}
 						component={Screens.DMDSelectTimeBright}
