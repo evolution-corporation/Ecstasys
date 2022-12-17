@@ -1,54 +1,36 @@
 /** @format */
 
-import React, { ElementRef, FC, useCallback, useRef, useState, useEffect } from "react";
-import { Platform, StyleSheet, FlatList, Text, TouchableOpacity, TextInput } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import React, { FC, useState, useEffect } from "react";
+import { TextInput, View } from "react-native";
 import isMobilePhone from "validator/lib/isMobilePhone";
 import i18n from "~i18n";
 import gStyle from "~styles";
-import TheArrow from "~assets/icons/TheArrow_WhiteTop.svg";
-import CustomModal from "../containers/CustomModal";
-import ColorButtonDoubleText from "./Buttons/ColorDoubleText";
 
 import listCodePhoneCountry from "assets/ListCodePhoneCountry.json";
+
+import WithDropList from "~components/containers/with-drop-list";
+import DefaultText from "~components/Text/default-text";
+import { useDimensions } from "@react-native-community/hooks";
+
+const SelectWithDropList = WithDropList<CodePhoneCountryType>();
 
 type CodePhoneCountryType = keyof typeof listCodePhoneCountry;
 const ListCodePhoneCountry = Object.keys(listCodePhoneCountry) as CodePhoneCountryType[];
 
-const NumberInput: FC<Props> = props => {
-	const { defaultCode = "RU", autoFocus = false, onChange = (number: string, isValidate) => {}, fixHeigth = 0 } = props;
+const NumberInput: FC<Properties> = properties => {
+	const {
+		defaultCode = "RU",
+		autoFocus = false,
+		onChange = (number: string, isValidate) => {},
+		onStatusViewDropList,
+	} = properties;
 
 	const [regionCode, setRegionCode] = useState<CodePhoneCountryType>(defaultCode);
 	const [phone, setPhone] = useState<string>("");
-	const [widthAndPositionRegionList, setWidthAndPositionRegionList] = useState<{
-		width: number;
-		y: number;
-		x: number;
-	} | null>(null);
-
-	const customModalRef = useRef<ElementRef<typeof CustomModal>>(null);
-
-	const _LeftBottomRadiusBackground = useSharedValue(styles.background.borderRadius ?? 15);
-	const _RotateArrow = useSharedValue("180deg");
-
-	const backgroundAnimatedStyle = useAnimatedStyle(() => ({
-		borderBottomLeftRadius: withTiming(_LeftBottomRadiusBackground.value),
-	}));
-
-	const arrowAnimatedStyle = useAnimatedStyle(() => ({
-		transform: [{ rotate: withTiming(_RotateArrow.value) }],
-	}));
-
-	const openList = () => {
-		_LeftBottomRadiusBackground.value = 0;
-		_RotateArrow.value = "0deg";
+	const onViewDropList = (isShow: boolean) => {
+		if (onStatusViewDropList) onStatusViewDropList(isShow);
 	};
-
-	const closeList = () => {
-		_LeftBottomRadiusBackground.value = 15;
-		_RotateArrow.value = "180deg";
-	};
-
+	const { window } = useDimensions();
 	useEffect(() => {
 		onChange(
 			`${listCodePhoneCountry[regionCode]}${phone}`,
@@ -58,7 +40,60 @@ const NumberInput: FC<Props> = props => {
 
 	return (
 		<>
-			<Animated.View
+			<SelectWithDropList
+				contentDopList={[{ name: i18n.t("RU"), value: "RU" }]}
+				onChange={region => {
+					setRegionCode(region);
+				}}
+				leftBorderDropList={-17.9}
+				onOpen={() => onViewDropList(true)}
+				onClose={() => onViewDropList(false)}
+				style={{ height: "100%" }}
+				renderItem={(name, value) => (
+					<View
+						style={{
+							width: 250,
+							height: 50,
+							flexDirection: "row",
+							justifyContent: "space-between",
+							alignItems: "center",
+						}}
+					>
+						<View style={{ paddingLeft: 19 }}>
+							<DefaultText color={"#555555"}>{listCodePhoneCountry[value]}</DefaultText>
+						</View>
+						<View style={{ flex: 1, paddingLeft: 24 }}>
+							<DefaultText color={"rgba(0, 0, 0, 0.22)"}>{name}</DefaultText>
+						</View>
+					</View>
+				)}
+			>
+				<DefaultText color={"#FFF"}>{listCodePhoneCountry[regionCode]}</DefaultText>
+			</SelectWithDropList>
+			<TextInput
+				style={{
+					color: "#FFFFFF",
+					...gStyle.styles.default,
+					flex: 1,
+					marginLeft: 15,
+					borderLeftColor: "#C2A9CE",
+					borderLeftWidth: 1,
+					height: "100%",
+					paddingLeft: 10,
+				}}
+				placeholder={i18n.t("c44c1286-2e08-4c18-ac68-4bae712c26a8")}
+				placeholderTextColor={"#E7DDEC"}
+				autoFocus={autoFocus}
+				autoComplete={"tel-device"}
+				textContentType={"telephoneNumber"}
+				importantForAutofill={"yes"}
+				keyboardType={"number-pad"}
+				maxLength={10}
+				returnKeyType={"go"}
+				selectionColor={"#FFFFFF"}
+				onChangeText={(number: string) => setPhone(number)}
+			/>
+			{/* <Animated.View
 				style={[styles.background, backgroundAnimatedStyle]}
 				onLayout={({ nativeEvent: { layout } }) => {
 					if (widthAndPositionRegionList === null) {
@@ -136,82 +171,16 @@ const NumberInput: FC<Props> = props => {
 						index,
 					})}
 				/>
-			</CustomModal>
+			</CustomModal> */}
 		</>
 	);
 };
 
-interface Props {
+interface Properties {
 	defaultCode?: keyof typeof listCodePhoneCountry;
 	autoFocus?: boolean;
 	onChange?: (number: string, isValidate: boolean) => void;
-	fixHeigth?: number;
+	onStatusViewDropList?: (isShow: boolean) => void;
 }
-
-const styles = StyleSheet.create({
-	background: {
-		borderRadius: 15,
-		backgroundColor: "rgba(255, 255, 255, 0.2)",
-		borderWidth: 1,
-		borderColor: "#C2A9CE",
-		height: 45,
-		width: "100%",
-		flexDirection: "row",
-		justifyContent: "flex-start",
-		alignItems: "center",
-	},
-	buttonRegionSelect: {
-		flexDirection: "row",
-		justifyContent: "center",
-		alignItems: "center",
-		width: 70,
-		height: "100%",
-	},
-	phoneStyle: {
-		color: "#FFFFFF",
-		fontSize: 14,
-		...gStyle.font("500"),
-	},
-	textInputStyle: {
-		borderLeftColor: "#C2A9CE",
-		borderLeftWidth: 1,
-		width: "100%",
-		height: "100%",
-		paddingHorizontal: 10,
-	},
-	flatListStyle: {
-		position: "absolute",
-		top: 45,
-		maxHeight: 144,
-		width: "80%",
-		alignSelf: "flex-start",
-		backgroundColor: "#FFFFFF",
-		borderBottomLeftRadius: 15,
-		borderBottomRightRadius: 15,
-		transform: [{ translateY: -1 }],
-	},
-	selectCodeNumberView: {
-		width: "100%",
-		height: 28,
-		flexDirection: "row",
-		alignItems: "center",
-		backgroundColor: "transparent",
-	},
-	selectCodeNumberText: {
-		color: "#555555",
-		width: 70,
-		textAlign: "center",
-		fontSize: 14,
-		...gStyle.font("500"),
-	},
-	selectCountryText: {
-		paddingLeft: 24,
-		opacity: 0.22,
-		color: "#000000",
-		fontSize: 13,
-		textAlign: "left",
-		...gStyle.font("400"),
-	},
-});
 
 export default NumberInput;

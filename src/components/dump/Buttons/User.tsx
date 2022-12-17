@@ -10,7 +10,7 @@ export const UserButtonUI: FC<Props & UserInformationProps> = props => {
 	const { style, onPress, image, nickname } = props;
 	return (
 		<Pressable style={[{ ...styles.background }, style]} onPress={onPress}>
-			<Image source={{ uri: image }} style={{ height: 38, width: 38, borderRadius: 19 }} />
+			<Image source={{ uri: image }} style={{ height: 38, width: 38, borderRadius: 13 }} />
 
 			<Text style={styles.nickname}>{nickname}</Text>
 		</Pressable>
@@ -23,12 +23,13 @@ interface Props extends ViewProps {
 
 const styles = StyleSheet.create({
 	background: {
-		borderRadius: 22,
+		borderRadius: 15,
 		backgroundColor: "#FFFFFF",
 		paddingVertical: 3,
 		alignItems: "center",
 		flexDirection: "row",
 		padding: 2,
+		paddingLeft: 3,
 		paddingRight: 0,
 		height: 44,
 		width: "auto",
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
 	image: {
 		width: 38,
 		height: 38,
-		borderRadius: 22,
+		borderRadius: 13,
 		marginLeft: 4,
 		resizeMode: "center",
 	},
