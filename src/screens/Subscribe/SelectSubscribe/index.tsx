@@ -1,18 +1,19 @@
 /** @format */
 
 import React, { ElementRef, useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Pressable } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 
 import { CustomModal, DoubleColorView } from "~components/containers";
-import { ColorButton } from "~components/dump";
+import { ColorButton, TextButton } from "~components/dump";
 import i18n from "~i18n";
 import gStyle from "~styles";
 
 import { RootScreenProps, SubscribeType } from "~types";
 import { SubscribeCard } from "./components";
 import store, { actions, useAppDispatch, useAppSelector } from "~store";
+import DefaultText from "~components/Text/default-text";
 
 const price = {
 	month_1: 279,
@@ -110,7 +111,12 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 					isShowCancelButton={isAutoPayment ?? false}
 				/>
 				{isActiveSubs && subsType === "MONTH" && (
-					<Text style={styles.offerToChangeSubscribeType}>{i18n.t("b6f80560-6ba6-4646-821a-a03ca72acb74")}</Text>
+					<>
+						<Pressable>
+							<DefaultText color={"#C2A9CE"}>{i18n.t("4701c05d-d20a-4223-be13-45ba20cecfbc")}</DefaultText>
+						</Pressable>
+						<Text style={styles.offerToChangeSubscribeType}>{i18n.t("b6f80560-6ba6-4646-821a-a03ca72acb74")}</Text>
+					</>
 				)}
 				<SubscribeCard
 					image={require("./assets/armchair.png")}
@@ -157,6 +163,13 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 					// TODO: Navigation
 					isShowCancelButton={isAutoPayment ?? false}
 				/>
+				{isActiveSubs && subsType === "HALF_YEAR" && (
+					<>
+						<Pressable>
+							<DefaultText color={"#C2A9CE"}>{i18n.t("4701c05d-d20a-4223-be13-45ba20cecfbc")}</DefaultText>
+						</Pressable>
+					</>
+				)}
 			</View>
 			<ColorButton
 				styleButton={styles.button}

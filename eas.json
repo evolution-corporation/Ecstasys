@@ -27,7 +27,7 @@
 				"APP_VARIANT": "alpha"
 			},
 			"android": {
-				"buildType": "app-bundle",
+				"buildType": "apk",
 				"prebuildCommand": "prebuild"
 			},
 			"ios": {

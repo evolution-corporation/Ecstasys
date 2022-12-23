@@ -14,6 +14,8 @@ function getShadows(offset: number, blur: number): ShadowStyleIOS | { elevation:
 		return {
 			shadowOffset: { width: 0, height: offset },
 			shadowRadius: blur,
+			shadowOpacity: 1,
+			shadowColor: "#000",
 		};
 	}
 }

@@ -23,7 +23,7 @@ const DoubleColorView: FC<DoubleColorViewProps> = props => {
 		headerElement,
 		scroll = false,
 	} = props;
-	const { window } = useDimensions();
+	const { window, screen } = useDimensions();
 
 	useFocusEffect(
 		React.useCallback(() => {
@@ -66,8 +66,8 @@ const DoubleColorView: FC<DoubleColorViewProps> = props => {
 				<Path
 					d={[
 						"M0 0",
-						`${window.width} 0`,
-						`${window.width} ${heightViewPart + 55 + heightViewPart2 + insets.top}`,
+						`${screen.width} 0`,
+						`${screen.width} ${heightViewPart + 55 + heightViewPart2 + insets.top}`,
 						`0 ${heightViewPart + 55 + insets.top}`,
 						`0 0z`,
 					].join(" ")}
