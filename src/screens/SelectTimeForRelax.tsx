@@ -20,6 +20,7 @@ import * as StatusBar from "expo-status-bar";
 import { useFocusEffect } from "@react-navigation/native";
 import { useDimensions } from "@react-native-community/hooks";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import GradientShowTimeMeditation from "~components/dump/gradient-show-time-meditation";
 
 const SelectTimeForRelax: RootScreenProps<"SelectTimeForRelax"> = ({ navigation, route }) => {
 	const { selectedPractice } = route.params;
@@ -47,13 +48,7 @@ const SelectTimeForRelax: RootScreenProps<"SelectTimeForRelax"> = ({ navigation,
 						<Image source={{ uri: selectedPractice.image }} style={{ width: "100%", height: "100%" }} />
 					</SharedElement>
 					<View style={[styles.imageContent, { paddingTop: 55 + insets.top }]}>
-						<LinearGradient style={styles.timeMinutesBox} colors={["#75348B", "#6A2382"]}>
-							<Text style={styles.timeMinutes}>
-								{i18n.t("minute", {
-									count: Math.floor(milliseconds / 60000),
-								})}
-							</Text>
-						</LinearGradient>
+						<GradientShowTimeMeditation timeMilliseconds={milliseconds} />
 					</View>
 				</View>
 			</View>

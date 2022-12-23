@@ -8,13 +8,13 @@ import Headphones from "assets/icons/Headphones_white.svg";
 import { useNavigation } from "@react-navigation/native";
 
 interface BackgroundSoundButtonProperty {
-  onPress?: () => void
+	onPress?: () => void;
 }
 
 const BackgroundSoundButton: React.FC<BackgroundSoundButtonProperty> = property => {
 	const nameBackgroundSound = useBackgroundSound();
-  const navigation = useNavigation()
-  const { onPress= () => navigation.navigate('SelectBackgroundSound') } = property
+	const navigation = useNavigation();
+	const { onPress = () => navigation.navigate("SelectBackgroundSound") } = property;
 	return (
 		<Pressable
 			style={{
@@ -27,9 +27,7 @@ const BackgroundSoundButton: React.FC<BackgroundSoundButtonProperty> = property 
 				justifyContent: "center",
 				alignItems: "center",
 			}}
-      onPress={() => {
-
-      }}
+			onPress={() => {}}
 		>
 			<Headphones style={{ marginRight: 24 }} />
 			<Text
@@ -42,7 +40,7 @@ const BackgroundSoundButton: React.FC<BackgroundSoundButtonProperty> = property 
 				{" "}
 				{nameBackgroundSound}{" "}
 			</Text>
-		</View>
+		</Pressable>
 	);
 };
 

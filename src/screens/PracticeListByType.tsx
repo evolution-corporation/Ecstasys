@@ -186,6 +186,7 @@ const styles = StyleSheet.create({
 		alignSelf: "center",
 		paddingHorizontal: 34,
 		height: 30,
+		borderRadius: 10,
 	},
 	buttonTextInstruction: {
 		color: "#FFFFFF",

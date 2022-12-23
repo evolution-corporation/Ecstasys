@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { ElementRef, useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity, Pressable } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Pressable, Linking } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 
@@ -14,6 +14,8 @@ import { RootScreenProps, SubscribeType } from "~types";
 import { SubscribeCard } from "./components";
 import store, { actions, useAppDispatch, useAppSelector } from "~store";
 import DefaultText from "~components/Text/default-text";
+import Group48095715 from "/Group48095715.svg";
+import Vector from "/Vector.svg";
 
 const price = {
 	month_1: 279,
@@ -22,7 +24,7 @@ const price = {
 
 const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation }) => {
 	const [selectedSubscribeType, setSelectedSubscribeType] = useState<SubscribeType | null>(null);
-
+	const [isAccept, setIsAccept] = useState<boolean>(false);
 	// const modalRef = useRef<ElementRef<typeof CustomModal>>(null);
 
 	const _transporteeYButton = useSharedValue(300);
@@ -76,6 +78,7 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 	const editSubscribe = () => {
 		if (selectedSubscribeType !== null) navigation.navigate("Payment", { selectSubscribe: selectedSubscribeType });
 	};
+
 	return (
 		<DoubleColorView heightViewPart={229} style={styles.background}>
 			<View style={{ alignItems: "center" }}>
@@ -170,45 +173,36 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 						</Pressable>
 					</>
 				)}
+				<View style={{ width: "100%", flexDirection: "row", alignItems: "center" }}>
+					<Pressable onPress={() => setIsAccept(prev => !prev)}>{isAccept ? <Group48095715 /> : <Vector />}</Pressable>
+					<Text style={{ color: "#9E9E9E", fontSize: 13, ...gStyle.font("400"), marginLeft: 8 }}>
+						Выбирая подписку, я соглашаюсь с{" "}
+						<Text
+							style={{ color: "#C2A9CE" }}
+							onPress={() => Linking.openURL("https://evodigital.one/dmd_meditation/privacy")}
+						>
+							Условиями оферты о рекуррентных платежах
+						</Text>{" "}
+						и{" "}
+						<Text
+							style={{ color: "#C2A9CE" }}
+							onPress={() => Linking.openURL("https://evodigital.one/dmd_meditation/privacy")}
+						>
+							Обработкой персональных данных
+						</Text>
+					</Text>
+				</View>
 			</View>
 			<ColorButton
-				styleButton={styles.button}
+				styleButton={[styles.button, isAccept ? {} : { backgroundColor: "#C2A9CE" }]}
 				styleText={styles.buttonText}
 				animationStyle={aStyle.button}
 				onPress={() => {
-					editSubscribe();
+					if (isAccept) editSubscribe();
 				}}
 			>
 				{i18n.t("Arrange")}
 			</ColorButton>
-			{/* <CustomModal
-				ref={modalRef}
-				style={styles.informationMessage}
-				mainStyle={{
-					justifyContent: "center",
-					alignItems: "center",
-					flex: 1,
-					backgroundColor: "rgba(0, 0, 0, 0.5)",
-				}}
-			>
-				<Text style={styles.titleInformation}>
-					{i18n.t(
-						selectedSubscribeType !== null
-							? "2a881f76-a942-4175-a734-462661892693"
-							: "0f3b106b-5bfb-4870-8405-3735cf6ac3a5"
-					)}
-				</Text>
-				<Text style={styles.messageInformation}>
-					{i18n.t(
-						selectedSubscribeType !== null
-							? "664c1f21-3425-485a-b4d1-d59f8578207f"
-							: "274347f0-628b-4128-8595-d6be9611ea03"
-					)}
-				</Text>
-				<ColorButton styleButton={styles.buttonModal} styleText={styles.buttonModalText}>
-					{i18n.t(selectedSubscribeType !== null ? "edit" : "off")}
-				</ColorButton>
-			</CustomModal> */}
 		</DoubleColorView>
 	);
 };
