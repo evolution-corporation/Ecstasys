@@ -12,10 +12,12 @@ function getShadows(offset: number, blur: number): ShadowStyleIOS | { elevation:
 		return { elevation: offset };
 	} else {
 		return {
-			shadowOffset: { width: 0, height: offset },
-			shadowRadius: blur,
-			shadowOpacity: 1,
-			shadowColor: "#000",
+			shadowOffset: {
+				width: 0,
+				height: offset,
+			},
+			shadowOpacity: blur,
+			shadowRadius: 3.84,
 		};
 	}
 }

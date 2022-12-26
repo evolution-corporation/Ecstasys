@@ -94,7 +94,7 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 
 	const greetingText = React.useMemo(() => {
 		let _greetingText: string | undefined;
-		if (greeting !== null) _greetingText = i18n.t(greeting);
+		if (greeting !== null) _greetingText = greeting;
 		if (_greetingText === undefined && displayName !== undefined) return displayName + "!";
 		if (_greetingText !== undefined && displayName === undefined) return _greetingText + "!";
 		if (_greetingText !== undefined && displayName !== undefined) return `${_greetingText}, ${displayName}!`;
