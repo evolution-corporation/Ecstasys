@@ -102,6 +102,10 @@ const useMeditation = (source: AVPlaybackSource | [AVPlaybackSource, AVPlaybackS
 			});
 		}
 
+		Audio.setAudioModeAsync({
+			staysActiveInBackground: true,
+		});
+
 		const init = async () => {
 			if (audioList.length === 1) {
 				const status = await audioList[0].getStatusAsync();

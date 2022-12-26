@@ -35,6 +35,9 @@ const useBackgroundSound = (shouldPlay: boolean) => {
 	};
 
 	React.useEffect(() => {
+		Audio.setAudioModeAsync({
+			staysActiveInBackground: true,
+		});
 		if (name !== null) {
 			loadingAudio();
 		}

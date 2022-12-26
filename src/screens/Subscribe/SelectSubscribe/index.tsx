@@ -173,19 +173,19 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 						</Pressable>
 					</>
 				)}
-				<View style={{ width: "100%", flexDirection: "row", alignItems: "center" }}>
+				<View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
 					<Pressable onPress={() => setIsAccept(prev => !prev)}>{isAccept ? <Group48095715 /> : <Vector />}</Pressable>
-					<Text style={{ color: "#9E9E9E", fontSize: 13, ...gStyle.font("400"), marginLeft: 8 }}>
+					<Text style={{ color: "#9E9E9E", fontSize: 13, ...gStyle.font("400"), marginLeft: 8, flex: 1 }}>
 						Выбирая подписку, я соглашаюсь с{" "}
 						<Text
-							style={{ color: "#C2A9CE" }}
+							style={{ color: "#9765A8" }}
 							onPress={() => Linking.openURL("https://evodigital.one/dmd_meditation/privacy")}
 						>
 							Условиями оферты о рекуррентных платежах
 						</Text>{" "}
 						и{" "}
 						<Text
-							style={{ color: "#C2A9CE" }}
+							style={{ color: "#9765A8" }}
 							onPress={() => Linking.openURL("https://evodigital.one/dmd_meditation/privacy")}
 						>
 							Обработкой персональных данных
