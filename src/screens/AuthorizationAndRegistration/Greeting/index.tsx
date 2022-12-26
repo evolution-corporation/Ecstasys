@@ -3,6 +3,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, Text, Image, View, Dimensions, Pressable } from "react-native";
 import Animated from "react-native-reanimated";
+import ChevronViolet from "assets/icons/ChevronViolet.svg";
+import ChevronWhite from "assets/Menu/Arrow/Vector.svg";
 
 import { TextButton } from "~components/dump";
 
@@ -82,11 +84,20 @@ const GreetingScreen: RootScreenProps<"Greeting"> = ({ navigation }) => {
 					) : (
 						<ArrowButton onPress={() => prevPage()} color={"#9765A8"} />
 					)}
-					<ArrowButtonMask
-						backgroundColor={aStyles.button.backgroundColor}
-						color={aStyles.button.color}
+					<Pressable
 						onPress={() => nextPage()}
-					/>
+						style={{
+							backgroundColor: isShowSkipButton ? "#FFF" : "#9765A8",
+							width: 38,
+							height: 38,
+							borderRadius: 10,
+							justifyContent: "center",
+							alignItems: "center",
+							overflow: "hidden",
+						}}
+					>
+						{isShowSkipButton ? <ChevronViolet /> : <ChevronWhite />}
+					</Pressable>
 				</View>
 			</View>
 		</Animated.View>

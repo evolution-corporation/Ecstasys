@@ -124,6 +124,7 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		...Tools.gStyle.font("700"),
 		marginTop: 10,
+		marginHorizontal: 30,
 	},
 	greetingView: {
 		alignSelf: "center",

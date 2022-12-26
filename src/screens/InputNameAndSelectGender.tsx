@@ -168,7 +168,7 @@ const InputNameAndSelectGender: RootScreenProps<"InputNameAndSelectGender"> = ({
 					</ColorButton>
 					<Pressable
 						onPress={() => {
-							dispatch(actions.setNotNewUser());
+							upload();
 							navigation.goBack();
 						}}
 					>
