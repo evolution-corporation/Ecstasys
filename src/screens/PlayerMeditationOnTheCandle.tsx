@@ -44,12 +44,6 @@ const PlayerMeditationOnTheCandle: RootScreenProps<"PlayerMeditationOnTheCandle"
 		? useMeditation([require("~assets/Candle.mp3")], timer.currentMilliseconds, { autoPlay: true })
 		: undefined;
 
-	useEffect(() => {
-		if (meditation !== undefined) {
-			meditation.play();
-		}
-	}, [meditation]);
-
 	const video = useRef<Video>(null);
 
 	useEffect(() => {
