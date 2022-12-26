@@ -21,6 +21,8 @@ import { isNicknameValidate } from "src/validators";
 import PromiseCustom from "src/Promise";
 import DefaultText from "~components/Text/default-text";
 
+//TODO: Need export animation and status
+
 export enum StatusCheck {
 	"FREE",
 	"USED",
