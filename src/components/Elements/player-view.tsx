@@ -138,7 +138,7 @@ const PlayerView: React.FC<PlayerViewProperty> = property => {
 				}}
 				rewindMillisecond={rewindMillisecond}
 			/>
-			<ViewFullWidth direction={DirectionFullWidth.TopBottom} style={{ height: 122 }}>
+			<ViewFullWidth direction={DirectionFullWidth.TopBottom} style={{ height: 122, marginBottom: 20 }}>
 				<TimeLine
 					ref={referenceTimeLine}
 					onChange={async percent => {

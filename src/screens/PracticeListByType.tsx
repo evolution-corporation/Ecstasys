@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
 		fontSize: 14, //height * 0.018,
 		...Tools.gStyle.font("400"),
 		textAlign: "center",
-		color: "rgba(255, 255, 255, 0.8)",
+		color: "rgba(255, 255, 255, 1)",
 		marginBottom: 11,
 		marginTop: 11, //height * 0.0256,
 	},

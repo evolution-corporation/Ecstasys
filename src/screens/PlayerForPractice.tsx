@@ -84,7 +84,7 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 	}, [navigation, timer, statusPlayer]);
 
 	return (
-		<Pressable style={{ flex: 1, backgroundColor: "blue" }} onPressIn={() => setLastPressTime(new Date())}>
+		<Pressable style={{ flex: 1 }} onPressIn={() => setLastPressTime(new Date())}>
 			<SharedElement
 				id={`practice.item.${selectedPractice.id}`}
 				style={{ position: "absolute", width: "100%", height: "100%" }}
