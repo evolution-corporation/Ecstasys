@@ -1,7 +1,7 @@
 /** @format */
 
 import React from "react";
-import { View, Text, ActivityIndicator, Pressable } from "react-native";
+import { View, Text, ActivityIndicator, Pressable, ImageSourcePropType } from "react-native";
 
 import { TimeLine, PlayerControl } from "src/components/dump";
 
@@ -19,7 +19,7 @@ import ViewFullWidth, {
 	Direction as DirectionFullWidth,
 	PositionElements,
 } from "src/components/layouts/view-full-width";
-import BackgroundSoundButton from "src/components/dump/background-sound-button";
+import BackgroundSoundButton, { BackgroundSoundButtonReference } from "src/components/dump/background-sound-button";
 
 export enum Status {
 	Loading,
@@ -42,6 +42,8 @@ export interface PlayerViewProperty {
 	rewindMillisecond?: number;
 	onChangeStart: () => Promise<void>;
 	onChangeEnd: () => Promise<void>;
+	backgroundImageForBackgroundSound?: ImageSourcePropType;
+	nameBackgroundSound?: string;
 }
 
 const PlayerView: React.FC<PlayerViewProperty> = property => {
@@ -56,11 +58,13 @@ const PlayerView: React.FC<PlayerViewProperty> = property => {
 		onChangeStatus,
 		description,
 		rewindMillisecond = 15_000,
+		backgroundImageForBackgroundSound,
+		nameBackgroundSound,
 	} = property;
-	const reference = React.useRef<React.ElementRef<typeof TimeLine>>(null);
+	const referenceTimeLine = React.useRef<React.ElementRef<typeof TimeLine>>(null);
 
 	React.useEffect(() => {
-		reference.current?.setValue(currentMilliseconds / lengthMilliseconds);
+		referenceTimeLine.current?.setValue(currentMilliseconds / lengthMilliseconds);
 	}, [currentMilliseconds]);
 
 	if (status === Status.Init || status === Status.Loading) {
@@ -81,7 +85,7 @@ const PlayerView: React.FC<PlayerViewProperty> = property => {
 							</BlackCircle>
 						</Pressable>
 					)}
-					{description === undefined ? <></> : <DefaultText>{description}</DefaultText>}
+					{description === undefined ? <></> : <DefaultText color={"#FFF"}>{description}</DefaultText>}
 					<MeditationTimeInBox milliseconds={lengthMilliseconds} />
 				</ViewPaddingList>
 			</ViewFullSpace>
@@ -93,20 +97,26 @@ const PlayerView: React.FC<PlayerViewProperty> = property => {
 			seconds % 60 < 10 ? "0" : ""
 		}${seconds % 60}`;
 		return (
-			<ViewFullSpace
-				style={{ backgroundColor: "rgba(0, 0, 0, 0.6)", alignItems: "center" }}
-				direction={DirectionFullSpace.TopBottom}
-			>
-				<BlackCircle size={196}>
-					<Text style={{ color: "#FFF", fontSize: 48, ...gStyle.font("400") }}>{time}</Text>
-				</BlackCircle>
-			</ViewFullSpace>
+			<Pressable onPress={() => onChangeStatus(Status.Pause)}>
+				<ViewFullSpace
+					style={{ backgroundColor: "rgba(0, 0, 0, 0.6)", alignItems: "center" }}
+					direction={DirectionFullSpace.TopBottom}
+				>
+					<BlackCircle size={196}>
+						<Text style={{ color: "#FFF", fontSize: 48, ...gStyle.font("400") }}>{time}</Text>
+					</BlackCircle>
+				</ViewFullSpace>
+			</Pressable>
 		);
 	}
 
 	const patternVisibleTime = lengthMilliseconds > 3600 * 1000 ? "%-H:%M:%S" : "%M:%S";
 	return (
-		<ViewFullSpace direction={DirectionFullSpace.TopBottom}>
+		<ViewFullSpace
+			direction={DirectionFullSpace.TopBottom}
+			mainPositionElements={PositionElements.StartEnd}
+			style={{ paddingHorizontal: 20 }}
+		>
 			<View />
 			<PlayerControl
 				isPlay={status === Status.Play || status === Status.Change}
@@ -130,7 +140,7 @@ const PlayerView: React.FC<PlayerViewProperty> = property => {
 			/>
 			<ViewFullWidth direction={DirectionFullWidth.TopBottom} style={{ height: 122 }}>
 				<TimeLine
-					ref={reference}
+					ref={referenceTimeLine}
 					onChange={async percent => {
 						onChangeCurrentMilliseconds(lengthMilliseconds * percent);
 					}}
@@ -145,7 +155,13 @@ const PlayerView: React.FC<PlayerViewProperty> = property => {
 						{i18n.strftime(new Date(lengthMilliseconds - 5 * 3600 * 1000), patternVisibleTime)}
 					</DefaultText>
 				</ViewFullWidth>
-				{isSupportBackgroundSound ? <BackgroundSoundButton /> : <></>}
+				{isSupportBackgroundSound && nameBackgroundSound ? (
+					<View style={{ alignSelf: "flex-start", marginTop: 17 }}>
+						{<BackgroundSoundButton image={backgroundImageForBackgroundSound} name={nameBackgroundSound} />}
+					</View>
+				) : (
+					<></>
+				)}
 			</ViewFullWidth>
 		</ViewFullSpace>
 	);

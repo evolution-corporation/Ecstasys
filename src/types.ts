@@ -288,6 +288,7 @@ export type RootStackList = {
 	ResultSubscribeScreen: {
 		status: "Edit" | "Designations";
 	};
+	NoExitMeditation: undefined;
 };
 
 export type RootScreenProps<T extends keyof RootStackList> = FC<NativeStackScreenProps<RootStackList, T>>;

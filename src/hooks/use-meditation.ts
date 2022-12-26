@@ -73,6 +73,21 @@ const useMeditation = (source: AVPlaybackSource | [AVPlaybackSource, AVPlaybackS
 		}
 	};
 
+	const stop = async () => {
+		if (audioList.length === 1) {
+			const audioStatus = await audioList[0].getStatusAsync();
+			if (audioStatus.isLoaded) {
+				await audioList[0].stopAsync();
+			}
+		} else if (audioList.length === 2) {
+			const audioStatus = [await audioList[0].getStatusAsync(), await audioList[1].getStatusAsync()];
+			if (audioStatus[0].isLoaded && audioStatus[1].isLoaded) {
+				await audioList[0].stopAsync();
+				await audioList[1].stopAsync();
+			}
+		}
+	};
+
 	React.useEffect(() => {
 		if (audioList.length === 1) {
 			audioList[0].setOnPlaybackStatusUpdate(status => {
@@ -90,15 +105,15 @@ const useMeditation = (source: AVPlaybackSource | [AVPlaybackSource, AVPlaybackS
 		const init = async () => {
 			if (audioList.length === 1) {
 				const status = await audioList[0].getStatusAsync();
-				if (status.isLoaded) audioList[0].loadAsync(Array.isArray(source) ? source[0] : source, {});
+				if (!status.isLoaded) await audioList[0].loadAsync(Array.isArray(source) ? source[0] : source, {});
 				audioList[0].setOnPlaybackStatusUpdate(statusOfSubscribe => {
 					setIsLoaded(previousValue => [statusOfSubscribe.isLoaded, previousValue[1]]);
 				});
 			} else if (audioList.length === 2 && Array.isArray(source)) {
 				const statusFirst = await audioList[0].getStatusAsync();
-				if (statusFirst.isLoaded) audioList[0].loadAsync(source[0], {});
+				if (!statusFirst.isLoaded) await audioList[0].loadAsync(source[0], {});
 				const statusSecond = await audioList[1].getStatusAsync();
-				if (statusSecond.isLoaded) audioList[1].loadAsync(source[1], {});
+				if (!statusSecond.isLoaded) await audioList[1].loadAsync(source[1], {});
 				audioList[0].setOnPlaybackStatusUpdate(statusOfSubscribe => {
 					setIsLoaded(previousValue => [statusOfSubscribe.isLoaded, previousValue[1]]);
 				});
@@ -111,6 +126,6 @@ const useMeditation = (source: AVPlaybackSource | [AVPlaybackSource, AVPlaybackS
 		init();
 	}, []);
 
-	return { play, pause, setPosition, isLoading: isLoaded[0] && isLoaded[1] };
+	return { play, pause, setPosition, isLoading: isLoaded[0] && isLoaded[1], stop };
 };
 export default useMeditation;

@@ -1,20 +1,23 @@
 /** @format */
 
 import React from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet, Pressable, ImageSourcePropType } from "react-native";
 import useBackgroundSound from "src/hooks/use-background-sound";
 import gStyle from "~styles";
 import Headphones from "assets/icons/Headphones_white.svg";
 import { useNavigation } from "@react-navigation/native";
+import { Audio } from "expo-av";
+import BackgroundSound from "src/backgroundSound";
 
-interface BackgroundSoundButtonProperty {
-	onPress?: () => void;
+export interface BackgroundSoundButtonProperty {
+	image?: ImageSourcePropType;
+	name: string;
 }
 
 const BackgroundSoundButton: React.FC<BackgroundSoundButtonProperty> = property => {
-	const nameBackgroundSound = useBackgroundSound();
 	const navigation = useNavigation();
-	const { onPress = () => navigation.navigate("SelectBackgroundSound") } = property;
+	const { image, name } = property;
+
 	return (
 		<Pressable
 			style={{
@@ -27,7 +30,9 @@ const BackgroundSoundButton: React.FC<BackgroundSoundButtonProperty> = property 
 				justifyContent: "center",
 				alignItems: "center",
 			}}
-			onPress={() => {}}
+			onPress={() => {
+				navigation.navigate("SelectBackgroundSound", { backgroundImage: image });
+			}}
 		>
 			<Headphones style={{ marginRight: 24 }} />
 			<Text
@@ -38,20 +43,10 @@ const BackgroundSoundButton: React.FC<BackgroundSoundButtonProperty> = property 
 				}}
 			>
 				{" "}
-				{nameBackgroundSound}{" "}
+				{name}{" "}
 			</Text>
 		</Pressable>
 	);
 };
-
-BackgroundSoundButton.defaultProps = {};
-
-const styles = StyleSheet.create({
-	container: {
-		alignItems: "center",
-		flex: 1,
-		justifyContent: "center",
-	},
-});
 
 export default BackgroundSoundButton;

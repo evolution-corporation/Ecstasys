@@ -4,7 +4,7 @@ import React, { FC, memo } from "react";
 import { Dimensions, Pressable, StyleSheet, Text, View, ActivityIndicator } from "react-native";
 
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
-
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import Core from "~core";
@@ -28,6 +28,7 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 
 import ArrowBack from "assets/icons/ArrowBack.svg";
 import useAccountStatus from "./hooks/use-account-status";
+import IsFavorite from "~components/dump/IsFavorite";
 
 const TabNavigator = createBottomTabNavigator<TabNavigatorList>();
 
@@ -87,6 +88,7 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
 };
 
 const RootNavigation = createSharedElementStackNavigator<RootStackList>();
+// const RootNavigation = createNativeStackNavigator<RootStackList>();
 
 const RootRoutes: FC = () => {
 	const accountStatus = useAccountStatus();
@@ -231,7 +233,14 @@ const RootRoutes: FC = () => {
 						options={{ headerShown: false }}
 					/>
 					<RootNavigation.Screen name={"DMDIntro"} component={Screens.DMDIntro} options={{ headerShown: false }} />
-					<RootNavigation.Screen name={"PlayerForPractice"} component={Screens.PlayerForPractice} />
+					<RootNavigation.Screen
+						name={"PlayerForPractice"}
+						component={Screens.PlayerForPractice}
+						options={({ route: { params } }) => ({
+							title: params.selectedPractice.name,
+							headerRight: () => <IsFavorite practice={params.selectedPractice} />,
+						})}
+					/>
 					<RootNavigation.Screen
 						name={"SelectSubscribe"}
 						component={Screens.SelectSubscribe}
@@ -291,6 +300,11 @@ const RootRoutes: FC = () => {
 						name={"PlayerMeditationDot"}
 						component={Screens.PlayerMeditationDot}
 						options={{ title: i18n.t("8106b051-caea-44ff-a001-8636d3596275") }}
+					/>
+					<RootNavigation.Screen
+						name={"NoExitMeditation"}
+						component={Screens.NoExitMeditation}
+						options={{ presentation: "transparentModal", headerShown: false }}
 					/>
 				</>
 			);

@@ -18,8 +18,8 @@ import Group48095715 from "/Group48095715.svg";
 import Vector from "/Vector.svg";
 
 const price = {
-	month_1: 279,
-	month_6: 1179,
+	month_1: 299,
+	month_6: 1249,
 };
 
 const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation }) => {

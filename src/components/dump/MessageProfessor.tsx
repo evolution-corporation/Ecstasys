@@ -22,7 +22,7 @@ const MessageProfessor: React.FC<Props> = props => {
 					style={{
 						width: 180,
 						height: 180,
-						borderRadius: 90,
+						borderRadius: 53,
 						overflow: "hidden",
 					}}
 				>

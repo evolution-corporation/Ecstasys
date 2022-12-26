@@ -26,10 +26,10 @@ const SelectBackgroundSound: RootScreenProps<"SelectBackgroundSound"> = ({ navig
 		store.practice.paramsPractice.currentVolumeBackgroundSound,
 	]);
 	const dispatch = useAppDispatch();
-	const TimeLineRef = useRef<ElementRef<typeof TimeLine>>(null);
+	const TimeLineReference = useRef<ElementRef<typeof TimeLine>>(null);
 
 	const offPlayBackgroundSound = useRef<{ (): Promise<void> } | null>(null);
-
+	const changeVolumeCancel = useRef<() => void>();
 	return (
 		<View style={styles.background}>
 			{backgroundImage && <Image blurRadius={2} source={backgroundImage} style={styles.background} />}
@@ -76,10 +76,14 @@ const SelectBackgroundSound: RootScreenProps<"SelectBackgroundSound"> = ({ navig
 					))}
 				</View>
 				<TimeLine
-					ref={TimeLineRef}
+					ref={TimeLineReference}
 					initValue={volume}
 					onChange={percent => {
-						dispatch(actions.editBackgroundVolume(percent));
+						if (changeVolumeCancel.current) changeVolumeCancel.current();
+						const lastId = setTimeout(() => dispatch(actions.editBackgroundVolume(percent)), 100);
+						changeVolumeCancel.current = () => {
+							clearTimeout(lastId);
+						};
 					}}
 				/>
 			</View>
@@ -106,6 +110,7 @@ const styles = StyleSheet.create({
 	backgroundSoundList: {
 		flexDirection: "row",
 		paddingTop: 20,
+		flexWrap: "wrap",
 	},
 	iconBackgroundSound: {
 		borderRadius: 20,
