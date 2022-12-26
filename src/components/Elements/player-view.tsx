@@ -85,7 +85,13 @@ const PlayerView: React.FC<PlayerViewProperty> = property => {
 							</BlackCircle>
 						</Pressable>
 					)}
-					{description === undefined ? <></> : <DefaultText color={"#FFF"}>{description}</DefaultText>}
+					{description === undefined ? (
+						<></>
+					) : (
+						<DefaultText color={"#FFF"} style={{ textAlign: "center", width: 220 }}>
+							{description}
+						</DefaultText>
+					)}
 					<MeditationTimeInBox milliseconds={lengthMilliseconds} />
 				</ViewPaddingList>
 			</ViewFullSpace>

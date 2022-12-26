@@ -15,6 +15,7 @@ interface Props extends RN.ViewProps {
 
 const MessageProfessor: React.FC<Props> = props => {
 	const { message, greeting, style } = props;
+	console.log(greeting);
 	return (
 		<RN.View style={style}>
 			<RN.View style={{ justifyContent: "center", alignItems: "center" }}>

@@ -70,13 +70,13 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 		const hours = lastUpdate.getHours();
 		let greetingDay: string | undefined;
 		if (hours >= 0 && hours < 6) {
-			greetingDay = "06c305e9-2d05-4465-a0bf-8baa0de88baf";
+			greetingDay = i18n.t("06c305e9-2d05-4465-a0bf-8baa0de88baf");
 		} else if (hours >= 6 && hours < 12) {
-			greetingDay = "a6c20644-393e-410d-9d76-b5859128a20e";
+			greetingDay = i18n.t("a6c20644-393e-410d-9d76-b5859128a20e");
 		} else if (hours >= 12 && hours < 18) {
-			greetingDay = "469021f2-3e5c-4cee-b33a-ffd1bb12a7ef";
+			greetingDay = i18n.t("469021f2-3e5c-4cee-b33a-ffd1bb12a7ef");
 		} else {
-			greetingDay = "52a1a44e-d621-4d55-b0df-b21ddea89872";
+			greetingDay = i18n.t("52a1a44e-d621-4d55-b0df-b21ddea89872");
 		}
 		if (Date.now() - lastUpdate.getTime() > 300_000) {
 			greetingDay = undefined;
@@ -227,7 +227,7 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 				>
 					<Dump.UserButton
 						onPress={() => navigation.navigate("Profile")}
-						style={{ alignSelf: "flex-start", left: 20 }}
+						style={{ alignSelf: "flex-start", left: 20, marginBottom: 20 }}
 					/>
 					<Dump.MessageProfessor
 						greeting={greetingText}

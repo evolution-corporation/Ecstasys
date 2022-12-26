@@ -49,7 +49,7 @@ const InputNameAndSelectGender: RootScreenProps<"InputNameAndSelectGender"> = ({
 
 	return (
 		<View style={{ width: Dimensions.get("window").width, height: Dimensions.get("window").height }}>
-			<Pressable style={{ flexGrow: 1, backgroundColor: "rgba(0, 0, 0, 0.8)" }} onPress={() => navigation.goBack()}>
+			<Pressable style={{ flexGrow: 1, backgroundColor: "rgba(0, 0, 0, 0.8)" }}>
 				<Image
 					source={require("./AuthorizationAndRegistration/Greeting/assets/ttttttttt.png")}
 					style={{
