@@ -1,5 +1,7 @@
 /** @format */
 
+import { EventMapCore, StackNavigationState } from "@react-navigation/native";
+import { NativeStackNavigationEventMap } from "@react-navigation/native-stack";
 import React from "react";
 import { View, Image, Pressable } from "react-native";
 import { SharedElement } from "react-navigation-shared-element";
@@ -9,7 +11,7 @@ import useMeditation from "src/hooks/use-meditation";
 import useTimer from "src/hooks/use-timer";
 import { actions, useAppDispatch } from "~store";
 
-import { RootScreenProps } from "~types";
+import { RootScreenProps, RootStackList } from "~types";
 
 const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, route }) => {
 	const { selectedPractice } = route.params;
@@ -51,19 +53,6 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 		};
 	}, [lastPressTime, statusPlayer]);
 
-	React.useEffect(() => {
-		return () => {
-			console.log(timer.currentMilliseconds);
-			if (statusPlayer !== Status.Loading) {
-				meditation?.stop();
-				timer.edit(0);
-				if (timer.currentMilliseconds >= 60_000) {
-					appDispatch(actions.addStatisticPractice([selectedPractice, Math.floor(timer.currentMilliseconds)]));
-				}
-			}
-		};
-	}, []);
-
 	const isSupportBackgroundSound =
 		selectedPractice.type === "RELAXATION" || selectedPractice.type === "DIRECTIONAL_VISUALIZATIONS";
 
@@ -74,13 +63,25 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 	};
 
 	React.useEffect(() => {
-		navigation.addListener("beforeRemove", event => {
+		const exit = event => {
 			if (event.data.action.type === "GO_BACK") {
 				event.preventDefault();
 				navigation.navigate("NoExitMeditation");
+			} else {
+				if (statusPlayer !== Status.Loading) {
+					meditation?.stop();
+					timer.edit(0);
+					if (timer.currentMilliseconds >= 60_000) {
+						appDispatch(actions.addStatisticPractice([selectedPractice, Math.floor(timer.currentMilliseconds)]));
+					}
+				}
 			}
-		});
-	}, [navigation]);
+		};
+		navigation.addListener("beforeRemove", exit);
+		return () => {
+			navigation.removeListener("beforeRemove", exit);
+		};
+	}, [navigation, timer, statusPlayer]);
 
 	return (
 		<Pressable style={{ flex: 1, backgroundColor: "blue" }} onPressIn={() => setLastPressTime(new Date())}>
