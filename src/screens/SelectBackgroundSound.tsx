@@ -18,6 +18,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { BackgroundSound, playFragmentMeditationBackground } from "src/models/practices";
 import { RootScreenProps } from "~types";
 import { actions, useAppDispatch, useAppSelector } from "~store";
+import { useDimensions } from "@react-native-community/hooks";
 
 const SelectBackgroundSound: RootScreenProps<"SelectBackgroundSound"> = ({ navigation, route }) => {
 	const { backgroundImage } = route.params;
@@ -25,11 +26,14 @@ const SelectBackgroundSound: RootScreenProps<"SelectBackgroundSound"> = ({ navig
 		store.practice.paramsPractice.currentNameBackgroundSound,
 		store.practice.paramsPractice.currentVolumeBackgroundSound,
 	]);
+	const { window } = useDimensions();
 	const dispatch = useAppDispatch();
 	const TimeLineReference = useRef<ElementRef<typeof TimeLine>>(null);
 
 	const offPlayBackgroundSound = useRef<{ (): Promise<void> } | null>(null);
 	const changeVolumeCancel = useRef<() => void>();
+	const widthItem = (window.width - 40 - 25 * 3) / 4;
+	const widthImageItem = widthItem * 0.8;
 	return (
 		<View style={styles.background}>
 			{backgroundImage && <Image blurRadius={2} source={backgroundImage} style={styles.background} />}
@@ -61,12 +65,13 @@ const SelectBackgroundSound: RootScreenProps<"SelectBackgroundSound"> = ({ navig
 									offPlayBackgroundSound.current = null;
 								}
 							}}
-							style={{ width: 65, marginHorizontal: 12 }}
+							style={{ width: widthItem, marginHorizontal: 12, alignItems: "center" }}
 						>
 							<Image
 								source={item[1].image}
 								style={[
 									styles.iconBackgroundSound,
+									{ width: widthImageItem, height: widthImageItem },
 									selectBackgroundSound && selectBackgroundSound === item[0]
 										? { borderColor: "#FFFFFF", borderWidth: 2 }
 										: null,
@@ -115,9 +120,6 @@ const styles = StyleSheet.create({
 	},
 	iconBackgroundSound: {
 		borderRadius: 20,
-		width: 65,
-		height: 65,
-
 		marginVertical: 11,
 	},
 	nameBackgroundSound: {
