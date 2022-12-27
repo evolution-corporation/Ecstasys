@@ -54,7 +54,19 @@ const InstructionForDMD: RootScreenProps<"InstructionForDMD"> = ({ route, naviga
 					onPress={() => setIsShowFeatures(previous => !previous)}
 				>
 					<Text style={{ ...gStyle.font("500"), fontSize: 14, color: "#FFF" }}>Особенности этапов</Text>
-					<Animated.View style={[styleChevron, { width: 8, height: 8, right: 10, position: "absolute" }]}>
+					<Animated.View
+						style={[
+							styleChevron,
+							{
+								width: 24,
+								height: 24,
+								right: 10,
+								position: "absolute",
+								justifyContent: "center",
+								alignItems: "center",
+							},
+						]}
+					>
 						<Chevron />
 					</Animated.View>
 				</Pressable>
