@@ -49,7 +49,7 @@ const NoExitMeditation: RootScreenProps<"NoExitMeditation"> = ({ navigation, rou
 				/>
 
 				<ColorButton
-					styleButton={{ backgroundColor: "#C2A9CE", paddingHorizontal: 25, borderRadius: 100 }}
+					styleButton={{ backgroundColor: "#C2A9CE", paddingHorizontal: 25 }}
 					styleText={{ color: "#FFF" }}
 					onPress={() => {
 						navigation.goBack();

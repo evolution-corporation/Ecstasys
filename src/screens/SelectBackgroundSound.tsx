@@ -40,7 +40,7 @@ const SelectBackgroundSound: RootScreenProps<"SelectBackgroundSound"> = ({ navig
 				]}
 			>
 				<View style={styles.backgroundSoundList}>
-					{Object.entries(BackgroundSound).map(item => (
+					{Object.entries(BackgroundSound).map((item, index) => (
 						<Pressable
 							key={item[0]}
 							onPress={() => {
@@ -61,6 +61,7 @@ const SelectBackgroundSound: RootScreenProps<"SelectBackgroundSound"> = ({ navig
 									offPlayBackgroundSound.current = null;
 								}
 							}}
+							style={{ width: 65, marginHorizontal: 12 }}
 						>
 							<Image
 								source={item[1].image}
@@ -105,7 +106,7 @@ const styles = StyleSheet.create({
 		height: "100%",
 		justifyContent: "space-between",
 		paddingBottom: 30,
-		paddingHorizontal: 20,
+		paddingHorizontal: 8,
 	},
 	backgroundSoundList: {
 		flexDirection: "row",
@@ -116,7 +117,7 @@ const styles = StyleSheet.create({
 		borderRadius: 20,
 		width: 65,
 		height: 65,
-		marginHorizontal: 12,
+
 		marginVertical: 11,
 	},
 	nameBackgroundSound: {

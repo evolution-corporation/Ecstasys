@@ -10,8 +10,9 @@ import HeaderText from "~components/Text/header-text";
 import DefaultText from "~components/Text/default-text";
 import CustomPartText from "~components/Text/custom-part-text";
 import ViewPaddingList, { Direction } from "~components/containers/view-padding-list";
+import { ColorButton } from "~components/dump";
 
-const Instruction: RootScreenProps<"Instruction"> = ({ route }) => {
+const Instruction: RootScreenProps<"Instruction"> = ({ route, navigation }) => {
 	const { body, description, id, title } = route.params.instruction;
 	return (
 		<Screen backgroundColor={"#9765A8"} paddingHorizontalOff>
@@ -28,6 +29,15 @@ const Instruction: RootScreenProps<"Instruction"> = ({ route }) => {
 							{item.text}
 						</DefaultText>
 					))}
+					<ColorButton
+						onPress={() => {
+							navigation.goBack();
+						}}
+						styleButton={{ backgroundColor: "#C2A9CE" }}
+						styleText={{ color: "#FFFFFF" }}
+					>
+						К практике
+					</ColorButton>
 				</ViewPaddingList>
 			</ScrollView>
 		</Screen>

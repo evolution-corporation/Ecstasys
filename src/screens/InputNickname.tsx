@@ -68,19 +68,17 @@ const InputLoginScreen: RootScreenProps<"InputNickname"> = ({ navigation }) => {
 	// TODO need import animation and style
 	return (
 		<Screen backgroundColor={"#9765A8"}>
-			<ViewUserChange>
-				<NicknameBase
-					ref={NicknameBaseRef}
-					onEndChange={processing}
-					checkValidateNickname={async (nickname: string) => {
-						return (await appDispatch(actions.addChangedInformationUser({ nickname })).unwrap())
-							.lastCheckNicknameAndResult?.[1] ?? false
-							? StatusCheck.FREE
-							: StatusCheck.USED;
-					}}
-					styleNicknameInputView={{}}
-				/>
-			</ViewUserChange>
+			<NicknameBase
+				ref={NicknameBaseRef}
+				onEndChange={processing}
+				checkValidateNickname={async (nickname: string) => {
+					return (await appDispatch(actions.addChangedInformationUser({ nickname })).unwrap())
+						.lastCheckNicknameAndResult?.[1] ?? false
+						? StatusCheck.FREE
+						: StatusCheck.USED;
+				}}
+				styleNicknameInputView={{}}
+			/>
 			{variableNicknameList.length > 0 && (
 				<View style={[styles.variableNicknameList]}>
 					{variableNicknameList.map((item, index) => (

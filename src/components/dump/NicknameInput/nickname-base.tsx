@@ -20,6 +20,7 @@ import CrossMarkerWhite from "assets/icons/CrossMarker_White.svg";
 import { isNicknameValidate } from "src/validators";
 import PromiseCustom from "src/Promise";
 import DefaultText from "~components/Text/default-text";
+import ViewUserChange from "~components/containers/view-user-change";
 
 //TODO: Need export animation and status
 
@@ -133,24 +134,32 @@ const NicknameInput = forwardRef<Reference, Props>((properties, reference) => {
 
 	return (
 		<>
-			<Animated.View
-				style={[{ width: "100%", height: "100%", flexDirection: "row" }, styleNicknameInputView, animatedView]}
-			>
-				<TextInput
-					onChangeText={text => editNickname(text)}
-					style={[{ color: "#FFFFFF", fontSize: 14, ...gStyle.font("400"), flex: 1 }, styleNicknameInputText]}
-					value={nickname}
-					placeholderTextColor={"#C2A9CE"}
-					maxLength={16}
-					placeholder={i18n.t("f212a1ac-9688-4671-bbd1-6cbe20662ad7")}
-					autoCapitalize={"none"}
-					onFocus={onFocus}
-					onBlur={onBlur}
-				/>
-				<View style={{ minWidth: 20, height: "100%", alignItems: "center", justifyContent: "center" }}>
-					{StatusCheckView}
+			<ViewUserChange animatedStyle={animatedView}>
+				<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						justifyContent: "space-between",
+						height: "100%",
+						width: "100%",
+					}}
+				>
+					<TextInput
+						onChangeText={text => editNickname(text)}
+						style={[{ color: "#FFFFFF", fontSize: 14, ...gStyle.font("400"), flex: 1 }, styleNicknameInputText]}
+						value={nickname}
+						placeholderTextColor={"#C2A9CE"}
+						maxLength={16}
+						placeholder={i18n.t("f212a1ac-9688-4671-bbd1-6cbe20662ad7")}
+						autoCapitalize={"none"}
+						onFocus={onFocus}
+						onBlur={onBlur}
+					/>
+					<View style={{ minWidth: 20, height: "100%", alignItems: "center", justifyContent: "center" }}>
+						{StatusCheckView}
+					</View>
 				</View>
-			</Animated.View>
+			</ViewUserChange>
 			{StatusCheckText === undefined ? undefined : <DefaultText color={"#E7DDEC"}>{StatusCheckText}</DefaultText>}
 		</>
 	);

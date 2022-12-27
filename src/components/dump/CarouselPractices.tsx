@@ -5,7 +5,6 @@ import { StyleSheet, FlatList, ViewProps, Dimensions, ViewToken, ViewabilityConf
 
 import CarouselPracticesElement from "./CarouselPracticesElement";
 import { State } from "~types";
-import { useNavigation } from "@react-navigation/native";
 
 const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 	const { data, style, onChange, onPress } = props;
@@ -46,7 +45,10 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 		},
 		[selectedIndex]
 	);
-	if (widthCarousel <= 300) {
+
+	const fixRefonLayout = useRef<() => void>();
+
+	if (widthCarousel <= 300 || data.length === 0) {
 		return null;
 	}
 
@@ -55,6 +57,20 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 			style={[{ flex: 1, overflow: "hidden" }, style]}
 			onLayout={({ nativeEvent: { layout } }) => {
 				if (widthCarousel === null) setWidthCarousel(layout.width);
+				console.log("1");
+				if (!isFlatListRender.current) {
+					isFlatListRender.current = true;
+					let index = 0;
+					if (data.length >= 3) {
+						index = 1;
+					}
+					fixRefonLayout.current = () => {
+						refFlatList.current?.scrollToIndex({ index, animated: false, viewOffset: widthCarousel - 254 - 10 });
+
+						setSelectedIndex(index);
+						if (onChange) onChange(data[index].id);
+					};
+				}
 			}}
 		>
 			<FlatList
@@ -85,26 +101,17 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 				contentContainerStyle={{
 					paddingHorizontal: (widthCarousel - 254) / 2 + Math.abs(styles.flatList.left), //* скрываем индикатор начала/конца прокрутки
 				}}
+				onLayout={() => {
+					if (fixRefonLayout.current !== undefined) {
+						fixRefonLayout.current();
+						fixRefonLayout.current = undefined;
+					}
+				}}
 				showsVerticalScrollIndicator={false}
 				showsHorizontalScrollIndicator={false}
 				//* настройка логики
 				viewabilityConfig={_viewabilityConfig}
 				onViewableItemsChanged={_onViewableItemsChanged}
-				onLayout={() => {
-					if (!isFlatListRender.current) {
-						isFlatListRender.current = true;
-						// let index = 0;
-						// if (data.length >= 3) {
-						// 	index = 1;
-						// }
-						// setTimeout(() => {
-						// 	refFlatList.current?.scrollToIndex({ index, animated: false, viewOffset: widthCarousel - 254 });
-
-						// 	setSelectedIndex(index);
-						// 	if (onChange) onChange(data[index].id);
-						// }, 0);
-					}
-				}}
 				// getItemLayout={(data, index) => ({
 				// 	length: styles.elementList.width,
 				// 	offset: styles.elementList.width * index,

@@ -8,7 +8,7 @@ import gStyle from "~styles";
 import { ColorButton, SelectImageButton, NicknameInput, NumberInput } from "~components/dump";
 import { Screen } from "~components/containers";
 import { Gender, RootScreenProps } from "~types";
-import { actions } from "~store";
+import { actions, useAppDispatch } from "~store";
 import { StatusCheck } from "~components/dump/NicknameInput/nickname-base";
 import { Request } from "~api";
 import { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
@@ -52,7 +52,7 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 	const animatedStyleSelectGender = useAnimatedStyle(() => ({
 		borderBottomRightRadius: withTiming(borderBottomRightRadiusSelectGender.value),
 	}));
-
+	const appDispatch = useAppDispatch();
 	React.useEffect(() => {
 		const keyboardListenOpen = Keyboard.addListener("keyboardDidShow", () => setIsKeyboardOpen(true));
 		const keyboardListenClose = Keyboard.addListener("keyboardDidHide", () => setIsKeyboardOpen(false));
@@ -120,27 +120,25 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 							<DefaultText color={"#FFF"}>{nameSelectedGender}</DefaultText>
 						</SelectWithDropList>
 					</ViewUserChange>
-					<ViewUserChange>
-						<NicknameInput
-							defaultValue={nickName}
-							onEndChange={(inputNickName, status) => {
-								if (status === StatusCheck.FREE) {
-									Request.reservationNickname(inputNickName);
-								}
-							}}
-							// styleNicknameInputView={{}}
-							checkValidateNickname={async (inputNickName: string) => {
-								if (nickName !== inputNickName) {
-									return (await dispatch(actions.addChangedInformationUser({ nickname: inputNickName })).unwrap())
-										.lastCheckNicknameAndResult?.[1] ?? false
-										? StatusCheck.FREE
-										: StatusCheck.USED;
-								} else {
-									return StatusCheck.AWAIT;
-								}
-							}}
-						/>
-					</ViewUserChange>
+					<NicknameInput
+						defaultValue={nickName}
+						onEndChange={(inputNickName, status) => {
+							if (status === StatusCheck.FREE) {
+								Request.reservationNickname(inputNickName);
+							}
+						}}
+						// styleNicknameInputView={{}}
+						checkValidateNickname={async (inputNickName: string) => {
+							if (nickName !== inputNickName) {
+								return (await appDispatch(actions.addChangedInformationUser({ nickname: inputNickName })).unwrap())
+									.lastCheckNicknameAndResult?.[1] ?? false
+									? StatusCheck.FREE
+									: StatusCheck.USED;
+							} else {
+								return StatusCheck.AWAIT;
+							}
+						}}
+					/>
 					<Pressable onPress={() => navigation.navigate("EditUserBirthday")}>
 						<ViewUserChange>
 							<DefaultText color={"#FFF"}>{i18n.strftime(new Date(birthday), "%d.%m.%Y")}</DefaultText>
