@@ -44,6 +44,7 @@ const CategoryCard: React.FC<Props> = props => {
 					...gStyle.shadows(1, 1),
 					shadowColor: Platform.OS === "ios" ? "rgba(0,0,0,0.1)" : undefined,
 					borderRadius: 20,
+					backgroundColor: "#FFF",
 				},
 			]}
 		>

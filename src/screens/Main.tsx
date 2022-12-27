@@ -21,6 +21,8 @@ import useIsNewUser from "src/hooks/use-is-new-user";
 import ViewFullSpace from "~components/layouts/view-full-space";
 import ViewFullWidth, { Direction } from "~components/layouts/view-full-width";
 import TitleAndSubTitle from "~components/Text/title-and-sub-title";
+import ViewPaddingList, { Direction as DirectionForPaddingList } from "~components/containers/view-padding-list";
+import Star from "assets/icons/Star.svg";
 
 const styles = RN.StyleSheet.create({
 	image: {
@@ -147,40 +149,67 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 
 	const PopularPracticeBlock =
 		!!toDayPopularMeditation || (!toDayPopularMeditation && isLoadingPopularPractice) ? (
-			<>
-				<TitleAndSubTitle
-					title={i18n.t("bbb079ed-25a1-4360-a262-5c1ef0741cbf")}
-					subtitle={i18n.t("b47177ce-a266-4e2f-ba88-218f93de38a3")}
-					styleTitle={styles.nameSection}
-					styleSubTitle={styles.descriptionSection}
-				/>
-
-				{toDayPopularMeditation ? (
-					<Dump.PracticeCard
-						id={toDayPopularMeditation.id}
-						style={{ marginTop: 12 }}
-						description={toDayPopularMeditation.description}
-						image={toDayPopularMeditation.image}
-						lengthAudio={toDayPopularMeditation.length}
-						name={toDayPopularMeditation.name}
-						typePractice={toDayPopularMeditation.type}
-						isPermission={toDayPopularMeditation.isNeedSubscribe && isSubscribe}
-						onPress={() => {
-							if (toDayPopularMeditation.type === "RELAXATION") {
-								navigation.navigate("SelectTimeForRelax", {
-									selectedPractice: toDayPopularMeditation,
-								});
-							} else {
-								navigation.navigate("PlayerForPractice", {
-									selectedPractice: toDayPopularMeditation,
-								});
-							}
-						}}
+			<RN.Pressable
+				style={{
+					backgroundColor: "#FFF",
+					borderRadius: 20,
+					...gStyle.shadows(1, 4),
+					shadowColor: RN.Platform.OS === "ios" ? "rgba(0,0,0,0.25)" : undefined,
+					marginTop: 28,
+				}}
+				onPress={() => {
+					if (toDayPopularMeditation) {
+						if (toDayPopularMeditation.type === "RELAXATION") {
+							navigation.navigate("SelectTimeForRelax", {
+								selectedPractice: toDayPopularMeditation,
+							});
+						} else {
+							navigation.navigate("PlayerForPractice", {
+								selectedPractice: toDayPopularMeditation,
+							});
+						}
+					}
+				}}
+			>
+				<RN.View
+					style={{
+						width: 50,
+						height: 50,
+						borderRadius: 25,
+						backgroundColor: "#9765A8",
+						justifyContent: "center",
+						alignItems: "center",
+						position: "absolute",
+						top: -28,
+						alignSelf: "center",
+					}}
+				>
+					<Star />
+				</RN.View>
+				<ViewPaddingList paddings={[28, 15, 0]} direction={DirectionForPaddingList.Vertical}>
+					<TitleAndSubTitle
+						title={i18n.t("bbb079ed-25a1-4360-a262-5c1ef0741cbf")}
+						subtitle={i18n.t("b47177ce-a266-4e2f-ba88-218f93de38a3")}
+						styleTitle={[styles.nameSection, { alignSelf: "center" }]}
+						styleSubTitle={[styles.descriptionSection, { alignSelf: "center", textAlign: "center" }]}
 					/>
-				) : (
-					<RN.ActivityIndicator />
-				)}
-			</>
+
+					{toDayPopularMeditation ? (
+						<Dump.PracticeCard
+							id={toDayPopularMeditation.id}
+							description={toDayPopularMeditation.description}
+							image={toDayPopularMeditation.image}
+							lengthAudio={toDayPopularMeditation.length}
+							name={toDayPopularMeditation.name}
+							typePractice={toDayPopularMeditation.type}
+							isPermission={toDayPopularMeditation.isNeedSubscribe && isSubscribe}
+							onPress={() => {}}
+						/>
+					) : (
+						<RN.ActivityIndicator />
+					)}
+				</ViewPaddingList>
+			</RN.Pressable>
 		) : (
 			<></>
 		);
