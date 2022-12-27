@@ -41,3 +41,4 @@ export { default as InputNameAndSelectGender } from "./InputNameAndSelectGender"
 export { default as ByMaySubscribe } from "./by-may-subscribe";
 export { default as PlayerMeditationDot } from "./PlayerMeditationDot";
 export { default as NoExitMeditation } from "./no-exit-meditation";
+export { default as InstructionForDMD } from "./instruction-for-dmd.tsx";

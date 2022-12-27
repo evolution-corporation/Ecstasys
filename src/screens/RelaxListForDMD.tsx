@@ -115,7 +115,9 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 				styleButton={styles.buttonInstruction}
 				styleText={styles.buttonTextInstruction}
 				colors={["#75348B", "#6A2382"]}
-				onPress={() => {}}
+				onPress={() => {
+					navigation.navigate("InstructionForDMD");
+				}}
 			>
 				{i18n.t("ce174d00-e4df-42f3-bb19-82ed6c987750")}
 			</ColorButton>
