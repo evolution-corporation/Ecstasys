@@ -32,7 +32,7 @@ const SelectBackgroundSound: RootScreenProps<"SelectBackgroundSound"> = ({ navig
 
 	const offPlayBackgroundSound = useRef<{ (): Promise<void> } | null>(null);
 	const changeVolumeCancel = useRef<() => void>();
-	const widthItem = (window.width - 40 - 25 * 3) / 4;
+	const widthItem = (window.width - 40 - 15 * 3) / 4;
 	const widthImageItem = widthItem * 0.8;
 	return (
 		<View style={styles.background}>
@@ -65,7 +65,7 @@ const SelectBackgroundSound: RootScreenProps<"SelectBackgroundSound"> = ({ navig
 									offPlayBackgroundSound.current = null;
 								}
 							}}
-							style={{ width: widthItem, marginHorizontal: 12, alignItems: "center" }}
+							style={{ width: widthItem, marginHorizontal: 7.5, alignItems: "center" }}
 						>
 							<Image
 								source={item[1].image}
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
 		height: "100%",
 		justifyContent: "space-between",
 		paddingBottom: 30,
-		paddingHorizontal: 8,
+		paddingHorizontal: 12.5,
 	},
 	backgroundSoundList: {
 		flexDirection: "row",
