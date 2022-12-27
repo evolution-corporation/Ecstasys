@@ -289,6 +289,7 @@ export type RootStackList = {
 		status: "Edit" | "Designations";
 	};
 	NoExitMeditation: undefined;
+	InstructionForDMD: undefined;
 };
 
 export type RootScreenProps<T extends keyof RootStackList> = FC<NativeStackScreenProps<RootStackList, T>>;
