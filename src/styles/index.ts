@@ -9,7 +9,7 @@ import { ToastOptions } from "react-native-root-toast";
 
 function getShadows(offset: number, blur: number): ShadowStyleIOS | { elevation: number } {
 	return Platform.OS == "android"
-		? { elevation: offset }
+		? { elevation: offset * blur }
 		: {
 				shadowOffset: {
 					width: 0,
