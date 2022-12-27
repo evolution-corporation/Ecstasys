@@ -8,14 +8,15 @@ import colors, { setColorOpacity } from "./colors";
 import { ToastOptions } from "react-native-root-toast";
 
 function getShadows(offset: number, blur: number): ShadowStyleIOS | { elevation: number } {
-	if (Platform.OS == "android") {
-		return { elevation: offset };
-	} else {
-		return {
-			shadowOffset: { width: 0, height: offset },
-			shadowRadius: blur,
-		};
-	}
+	return Platform.OS == "android"
+		? { elevation: offset }
+		: {
+				shadowOffset: {
+					width: 0,
+					height: offset,
+				},
+				shadowOpacity: blur,
+		  };
 }
 
 export const styleImage = StyleSheet.create({

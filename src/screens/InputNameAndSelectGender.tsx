@@ -49,7 +49,16 @@ const InputNameAndSelectGender: RootScreenProps<"InputNameAndSelectGender"> = ({
 
 	return (
 		<View style={{ width: Dimensions.get("window").width, height: Dimensions.get("window").height }}>
-			<Pressable style={{ flexGrow: 1, backgroundColor: "rgba(0, 0, 0, 0.8)" }} onPress={() => navigation.goBack()} />
+			<Pressable style={{ flexGrow: 1, backgroundColor: "rgba(0, 0, 0, 0.8)" }}>
+				<Image
+					source={require("./AuthorizationAndRegistration/Greeting/assets/ttttttttt.png")}
+					style={{
+						width: "100%",
+						position: "absolute",
+					}}
+					resizeMode={"repeat"}
+				/>
+			</Pressable>
 			<View style={{ position: "absolute", bottom: 0, width: "100%" }}>
 				{Dimensions.get("window").height >= 800 ? (
 					<Image
@@ -159,7 +168,7 @@ const InputNameAndSelectGender: RootScreenProps<"InputNameAndSelectGender"> = ({
 					</ColorButton>
 					<Pressable
 						onPress={() => {
-							dispatch(actions.setNotNewUser());
+							upload();
 							navigation.goBack();
 						}}
 					>

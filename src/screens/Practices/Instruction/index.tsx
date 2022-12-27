@@ -6,21 +6,39 @@ import { StyleSheet, Text, View, ScrollView } from "react-native";
 import { RootScreenProps } from "~types";
 import core from "~core";
 import { Screen } from "~components/containers";
+import HeaderText from "~components/Text/header-text";
+import DefaultText from "~components/Text/default-text";
+import CustomPartText from "~components/Text/custom-part-text";
+import ViewPaddingList, { Direction } from "~components/containers/view-padding-list";
+import { ColorButton } from "~components/dump";
 
-const Instruction: RootScreenProps<"Instruction"> = ({ route }) => {
+const Instruction: RootScreenProps<"Instruction"> = ({ route, navigation }) => {
 	const { body, description, id, title } = route.params.instruction;
 	return (
 		<Screen backgroundColor={"#9765A8"} paddingHorizontalOff>
-			<ScrollView style={styles.background}>
-				<Text style={styles.title}>{title}</Text>
-				<Text style={styles.description}>{description}</Text>
-				<View style={styles.lineDescription} />
-				{body.map((item, index) => (
-					<Text key={`key_${index}`} style={styles.text}>
-						<Text style={styles.indexKey}>{`${index + 1} `}</Text>
-						{item.text}
-					</Text>
-				))}
+			<ScrollView style={{ backgroundColor: "#FFFFFF", paddingHorizontal: 20 }} showsVerticalScrollIndicator={false}>
+				<ViewPaddingList paddings={[29.5, 28, 20]} direction={Direction.Vertical}>
+					<HeaderText color={"#3D3D3D"}>{title}</HeaderText>
+					<DefaultText color={"#9E9E9E"} style={{ textAlign: "center" }}>
+						{description}
+					</DefaultText>
+					<View style={styles.lineDescription} />
+					{body.map((item, index) => (
+						<DefaultText key={`key_${index}`} color={"#3D3D3D"}>
+							<CustomPartText color={"#9765A8"} fontWeight="600">{`${index + 1}. `}</CustomPartText>
+							{item.text}
+						</DefaultText>
+					))}
+					<ColorButton
+						onPress={() => {
+							navigation.goBack();
+						}}
+						styleButton={{ backgroundColor: "#C2A9CE" }}
+						styleText={{ color: "#FFFFFF" }}
+					>
+						К практике
+					</ColorButton>
+				</ViewPaddingList>
 			</ScrollView>
 		</Screen>
 	);
@@ -52,7 +70,6 @@ const styles = StyleSheet.create({
 		height: 2,
 		backgroundColor: "#555555",
 		alignSelf: "center",
-		marginTop: 20,
 	},
 	text: {
 		color: "#3D3D3D",

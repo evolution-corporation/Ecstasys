@@ -3,6 +3,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, Text, Image, View, Dimensions, Pressable } from "react-native";
 import Animated from "react-native-reanimated";
+import ChevronViolet from "assets/icons/ChevronViolet.svg";
+import ChevronWhite from "assets/Menu/Arrow/Vector.svg";
 
 import { TextButton } from "~components/dump";
 
@@ -55,6 +57,12 @@ const GreetingScreen: RootScreenProps<"Greeting"> = ({ navigation }) => {
 	return (
 		<Animated.View style={[aStyles.background, styles.background]}>
 			{/* <StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} /> */}
+			{isShowSkipButton ? (
+				<Image
+					source={require("./assets/ttttttttt.png")}
+					style={{ position: "absolute", top: 0, width: "100%", height: "60%" }}
+				/>
+			) : null}
 			<Animated.View style={[aStyles.professor, styles.professor]}>
 				<Image source={require("./assets/professor.png")} />
 			</Animated.View>
@@ -76,11 +84,20 @@ const GreetingScreen: RootScreenProps<"Greeting"> = ({ navigation }) => {
 					) : (
 						<ArrowButton onPress={() => prevPage()} color={"#9765A8"} />
 					)}
-					<ArrowButtonMask
-						backgroundColor={aStyles.button.backgroundColor}
-						color={aStyles.button.color}
+					<Pressable
 						onPress={() => nextPage()}
-					/>
+						style={{
+							backgroundColor: isShowSkipButton ? "#FFF" : "#9765A8",
+							width: 38,
+							height: 38,
+							borderRadius: 10,
+							justifyContent: "center",
+							alignItems: "center",
+							overflow: "hidden",
+						}}
+					>
+						{isShowSkipButton ? <ChevronViolet /> : <ChevronWhite />}
+					</Pressable>
 				</View>
 			</View>
 		</Animated.View>

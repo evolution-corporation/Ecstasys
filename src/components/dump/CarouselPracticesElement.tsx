@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useEffect } from "react";
+import React, { memo, useEffect } from "react";
 import { View, Text, StyleSheet, Image, Pressable, ViewProps } from "react-native";
 import Animated, * as AnimatedTools from "react-native-reanimated";
 import Lock from "assets/icons/Lock.svg";
@@ -165,4 +165,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default CarouselPracticesElement;
+export default memo(CarouselPracticesElement);

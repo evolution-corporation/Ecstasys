@@ -49,7 +49,9 @@ const TimeLine = forwardRef<Ref, TimeLineProps>((props, ref) => {
 			_frontLineWidth.value = withTiming(event.x);
 			if (maxWidth) _value = maxWidth / event.x;
 			_scaleCircle.value = 1;
+
 			if (onStartChange) runOnJS(onStartChange)();
+			console.log("onBegin");
 		})
 		.onUpdate(event => {
 			if (maxWidth && event.x >= 0 && event.x <= maxWidth) {
@@ -57,6 +59,7 @@ const TimeLine = forwardRef<Ref, TimeLineProps>((props, ref) => {
 				_value = maxWidth / event.x;
 				runOnJS(returnUpdate)(event.x);
 			}
+			console.log("onUpdate");
 		})
 		.onFinalize(event => {
 			if (maxWidth && onChange) {
@@ -64,6 +67,7 @@ const TimeLine = forwardRef<Ref, TimeLineProps>((props, ref) => {
 			}
 			_scaleCircle.value = 1;
 			if (onEndChange) runOnJS(onEndChange)();
+			console.log("onFinalize");
 		});
 
 	useEffect(() => {

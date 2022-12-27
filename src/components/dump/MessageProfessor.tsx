@@ -15,6 +15,7 @@ interface Props extends RN.ViewProps {
 
 const MessageProfessor: React.FC<Props> = props => {
 	const { message, greeting, style } = props;
+	console.log(greeting);
 	return (
 		<RN.View style={style}>
 			<RN.View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -22,7 +23,7 @@ const MessageProfessor: React.FC<Props> = props => {
 					style={{
 						width: 180,
 						height: 180,
-						borderRadius: 90,
+						borderRadius: 53,
 						overflow: "hidden",
 					}}
 				>
@@ -123,6 +124,7 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		...Tools.gStyle.font("700"),
 		marginTop: 10,
+		marginHorizontal: 30,
 	},
 	greetingView: {
 		alignSelf: "center",

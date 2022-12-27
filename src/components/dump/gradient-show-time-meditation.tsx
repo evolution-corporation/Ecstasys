@@ -14,7 +14,7 @@ const GradientShowTimeMeditation: React.FC<GradientShowTimeMeditationProperty> =
 	return (
 		<LinearGradient
 			style={{
-				borderRadius: 15,
+				borderRadius: 10,
 				paddingHorizontal: 34,
 				height: 30,
 				alignItems: "center",

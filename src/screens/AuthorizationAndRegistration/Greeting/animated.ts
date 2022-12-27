@@ -104,6 +104,6 @@ const nextValue = {
 	colorTitle: "#3D3D3D",
 	colorDescription: "#3D3D3D",
 	backgroundColorButton: "#9765A8",
-	colorColorButton: "#FFFFFF",
+	colorColorButton: "#fff",
 	colorBird: "#9765A8",
 };

@@ -12,6 +12,7 @@ import i18n from "~i18n";
 import gStyle from "~styles";
 
 import { fontStyle, viewStyle } from "~styles";
+import MeditationTimeInBox from "./meditation-time-in-box";
 
 interface GeneralProps extends ViewProps {
 	typePractice: State.PracticesMeditation;
@@ -188,7 +189,8 @@ const Card: React.FC<CardProps> = props => {
 					</Text>
 				</View>
 				<View style={cardStyles.footer}>
-					<View
+					<MeditationTimeInBox milliseconds={lengthAudio} />
+					{/* <View
 						style={{
 							backgroundColor: "#9765A8",
 							paddingHorizontal: 25,
@@ -207,7 +209,7 @@ const Card: React.FC<CardProps> = props => {
 						>
 							{i18n.t(translateIdTime, { count: Math.round(lengthAudio / 60000) })}
 						</Text>
-					</View>
+					</View> */}
 					<View>
 						<Play />
 					</View>

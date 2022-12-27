@@ -39,7 +39,7 @@ const ByMaySubscribe: RootScreenProps<"ByMaySubscribe"> = ({ navigation }) => {
 					{i18n.t("3d2b0890-e1e2-4abe-9fa1-a2bc531e38b6")}
 				</DescriptionText>
 				<ColorButton
-					styleButton={{ backgroundColor: "#C2A9CE", paddingHorizontal: 25, borderRadius: 100 }}
+					styleButton={{ backgroundColor: "#C2A9CE", paddingHorizontal: 25 }}
 					styleText={{ color: "#FFF" }}
 					onPress={() => {
 						navigation.navigate("SelectSubscribe");

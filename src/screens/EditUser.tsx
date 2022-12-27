@@ -1,18 +1,17 @@
 /** @format */
 
-import React, { ElementRef } from "react";
-import { StyleSheet, TextInput, View, Text, TouchableOpacity, Keyboard, Pressable, Modal, Button } from "react-native";
+import React from "react";
+import { StyleSheet, TextInput, View, Keyboard, Pressable } from "react-native";
 import i18n from "~i18n";
 import gStyle from "~styles";
 
-import { ColorButton, SelectImageButton, NicknameInput, TextButton } from "~components/dump";
-import { CustomModal, Screen } from "~components/containers";
+import { ColorButton, SelectImageButton, NicknameInput, NumberInput } from "~components/dump";
+import { Screen } from "~components/containers";
 import { Gender, RootScreenProps } from "~types";
 import { actions, useAppDispatch } from "~store";
 import { StatusCheck } from "~components/dump/NicknameInput/nickname-base";
 import { Request } from "~api";
-import { useDimensions } from "@react-native-community/hooks";
-import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
+import { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
 import useUserInformation from "src/hooks/use-user-information";
 import ViewPaddingList, { Direction } from "~components/containers/view-padding-list";
 import WithDropList from "~components/containers/with-drop-list";
@@ -53,7 +52,7 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 	const animatedStyleSelectGender = useAnimatedStyle(() => ({
 		borderBottomRightRadius: withTiming(borderBottomRightRadiusSelectGender.value),
 	}));
-
+	const appDispatch = useAppDispatch();
 	React.useEffect(() => {
 		const keyboardListenOpen = Keyboard.addListener("keyboardDidShow", () => setIsKeyboardOpen(true));
 		const keyboardListenClose = Keyboard.addListener("keyboardDidHide", () => setIsKeyboardOpen(false));
@@ -62,6 +61,7 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 			keyboardListenClose.remove();
 		};
 	}, []);
+
 	return (
 		<Screen
 			backgroundColor={"#9765A8"}
@@ -83,6 +83,7 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 							{i18n.t("634c0283-1657-42ca-b25a-482dd5c7f439")}
 						</DefaultText>
 					</Pressable> */}
+
 					<ViewUserChange animatedStyle={animatedStyleSelectGender}>
 						<TextInput
 							placeholder={i18n.t("b89f2757-8b5e-4a08-b8f8-1bbe87834f3e")}
@@ -107,7 +108,7 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 							onChange={selectedGender => {
 								setValue({ gender: selectedGender });
 							}}
-							rightBorderDropList={-14}
+							rightBorderDropList={-16.5}
 							onClose={() => {
 								borderBottomRightRadiusSelectGender.value = 20;
 							}}
@@ -119,27 +120,25 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 							<DefaultText color={"#FFF"}>{nameSelectedGender}</DefaultText>
 						</SelectWithDropList>
 					</ViewUserChange>
-					<ViewUserChange>
-						<NicknameInput
-							defaultValue={nickName}
-							onEndChange={(inputNickName, status) => {
-								if (status === StatusCheck.FREE) {
-									Request.reservationNickname(inputNickName);
-								}
-							}}
-							// styleNicknameInputView={{}}
-							checkValidateNickname={async (inputNickName: string) => {
-								if (nickName !== inputNickName) {
-									return (await dispatch(actions.addChangedInformationUser({ nickname: inputNickName })).unwrap())
-										.lastCheckNicknameAndResult?.[1] ?? false
-										? StatusCheck.FREE
-										: StatusCheck.USED;
-								} else {
-									return StatusCheck.AWAIT;
-								}
-							}}
-						/>
-					</ViewUserChange>
+					<NicknameInput
+						defaultValue={nickName}
+						onEndChange={(inputNickName, status) => {
+							if (status === StatusCheck.FREE) {
+								Request.reservationNickname(inputNickName);
+							}
+						}}
+						// styleNicknameInputView={{}}
+						checkValidateNickname={async (inputNickName: string) => {
+							if (nickName !== inputNickName) {
+								return (await appDispatch(actions.addChangedInformationUser({ nickname: inputNickName })).unwrap())
+									.lastCheckNicknameAndResult?.[1] ?? false
+									? StatusCheck.FREE
+									: StatusCheck.USED;
+							} else {
+								return StatusCheck.AWAIT;
+							}
+						}}
+					/>
 					<Pressable onPress={() => navigation.navigate("EditUserBirthday")}>
 						<ViewUserChange>
 							<DefaultText color={"#FFF"}>{i18n.strftime(new Date(birthday), "%d.%m.%Y")}</DefaultText>

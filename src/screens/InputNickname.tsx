@@ -17,6 +17,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { useBackHandler } from "@react-native-community/hooks";
 import { Screen } from "~components/containers";
+import ViewUserChange from "~components/containers/view-user-change";
 
 const InputLoginScreen: RootScreenProps<"InputNickname"> = ({ navigation }) => {
 	const appDispatch = useAppDispatch();
@@ -64,7 +65,7 @@ const InputLoginScreen: RootScreenProps<"InputNickname"> = ({ navigation }) => {
 			return true;
 		}
 	});
-
+	// TODO need import animation and style
 	return (
 		<Screen backgroundColor={"#9765A8"}>
 			<NicknameBase
@@ -76,7 +77,7 @@ const InputLoginScreen: RootScreenProps<"InputNickname"> = ({ navigation }) => {
 						? StatusCheck.FREE
 						: StatusCheck.USED;
 				}}
-				styleNicknameInputView={{ marginBottom: 5 }}
+				styleNicknameInputView={{}}
 			/>
 			{variableNicknameList.length > 0 && (
 				<View style={[styles.variableNicknameList]}>

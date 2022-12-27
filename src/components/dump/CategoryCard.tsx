@@ -11,6 +11,7 @@ import {
 	ViewProps,
 	ImageSourcePropType,
 	ActivityIndicator,
+	Platform,
 } from "react-native";
 import Tools from "~core";
 import i18n from "~i18n";
@@ -37,9 +38,16 @@ const CategoryCard: React.FC<Props> = props => {
 			onLayout={({ nativeEvent: { layout } }) => {
 				setWidthComponent(layout.width);
 			}}
-			style={style}
+			style={[
+				style,
+				{
+					...gStyle.shadows(1, 1),
+					shadowColor: Platform.OS === "ios" ? "rgba(0,0,0,0.1)" : undefined,
+					borderRadius: 20,
+				},
+			]}
 		>
-			<View style={styles.background}>
+			<View style={[styles.background]}>
 				<Image
 					source={image}
 					style={{ width: widthComponent, height: (widthComponent * 290) / 335 }}
@@ -83,8 +91,8 @@ const styles = StyleSheet.create({
 		justifyContent: "flex-start",
 		overflow: "hidden",
 		backgroundColor: "#FFFFFF",
-		...gStyle.shadows(1, 1),
-		shadowColor: "rgba(0,0,0,0.7)",
+		// ...gStyle.shadows(1, 1),
+		// shadowColor: "rgba(0,0,0,0.7)",
 	},
 	name: {
 		color: "#3d3d3d",
