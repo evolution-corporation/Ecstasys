@@ -11,6 +11,7 @@ export interface ReturnUserInformationHook extends CurrentData {
 	setValue: (parameters: SetChangedAccountDataParams) => Promise<void>;
 	isLoading: boolean;
 	clearChangedValue: () => Promise<void>;
+	isHaveImage: boolean;
 }
 
 const useUserInformation = (usingChangeData = true, clearUnmount = true): ReturnUserInformationHook => {
@@ -27,7 +28,14 @@ const useUserInformation = (usingChangeData = true, clearUnmount = true): Return
 			gender: Gender[changeData?.gender ?? store.account.currentData.gender],
 		};
 	});
-
+	const isHaveImage = useAppSelector(store => {
+		if (store.account.currentData === undefined)
+			throw new Error("Максимально информативная ошибка. useUserInformation");
+		return (
+			store.account.currentData.image !== "https://thiscatdoesnotexist.com/" &&
+			store.account.currentData.image !== "https://storage.yandexcloud.net/dmdmeditationimage/users/NoUserImage.png"
+		);
+	});
 	const appDispatch = useAppDispatch();
 
 	const upload = async () => {
@@ -57,6 +65,7 @@ const useUserInformation = (usingChangeData = true, clearUnmount = true): Return
 		setValue,
 		isLoading,
 		clearChangedValue,
+		isHaveImage,
 	};
 };
 

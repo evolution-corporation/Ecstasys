@@ -19,6 +19,8 @@ import BirdViolet from "assets/icons/BitrdViolet.svg";
 import gStyles from "~styles";
 import i18n from "~i18n";
 import CircleCheck from "assets/icons/CircleCheck";
+import { useAppDispatch } from "~store";
+import { useNavigation } from "@react-navigation/native";
 
 const SubscribeCard: FC<SubscribeCardProps> = props => {
 	const {
@@ -33,8 +35,10 @@ const SubscribeCard: FC<SubscribeCardProps> = props => {
 		countMonth,
 		textPrice,
 		isShowCancelButton,
+		isFirstPayment,
 	} = props;
-	const isFirstPayment = false;
+	const navigation = useNavigation();
+
 	return (
 		<>
 			<TouchableOpacity style={[styles.background, stylesContent.background, style]} onPress={() => onPress()}>
@@ -61,7 +65,9 @@ const SubscribeCard: FC<SubscribeCardProps> = props => {
 				{!isUsed && <CircleCheck isSelected={isSelected} style={styles.checkSelectedSubscribe} colorItem={mainColor} />}
 			</TouchableOpacity>
 			{isShowCancelButton && isUsed && (
-				<TextButton style={styles.cancelSubs}>{i18n.t("c0c032e5-8965-4703-bed6-77f919acd4d5")}</TextButton>
+				<TextButton style={styles.cancelSubs} onPress={() => navigation.navigate("ConfirmationRemoveSubs")}>
+					{i18n.t("c0c032e5-8965-4703-bed6-77f919acd4d5")}
+				</TextButton>
 			)}
 		</>
 	);
@@ -83,6 +89,7 @@ interface SubscribeCardProps extends ViewProps {
 	countMonth: number;
 	textPrice: { top: string; bottom: string };
 	isShowCancelButton: boolean;
+	isFirstPayment: boolean;
 }
 
 const styles = StyleSheet.create({

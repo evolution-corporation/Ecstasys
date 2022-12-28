@@ -293,6 +293,9 @@ export type RootStackList = {
 	NoExitMeditation: undefined;
 	InstructionForDMD: undefined;
 	EndMeditation: undefined;
+	ConfirmationRemoveSubs: undefined;
+	ConfirmChangeSubs: { selectSubscribe: State.SubscribeType };
+	NoHaveInternet: undefined;
 };
 
 export type RootScreenProps<T extends keyof RootStackList> = FC<NativeStackScreenProps<RootStackList, T>>;
