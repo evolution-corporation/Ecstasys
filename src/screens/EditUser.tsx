@@ -1,6 +1,6 @@
 /** @format */
 
-import React from "react";
+import React, { useRef } from "react";
 import { StyleSheet, TextInput, View, Keyboard, Pressable } from "react-native";
 import i18n from "~i18n";
 import gStyle from "~styles";
@@ -21,7 +21,7 @@ import ViewUserChange from "~components/containers/view-user-change";
 const SelectWithDropList = WithDropList<Gender>();
 
 const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
-	const { birthday, gender, image, nickName, setValue, upload, displayName } = useUserInformation();
+	const { birthday, gender, image, nickName, setValue, upload, displayName, isHaveImage } = useUserInformation();
 	const nameSelectedGender =
 		gender === "FEMALE"
 			? i18n.t("83dfa634-dd9f-4dce-ab9e-6d6961a296f7")
@@ -61,15 +61,16 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 			keyboardListenClose.remove();
 		};
 	}, []);
-
+	const referenceSelectImage = useRef<React.ElementRef<typeof SelectImageButton>>(null);
 	return (
 		<Screen
 			backgroundColor={"#9765A8"}
 			styleScreen={{ justifyContent: "space-between", paddingBottom: isKeyboardOpen ? 5 : 79 }}
 		>
 			<View>
-				<ViewPaddingList direction={Direction.Vertical} paddings={[28, 50, 15]}>
+				<ViewPaddingList direction={Direction.Vertical} paddings={[28, 17, 17, 15]}>
 					<SelectImageButton
+						ref={referenceSelectImage}
 						style={{ alignSelf: "center" }}
 						onChangeImage={base64 => {
 							if (base64) {
@@ -78,11 +79,20 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 						}}
 						initImage={image}
 					/>
-					{/* <Pressable onPress={() => {  }}>
-						<DefaultText color={"#C2A9CE"} style={{ alignSelf: "center" }}>
-							{i18n.t("634c0283-1657-42ca-b25a-482dd5c7f439")}
-						</DefaultText>
-					</Pressable> */}
+					{isHaveImage ? (
+						<Pressable
+							onPress={() => {
+								setValue({ image: null });
+								referenceSelectImage.current?.removeImage();
+							}}
+						>
+							<DefaultText color={"#C2A9CE"} style={{ alignSelf: "center" }}>
+								{i18n.t("634c0283-1657-42ca-b25a-482dd5c7f439")}
+							</DefaultText>
+						</Pressable>
+					) : (
+						<View style={{ height: 16 }} />
+					)}
 
 					<ViewUserChange animatedStyle={animatedStyleSelectGender}>
 						<TextInput

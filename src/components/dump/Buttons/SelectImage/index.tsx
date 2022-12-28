@@ -20,6 +20,7 @@ interface SelectImageButtonProperties extends TouchableOpacityProps {
 
 interface Reference {
 	setImage: (image: string) => void;
+	removeImage: () => void;
 }
 
 export const SelectImageButton = forwardRef<Reference, SelectImageButtonProperties>((properties, reference) => {
@@ -67,6 +68,9 @@ export const SelectImageButton = forwardRef<Reference, SelectImageButtonProperti
 		setImage: image => {
 			setImage(image);
 		},
+		removeImage: () => {
+			setImage(null);
+		},
 	}));
 
 	return (
@@ -78,9 +82,9 @@ export const SelectImageButton = forwardRef<Reference, SelectImageButtonProperti
 					overflow: "hidden",
 					alignItems: "center",
 					justifyContent: "center",
-					height: 92,
-					width: 92,
-					borderRadius: 46,
+					height: 128,
+					width: 128,
+					borderRadius: 40,
 					borderColor: "#FFFFFF",
 					borderWidth: 3,
 					backgroundColor: "#E7DDEC",
@@ -95,7 +99,7 @@ export const SelectImageButton = forwardRef<Reference, SelectImageButtonProperti
 			) : image == undefined ? (
 				<PhotoIcon />
 			) : (
-				<Image source={{ uri: image }} resizeMode={"cover"} style={{ width: 128, height: 128 }} />
+				<Image source={{ uri: image }} style={{ width: 128, height: 128 }} />
 			)}
 		</TouchableOpacity>
 	);

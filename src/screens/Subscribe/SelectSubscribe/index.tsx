@@ -76,7 +76,13 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 		}
 	}, [selectedSubscribeType, subsType]);
 	const editSubscribe = () => {
-		if (selectedSubscribeType !== null) navigation.navigate("Payment", { selectSubscribe: selectedSubscribeType });
+		if (selectedSubscribeType !== null) {
+			if (subsType === null) {
+				navigation.navigate("Payment", { selectSubscribe: selectedSubscribeType });
+			} else if (selectedSubscribeType !== subsType) {
+				navigation.navigate("ConfirmChangeSubs", { selectSubscribe: selectedSubscribeType });
+			}
+		}
 	};
 
 	return (
@@ -112,16 +118,15 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 					}}
 					onCancelSubscribe={() => {}}
 					isShowCancelButton={isAutoPayment ?? false}
+					isFirstPayment={subscribeEnd === null}
 				/>
 				{isActiveSubs && subsType === "MONTH" && (
 					<>
-						<Pressable>
-							<DefaultText color={"#C2A9CE"}>{i18n.t("4701c05d-d20a-4223-be13-45ba20cecfbc")}</DefaultText>
-						</Pressable>
 						<Text style={styles.offerToChangeSubscribeType}>{i18n.t("b6f80560-6ba6-4646-821a-a03ca72acb74")}</Text>
 					</>
 				)}
 				<SubscribeCard
+					isFirstPayment={false}
 					image={require("./assets/armchair.png")}
 					isSelected={selectedSubscribeType === SubscribeType.HALF_YEAR}
 					isUsed={isActiveSubs && subsType === "HALF_YEAR"}
@@ -166,15 +171,13 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 					// TODO: Navigation
 					isShowCancelButton={isAutoPayment ?? false}
 				/>
-				{isActiveSubs && subsType === "HALF_YEAR" && (
-					<>
-						<Pressable>
-							<DefaultText color={"#C2A9CE"}>{i18n.t("4701c05d-d20a-4223-be13-45ba20cecfbc")}</DefaultText>
-						</Pressable>
-					</>
-				)}
 				<View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-					<Pressable onPress={() => setIsAccept(prev => !prev)}>{isAccept ? <Group48095715 /> : <Vector />}</Pressable>
+					<Pressable
+						onPress={() => setIsAccept(prev => !prev)}
+						style={{ width: 23, height: 23, justifyContent: "center", alignItems: "flex-start" }}
+					>
+						{isAccept ? <Group48095715 /> : <Vector />}
+					</Pressable>
 					<Text style={{ color: "#9E9E9E", fontSize: 13, ...gStyle.font("400"), marginLeft: 8, flex: 1 }}>
 						Выбирая подписку, я соглашаюсь с{" "}
 						<Text

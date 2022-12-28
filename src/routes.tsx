@@ -92,6 +92,7 @@ const RootNavigation = createSharedElementStackNavigator<RootStackList>();
 
 const RootRoutes: FC = () => {
 	const accountStatus = useAccountStatus();
+	const isInternet = useInternet();
 	let screenList;
 	switch (accountStatus) {
 		case "NO_AUTHENTICATION": {
@@ -316,6 +317,16 @@ const RootRoutes: FC = () => {
 						component={Screens.EndMeditation}
 						options={{ presentation: "transparentModal", headerShown: false }}
 					/>
+					<RootNavigation.Screen
+						name={"ConfirmationRemoveSubs"}
+						component={Screens.ConfirmationRemoveSubs}
+						options={{ presentation: "transparentModal", headerShown: false }}
+					/>
+					<RootNavigation.Screen
+						name={"ConfirmChangeSubs"}
+						component={Screens.ConfirmChangeSubs}
+						options={{ presentation: "transparentModal", headerShown: false }}
+					/>
 				</>
 			);
 		}
@@ -373,7 +384,12 @@ const RootRoutes: FC = () => {
 				headerTransparent: true,
 			}}
 		>
-			{screenList}
+			{isInternet ? screenList : undefined}
+			<RootNavigation.Screen
+				name={"NoHaveInternet"}
+				component={Screens.NoHaveInternet}
+				options={{ presentation: "transparentModal", headerShown: false }}
+			/>
 		</RootNavigation.Navigator>
 	);
 };

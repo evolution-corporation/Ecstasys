@@ -41,7 +41,7 @@ const ProfileInformation: React.FC<Props> = props => {
 				}}
 				style={styles.image}
 				resizeMethod={"resize"}
-				resizeMode={"contain"}
+				// resizeMode={"contain"}
 			/>
 			<RN.View style={styles.backgroundInfo}>
 				{displayName && <RN.Text style={styles.displayName}>{displayName}</RN.Text>}
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
 	image: {
 		width: 92,
 		height: 92,
-		borderRadius: 46,
+		borderRadius: 30,
 		borderWidth: 3,
 		borderColor: "#FFFFFF",
 		alignSelf: "center",

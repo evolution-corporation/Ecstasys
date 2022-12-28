@@ -41,7 +41,7 @@ export function composeSubscribe(data: ServerEntities.Subscribe | null): State.S
 	}
 	return {
 		type: type,
-		autoPayment: data.RebillId === -1,
+		autoPayment: data.RebillId !== -1,
 		whenSubscribe: data.WhenSubscribe,
 	};
 }
