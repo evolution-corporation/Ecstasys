@@ -35,25 +35,14 @@ const ProfileInformation: React.FC<Props> = props => {
 
 	return (
 		<RN.View style={styles.container}>
-			{onChangeImage === undefined ? (
-				<RN.Image
-					source={{
-						uri: image,
-					}}
-					style={styles.image}
-					resizeMethod={"resize"}
-					resizeMode={"contain"}
-				/>
-			) : (
-				<SelectImageButton
-					ref={refSelectImage}
-					initImage={image}
-					onChangeImage={image => {
-						onChangeImage(image);
-					}}
-					style={styles.image}
-				/>
-			)}
+			<RN.Image
+				source={{
+					uri: image,
+				}}
+				style={styles.image}
+				resizeMethod={"resize"}
+				// resizeMode={"contain"}
+			/>
 			<RN.View style={styles.backgroundInfo}>
 				{displayName && <RN.Text style={styles.displayName}>{displayName}</RN.Text>}
 				<RN.Text style={styles.nameSubscribe}>
@@ -102,7 +91,7 @@ const styles = StyleSheet.create({
 	image: {
 		width: 92,
 		height: 92,
-		borderRadius: 46,
+		borderRadius: 30,
 		borderWidth: 3,
 		borderColor: "#FFFFFF",
 		alignSelf: "center",

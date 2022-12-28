@@ -440,3 +440,33 @@ export async function getSubscribeUserInformationSubs(
 	const json = await requestServer.json();
 	return json as ServerEntities.Subscribe;
 }
+
+export async function removeAutoPayment(firebaseTokenToken?: string): Promise<void> {
+	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
+	const requestServer = await fetch(URL + "subscribe", {
+		method: "DELETE",
+		headers: {
+			Authorization: firebaseTokenToken,
+			"Content-Type": "application/json",
+		},
+	});
+
+	if (requestServer.status >= 500) {
+		throw new Error(`Server Error in getSubscribeUserInformation: ${await requestServer.text()}`);
+	}
+}
+
+export async function removeUserImage(firebaseTokenToken?: string): Promise<void> {
+	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
+	const requestServer = await fetch(URL + "user.image", {
+		method: "DELETE",
+		headers: {
+			Authorization: firebaseTokenToken,
+			"Content-Type": "application/json",
+		},
+	});
+
+	if (requestServer.status >= 500) {
+		throw new Error(`Server Error in getSubscribeUserInformation: ${await requestServer.text()}`);
+	}
+}

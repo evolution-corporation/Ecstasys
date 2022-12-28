@@ -6,6 +6,7 @@
 		}
 	],
 	"settings": {
+		"cSpell.language": "en,ru",
 		"cSpell.customDictionaries": {
 			"custom-dictionary-workspace": {
 				"name": "custom-dictionary-workspace",

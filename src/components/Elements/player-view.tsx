@@ -135,12 +135,12 @@ const PlayerView: React.FC<PlayerViewProperty> = property => {
 					await onChangeEnd();
 				}}
 				stepForward={async () => {
-					await onChangeCurrentMilliseconds(
+					console.log({ stepForward: currentMilliseconds + rewindMillisecond });
+					onChangeCurrentMilliseconds(
 						currentMilliseconds + rewindMillisecond < lengthMilliseconds
 							? currentMilliseconds + rewindMillisecond
 							: lengthMilliseconds
-					);
-					await onChangeEnd();
+					).then(() => onChangeEnd());
 				}}
 				rewindMillisecond={rewindMillisecond}
 			/>

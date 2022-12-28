@@ -3,11 +3,13 @@
 import React from "react";
 import { AVPlaybackSource, Audio } from "expo-av";
 
+let i = 1;
+
 const useMeditation = (source: AVPlaybackSource | [AVPlaybackSource, AVPlaybackSource], currentTime: number) => {
 	const audioList = React.useRef<[Audio.Sound, Audio.Sound] | [Audio.Sound]>(
 		Array.isArray(source) && source.length === 2 ? [new Audio.Sound(), new Audio.Sound()] : [new Audio.Sound()]
 	).current;
-	const [isLoaded, setIsLoaded] = React.useState<[boolean, boolean]>([true, true]);
+	const [isLoaded, setIsLoaded] = React.useState<[boolean, boolean]>([false, false]);
 
 	const play = async () => {
 		if (audioList.length === 1) {
@@ -43,12 +45,11 @@ const useMeditation = (source: AVPlaybackSource | [AVPlaybackSource, AVPlaybackS
 	};
 
 	const setPosition = async (milliseconds: number) => {
+		console.log({ i: i++, setPosition: milliseconds });
 		if (audioList.length === 1) {
 			const audioStatus = await audioList[0].getStatusAsync();
 			if (audioStatus.isLoaded && (audioStatus.durationMillis ?? 0) >= milliseconds) {
-				const isPlay = audioStatus.isPlaying;
 				await audioList[0].setPositionAsync(milliseconds);
-				if (isPlay) await audioList[0].playAsync();
 			}
 		} else if (audioList.length === 2) {
 			const audioStatus = [await audioList[0].getStatusAsync(), await audioList[1].getStatusAsync()];
@@ -58,16 +59,15 @@ const useMeditation = (source: AVPlaybackSource | [AVPlaybackSource, AVPlaybackS
 					audioStatus[0].durationMillis ?? 0,
 					audioStatus[1].durationMillis ?? 0,
 				];
-				await audioList[0].pauseAsync();
-				await audioList[1].pauseAsync();
+				console.log({ lengthFirstAudio, lengthSecondAudio, milliseconds, isPlay });
+				// await audioList[0].pauseAsync();
+				// await audioList[1].pauseAsync();
 				if (lengthFirstAudio > milliseconds) {
 					await audioList[0].setPositionAsync(milliseconds);
 					await audioList[1].setPositionAsync(0);
-					if (isPlay) audioList[0].playAsync();
-				} else if (lengthFirstAudio + lengthSecondAudio > currentTime) {
+				} else if (lengthFirstAudio + lengthSecondAudio > milliseconds) {
 					await audioList[0].setPositionAsync(lengthFirstAudio);
-					await audioList[1].setPositionAsync(milliseconds - lengthSecondAudio);
-					if (isPlay) audioList[1].playAsync();
+					await audioList[1].setPositionAsync(milliseconds - lengthFirstAudio);
 				}
 			}
 		}
@@ -111,7 +111,7 @@ const useMeditation = (source: AVPlaybackSource | [AVPlaybackSource, AVPlaybackS
 				const status = await audioList[0].getStatusAsync();
 				if (!status.isLoaded) await audioList[0].loadAsync(Array.isArray(source) ? source[0] : source, {});
 				audioList[0].setOnPlaybackStatusUpdate(statusOfSubscribe => {
-					setIsLoaded(previousValue => [statusOfSubscribe.isLoaded, previousValue[1]]);
+					setIsLoaded(previousValue => [statusOfSubscribe.isLoaded, true]);
 				});
 			} else if (audioList.length === 2 && Array.isArray(source)) {
 				const statusFirst = await audioList[0].getStatusAsync();
@@ -120,6 +120,9 @@ const useMeditation = (source: AVPlaybackSource | [AVPlaybackSource, AVPlaybackS
 				if (!statusSecond.isLoaded) await audioList[1].loadAsync(source[1], {});
 				audioList[0].setOnPlaybackStatusUpdate(statusOfSubscribe => {
 					setIsLoaded(previousValue => [statusOfSubscribe.isLoaded, previousValue[1]]);
+					if (statusOfSubscribe.isLoaded && statusOfSubscribe.didJustFinish) {
+						audioList[1].playAsync();
+					}
 				});
 				audioList[1].setOnPlaybackStatusUpdate(statusOfSubscribe => {
 					setIsLoaded(previousValue => [previousValue[0], statusOfSubscribe.isLoaded]);

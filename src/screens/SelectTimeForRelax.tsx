@@ -86,7 +86,9 @@ const SelectTimeForRelax: RootScreenProps<"SelectTimeForRelax"> = ({ navigation,
 					styleButton={styles.buttonView}
 					styleText={styles.buttonText}
 					onPress={() => {
-						navigation.navigate("PlayerForRelaxation", { selectedPractice, practiceLength: milliseconds });
+						navigation.navigate("PlayerForPractice", {
+							selectedPractice: { ...selectedPractice, length: milliseconds },
+						});
 					}}
 				>
 					{i18n.t("c45a8d0b-dca1-46d8-8110-6fe268acabfd")}

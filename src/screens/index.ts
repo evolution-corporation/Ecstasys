@@ -42,3 +42,7 @@ export { default as ByMaySubscribe } from "./by-may-subscribe";
 export { default as PlayerMeditationDot } from "./PlayerMeditationDot";
 export { default as NoExitMeditation } from "./no-exit-meditation";
 export { default as InstructionForDMD } from "./instruction-for-dmd.tsx";
+export { default as EndMeditation } from "./end-meditation";
+export { default as ConfirmationRemoveSubs } from "./confirmation-remove-subs";
+export { default as ConfirmChangeSubs } from "./confirmation-change-subs";
+export { default as NoHaveInternet } from "./no-have-internet";

@@ -70,7 +70,12 @@ function generateConfig(): ExpoConfig {
 			"expo-av",
 			"expo-updates",
 			"@react-native-firebase/app",
-			"expo-notifications",
+			[
+				"expo-notifications",
+				{
+					sounds: ["./assets/triggerSounds/bells.wav"],
+				},
+			],
 			"@react-native-google-signin/google-signin",
 			[
 				"expo-build-properties",

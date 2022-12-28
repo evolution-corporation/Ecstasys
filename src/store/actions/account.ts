@@ -22,7 +22,7 @@ enum AccountAction {
 
 export interface SetChangedAccountDataParams {
 	nickname?: string;
-	image?: string;
+	image?: string | null;
 	displayName?: string;
 	birthday?: Date;
 	gender?: Gender;
@@ -37,6 +37,8 @@ export const addChangedInformationUser = createAsyncThunk<
 	if (nickname !== undefined) {
 		lastCheckNicknameAndResult = [new Date(), (await Request.getUserByNickname(nickname)) === null];
 	}
+	if (image === null) image = "https://storage.yandexcloud.net/dmdmeditationimage/users/NoUserImage.png";
+	console.log(image);
 	return {
 		birthday: birthday !== undefined ? birthday.toISOString() : undefined,
 		displayName,
@@ -58,7 +60,13 @@ export const updateAccount = createAsyncThunk<
 	AsyncThunkConfig
 >(AccountAction.saveChangeData, async ({ image, birthday, displayName, gender }, { getState }) => {
 	const changeData = getState().account.changeData;
-	if (image === undefined) image = changeData.image;
+	if (image === undefined) {
+		if (changeData.image === "https://storage.yandexcloud.net/dmdmeditationimage/users/NoUserImage.png") {
+			await Request.removeUserImage();
+		} else {
+			image = changeData.image;
+		}
+	}
 	if (birthday === undefined) birthday = changeData.birthday;
 	if (displayName === undefined) displayName = changeData.displayName;
 	if (gender === undefined)
@@ -165,4 +173,8 @@ export const setNotNewUser = createAction(AccountAction.setNotNewUser);
 
 export const getSubs = createAsyncThunk("account/subs", async () => {
 	return await Request.getSubscribeUserInformation();
+});
+
+export const removeSubscribe = createAsyncThunk("account/removeSubscribe", async () => {
+	await Request.removeAutoPayment();
 });
