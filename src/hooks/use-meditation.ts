@@ -3,11 +3,13 @@
 import React from "react";
 import { AVPlaybackSource, Audio } from "expo-av";
 
+let i = 1;
+
 const useMeditation = (source: AVPlaybackSource | [AVPlaybackSource, AVPlaybackSource], currentTime: number) => {
 	const audioList = React.useRef<[Audio.Sound, Audio.Sound] | [Audio.Sound]>(
 		Array.isArray(source) && source.length === 2 ? [new Audio.Sound(), new Audio.Sound()] : [new Audio.Sound()]
 	).current;
-	const [isLoaded, setIsLoaded] = React.useState<[boolean, boolean]>([true, true]);
+	const [isLoaded, setIsLoaded] = React.useState<[boolean, boolean]>([false, false]);
 
 	const play = async () => {
 		if (audioList.length === 1) {
@@ -43,6 +45,7 @@ const useMeditation = (source: AVPlaybackSource | [AVPlaybackSource, AVPlaybackS
 	};
 
 	const setPosition = async (milliseconds: number) => {
+		console.log({ i: i++, setPosition: milliseconds });
 		if (audioList.length === 1) {
 			const audioStatus = await audioList[0].getStatusAsync();
 			if (audioStatus.isLoaded && (audioStatus.durationMillis ?? 0) >= milliseconds) {
@@ -111,7 +114,7 @@ const useMeditation = (source: AVPlaybackSource | [AVPlaybackSource, AVPlaybackS
 				const status = await audioList[0].getStatusAsync();
 				if (!status.isLoaded) await audioList[0].loadAsync(Array.isArray(source) ? source[0] : source, {});
 				audioList[0].setOnPlaybackStatusUpdate(statusOfSubscribe => {
-					setIsLoaded(previousValue => [statusOfSubscribe.isLoaded, previousValue[1]]);
+					setIsLoaded(previousValue => [statusOfSubscribe.isLoaded, true]);
 				});
 			} else if (audioList.length === 2 && Array.isArray(source)) {
 				const statusFirst = await audioList[0].getStatusAsync();

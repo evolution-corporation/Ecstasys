@@ -2,7 +2,7 @@
 import React from "react";
 import { InteractionManager, AppState } from "react-native";
 
-const timeUpdate = 1000;
+const timeUpdate = 100;
 
 const useTimer = (maxMilliseconds: number, onFinish: () => void) => {
 	const [currentMilliseconds, setCurrentMilliseconds] = React.useState(0);

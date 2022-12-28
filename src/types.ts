@@ -263,6 +263,7 @@ export type RootStackList = {
 	DMDIntro: undefined;
 	PlayerForPractice: {
 		selectedPractice: State.Practice;
+		timeNotification?: number[];
 	};
 	PlayerMeditationOnTheMandala: {
 		isNeedVoice: boolean;

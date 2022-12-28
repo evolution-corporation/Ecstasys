@@ -9,18 +9,27 @@ import PlayerView, { Status } from "src/components/Elements/player-view";
 import useBackgroundSound from "src/hooks/use-background-sound";
 import useMeditation from "src/hooks/use-meditation";
 import useTimer from "src/hooks/use-timer";
+import useTrigger from "src/hooks/use-trigger";
 import { actions, useAppDispatch } from "~store";
 
 import { RootScreenProps, RootStackList } from "~types";
 
 const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, route }) => {
-	const { selectedPractice } = route.params;
+	const { selectedPractice, timeNotification = [240_000, 300_000, 360_000] } = route.params;
 	if (selectedPractice === undefined) throw new Error("21382390-5654-44fc-b365-0a7f29ad68d3");
 	const timeTrack = selectedPractice.length;
 	const appDispatch = useAppDispatch();
 	const timer = useTimer(timeTrack, () => alert("Конец"));
 	const [lastPressTime, setLastPressTime] = React.useState<Date>(new Date());
-	const [statusPlayer, setStatusPlayer] = React.useState<Status>(Status.Init);
+	const [statusPlayer, setStatusPlayer] = React.useState<Status>(Status.Loading);
+	if (timeNotification !== undefined) {
+		useTrigger(
+			timeNotification,
+			timer.currentMilliseconds,
+			statusPlayer === Status.Play || statusPlayer === Status.Wait
+		);
+	}
+
 	const meditation =
 		selectedPractice.audio === undefined
 			? undefined
@@ -33,7 +42,7 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 
 	React.useEffect(() => {
 		if (meditation?.isLoading) {
-			setStatusPlayer(Status.Init);
+			setImmediate(() => setStatusPlayer(Status.Init));
 		} else {
 			setStatusPlayer(Status.Loading);
 		}
@@ -83,6 +92,9 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 		};
 	}, [navigation, timer, statusPlayer]);
 
+	//! Fix with update state React
+	const __fixEditCurrentTime = React.useRef<number>(0);
+
 	return (
 		<Pressable style={{ flex: 1 }} onPressIn={() => setLastPressTime(new Date())}>
 			<SharedElement
@@ -109,9 +121,10 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 				}}
 				onChangeCurrentMilliseconds={async milliseconds => {
 					timer.edit(milliseconds);
+					__fixEditCurrentTime.current = milliseconds;
 				}}
 				onChangeEnd={async () => {
-					meditation?.setPosition(timer.currentMilliseconds);
+					meditation?.setPosition(__fixEditCurrentTime.current);
 					if (statusPlayer === Status.Play) {
 						timer.play();
 						backgroundSound?.control.play();
