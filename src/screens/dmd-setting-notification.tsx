@@ -4,7 +4,7 @@ import React, { useCallback } from "react";
 import { SafeAreaView, Text, StyleSheet, Image, Pressable, View, Platform } from "react-native";
 import { ColorButton, TextButton } from "~components/dump";
 import { actions, useAppDispatch, useAppSelector } from "~store";
-import { RootScreenProps } from "~types";
+import { Breathing, RootScreenProps } from "~types";
 import i18n from "~i18n";
 import gStyle from "~styles";
 import { useFocusEffect } from "@react-navigation/native";
@@ -25,7 +25,7 @@ import useSizeElement from "src/hooks/use-size-element";
 const DMDSettingNotification: RootScreenProps<"DMDSettingNotification"> = ({ navigation, route }) => {
 	const { selectedRelax, selectSet } = route.params;
 
-	const [, setTimeNotification] = useTimeNotificationDMD();
+	const [TimeSegment, setTimeNotification] = useTimeNotificationDMD();
 	const [sizeBottomPart, setSizeBottomPart] = useSizeElement();
 
 	const { window } = useDimensions();
@@ -75,7 +75,18 @@ const DMDSettingNotification: RootScreenProps<"DMDSettingNotification"> = ({ nav
 						styleButton={styles.meditationButton}
 						styleText={styles.meditationButtonText}
 						onPress={() => {
-							navigation.navigate("PlayerForDMD", { selectedRelax });
+							navigation.navigate("PlayerForPractice", {
+								selectedPractice: selectedRelax,
+								selectSet,
+								timeNotification: [
+									{ type: Breathing.Active, time: TimeSegment.setup },
+									{ type: Breathing.Spontaneous, time: TimeSegment.setup + TimeSegment.activeBreathing },
+									{
+										type: Breathing.Active,
+										time: TimeSegment.setup + TimeSegment.activeBreathing + TimeSegment.spontaneousBreathing,
+									},
+								],
+							});
 						}}
 					>
 						{i18n.t("79dc5c1b-465a-4ead-bb4b-57fcf88af1d1")}

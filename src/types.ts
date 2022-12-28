@@ -263,7 +263,8 @@ export type RootStackList = {
 	DMDIntro: undefined;
 	PlayerForPractice: {
 		selectedPractice: State.Practice;
-		timeNotification?: number[];
+		timeNotification?: { type: Breathing; time: number }[];
+		selectSet?: State.Set;
 	};
 	PlayerMeditationOnTheMandala: {
 		isNeedVoice: boolean;
@@ -291,6 +292,13 @@ export type RootStackList = {
 	};
 	NoExitMeditation: undefined;
 	InstructionForDMD: undefined;
+	EndMeditation: undefined;
 };
 
 export type RootScreenProps<T extends keyof RootStackList> = FC<NativeStackScreenProps<RootStackList, T>>;
+
+export enum Breathing {
+	Active,
+	Spontaneous,
+	Free,
+}

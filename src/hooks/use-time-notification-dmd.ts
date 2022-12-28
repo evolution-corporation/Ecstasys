@@ -17,7 +17,7 @@ export interface TimeSegment {
 const useTimeNotificationDMD = (): [TimeSegment, (timeSegments: TimeSegments, milliseconds: number) => void] => {
 	const [activeBreathing, setup, spontaneousBreathing, freeBreathing] = useAppSelector(store => [
 		store.DMD.configuratorNotification.activate,
-		store.DMD.configuratorNotification.option ?? 0,
+		(store.DMD.configuratorNotification.option ?? 0) + 5 * 60_000,
 		store.DMD.configuratorNotification.random,
 		store.DMD.set?.length ?? 0,
 	]);

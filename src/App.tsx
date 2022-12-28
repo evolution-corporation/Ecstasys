@@ -13,6 +13,7 @@ import Store, { actions, useAppDispatch } from "./store";
 import "./TaskManager";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
+import "./notification";
 
 GoogleSignin.configure({
 	webClientId: "878799007977-cj3549ni87jre2rmg4eq0hiolp08igh2.apps.googleusercontent.com",

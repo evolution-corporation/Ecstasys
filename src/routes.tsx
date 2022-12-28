@@ -311,6 +311,11 @@ const RootRoutes: FC = () => {
 						component={Screens.InstructionForDMD}
 						options={{ title: i18n.t("ce174d00-e4df-42f3-bb19-82ed6c987750") }}
 					/>
+					<RootNavigation.Screen
+						name={"EndMeditation"}
+						component={Screens.EndMeditation}
+						options={{ presentation: "transparentModal", headerShown: false }}
+					/>
 				</>
 			);
 		}
