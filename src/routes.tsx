@@ -92,7 +92,6 @@ const RootNavigation = createSharedElementStackNavigator<RootStackList>();
 
 const RootRoutes: FC = () => {
 	const accountStatus = useAccountStatus();
-	const isInternet = useInternet();
 	let screenList;
 	switch (accountStatus) {
 		case "NO_AUTHENTICATION": {
@@ -384,12 +383,7 @@ const RootRoutes: FC = () => {
 				headerTransparent: true,
 			}}
 		>
-			{isInternet ? screenList : undefined}
-			<RootNavigation.Screen
-				name={"NoHaveInternet"}
-				component={Screens.NoHaveInternet}
-				options={{ presentation: "transparentModal", headerShown: false }}
-			/>
+			{screenList}
 		</RootNavigation.Navigator>
 	);
 };
