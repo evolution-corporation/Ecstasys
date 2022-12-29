@@ -11,7 +11,7 @@ interface MeditationTimeInBoxProperty {
 
 const MeditationTimeInBox: React.FC<MeditationTimeInBoxProperty> = property => {
 	const { milliseconds } = property;
-	const minutes = milliseconds / 60_000;
+	const minutes = milliseconds / 60000;
 	return (
 		<View
 			style={{

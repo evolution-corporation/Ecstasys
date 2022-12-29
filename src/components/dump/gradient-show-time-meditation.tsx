@@ -25,7 +25,7 @@ const GradientShowTimeMeditation: React.FC<GradientShowTimeMeditationProperty> =
 		>
 			<ElementSimpleText color={"#FFFFFF"}>
 				{i18n.t("minute", {
-					count: Math.floor(timeMilliseconds / 60_000),
+					count: Math.floor(timeMilliseconds / 60000),
 				})}
 			</ElementSimpleText>
 		</LinearGradient>

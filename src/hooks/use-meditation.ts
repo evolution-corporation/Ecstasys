@@ -3,8 +3,6 @@
 import React from "react";
 import { AVPlaybackSource, Audio } from "expo-av";
 
-let i = 1;
-
 const useMeditation = (source: AVPlaybackSource | [AVPlaybackSource, AVPlaybackSource], currentTime: number) => {
 	const audioList = React.useRef<[Audio.Sound, Audio.Sound] | [Audio.Sound]>(
 		Array.isArray(source) && source.length === 2 ? [new Audio.Sound(), new Audio.Sound()] : [new Audio.Sound()]
@@ -45,7 +43,6 @@ const useMeditation = (source: AVPlaybackSource | [AVPlaybackSource, AVPlaybackS
 	};
 
 	const setPosition = async (milliseconds: number) => {
-		console.log({ i: i++, setPosition: milliseconds });
 		if (audioList.length === 1) {
 			const audioStatus = await audioList[0].getStatusAsync();
 			if (audioStatus.isLoaded && (audioStatus.durationMillis ?? 0) >= milliseconds) {

@@ -80,7 +80,7 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 		} else {
 			greetingDay = i18n.t("52a1a44e-d621-4d55-b0df-b21ddea89872");
 		}
-		if (Date.now() - lastUpdate.getTime() > 300_000) {
+		if (Date.now() - lastUpdate.getTime() > 300000) {
 			greetingDay = undefined;
 		}
 		return [store.style.messageProfessor.idMessage, greetingDay];

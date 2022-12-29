@@ -57,7 +57,7 @@ const PlayerView: React.FC<PlayerViewProperty> = property => {
 		onChangeStart,
 		onChangeStatus,
 		description,
-		rewindMillisecond = 15_000,
+		rewindMillisecond = 15000,
 		backgroundImageForBackgroundSound,
 		nameBackgroundSound,
 	} = property;
@@ -99,7 +99,7 @@ const PlayerView: React.FC<PlayerViewProperty> = property => {
 	}
 	if (status === Status.Wait) {
 		const seconds = Math.floor(currentMilliseconds / 1000);
-		const time = `${currentMilliseconds < 600_000 ? "0" : ""}${Math.floor(currentMilliseconds / 60_000)}:${
+		const time = `${currentMilliseconds < 600000 ? "0" : ""}${Math.floor(currentMilliseconds / 60000)}:${
 			seconds % 60 < 10 ? "0" : ""
 		}${seconds % 60}`;
 		return (
