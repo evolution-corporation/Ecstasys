@@ -2,7 +2,7 @@
 
 import { useDimensions } from "@react-native-community/hooks";
 import React from "react";
-import { Pressable, StyleProp, View, ViewStyle } from "react-native";
+import { PixelRatio, Pressable, StyleProp, View, ViewStyle } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import DefaultText from "~components/Text/default-text";
 import CustomModal from "./CustomModal";
@@ -21,6 +21,7 @@ export interface WithDropListProperty<T> {
 	onOpen?: () => void;
 	onClose?: () => void;
 	renderItem?: (name: string, value: T) => JSX.Element;
+	pixelRatio?: number;
 }
 
 function createDropList<T>() {
@@ -35,6 +36,7 @@ function createDropList<T>() {
 			onOpen,
 			onClose,
 			renderItem,
+			pixelRatio = 1,
 		} = property;
 		const customModalReference = React.useRef<React.ElementRef<typeof CustomModal>>(null);
 		const viewReference = React.useRef<View>(null);
@@ -48,9 +50,25 @@ function createDropList<T>() {
 		}));
 
 		const open = async () => {
-			if (onOpen) onOpen();
-			rotateChevron.value = "0deg";
-			customModalReference.current?.open();
+			viewReference.current?.measureInWindow((x, y, width, height) => {
+				let left: undefined | number;
+				let right: undefined | number;
+				if (leftBorderDropList !== undefined) {
+					left = x / pixelRatio;
+				}
+				if (rightBorderDropList !== undefined) {
+					right = window.width - x / pixelRatio - width;
+				}
+				const t = {
+					y: y / pixelRatio + insets.top + height - 24,
+					left: left === undefined ? undefined : left + insets.left,
+					right: right === undefined ? undefined : right + insets.right,
+				};
+				setLayoutList(t);
+				if (onOpen) onOpen();
+				rotateChevron.value = "0deg";
+				customModalReference.current?.open();
+			});
 		};
 
 		const close = async () => {
@@ -83,24 +101,29 @@ function createDropList<T>() {
 			<View
 				ref={viewReference}
 				onLayout={({ nativeEvent: { layout } }) => {
-					setImmediate(() =>
-						viewReference.current?.measureInWindow((x, y, width, height) => {
-							let left: undefined | number;
-							let right: undefined | number;
-							console.log(insets);
-							if (leftBorderDropList !== undefined) {
-								left = x;
-							}
-							if (rightBorderDropList !== undefined) {
-								right = window.width - x - width;
-							}
-							setLayoutList({
-								y: y + height - 2,
-								left: left === undefined ? undefined : left + insets.left,
-								right: right === undefined ? undefined : right + insets.right,
-							});
-						})
-					);
+					// setImmediate(() =>
+					// 	viewReference.current?.measureInWindow((x, y, width, height) => {
+					// 		let left: undefined | number;
+					// 		let right: undefined | number;
+					// 		console.log({ x, y, width, height });
+					// 		if (leftBorderDropList !== undefined) {
+					// 			left = x / PixelRatio.get();
+					// 		}
+					// 		if (rightBorderDropList !== undefined) {
+					// 			right = x / PixelRatio.get() - width;
+					// 		}
+					// 		const t = {
+					// 			y: y / PixelRatio.get() + height + insets.top,
+					// 			left: left === undefined ? undefined : left + insets.left,
+					// 			right: right === undefined ? undefined : right + insets.right,
+					// 		};
+					// 		console.log(t);
+					// 		setLayoutList(t);
+					// 		if (onOpen) onOpen();
+					// 		rotateChevron.value = "0deg";
+					// 		customModalReference.current?.open();
+					// 	})
+					// );
 				}}
 			>
 				<Pressable onPress={() => open()}>
@@ -123,38 +146,25 @@ function createDropList<T>() {
 						</ViewPaddingList>
 					</View>
 				</Pressable>
-				<CustomModal ref={customModalReference} onClose={() => close()}>
-					{/* <View
-						style={{
-							width: 2,
-							height: 2,
-							borderRadius: 1,
-							position: "absolute",
-							backgroundColor: "red",
-							top: (layoutList?.y ?? 0) + 1,
-							right: layoutList?.right ? layoutList?.right + 1 : undefined,
-							left: layoutList?.left ? layoutList?.left + 1 : undefined,
-						}}
-					/> */}
-
-					<View
-						style={{
-							backgroundColor: "#FFFFFF",
-							borderBottomLeftRadius: 15,
-							borderBottomRightRadius: 15,
-							position: "absolute",
-							top: layoutList?.y ?? 0,
-							right: layoutList?.right,
-							left: layoutList?.left,
-							...gStyle.shadows(2, 3),
-							marginLeft: leftBorderDropList ?? 0,
-							marginRight: rightBorderDropList ?? 0,
-						}}
-					>
-						<ViewPaddingList direction={Direction.Vertical} paddings={1}>
-							{listComponents}
-						</ViewPaddingList>
-					</View>
+				<CustomModal
+					ref={customModalReference}
+					onClose={() => close()}
+					style={{
+						backgroundColor: "#FFFFFF",
+						borderBottomLeftRadius: 15,
+						borderBottomRightRadius: 15,
+						position: "absolute",
+						top: layoutList?.y ?? 0,
+						right: layoutList?.right,
+						left: layoutList?.left,
+						...gStyle.shadows(2, 3),
+						marginLeft: leftBorderDropList ?? 0,
+						marginRight: rightBorderDropList ?? 0,
+					}}
+				>
+					<ViewPaddingList direction={Direction.Vertical} paddings={1}>
+						{listComponents}
+					</ViewPaddingList>
 				</CustomModal>
 			</View>
 		);

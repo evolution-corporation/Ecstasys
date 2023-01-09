@@ -30,9 +30,8 @@ const DMDSettingNotification: RootScreenProps<"DMDSettingNotification"> = ({ nav
 
 	const { window } = useDimensions();
 	const sizeTopPart = sizeBottomPart
-		? { height: window.height - sizeBottomPart?.height, width: window.width }
+		? { height: Math.floor(window.height - sizeBottomPart?.height), width: window.width }
 		: undefined;
-
 	const resetTimeSegments = () => {
 		setTimeNotification(TimeSegments.ActiveBreathing, 0);
 		setTimeNotification(TimeSegments.SpontaneousBreathing, 0);

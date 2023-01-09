@@ -8,7 +8,7 @@ const CustomModal = forwardRef<Ref, Props>((props, ref) => {
 	const { children, style, onClose, styleBackground, mainStyle } = props;
 	const [isShow, setIsShow] = useState<boolean>(false);
 	const {
-		window: { height, width },
+		screen: { height, width },
 	} = useDimensions();
 	useEffect(() => {
 		if (!isShow && onClose) onClose();
@@ -29,7 +29,7 @@ const CustomModal = forwardRef<Ref, Props>((props, ref) => {
 			hardwareAccelerated={true}
 			onRequestClose={() => setIsShow(false)}
 			visible={isShow}
-			style={[{ width, height }, mainStyle]}
+			style={[{ width, height }, mainStyle, {}]}
 		>
 			<View style={[{ width, height }, mainStyle]}>
 				<Pressable style={[StyleSheet.absoluteFill, styleBackground]} onPress={() => setIsShow(false)} />

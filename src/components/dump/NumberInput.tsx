@@ -45,7 +45,7 @@ const NumberInput: FC<Properties> = properties => {
 				onChange={region => {
 					setRegionCode(region);
 				}}
-				leftBorderDropList={-17.9}
+				leftBorderDropList={-15}
 				onOpen={() => onViewDropList(true)}
 				onClose={() => onViewDropList(false)}
 				style={{ height: "100%" }}

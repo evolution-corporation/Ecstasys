@@ -7,12 +7,12 @@ const timeUpdate = 100;
 const useTimer = (maxMilliseconds: number, onFinish: () => void) => {
 	const [currentMilliseconds, setCurrentMilliseconds] = React.useState(0);
 	const TimerPromise = React.useRef<ReturnType<typeof InteractionManager.runAfterInteractions>>();
-	const cancelInterval = React.useRef<NodeJS.Timer | null>(null);
-	const timeStartBackgroundApplication = React.useRef<Date | null>(null);
+	const cancelInterval = React.useRef<NodeJS.Timer>();
+	const timeStartBackgroundApplication = React.useRef<Date>();
 
 	const clearIntervalDecorator = () => {
-		if (cancelInterval.current !== null) clearInterval(cancelInterval.current);
-		cancelInterval.current = null;
+		if (cancelInterval.current !== undefined) clearInterval(cancelInterval.current);
+		cancelInterval.current = undefined;
 	};
 
 	const finish = () => {
@@ -59,12 +59,12 @@ const useTimer = (maxMilliseconds: number, onFinish: () => void) => {
 
 	React.useEffect(() => {
 		const subscribe = AppState.addEventListener("change", state => {
-			if (state === "active" && timeStartBackgroundApplication.current !== null) {
+			if (state === "active" && timeStartBackgroundApplication.current !== undefined) {
 				const deltaTime = Date.now() - timeStartBackgroundApplication.current.getTime();
 				setCurrentMilliseconds(previousTime => (previousTime += deltaTime));
 				play();
-				timeStartBackgroundApplication.current = null;
-			} else if (state === "background" && cancelInterval.current !== null) {
+				timeStartBackgroundApplication.current = undefined;
+			} else if (state === "background" && cancelInterval.current !== undefined) {
 				timeStartBackgroundApplication.current = new Date();
 				pause();
 			}

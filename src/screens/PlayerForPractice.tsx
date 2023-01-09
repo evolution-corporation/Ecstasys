@@ -51,15 +51,14 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 			if (timerShowBigTimer.current) clearTimeout(timerShowBigTimer.current);
 			timerShowBigTimer.current = setTimeout(() => {
 				setStatusPlayer(Status.Wait);
-			}, 30_000);
+			}, 30000);
 		}
 		return () => {
 			if (timerShowBigTimer.current) clearTimeout(timerShowBigTimer.current);
 		};
 	}, [lastPressTime, statusPlayer]);
 
-	const isSupportBackgroundSound =
-		selectedPractice.type === "RELAXATION" || selectedPractice.type === "DIRECTIONAL_VISUALIZATIONS";
+	const isSupportBackgroundSound = selectSet === undefined;
 
 	const backgroundSound = isSupportBackgroundSound ? useBackgroundSound(statusPlayer === Status.Play) : undefined;
 
@@ -79,7 +78,7 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 				if (statusPlayer !== Status.Loading) {
 					meditation?.stop();
 					timer.edit(0);
-					if (timer.currentMilliseconds >= 60_000) {
+					if (timer.currentMilliseconds >= 60000) {
 						appDispatch(actions.addStatisticPractice([selectedPractice, Math.floor(timer.currentMilliseconds)]));
 					}
 				}

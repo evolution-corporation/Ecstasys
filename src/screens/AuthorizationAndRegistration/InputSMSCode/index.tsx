@@ -56,7 +56,11 @@ const SMSCodeInputScreen: RootScreenProps<"InputSMSCode"> = ({ route }) => {
 			>
 				{i18n.t("cfdefbe6-ae49-4e17-8628-bbe46d144418")}
 			</Text>
-			<SMSCodeInput ref={refSMSCodeInput} autoFocus onEndInput={checkSMSCode} />
+			<SMSCodeInput
+				ref={refSMSCodeInput}
+				onEndInput={checkSMSCode}
+				disable={status === SMSCodeInputInfoShow.loadingIndicator}
+			/>
 			<SMSCodeInputInfo status={status} style={styles.SMSCodeInputInfoStyle} onPress={requestSMSCode} seconds={160} />
 		</Screen>
 	);

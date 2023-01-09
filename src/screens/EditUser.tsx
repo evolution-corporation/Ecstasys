@@ -118,7 +118,7 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 							onChange={selectedGender => {
 								setValue({ gender: selectedGender });
 							}}
-							rightBorderDropList={-16.5}
+							rightBorderDropList={-15}
 							onClose={() => {
 								borderBottomRightRadiusSelectGender.value = 20;
 							}}
