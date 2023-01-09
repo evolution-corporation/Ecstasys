@@ -58,8 +58,7 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 		};
 	}, [lastPressTime, statusPlayer]);
 
-	const isSupportBackgroundSound =
-		selectedPractice.type === "RELAXATION" || selectedPractice.type === "DIRECTIONAL_VISUALIZATIONS";
+	const isSupportBackgroundSound = selectSet === undefined;
 
 	const backgroundSound = isSupportBackgroundSound ? useBackgroundSound(statusPlayer === Status.Play) : undefined;
 

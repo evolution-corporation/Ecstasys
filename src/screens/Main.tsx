@@ -170,6 +170,7 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 						}
 					}
 				}}
+				pointerEvents={"box-only"}
 			>
 				<RN.View
 					style={{

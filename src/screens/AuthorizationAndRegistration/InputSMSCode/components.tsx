@@ -10,7 +10,7 @@ const countCode = 6;
 const keyList = [0, 1, 2, 3, 4, 5];
 
 export const SMSCodeInput = forwardRef<SMSCodeInputRef, SMSCodeInputProps>((props, ref) => {
-	const { autoFocus = false, onChange, onEndInput = text => {}, style } = props;
+	const { autoFocus = false, onChange, onEndInput = text => {}, style, disable = false } = props;
 	const refList = keyList.map(key => useRef<TextInput>(null));
 	const [code, setCode] = useState<string>("");
 
@@ -77,6 +77,7 @@ export const SMSCodeInput = forwardRef<SMSCodeInputRef, SMSCodeInputProps>((prop
 							clear();
 						}
 					}}
+					editable={!disable}
 				/>
 			))}
 		</View>
@@ -88,6 +89,7 @@ interface SMSCodeInputProps {
 	onEndInput?: (code: string) => void;
 	style?: ViewStyle;
 	autoFocus?: boolean;
+	disable?: boolean;
 }
 
 interface SMSCodeInputRef {

@@ -157,6 +157,7 @@ const SelectMethodAuthentication: RootScreenProps<"SelectMethodAuthentication"> 
 									{i18n.t("a9f1fa29-cd92-473f-ae6c-dd5429cf9e9a")}
 								</ColorWithIconButton>
 							) : null}
+
 							<View
 								style={{
 									flexDirection: "row",
