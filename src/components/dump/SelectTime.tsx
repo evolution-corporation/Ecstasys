@@ -2,7 +2,7 @@
 
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { View, Text, StyleSheet, FlatList, ViewabilityConfig, ViewToken, ViewStyle } from "react-native";
+import { View, Text, StyleSheet, FlatList, ViewabilityConfig, ViewToken, ViewStyle, Platform } from "react-native";
 import core from "~core";
 
 interface Props {
@@ -49,7 +49,6 @@ const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
 	}).current;
 
 	const _onViewableItemsChangedMinute = React.useRef(({ viewableItems }: { viewableItems: ViewToken[] }) => {
-
 		if (viewableItems.length > 0) {
 			const mediumIndex = Math.floor(viewableItems.length / 2);
 			if (viewableItems[mediumIndex].index !== null) {
@@ -185,11 +184,11 @@ const styles = StyleSheet.create({
 	},
 	numberNoSelectedOne: {
 		color: "#D3D3D3",
-		fontSize: 40,
+		fontSize: Platform.OS === "ios" ? 46 : 48,
 	},
 	numberNoSelectedTwo: {
 		color: "#F4F4F4",
-		fontSize: 32,
+		fontSize: Platform.OS === "ios" ? 38 : 40,
 	},
 	br: {
 		height: "100%",
