@@ -57,7 +57,7 @@ function generateConfig(): ExpoConfig {
 		},
 		ios: {
 			googleServicesFile: "./GoogleService-Info.plist",
-			bundleIdentifier: "com.evodigital.dmdmeditation",
+			bundleIdentifier: "one.evodigital.test",
 			buildNumber: versionCode.toString(),
 			infoPlist: {
 				UIBackgroundModes: ["audio"],

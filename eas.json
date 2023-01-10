@@ -20,7 +20,7 @@
 			}
 		},
 		"preview-close": {
-			"distribution": "internal",
+			"distribution": "store",
 			"channel": "preview",
 			"env": {
 				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
@@ -31,7 +31,8 @@
 				"prebuildCommand": "prebuild"
 			},
 			"ios": {
-				"prebuildCommand": "prebuild"
+				"prebuildCommand": "prebuild",
+				"enterpriseProvisioning": "universal"
 			}
 		},
 		"test": {
@@ -65,7 +66,5 @@
 			}
 		}
 	},
-	"submit": {
-		"production": {}
-	}
+	"submit": {}
 }

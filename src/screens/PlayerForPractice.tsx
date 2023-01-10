@@ -35,7 +35,6 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 						: [{ uri: selectedPractice.audio }, { uri: selectSet.audio }],
 					timer.currentMilliseconds
 			  );
-
 	React.useEffect(() => {
 		if (meditation?.isLoading) {
 			setImmediate(() => setStatusPlayer(Status.Init));

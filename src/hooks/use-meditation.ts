@@ -1,7 +1,7 @@
 /** @format */
 
 import React from "react";
-import { AVPlaybackSource, Audio } from "expo-av";
+import { AVPlaybackSource, Audio, InterruptionModeIOS, InterruptionModeAndroid } from "expo-av";
 
 const useMeditation = (source: AVPlaybackSource | [AVPlaybackSource, AVPlaybackSource], currentTime: number) => {
 	const audioList = React.useRef<[Audio.Sound, Audio.Sound] | [Audio.Sound]>(
@@ -56,9 +56,7 @@ const useMeditation = (source: AVPlaybackSource | [AVPlaybackSource, AVPlaybackS
 					audioStatus[0].durationMillis ?? 0,
 					audioStatus[1].durationMillis ?? 0,
 				];
-				console.log({ lengthFirstAudio, lengthSecondAudio, milliseconds, isPlay });
-				// await audioList[0].pauseAsync();
-				// await audioList[1].pauseAsync();
+
 				if (lengthFirstAudio > milliseconds) {
 					await audioList[0].setPositionAsync(milliseconds);
 					await audioList[1].setPositionAsync(0);
@@ -88,7 +86,7 @@ const useMeditation = (source: AVPlaybackSource | [AVPlaybackSource, AVPlaybackS
 	React.useEffect(() => {
 		if (audioList.length === 1) {
 			audioList[0].setOnPlaybackStatusUpdate(status => {
-				setIsLoaded(previousValue => [status.isLoaded, previousValue[1]]);
+				setIsLoaded(previousValue => [status.isLoaded, true]);
 			});
 		} else if (audioList.length === 2) {
 			audioList[0].setOnPlaybackStatusUpdate(status => {
@@ -99,17 +97,15 @@ const useMeditation = (source: AVPlaybackSource | [AVPlaybackSource, AVPlaybackS
 			});
 		}
 
-		Audio.setAudioModeAsync({
-			staysActiveInBackground: true,
-		});
-
 		const init = async () => {
+			Audio.setAudioModeAsync({
+				staysActiveInBackground: false,
+				interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
+				interruptionModeIOS: InterruptionModeIOS.DoNotMix,
+			});
 			if (audioList.length === 1) {
 				const status = await audioList[0].getStatusAsync();
-				if (!status.isLoaded) await audioList[0].loadAsync(Array.isArray(source) ? source[0] : source, {});
-				audioList[0].setOnPlaybackStatusUpdate(statusOfSubscribe => {
-					setIsLoaded(previousValue => [statusOfSubscribe.isLoaded, true]);
-				});
+				if (!status.isLoaded) await audioList[0].loadAsync(Array.isArray(source) ? source[0] : source);
 			} else if (audioList.length === 2 && Array.isArray(source)) {
 				const statusFirst = await audioList[0].getStatusAsync();
 				if (!statusFirst.isLoaded) await audioList[0].loadAsync(source[0], {});
