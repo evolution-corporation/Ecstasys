@@ -21,7 +21,7 @@ function generateConfig(): ExpoConfig {
 		year: toDay.getFullYear(),
 	};
 	let versionCode = Number(`${date.year}${date.month}${date.date}0`);
-	versionCode += 2;
+	versionCode += 3;
 	return {
 		jsEngine: "hermes",
 		name: appName,
