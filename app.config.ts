@@ -21,7 +21,7 @@ function generateConfig(): ExpoConfig {
 		year: toDay.getFullYear(),
 	};
 	let versionCode = Number(`${date.year}${date.month}${date.date}0`);
-	versionCode += 3;
+	versionCode += 0;
 	return {
 		jsEngine: "hermes",
 		name: appName,
@@ -41,7 +41,7 @@ function generateConfig(): ExpoConfig {
 		},
 		updates: {
 			fallbackToCacheTimeout: 0,
-			url: "https://u.expo.dev/ca80bcb8-c749-4c34-ac86-5685e4da70ed",
+			url: "https://u.expo.dev/360fff0b-5a9b-41de-9bb3-016641a64554",
 		},
 		assetBundlePatterns: ["**/*"],
 		android: {
@@ -57,11 +57,12 @@ function generateConfig(): ExpoConfig {
 		},
 		ios: {
 			googleServicesFile: "./GoogleService-Info.plist",
-			bundleIdentifier: "com.evodigital.dmdmeditation",
+			bundleIdentifier: appUrl,
 			buildNumber: versionCode.toString(),
 			infoPlist: {
 				UIBackgroundModes: ["audio"],
 			},
+			usesAppleSignIn: true,
 		},
 		plugins: [
 			"expo-dev-client",
@@ -88,7 +89,7 @@ function generateConfig(): ExpoConfig {
 		],
 		extra: {
 			eas: {
-				projectId: "ca80bcb8-c749-4c34-ac86-5685e4da70ed",
+				projectId: "360fff0b-5a9b-41de-9bb3-016641a64554",
 			},
 			isDebug: process.env.APP_VARIANT !== "dev",
 			apiURL,
