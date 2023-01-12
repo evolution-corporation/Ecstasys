@@ -30,9 +30,8 @@ import Bird from "assets/icons/BirdWhite.svg";
 import auth from "@react-native-firebase/auth";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { actions, useAppDispatch } from "~store";
-import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { appleAuth } from "@invertase/react-native-apple-authentication";
+import * as AppleAuthentication from "expo-apple-authentication";
 import AppleLogo from "~assets/icons/Apple.svg";
 
 const SelectMethodAuthentication: RootScreenProps<"SelectMethodAuthentication"> = ({ navigation }) => {
@@ -53,11 +52,9 @@ const SelectMethodAuthentication: RootScreenProps<"SelectMethodAuthentication"> 
 			const googleCredential = auth.GoogleAuthProvider.credential(idToken);
 			await auth().signInWithCredential(googleCredential);
 		} catch (error) {
-			if (error instanceof Error) {
-				if (error.message === "Sign in action cancelled") {
-					setIsLoading(false);
-					return;
-				}
+			if (error instanceof Error && error.message === "Sign in action cancelled") {
+				setIsLoading(false);
+				return;
 			}
 		}
 		await appDispatch(actions.sigIn()).unwrap();
@@ -66,24 +63,21 @@ const SelectMethodAuthentication: RootScreenProps<"SelectMethodAuthentication"> 
 	const authWithApple = async () => {
 		setIsLoading(true);
 		try {
-			const appleAuthRequestResponse = await appleAuth.performRequest({
-				requestedOperation: appleAuth.Operation.LOGIN,
-				requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+			const appleAuthRequestResponse = await AppleAuthentication.signInAsync({
+				requestedScopes: [
+					AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+					AppleAuthentication.AppleAuthenticationScope.EMAIL,
+				],
 			});
-			const appleCredential = auth.AppleAuthProvider.credential(
-				appleAuthRequestResponse.identityToken,
-				appleAuthRequestResponse.nonce
-			);
+			const appleCredential = auth.AppleAuthProvider.credential(appleAuthRequestResponse.identityToken);
 			await auth().signInWithCredential(appleCredential);
 		} catch (error) {
 			alert(error);
 			console.log(error);
 			setIsLoading(false);
-			if (error instanceof Error) {
-				if (error.message === "Sign in action cancelled") {
-					setIsLoading(false);
-					return;
-				}
+			if (error instanceof Error && error.message === "Sign in action cancelled") {
+				setIsLoading(false);
+				return;
 			}
 		}
 		await appDispatch(actions.sigIn()).unwrap();

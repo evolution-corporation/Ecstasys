@@ -6,7 +6,7 @@ import { version } from "./package.json";
 function generateConfig(): ExpoConfig {
 	const appName = process.env.APP_VARIANT !== "dev" ? "dmd meditation" : "DMD Dev";
 	const appUrl =
-		process.env.APP_VARIANT !== "dev" ? "com.evodigital.dmdmeditation" : "com.evodigital.dmdmeditation_dev";
+		process.env.APP_VARIANT !== "dev" ? "com.evodigital.dmdmeditation" : "com.evodigital.dmdmeditation+dev";
 	const apiURL =
 		process.env.APP_VARIANT === "prod"
 			? "api.evodigital.one"
@@ -50,14 +50,14 @@ function generateConfig(): ExpoConfig {
 				backgroundColor: "#FFFFFF",
 			},
 			icon: "./assets/icon.png",
-			package: appUrl,
+			package: appUrl.replace("+", "_"),
 			googleServicesFile: "./google-services.json",
 			permissions: ["android.permission.RECORD_AUDIO"],
 			versionCode,
 		},
 		ios: {
 			googleServicesFile: "./GoogleService-Info.plist",
-			bundleIdentifier: appUrl,
+			bundleIdentifier: appUrl.replace("+", "-"),
 			buildNumber: versionCode.toString(),
 			infoPlist: {
 				UIBackgroundModes: ["audio"],

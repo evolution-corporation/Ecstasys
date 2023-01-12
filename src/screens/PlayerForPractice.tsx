@@ -13,6 +13,7 @@ import useTimer from "src/hooks/use-timer";
 import { actions, useAppDispatch } from "~store";
 
 import { Breathing, RootScreenProps } from "~types";
+import { Asset, useAssets } from "expo-asset";
 
 const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, route }) => {
 	const { selectedPractice, timeNotification, selectSet } = route.params;
@@ -23,18 +24,17 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 	const [lastPressTime, setLastPressTime] = React.useState<Date>(new Date());
 	const [statusPlayer, setStatusPlayer] = React.useState<Status>(Status.Loading);
 	const breathingController = useBreathingController();
-
-	const meditation =
+	const meditationAssets =
 		selectedPractice.audio === undefined
 			? undefined
-			: useMeditation(
-					selectSet === undefined
-						? {
-								uri: selectedPractice.audio,
-						  }
-						: [{ uri: selectedPractice.audio }, { uri: selectSet.audio }],
-					timer.currentMilliseconds
-			  );
+			: selectSet === undefined
+			? ([new Asset({ name: selectedPractice.name, type: ".", uri: selectedPractice.audio })] as [Asset])
+			: ([
+					new Asset({ name: selectedPractice.name, type: ".", uri: selectedPractice.audio }),
+					new Asset({ name: selectSet.name, type: ".", uri: selectSet.audio }),
+			  ] as [Asset, Asset]);
+	const meditation =
+		meditationAssets === undefined ? undefined : useMeditation(meditationAssets, timer.currentMilliseconds);
 
 	React.useEffect(() => {
 		if (meditation?.isLoading) {

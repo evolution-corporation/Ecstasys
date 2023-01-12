@@ -3,9 +3,9 @@
 import React from "react";
 import { AVPlaybackSource, Audio } from "expo-av";
 
-const useMeditation = (source: AVPlaybackSource | [AVPlaybackSource, AVPlaybackSource], currentTime: number) => {
+const useMeditation = (source: [AVPlaybackSource, AVPlaybackSource], currentTime: number) => {
 	const audioList = React.useRef<[Audio.Sound, Audio.Sound] | [Audio.Sound]>(
-		Array.isArray(source) && source.length === 2 ? [new Audio.Sound(), new Audio.Sound()] : [new Audio.Sound()]
+		source.length === 2 ? [new Audio.Sound(), new Audio.Sound()] : [new Audio.Sound()]
 	).current;
 	const [isLoaded, setIsLoaded] = React.useState<[boolean, boolean]>([false, false]);
 
