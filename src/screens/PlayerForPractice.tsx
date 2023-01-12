@@ -28,11 +28,8 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 		selectedPractice.audio === undefined
 			? undefined
 			: selectSet === undefined
-			? ([new Asset({ name: selectedPractice.name, type: ".", uri: selectedPractice.audio })] as [Asset])
-			: ([
-					new Asset({ name: selectedPractice.name, type: ".", uri: selectedPractice.audio }),
-					new Asset({ name: selectSet.name, type: ".", uri: selectSet.audio }),
-			  ] as [Asset, Asset]);
+			? ([Asset.fromURI(selectedPractice.audio)] as [Asset])
+			: ([Asset.fromURI(selectedPractice.audio), Asset.fromURI(selectSet.audio)] as [Asset, Asset]);
 	const meditation =
 		meditationAssets === undefined ? undefined : useMeditation(meditationAssets, timer.currentMilliseconds);
 

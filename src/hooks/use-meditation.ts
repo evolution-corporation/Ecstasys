@@ -88,7 +88,7 @@ const useMeditation = (source: [AVPlaybackSource, AVPlaybackSource], currentTime
 	React.useEffect(() => {
 		if (audioList.length === 1) {
 			audioList[0].setOnPlaybackStatusUpdate(status => {
-				setIsLoaded(previousValue => [status.isLoaded, previousValue[1]]);
+				setIsLoaded(previousValue => [status.isLoaded, status.isLoaded]);
 			});
 		} else if (audioList.length === 2) {
 			audioList[0].setOnPlaybackStatusUpdate(status => {
@@ -107,9 +107,6 @@ const useMeditation = (source: [AVPlaybackSource, AVPlaybackSource], currentTime
 			if (audioList.length === 1) {
 				const status = await audioList[0].getStatusAsync();
 				if (!status.isLoaded) await audioList[0].loadAsync(Array.isArray(source) ? source[0] : source, {});
-				audioList[0].setOnPlaybackStatusUpdate(statusOfSubscribe => {
-					setIsLoaded(previousValue => [statusOfSubscribe.isLoaded, true]);
-				});
 			} else if (audioList.length === 2 && Array.isArray(source)) {
 				const statusFirst = await audioList[0].getStatusAsync();
 				if (!statusFirst.isLoaded) await audioList[0].loadAsync(source[0], {});
@@ -120,9 +117,6 @@ const useMeditation = (source: [AVPlaybackSource, AVPlaybackSource], currentTime
 					if (statusOfSubscribe.isLoaded && statusOfSubscribe.didJustFinish) {
 						audioList[1].playAsync();
 					}
-				});
-				audioList[1].setOnPlaybackStatusUpdate(statusOfSubscribe => {
-					setIsLoaded(previousValue => [previousValue[0], statusOfSubscribe.isLoaded]);
 				});
 			}
 		};
