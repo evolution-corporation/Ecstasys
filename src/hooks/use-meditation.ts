@@ -101,6 +101,10 @@ const useMeditation = (source: [AVPlaybackSource, AVPlaybackSource], currentTime
 
 		Audio.setAudioModeAsync({
 			staysActiveInBackground: true,
+			shouldDuckAndroid: false,
+			playThroughEarpieceAndroid: false,
+			allowsRecordingIOS: false,
+			playsInSilentModeIOS: true,
 		});
 
 		const init = async () => {
