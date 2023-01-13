@@ -4,9 +4,9 @@ import type { ExpoConfig } from "expo/config";
 import { version } from "./package.json";
 
 function generateConfig(): ExpoConfig {
-	const appName = process.env.APP_VARIANT !== "dev" ? "dmd meditation" : "DMD Dev";
+	const appName = process.env.APP_VARIANT === "dev" ? "DMD Dev" : "dmd meditation";
 	const appUrl =
-		process.env.APP_VARIANT !== "dev" ? "com.evodigital.dmdmeditation" : "com.evodigital.dmdmeditation+dev";
+		process.env.APP_VARIANT === "dev" ? "com.evodigital.dmdmeditation+dev" : "com.evodigital.dmdmeditation";
 	const apiURL =
 		process.env.APP_VARIANT === "prod"
 			? "api.evodigital.one"
@@ -27,7 +27,7 @@ function generateConfig(): ExpoConfig {
 		name: appName,
 		owner: "evo_digital",
 		slug: "dmd-meditation",
-		privacy: process.env.APP_VARIANT !== "dev" ? "public" : "hidden",
+		privacy: process.env.APP_VARIANT === "dev" ? "hidden" : "public",
 		description: "Авторские медитации и дыхательные практики от профессора психологии Козлова В.В.",
 		version,
 		orientation: "portrait",
@@ -65,7 +65,7 @@ function generateConfig(): ExpoConfig {
 			usesAppleSignIn: true,
 		},
 		plugins: [
-			"expo-dev-client",
+			// "expo-dev-client",
 			"expo-splash-screen",
 			"expo-image-picker",
 			"expo-av",

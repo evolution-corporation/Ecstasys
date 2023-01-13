@@ -1,6 +1,6 @@
 {
 	"cli": {
-		"version": ">=2.1.0"
+		"version": "^3.3.2"
 	},
 	"build": {
 		"development": {
@@ -55,7 +55,7 @@
 			"distribution": "store",
 			"env": {
 				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
-				"APP_VARIANT": "dev"
+				"APP_VARIANT": "alpha"
 			},
 			"android": {
 				"prebuildCommand": "prebuild "
