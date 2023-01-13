@@ -28,7 +28,6 @@ import gStyle from "~styles";
 import Bird from "assets/icons/BirdWhite.svg";
 
 import auth from "@react-native-firebase/auth";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { actions, useAppDispatch } from "~store";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as AppleAuthentication from "expo-apple-authentication";
@@ -44,21 +43,6 @@ const SelectMethodAuthentication: RootScreenProps<"SelectMethodAuthentication"> 
 		}
 		return true;
 	});
-	const authWithGoogle = async () => {
-		setIsLoading(true);
-
-		try {
-			const { idToken, serverAuthCode, user } = await GoogleSignin.signIn();
-			const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-			await auth().signInWithCredential(googleCredential);
-		} catch (error) {
-			if (error instanceof Error && error.message === "Sign in action cancelled") {
-				setIsLoading(false);
-				return;
-			}
-		}
-		await appDispatch(actions.sigIn()).unwrap();
-	};
 
 	const authWithApple = async () => {
 		setIsLoading(true);
@@ -134,23 +118,13 @@ const SelectMethodAuthentication: RootScreenProps<"SelectMethodAuthentication"> 
 								{i18n.t("526fba9f-2b69-4fe6-aefd-d491e86e59da")}
 							</ColorButton>
 
-							{Platform.OS === "android" ? (
-								<ColorWithIconButton
-									icon={<GoogleLogo style={{ marginLeft: 3.5 }} />}
-									styleButton={styles.button}
-									onPress={authWithGoogle}
-								>
-									{i18n.t("235a94d8-5deb-460a-bf03-e0e30e93df1b")}
-								</ColorWithIconButton>
-							) : Platform.OS === "ios" ? (
-								<ColorWithIconButton
-									icon={<AppleLogo style={{ marginLeft: 7, transform: [{ translateY: -2 }] }} />}
-									styleButton={styles.button}
-									onPress={authWithApple}
-								>
-									{i18n.t("a9f1fa29-cd92-473f-ae6c-dd5429cf9e9a")}
-								</ColorWithIconButton>
-							) : null}
+							<ColorWithIconButton
+								icon={<AppleLogo style={{ marginLeft: 7, transform: [{ translateY: -2 }] }} />}
+								styleButton={styles.button}
+								onPress={authWithApple}
+							>
+								{i18n.t("a9f1fa29-cd92-473f-ae6c-dd5429cf9e9a")}
+							</ColorWithIconButton>
 
 							<View
 								style={{

@@ -65,7 +65,7 @@ function generateConfig(): ExpoConfig {
 			usesAppleSignIn: true,
 		},
 		plugins: [
-			// "expo-dev-client",
+			"expo-dev-client",
 			"expo-splash-screen",
 			"expo-image-picker",
 			"expo-av",
