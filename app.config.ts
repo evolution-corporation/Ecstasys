@@ -4,9 +4,9 @@ import type { ExpoConfig } from "expo/config";
 import { version } from "./package.json";
 
 function generateConfig(): ExpoConfig {
-	const appName = process.env.APP_VARIANT !== "dev" ? "dmd meditation" : "DMD Dev";
+	const appName = process.env.APP_VARIANT === "dev" ? "DMD Dev" : "dmd meditation";
 	const appUrl =
-		process.env.APP_VARIANT !== "dev" ? "com.evodigital.dmdmeditation" : "com.evodigital.dmdmeditation_dev";
+		process.env.APP_VARIANT === "dev" ? "com.evodigital.dmdmeditation+dev" : "com.evodigital.dmdmeditation";
 	const apiURL =
 		process.env.APP_VARIANT === "prod"
 			? "api.evodigital.one"
@@ -21,13 +21,13 @@ function generateConfig(): ExpoConfig {
 		year: toDay.getFullYear(),
 	};
 	let versionCode = Number(`${date.year}${date.month}${date.date}0`);
-	versionCode += 3;
+	versionCode += 0;
 	return {
 		jsEngine: "hermes",
 		name: appName,
 		owner: "evo_digital",
 		slug: "dmd-meditation",
-		privacy: process.env.APP_VARIANT !== "dev" ? "public" : "hidden",
+		privacy: process.env.APP_VARIANT === "dev" ? "hidden" : "public",
 		description: "Авторские медитации и дыхательные практики от профессора психологии Козлова В.В.",
 		version,
 		orientation: "portrait",
@@ -41,7 +41,7 @@ function generateConfig(): ExpoConfig {
 		},
 		updates: {
 			fallbackToCacheTimeout: 0,
-			url: "https://u.expo.dev/ca80bcb8-c749-4c34-ac86-5685e4da70ed",
+			url: "https://u.expo.dev/360fff0b-5a9b-41de-9bb3-016641a64554",
 		},
 		assetBundlePatterns: ["**/*"],
 		android: {
@@ -50,18 +50,19 @@ function generateConfig(): ExpoConfig {
 				backgroundColor: "#FFFFFF",
 			},
 			icon: "./assets/icon.png",
-			package: appUrl,
+			package: appUrl.replace("+", "_"),
 			googleServicesFile: "./google-services.json",
 			permissions: ["android.permission.RECORD_AUDIO"],
 			versionCode,
 		},
 		ios: {
 			googleServicesFile: "./GoogleService-Info.plist",
-			bundleIdentifier: "com.evodigital.dmdmeditation",
+			bundleIdentifier: appUrl.replace("+", "-"),
 			buildNumber: versionCode.toString(),
 			infoPlist: {
 				UIBackgroundModes: ["audio"],
 			},
+			usesAppleSignIn: true,
 		},
 		plugins: [
 			"expo-dev-client",
@@ -88,7 +89,7 @@ function generateConfig(): ExpoConfig {
 		],
 		extra: {
 			eas: {
-				projectId: "ca80bcb8-c749-4c34-ac86-5685e4da70ed",
+				projectId: "360fff0b-5a9b-41de-9bb3-016641a64554",
 			},
 			isDebug: process.env.APP_VARIANT !== "dev",
 			apiURL,

@@ -4,8 +4,6 @@
   "scripts": {
     "start": "expo start --dev-client --force-manifest-type=classic",
     "build Dev": "eas build --platform android --profile development",
-    "upgrade SDK": "yarn expo upgrade",
-    "test": "jest",
     "android": "expo run:android",
     "ios": "expo run:ios"
   },
@@ -28,8 +26,9 @@
     "@react-navigation/native-stack": "^6.6.2",
     "@react-navigation/stack": "^6.3.0",
     "@reduxjs/toolkit": "^1.8.3",
-    "bluebird": "^3.7.2",
-    "expo": "^47.0.0",
+    "expo": "~47.0.12",
+    "expo-apple-authentication": "~5.0.1",
+    "expo-asset": "~8.7.0",
     "expo-av": "~13.0.2",
     "expo-blur": "~12.0.1",
     "expo-build-properties": "~0.4.1",
@@ -73,9 +72,8 @@
     "@babel/core": "^7.19.3",
     "@babel/preset-env": "^7.19.3",
     "@babel/preset-typescript": "^7.18.6",
+    "@expo/eas-build-job": "^0.2.102",
     "@types/babel__preset-env": "^7",
-    "@types/bluebird": "^3",
-    "@types/jest": "^29.1.2",
     "@types/react": "~18.0.24",
     "@types/react-native": "~0.70.6",
     "@types/react-native-snap-carousel": "^3.8.5",
@@ -83,7 +81,6 @@
     "@types/validator": "^13.7.3",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
-    "babel-jest": "^29.1.2",
     "eslint": "^8.28.0",
     "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-config-prettier": "^8.5.0",
@@ -93,22 +90,10 @@
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-react-native": "^4.0.0",
     "eslint-plugin-unicorn": "^45.0.1",
-    "jest": "^26.6.3",
-    "jest-expo": "^47.0.0",
-    "jest-fetch-mock": "^3.0.3",
     "prettier": "^2.7.1",
     "react-native-svg-transformer": "^1.0.0",
-    "react-test-renderer": "^18.2.0",
     "typescript": "^4.6.3",
-    "typescript-eslint-parser": "^22.0.0",
-    "whatwg-fetch": "^3.6.2"
+    "typescript-eslint-parser": "^22.0.0"
   },
-  "private": true,
-  "packageManager": "yarn@3.2.3",
-  "installConfig": {
-    "hoistingLimits": "workspaces"
-  },
-  "jest": {
-    "preset": "jest-expo"
-  }
+  "private": true
 }

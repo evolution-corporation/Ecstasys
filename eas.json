@@ -1,6 +1,6 @@
 {
 	"cli": {
-		"version": ">=2.1.0"
+		"version": "^3.3.2"
 	},
 	"build": {
 		"development": {
@@ -23,30 +23,12 @@
 			"distribution": "internal",
 			"channel": "preview",
 			"env": {
-				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
 				"APP_VARIANT": "alpha"
 			},
 			"android": {
-				"buildType": "app-bundle",
-				"prebuildCommand": "prebuild"
+				"buildType": "app-bundle"
 			},
 			"ios": {
-				"prebuildCommand": "prebuild"
-			}
-		},
-		"test": {
-			"distribution": "internal",
-			"channel": "preview",
-			"env": {
-				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
-				"APP_VARIANT": "beta"
-			},
-			"android": {
-				"buildType": "apk",
-				"prebuildCommand": "prebuild"
-			},
-			"ios": {
-				"simulator": true,
 				"prebuildCommand": "prebuild"
 			}
 		},
@@ -54,11 +36,7 @@
 			"channel": "production",
 			"distribution": "store",
 			"env": {
-				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
-				"APP_VARIANT": "dev"
-			},
-			"android": {
-				"prebuildCommand": "prebuild "
+				"APP_VARIANT": "alpha"
 			},
 			"ios": {
 				"prebuildCommand": "prebuild"
@@ -66,6 +44,12 @@
 		}
 	},
 	"submit": {
-		"production": {}
+		"production": {
+			"android": {
+				"changesNotSentForReview": true,
+				"track": "production"
+			},
+			"ios": {}
+		}
 	}
 }
