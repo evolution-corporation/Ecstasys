@@ -99,8 +99,8 @@ const preValue = {
 };
 const nextValue = {
 	backgroundColor: "rgba(151, 101, 168, 0)",
-	scaleBird: Dimensions.get("window").height > 800 ? 0.35 : 0.2,
-	translateBird: { x: 0, y: Dimensions.get("window").height > 800 ? 60 : -140 },
+	scaleBird: Dimensions.get("window").height > 815 ? 0.35 : 0.2,
+	translateBird: { x: 0, y: Dimensions.get("window").height > 815 ? 60 : -140 },
 	colorTitle: "#3D3D3D",
 	colorDescription: "#3D3D3D",
 	backgroundColorButton: "#9765A8",

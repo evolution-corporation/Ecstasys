@@ -349,7 +349,12 @@ const RootRoutes: FC = () => {
 								top: insets.top,
 							}}
 						>
-							<View style={{ width: "13%", height: "100%" }}>
+							<View
+								style={{
+									width: "13%",
+									height: "100%",
+								}}
+							>
 								{navigation.canGoBack() ? (
 									<Pressable
 										style={{
@@ -364,19 +369,40 @@ const RootRoutes: FC = () => {
 									</Pressable>
 								) : null}
 							</View>
-							<Text
+							<View
 								style={{
-									...gStyle.styles.header,
-									color: "#FFFFFF",
-									textAlignVertical: "center",
-									textAlign: "center",
+									width: "74%",
+									height: "100%",
+									alignItems: "center",
+									justifyContent: "center",
+									paddingHorizontal: 20,
 								}}
-								adjustsFontSizeToFit
-								numberOfLines={2}
 							>
-								{options.title}
-							</Text>
-							<View>{options.headerRight !== undefined ? options.headerRight({}) : null}</View>
+								<Text
+									style={{
+										...gStyle.styles.header,
+										color: "#FFFFFF",
+										textAlignVertical: "center",
+										textAlign: "center",
+									}}
+									adjustsFontSizeToFit
+									numberOfLines={2}
+								>
+									{options.title}
+								</Text>
+							</View>
+
+							<View
+								style={{
+									height: "100%",
+									width: "13%",
+									justifyContent: "center",
+									alignItems: "center",
+									paddingRight: 20,
+								}}
+							>
+								{options.headerRight !== undefined ? options.headerRight({}) : null}
+							</View>
 						</View>
 					);
 				},

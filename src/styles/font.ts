@@ -77,7 +77,6 @@ export const styles = StyleSheet.create({
 		fontSize: 24,
 		fontFamily: Platform.OS === "ios" ? "System" : "Roboto_700Bold",
 		fontWeight: "600",
-		widthMax: "74%",
 		maxHeight: "100%",
 	},
 	description: {

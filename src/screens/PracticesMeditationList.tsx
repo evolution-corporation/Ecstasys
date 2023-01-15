@@ -50,10 +50,13 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 				Request.getCountMeditationsByType("directionalVisualizations").then(count =>
 					setCountPractices(preValue => ({ ...preValue, directionalVisualizations: count }))
 				),
-				new Promise(resolve => {
-					setCountPractices(preValue => ({ ...preValue, basic: Object.keys(BaseMeditation).length }));
-					resolve(undefined);
-				}),
+				Request.getCountMeditationsByType("breathtakingPractice").then(count =>
+					setCountPractices(preValue => ({ ...preValue, breathingPractices: count }))
+				),
+				// new Promise(resolve => {
+				// 	setCountPractices(preValue => ({ ...preValue, basic: Object.keys(BaseMeditation).length }));
+				// 	resolve(undefined);
+				// }),
 			]);
 		})();
 	}, []);
@@ -79,11 +82,17 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 			headerElement={
 				<View
 					style={{
-						flex: 1,
-						paddingHorizontal: 20,
-						alignItems: "center",
-						justifyContent: "space-between",
+						position: "absolute",
+						width: "100%",
+						left: 0,
+						right: 0,
 						flexDirection: "row",
+						justifyContent: "space-between",
+						alignItems: "center",
+						paddingHorizontal: 20,
+					}}
+					onLayout={({ nativeEvent: { layout } }) => {
+						console.log(layout, "prac");
 					}}
 				>
 					<Text style={{ ...gStyle.styles.header, color: "#FFF", width: "auto" }}>
@@ -214,18 +223,18 @@ const CategoryMeditation: {
 		description: "bb340c18-2a8b-4b7b-8250-80a865dca9b4",
 		id: PracticesMeditation.DIRECTIONAL_VISUALIZATIONS,
 	},
-	// {
-	// 	name: "c15d823e-8dd8-4eb7-b9f5-87c9845ac397",
-	// 	image: require("assets/practicesImage/breathingPractices.png"),
-	// 	description: "c54bff96-21eb-4f10-8ad6-090e06f2eef9",
-	// 	id: PracticesMeditation.BREATHING_PRACTICES,
-	// },
 	{
-		name: "0d63a21e-eecc-45cc-9085-86b97c88d713",
-		image: require("assets/practicesImage/basic.png"),
-		description: "ef09ec88-afda-4fef-b68b-02b433919e50",
-		id: PracticesMeditation.BASIC,
+		name: "c15d823e-8dd8-4eb7-b9f5-87c9845ac397",
+		image: require("assets/practicesImage/breathingPractices.png"),
+		description: "c54bff96-21eb-4f10-8ad6-090e06f2eef9",
+		id: PracticesMeditation.BREATHING_PRACTICES,
 	},
+	// {
+	// 	name: "0d63a21e-eecc-45cc-9085-86b97c88d713",
+	// 	image: require("assets/practicesImage/basic.png"),
+	// 	description: "ef09ec88-afda-4fef-b68b-02b433919e50",
+	// 	id: PracticesMeditation.BASIC,
+	// },
 ];
 
 export default PracticesMeditationList;

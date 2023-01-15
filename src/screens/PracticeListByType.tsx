@@ -127,7 +127,7 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 					}}
 				/>
 			)}
-			{height >= 800 && (
+			{height >= 815 && (
 				<ColorButton
 					animationStyle={aStyle.button}
 					styleButton={styles.button}

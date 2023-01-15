@@ -109,7 +109,7 @@ const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation })
 	);
 	return (
 		<View style={styles.background}>
-			{isGreeting || Dimensions.get("window").height <= 800 ? null : (
+			{isGreeting || Dimensions.get("window").height <= 815 ? null : (
 				<Image
 					source={require("./assets/Vector403.png")}
 					style={{
@@ -129,8 +129,8 @@ const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation })
 					<View>
 						<Text style={styles.title}>{i18n.t("3410ac11-a61b-49f7-b7e4-3bbc2998f1c2")}</Text>
 						<Text
-							style={[styles.text, Dimensions.get("window").height < 800 ? { maxHeight: 90 } : { lineHeight: 23.1 }]}
-							adjustsFontSizeToFit={Dimensions.get("window").height < 800}
+							style={[styles.text, Dimensions.get("window").height < 815 ? { maxHeight: 90 } : { lineHeight: 23.1 }]}
+							adjustsFontSizeToFit={Dimensions.get("window").height < 815}
 						>
 							{i18n.t("42ccdb27-d3ef-4a77-89bf-89138155211e")}
 						</Text>
@@ -158,7 +158,7 @@ const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation })
 								paddingTop: 15,
 							}}
 						>
-							{Dimensions.get("window").height > 800 ? dots : null}
+							{Dimensions.get("window").height > 815 ? dots : null}
 						</View>
 					</View>
 				</GestureDetector>
@@ -183,7 +183,7 @@ const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation })
 						<ArrowLeft />
 					</Pressable>
 				)}
-				{Dimensions.get("window").height <= 800 && !isGreeting ? dots : null}
+				{Dimensions.get("window").height <= 815 && !isGreeting ? dots : null}
 				<ColorButton
 					secondItem={<Arrow />}
 					styleButton={styles.buttonNext}

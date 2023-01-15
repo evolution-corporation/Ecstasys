@@ -36,7 +36,7 @@ const NumberInputScreen: RootScreenProps<"InputNumberPhone"> = ({ navigation }) 
 	};
 	return (
 		<Screen backgroundColor={"#9765A8"} styleScreen={{}}>
-			<ViewUserChange animatedStyle={viewUserChangeAnimatedStyle}>
+			<ViewUserChange>
 				<NumberInput
 					onChange={(numberPhone: string, isValidate: boolean) => {
 						NumberPhone.current = { numberPhone, isValidate };
