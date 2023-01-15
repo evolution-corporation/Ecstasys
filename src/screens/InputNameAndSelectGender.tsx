@@ -60,7 +60,7 @@ const InputNameAndSelectGender: RootScreenProps<"InputNameAndSelectGender"> = ({
 				/>
 			</Pressable>
 			<View style={{ position: "absolute", bottom: 0, width: "100%" }}>
-				{Dimensions.get("window").height >= 800 ? (
+				{Dimensions.get("window").height >= 815 ? (
 					<Image
 						source={require("assets/asdjkdsa.png")}
 						style={{ alignSelf: "center", width: 249, height: 229, transform: [{ translateY: 1 }] }}

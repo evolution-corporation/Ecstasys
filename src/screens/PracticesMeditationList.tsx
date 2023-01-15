@@ -21,6 +21,16 @@ import { CategoryCard, UserButton } from "~components/dump";
 import { Request, Storage } from "~api";
 import { useFocusEffect } from "@react-navigation/native";
 import * as BaseMeditation from "src/baseMeditation";
+import { NameExperimentalFunction } from "src/store/reducers/experimental-config";
+import useExperimentalFunction from "src/hooks/use-experimental-function";
+
+//! Experimental
+const BasemeditationList: NameExperimentalFunction[] = [
+	"baseMeditation_dotMeditation",
+	"baseMeditation_mandalaMeditation",
+	"baseMeditation_noseMeditation",
+];
+//! ---
 
 const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) => {
 	const [countPractices, setCountPractices] = useState<{ [key: string]: number | null }>({
@@ -29,6 +39,29 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 		breathingPractices: null,
 		directionalVisualizations: null,
 	});
+
+	//! Experimental
+
+	const DotMeditation = useExperimentalFunction("baseMeditation_dotMeditation");
+	const mandalaMeditation = useExperimentalFunction("baseMeditation_mandalaMeditation");
+	const noseMeditation = useExperimentalFunction("baseMeditation_noseMeditation");
+
+	useEffect(() => {
+		let countBaseMeditation = 0;
+		if (DotMeditation.status) {
+			countBaseMeditation++;
+		}
+		if (mandalaMeditation.status) {
+			countBaseMeditation++;
+		}
+		if (noseMeditation.status) {
+			countBaseMeditation++;
+		}
+		setCountPractices(prevValue => ({ ...prevValue, basic: countBaseMeditation }));
+	}, [DotMeditation.status, mandalaMeditation.status, noseMeditation.status]);
+
+	//! ---
+
 	const [getPaddingTopFunc, setGetPaddingTopFunc] = useState<{
 		f: (width: number) => number;
 	} | null>(null);
@@ -50,10 +83,9 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 				Request.getCountMeditationsByType("directionalVisualizations").then(count =>
 					setCountPractices(preValue => ({ ...preValue, directionalVisualizations: count }))
 				),
-				new Promise(resolve => {
-					setCountPractices(preValue => ({ ...preValue, basic: Object.keys(BaseMeditation).length }));
-					resolve(undefined);
-				}),
+				Request.getCountMeditationsByType("breathtakingPractice").then(count =>
+					setCountPractices(preValue => ({ ...preValue, breathingPractices: count }))
+				),
 			]);
 		})();
 	}, []);
@@ -79,11 +111,17 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 			headerElement={
 				<View
 					style={{
-						flex: 1,
-						paddingHorizontal: 20,
-						alignItems: "center",
-						justifyContent: "space-between",
+						position: "absolute",
+						width: "100%",
+						left: 0,
+						right: 0,
 						flexDirection: "row",
+						justifyContent: "space-between",
+						alignItems: "center",
+						paddingHorizontal: 20,
+					}}
+					onLayout={({ nativeEvent: { layout } }) => {
+						console.log(layout, "prac");
 					}}
 				>
 					<Text style={{ ...gStyle.styles.header, color: "#FFF", width: "auto" }}>
@@ -214,12 +252,12 @@ const CategoryMeditation: {
 		description: "bb340c18-2a8b-4b7b-8250-80a865dca9b4",
 		id: PracticesMeditation.DIRECTIONAL_VISUALIZATIONS,
 	},
-	// {
-	// 	name: "c15d823e-8dd8-4eb7-b9f5-87c9845ac397",
-	// 	image: require("assets/practicesImage/breathingPractices.png"),
-	// 	description: "c54bff96-21eb-4f10-8ad6-090e06f2eef9",
-	// 	id: PracticesMeditation.BREATHING_PRACTICES,
-	// },
+	{
+		name: "c15d823e-8dd8-4eb7-b9f5-87c9845ac397",
+		image: require("assets/practicesImage/breathingPractices.png"),
+		description: "c54bff96-21eb-4f10-8ad6-090e06f2eef9",
+		id: PracticesMeditation.BREATHING_PRACTICES,
+	},
 	{
 		name: "0d63a21e-eecc-45cc-9085-86b97c88d713",
 		image: require("assets/practicesImage/basic.png"),

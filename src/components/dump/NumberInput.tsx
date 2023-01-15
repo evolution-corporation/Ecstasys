@@ -15,7 +15,10 @@ import { useDimensions } from "@react-native-community/hooks";
 const SelectWithDropList = WithDropList<CodePhoneCountryType>();
 
 type CodePhoneCountryType = keyof typeof listCodePhoneCountry;
-const ListCodePhoneCountry = Object.keys(listCodePhoneCountry) as CodePhoneCountryType[];
+const ListCodePhoneCountry = (Object.keys(listCodePhoneCountry) as CodePhoneCountryType[]).filter(name =>
+	["RU", "UA", "OS", "KZ"].includes(name)
+);
+console.log(ListCodePhoneCountry);
 
 const NumberInput: FC<Properties> = properties => {
 	const {
@@ -41,7 +44,7 @@ const NumberInput: FC<Properties> = properties => {
 	return (
 		<>
 			<SelectWithDropList
-				contentDopList={[{ name: i18n.t("RU"), value: "RU" }]}
+				contentDopList={ListCodePhoneCountry.map(name => ({ name: i18n.t(name), value: name }))}
 				onChange={region => {
 					setRegionCode(region);
 				}}
@@ -52,17 +55,16 @@ const NumberInput: FC<Properties> = properties => {
 				renderItem={(name, value) => (
 					<View
 						style={{
-							width: 250,
 							height: 50,
 							flexDirection: "row",
 							justifyContent: "space-between",
 							alignItems: "center",
 						}}
 					>
-						<View style={{ paddingLeft: 19 }}>
+						<View>
 							<DefaultText color={"#555555"}>{listCodePhoneCountry[value]}</DefaultText>
 						</View>
-						<View style={{ flex: 1, paddingLeft: 24 }}>
+						<View>
 							<DefaultText color={"rgba(0, 0, 0, 0.22)"}>{name}</DefaultText>
 						</View>
 					</View>

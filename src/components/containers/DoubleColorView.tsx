@@ -25,16 +25,6 @@ const DoubleColorView: FC<DoubleColorViewProps> = props => {
 	} = props;
 	const { window, screen } = useDimensions();
 
-	useFocusEffect(
-		React.useCallback(() => {
-			// if (Platform.OS === "android") {
-			// 	StatusBar.setStatusBarBackgroundColor("#9765A8", false);
-			// 	StatusBar.setStatusBarTranslucent(false);
-			// }
-			// StatusBar.setStatusBarStyle("light");
-			// StatusBar.setStatusBarHidden(false, "none");
-		}, [])
-	);
 	const insets = useSafeAreaInsets();
 	const mainComponent = (
 		<View style={[{ flex: 1, backgroundColor: "#FFFFFF", paddingTop: 55 + insets.top }, style]} onLayout={onLayout}>
@@ -66,13 +56,16 @@ const DoubleColorView: FC<DoubleColorViewProps> = props => {
 				<Path
 					d={[
 						"M0 0",
-						`${screen.width} 0`,
-						`${screen.width} ${heightViewPart + 55 + heightViewPart2 + insets.top}`,
+						`${window.width} 0`,
+						`${window.width} ${heightViewPart + 55 + heightViewPart2 + insets.top}`,
 						`0 ${heightViewPart + 55 + insets.top}`,
 						`0 0z`,
 					].join(" ")}
 					fill="#9765A8"
 					stroke={"none"}
+					onLayout={event => {
+						console.log(event.nativeEvent.layout, screen.width, "Path");
+					}}
 				/>
 			</Svg>
 			{children}

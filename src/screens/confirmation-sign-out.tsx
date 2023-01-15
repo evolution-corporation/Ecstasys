@@ -30,7 +30,9 @@ const ConfirmationSignOut: RootScreenProps<"ConfirmationSignOut"> = ({ navigatio
 			<CloseCross />
 			<ViewPaddingList paddings={[47, 24, 17, 15, 22]} direction={Direction.Vertical}>
 				<HeaderText color={"#3D3D3D"}>{i18n.t("fc28e1fe-c700-4f9a-bb9f-3f54d9e2da8c")}</HeaderText>
-				<DefaultText color={"#404040"}>{i18n.t("02344de7-fd68-48e8-a1ff-0f5cf831e0c6")}</DefaultText>
+				<DefaultText color={"#404040"} style={{ textAlign: "center" }}>
+					{i18n.t("02344de7-fd68-48e8-a1ff-0f5cf831e0c6")}
+				</DefaultText>
 				<ColorButton
 					onPress={() => dispatch(actions.signOutAccount())}
 					styleText={{ color: "#FFF" }}

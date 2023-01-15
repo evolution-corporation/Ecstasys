@@ -147,7 +147,7 @@ const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigatio
 							{i18n.t("0ead63ec-a460-4688-9096-7310f2a10ed6")}
 						</Text>
 						<SelectColor size={250} widthBorder={30} onChange={c => setColor(c)} initColor={color} />
-						{window.height >= 800 ? (
+						{window.height >= 815 ? (
 							<ColorButton
 								onPress={() => {
 									setEditView(false);

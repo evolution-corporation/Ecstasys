@@ -90,19 +90,21 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 
 	return (
 		<DoubleColorView
-			style={styles.background}
 			heightViewPart={height / 2 - 100}
 			headerElement={
 				<View
 					style={{
 						position: "absolute",
 						width: "100%",
-						left: 20,
+						left: 0,
 						right: 0,
 						flexDirection: "row",
 						justifyContent: "space-between",
 						alignItems: "center",
-						paddingHorizontal: 0,
+						paddingHorizontal: 20,
+					}}
+					onLayout={({ nativeEvent: { layout } }) => {
+						console.log(layout, "dmd");
 					}}
 				>
 					<Text style={{ ...gStyle.styles.header, color: "#FFFFFF", width: "auto" }}>{i18n.t("DMD")}</Text>
@@ -126,7 +128,7 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 				<CarouselPractices
 					data={practiceList}
 					isNoShowFavorite
-					style={{ width: Dimensions.get("window").width, left: -20 }}
+					style={{ width: Dimensions.get("window").width, left: 0 }}
 					onPress={practiceId => {
 						onClick(practiceId);
 					}}
@@ -135,7 +137,7 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 					}}
 				/>
 			)}
-			{height >= 800 && (
+			{height >= 815 && (
 				<ColorButton
 					animationStyle={aStyle.button}
 					styleButton={styles.button}

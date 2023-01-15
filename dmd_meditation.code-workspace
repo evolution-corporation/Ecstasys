@@ -121,7 +121,19 @@
 			"**/.settings": true,
 			"**/.factorypath": true,
 			"**/node_modules": true
-		}
+		},
+		"sqltools.connections": [
+			{
+				"previewLimit": 50,
+				"server": "84.252.131.99",
+				"port": 5432,
+				"driver": "PostgreSQL",
+				"database": "api",
+				"name": "DMD dev",
+				"username": "server",
+				"password": "SIgj8j"
+			}
+		]
 	},
 	"extensions": {
 		"recommendations": [

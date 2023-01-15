@@ -296,6 +296,7 @@ export type RootStackList = {
 	ConfirmationRemoveSubs: undefined;
 	ConfirmChangeSubs: { selectSubscribe: State.SubscribeType };
 	NoHaveInternet: undefined;
+	ExperimentalConfig: undefined;
 };
 
 export type RootScreenProps<T extends keyof RootStackList> = FC<NativeStackScreenProps<RootStackList, T>>;

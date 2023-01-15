@@ -44,25 +44,41 @@ const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
 
 	const _viewabilityConfig = React.useRef<ViewabilityConfig>({
 		viewAreaCoveragePercentThreshold: 100,
-		//itemVisiblePercentThreshold: 100,
+		minimumViewTime: 10,
 		waitForInteraction: false,
 	}).current;
 
 	const _onViewableItemsChangedMinute = React.useRef(({ viewableItems }: { viewableItems: ViewToken[] }) => {
-		if (viewableItems.length > 0) {
-			const mediumIndex = Math.floor(viewableItems.length / 2);
-			if (viewableItems[mediumIndex].index !== null) {
-				setSelectedIndexMinute(viewableItems[mediumIndex].index ?? 0);
+		if (viewableItems.length === 2) {
+			if (viewableItems[0]?.index !== null) {
+				if (viewableItems[0].index === 0) {
+					setSelectedIndexMinute(0);
+				} else {
+					setSelectedIndexSecond(0);
+					setSelectedIndexMinute(minutes.length - 1);
+				}
+			}
+		} else if (viewableItems.length > 0) {
+			const mediumIndex = viewableItems[Math.floor(viewableItems.length / 2)]?.index;
+			if (mediumIndex !== null) {
+				setSelectedIndexMinute(mediumIndex ?? 0);
 			}
 		}
 	}).current;
 
 	const _onViewableItemsChangedSecond = React.useRef(({ viewableItems }: { viewableItems: ViewToken[] }) => {
-		if (viewableItems.length > 0) {
-			const mediumIndex = Math.floor(viewableItems.length / 2);
-
-			if (viewableItems[mediumIndex].index !== null) {
-				setSelectedIndexSecond(viewableItems[mediumIndex].index ?? 0);
+		if (viewableItems.length === 2) {
+			if (viewableItems[0]?.index !== null) {
+				if (viewableItems[0].index === 0) {
+					setSelectedIndexSecond(0);
+				} else {
+					setSelectedIndexSecond(minutes.length - 1);
+				}
+			}
+		} else if (viewableItems.length > 0) {
+			const mediumIndex = viewableItems[Math.floor(viewableItems.length / 2)]?.index;
+			if (mediumIndex !== null) {
+				setSelectedIndexSecond(mediumIndex ?? 0);
 			}
 		}
 	}).current;
@@ -111,7 +127,7 @@ const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
 				onViewableItemsChanged={_onViewableItemsChangedMinute}
 				contentContainerStyle={{
 					paddingTop: styles.numberGeneral.height,
-					paddingBottom: styles.numberGeneral.height,
+					paddingBottom: styles.numberGeneral.height + 10,
 				}}
 				style={[styles.selected, { left: 0 }]}
 				keyExtractor={item => `minute_${item.value}`}
@@ -138,6 +154,7 @@ const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
 							styles.numberGeneral,
 							index === selectedIndexSecond ? styles.numberSelected : styles.numberNoSelectedOne,
 						]}
+						adjustsFontSizeToFit
 					>
 						{item.text}
 					</Text>
@@ -146,7 +163,7 @@ const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
 				onViewableItemsChanged={_onViewableItemsChangedSecond}
 				contentContainerStyle={{
 					paddingTop: styles.numberGeneral.height,
-					paddingBottom: styles.numberGeneral.height,
+					paddingBottom: styles.numberGeneral.height + 10,
 				}}
 				style={[styles.selected, { right: 0 }]}
 				keyExtractor={item => `second_${item.value}`}
@@ -165,7 +182,7 @@ const styles = StyleSheet.create({
 	container: {
 		alignItems: "center",
 		height: "100%",
-		maxHeight: 162,
+		maxHeight: 190,
 		justifyContent: "center",
 		flexDirection: "row",
 		width: 200,
@@ -184,11 +201,11 @@ const styles = StyleSheet.create({
 	},
 	numberNoSelectedOne: {
 		color: "#D3D3D3",
-		fontSize: Platform.OS === "ios" ? 46 : 48,
+		fontSize: Platform.OS === "ios" ? 44 : 48,
 	},
 	numberNoSelectedTwo: {
 		color: "#F4F4F4",
-		fontSize: Platform.OS === "ios" ? 38 : 40,
+		fontSize: Platform.OS === "ios" ? 36 : 40,
 	},
 	br: {
 		height: "100%",
@@ -197,9 +214,9 @@ const styles = StyleSheet.create({
 	selected: {
 		width: 60,
 		top: -0,
-		bottom: -55,
+		bottom: -0,
 		position: "absolute",
-		height: 160,
+		height: 180,
 	},
 });
 

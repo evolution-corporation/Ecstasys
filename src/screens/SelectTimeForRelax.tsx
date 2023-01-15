@@ -47,6 +47,7 @@ const SelectTimeForRelax: RootScreenProps<"SelectTimeForRelax"> = ({ navigation,
 					<SharedElement id={`practice.item.${selectedPractice.id}`} style={styles.image}>
 						<Image source={{ uri: selectedPractice.image }} style={{ width: "100%", height: "100%" }} />
 					</SharedElement>
+					<View style={{ backgroundColor: "rgba(0, 0, 0, 0.2)", ...StyleSheet.absoluteFillObject }} />
 					<View style={[styles.imageContent, { paddingTop: 55 + insets.top }]}>
 						<GradientShowTimeMeditation timeMilliseconds={milliseconds} />
 					</View>

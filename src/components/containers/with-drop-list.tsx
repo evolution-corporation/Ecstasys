@@ -2,7 +2,7 @@
 
 import { useDimensions } from "@react-native-community/hooks";
 import React from "react";
-import { PixelRatio, Pressable, StyleProp, View, ViewStyle } from "react-native";
+import { PixelRatio, Pressable, ScrollView, StyleProp, View, ViewStyle } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import DefaultText from "~components/Text/default-text";
 import CustomModal from "./CustomModal";
@@ -66,14 +66,14 @@ function createDropList<T>() {
 				};
 				setLayoutList(t);
 				if (onOpen) onOpen();
-				rotateChevron.value = "0deg";
+				rotateChevron.value = "180deg";
 				customModalReference.current?.open();
 			});
 		};
 
 		const close = async () => {
 			if (onClose) onClose();
-			rotateChevron.value = "180deg";
+			rotateChevron.value = "0deg";
 			customModalReference.current?.close();
 		};
 
@@ -151,20 +151,27 @@ function createDropList<T>() {
 					onClose={() => close()}
 					style={{
 						backgroundColor: "#FFFFFF",
-						borderBottomLeftRadius: 15,
-						borderBottomRightRadius: 15,
+						borderTopLeftRadius: 20,
+						borderTopRightRadius: 20,
 						position: "absolute",
-						top: layoutList?.y ?? 0,
-						right: layoutList?.right,
-						left: layoutList?.left,
+						bottom: 0,
+						height: window.height / 3,
+						right: 0,
+						left: 0,
+						width: "100%",
 						...gStyle.shadows(2, 3),
-						marginLeft: leftBorderDropList ?? 0,
-						marginRight: rightBorderDropList ?? 0,
+						paddingHorizontal: 20,
 					}}
 				>
-					<ViewPaddingList direction={Direction.Vertical} paddings={1}>
-						{listComponents}
-					</ViewPaddingList>
+					<ScrollView
+						style={{ flex: 1 }}
+						contentContainerStyle={{ paddingTop: 20, paddingBottom: 100 }}
+						showsVerticalScrollIndicator={false}
+					>
+						<ViewPaddingList direction={Direction.Vertical} paddings={1}>
+							{listComponents}
+						</ViewPaddingList>
+					</ScrollView>
 				</CustomModal>
 			</View>
 		);

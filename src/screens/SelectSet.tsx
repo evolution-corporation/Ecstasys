@@ -42,7 +42,7 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 	const insets = useSafeAreaInsets();
 
 	return (
-		<DoubleColorView heightViewPart={133}>
+		<DoubleColorView heightViewPart={133} hideElementVioletPart>
 			<View style={[styles.header, { top: insets.top + 55 }]}>
 				<View style={styles.informationPractice}>
 					<SharedElement id={`practice.item.${selectedRelax.id}`} style={styles.image}>
@@ -64,7 +64,7 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 					style={{ top: -6, marginLeft: 15 }}
 					onPress={() => {
 						const index = Math.floor(Math.random() * setList.length);
-						if (height >= 800) {
+						if (height >= 815) {
 							setSelectedSetIndex(index);
 						} else {
 							appDispatch(actions.setSetForDMD(setList[index]));
@@ -84,10 +84,10 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 					<Pressable
 						style={[
 							styles.renderElement,
-							selectedSetIndex === index && height >= 800 ? { backgroundColor: "#E7DDEC" } : null,
+							selectedSetIndex === index && height >= 815 ? { backgroundColor: "#E7DDEC" } : null,
 						]}
 						onPress={() => {
-							if (height >= 800) {
+							if (height >= 815) {
 								setSelectedSetIndex(index);
 							} else {
 								appDispatch(actions.setSetForDMD(setList[index]));
@@ -96,7 +96,7 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 						}}
 					>
 						<View style={[{ flexDirection: "row", alignItems: "center" }]}>
-							{selectedSetIndex === index && height >= 800 ? (
+							{selectedSetIndex === index && height >= 815 ? (
 								<View
 									style={{
 										width: 56,
@@ -143,8 +143,9 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 				)}
 				keyExtractor={item => item.id}
 				contentContainerStyle={{ paddingTop: heightViewPart2 + 21 }}
+				showsVerticalScrollIndicator={false}
 			/>
-			{height >= 800 && (
+			{height >= 815 && (
 				<ColorButton
 					styleButton={styles.continueButton}
 					styleText={styles.continueButtonText}

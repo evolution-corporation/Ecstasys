@@ -94,7 +94,7 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 						<View style={{ height: 16 }} />
 					)}
 
-					<ViewUserChange animatedStyle={animatedStyleSelectGender}>
+					<ViewUserChange>
 						<TextInput
 							placeholder={i18n.t("b89f2757-8b5e-4a08-b8f8-1bbe87834f3e")}
 							placeholderTextColor={"rgba(231, 221, 236, 1)"}
