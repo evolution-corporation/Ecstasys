@@ -14,6 +14,7 @@ import "./TaskManager";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import "./notification";
+import { printInformationError } from "~tools";
 
 GoogleSignin.configure({
 	webClientId: "878799007977-cj3549ni87jre2rmg4eq0hiolp08igh2.apps.googleusercontent.com",
@@ -36,7 +37,7 @@ const AppCore = () => {
 			}
 		})();
 	}, []);
-	// useAppDispatch()(actions.signOutAccount());
+
 	return (
 		<SafeAreaProvider>
 			<StatusBar backgroundColor={"#9765a8"} style={"light"} />

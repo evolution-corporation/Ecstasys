@@ -19,9 +19,9 @@ function generateConfig(): ExpoConfig {
 		date: toDay.getDate() < 10 ? "0" + toDay.getDate() : toDay.getDate(),
 		month: toDay.getMonth() < 10 ? "0" + toDay.getMonth() : toDay.getMonth(),
 		year: toDay.getFullYear(),
+		hour: toDay.getHours() < 10 ? "0" + toDay.getHours() : toDay.getHours(),
 	};
-	let versionCode = Number(`${date.year}${date.month}${date.date}0`);
-	versionCode += 0;
+	let versionCode = Number(`${date.year}${date.month}${date.date}${date.hour}`);
 	return {
 		jsEngine: "hermes",
 		name: appName,

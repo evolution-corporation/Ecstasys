@@ -1,6 +1,7 @@
 /** @format */
 import * as FileSystem from "expo-file-system";
 import { isNicknameValidate } from "src/validators";
+import { Request } from "~api";
 
 export function createArrayLength(len: number): null[] {
 	const arr = [];
@@ -70,4 +71,18 @@ export async function convertedImageURLInBase64(url: string): Promise<string> {
 	return await FileSystem.readAsStringAsync(uri, {
 		encoding: "base64",
 	});
+}
+
+export function printInformationError(name: string, error: Error, payload: string) {
+	if (__DEV__) {
+		console.error(
+			`${new Date().toISOString()}: \nName \n\t${error.name} \nMessage:\n\t${error.message} \nCause: \n\t${
+				error.cause ?? "Error not have cause"
+			} \nPayload: \n\t${payload.replaceAll("\n", "\n\t")}	\nStack: \n${error.stack?.slice(
+				error.stack.search(/\s+at/g)
+			)}`
+		);
+	} else {
+		Request.sendErrorInformation(name, error, payload);
+	}
 }
