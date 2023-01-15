@@ -32,6 +32,16 @@
 				"prebuildCommand": "prebuild"
 			}
 		},
+		"productionApk": {
+			"channel": "production",
+			"distribution": "store",
+			"env": {
+				"APP_VARIANT": "alpha"
+			},
+			"android": {
+				"buildType": "apk"
+			}
+		},
 		"production": {
 			"channel": "production",
 			"distribution": "store",

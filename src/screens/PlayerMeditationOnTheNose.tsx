@@ -80,7 +80,9 @@ const PlayerMeditationOnTheNose: RootScreenProps<"PlayerMeditationOnTheNose"> = 
 		});
 		if (isNeedVoice && statusIsLoaded.current) {
 			audioVoice.current
-				.loadAsync(require("assets/BaseMeditaionAssets/Audio/01a14e9b-d185-43a7-a4a9-93331efee380.mp3"))
+				.loadAsync({
+					uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/baseSound/01a14e9b-d185-43a7-a4a9-93331efee380.mp3",
+				})
 				.then(() => {
 					statusIsLoaded.current = false;
 					startTimer();
