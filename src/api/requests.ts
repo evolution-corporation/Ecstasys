@@ -470,3 +470,23 @@ export async function removeUserImage(firebaseTokenToken?: string): Promise<void
 		throw new Error(`Server Error in getSubscribeUserInformation: ${await requestServer.text()}`);
 	}
 }
+
+export async function sendErrorInformation(name: string, error: Error, payload: string, firebaseTokenToken?: string) {
+	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
+	fetch("http://dev.hades.evodigital.one/error", {
+		method: "POST",
+		headers: {
+			Authorization: firebaseTokenToken,
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			userId: auth().currentUser?.uid ?? null,
+			errorName: name,
+			errorPayload: `${error.name}: ${error.message} \nCause: \n\t${
+				error.cause ?? "Error not have cause"
+			} \nPayload: \n\t${payload.replaceAll("\n", "\n\t")}	\nStack: \n\t${error.stack?.slice(
+				error.stack.indexOf("at")
+			)}`,
+		}),
+	});
+}

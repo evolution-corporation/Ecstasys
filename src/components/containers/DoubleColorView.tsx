@@ -63,9 +63,6 @@ const DoubleColorView: FC<DoubleColorViewProps> = props => {
 					].join(" ")}
 					fill="#9765A8"
 					stroke={"none"}
-					onLayout={event => {
-						console.log(event.nativeEvent.layout, screen.width, "Path");
-					}}
 				/>
 			</Svg>
 			{children}

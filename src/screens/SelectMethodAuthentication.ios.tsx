@@ -57,7 +57,6 @@ const SelectMethodAuthentication: RootScreenProps<"SelectMethodAuthentication"> 
 			await auth().signInWithCredential(appleCredential);
 		} catch (error) {
 			alert(error);
-			console.log(error);
 			setIsLoading(false);
 			if (error instanceof Error && error.message === "Sign in action cancelled") {
 				setIsLoading(false);

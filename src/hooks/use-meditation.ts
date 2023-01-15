@@ -56,7 +56,6 @@ const useMeditation = (source: [AVPlaybackSource, AVPlaybackSource], currentTime
 					audioStatus[0].durationMillis ?? 0,
 					audioStatus[1].durationMillis ?? 0,
 				];
-				console.log({ lengthFirstAudio, lengthSecondAudio, milliseconds, isPlay });
 				// await audioList[0].pauseAsync();
 				// await audioList[1].pauseAsync();
 				if (lengthFirstAudio > milliseconds) {

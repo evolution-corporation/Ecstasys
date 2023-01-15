@@ -103,9 +103,6 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 						alignItems: "center",
 						paddingHorizontal: 20,
 					}}
-					onLayout={({ nativeEvent: { layout } }) => {
-						console.log(layout, "dmd");
-					}}
 				>
 					<Text style={{ ...gStyle.styles.header, color: "#FFFFFF", width: "auto" }}>{i18n.t("DMD")}</Text>
 					<UserButton onPress={() => navigation.navigate("Profile")} />

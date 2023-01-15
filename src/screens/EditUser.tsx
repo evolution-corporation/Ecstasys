@@ -39,7 +39,6 @@ const EditUser: RootScreenProps<"EditUser"> = ({ navigation }) => {
 				result: "Resolve",
 			});
 		} catch (error) {
-			console.log(error);
 			navigation.navigate("MessageLog", {
 				message: !!error.message ? error.message : "Упс...",
 				result: "Reject",

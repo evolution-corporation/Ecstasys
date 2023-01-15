@@ -69,7 +69,6 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 	React.useEffect(() => {
 		const exit = event => {
 			if (event.data.action.type === "GO_BACK") {
-				console.log(Status[statusPlayer]);
 				if (statusPlayer !== Status.Loading && statusPlayer !== Status.Init) {
 					event.preventDefault();
 					navigation.navigate("NoExitMeditation");

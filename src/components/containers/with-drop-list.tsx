@@ -98,34 +98,7 @@ function createDropList<T>() {
 		});
 		const insets = useSafeAreaInsets();
 		return (
-			<View
-				ref={viewReference}
-				onLayout={({ nativeEvent: { layout } }) => {
-					// setImmediate(() =>
-					// 	viewReference.current?.measureInWindow((x, y, width, height) => {
-					// 		let left: undefined | number;
-					// 		let right: undefined | number;
-					// 		console.log({ x, y, width, height });
-					// 		if (leftBorderDropList !== undefined) {
-					// 			left = x / PixelRatio.get();
-					// 		}
-					// 		if (rightBorderDropList !== undefined) {
-					// 			right = x / PixelRatio.get() - width;
-					// 		}
-					// 		const t = {
-					// 			y: y / PixelRatio.get() + height + insets.top,
-					// 			left: left === undefined ? undefined : left + insets.left,
-					// 			right: right === undefined ? undefined : right + insets.right,
-					// 		};
-					// 		console.log(t);
-					// 		setLayoutList(t);
-					// 		if (onOpen) onOpen();
-					// 		rotateChevron.value = "0deg";
-					// 		customModalReference.current?.open();
-					// 	})
-					// );
-				}}
-			>
+			<View ref={viewReference}>
 				<Pressable onPress={() => open()}>
 					<View
 						style={[
