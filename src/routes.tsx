@@ -326,6 +326,11 @@ const RootRoutes: FC = () => {
 						component={Screens.ConfirmChangeSubs}
 						options={{ presentation: "transparentModal", headerShown: false }}
 					/>
+					<RootNavigation.Screen
+						name={"ExperimentalConfig"}
+						component={Screens.ExperimentalConfig}
+						options={{ presentation: "transparentModal", headerShown: false }}
+					/>
 				</>
 			);
 		}

@@ -2,7 +2,7 @@
 import i18n from "~i18n";
 
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Switch } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Switch, Pressable } from "react-native";
 import * as MailComposer from "expo-mail-composer";
 
 import gStyles from "~styles";
@@ -15,6 +15,7 @@ import { RootScreenProps } from "~types";
 import { StatusBar } from "expo-status-bar";
 
 import { version } from "package.json";
+import DefaultText from "~components/Text/default-text";
 
 const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 	const appDispatch = useAppDispatch();
@@ -45,13 +46,32 @@ const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 			<TouchableOpacity
 				style={styles.button}
 				onPress={() => {
-					navigation.navigate("ConfirmationSignOut")
+					navigation.navigate("ConfirmationSignOut");
 				}}
 			>
 				<LogOut />
 				<Text style={styles.buttonText}>{i18n.t("c9bcb9a8-e59c-4ee5-97f1-94dae753a716")}</Text>
 			</TouchableOpacity>
-			<Text style={{ position: "absolute", bottom: 20, color: "#FFFFFF", right: 0 }}>{version}</Text>
+			<View
+				style={{
+					position: "absolute",
+					bottom: 20,
+					right: 20,
+					left: 20,
+					flexDirection: "row",
+					justifyContent: "space-between",
+					alignItems: "center",
+				}}
+			>
+				<Pressable
+					onPress={() => {
+						navigation.navigate("ExperimentalConfig");
+					}}
+				>
+					<DefaultText color={"#FFFFFF"}>{i18n.t("cf2785ca-7d89-4ee5-b494-82c76175f04b")}</DefaultText>
+				</Pressable>
+				<DefaultText color={"#FFFFFF"}>{version}</DefaultText>
+			</View>
 		</Screen>
 	);
 };
