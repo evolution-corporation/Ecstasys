@@ -15,7 +15,6 @@ const useBackgroundSound = (shouldPlay: boolean) => {
 	const audio = React.useRef<Audio.Sound>();
 
 	React.useEffect(() => {
-		console.log({ volume });
 		audio.current?.getStatusAsync().then(status => {
 			if (status.isLoaded) {
 				audio.current?.setVolumeAsync(volume);

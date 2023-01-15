@@ -38,7 +38,6 @@ export const addChangedInformationUser = createAsyncThunk<
 		lastCheckNicknameAndResult = [new Date(), (await Request.getUserByNickname(nickname)) === null];
 	}
 	if (image === null) image = "https://storage.yandexcloud.net/dmdmeditationimage/users/NoUserImage.png";
-	console.log(image);
 	return {
 		birthday: birthday !== undefined ? birthday.toISOString() : undefined,
 		displayName,

@@ -17,10 +17,6 @@ const NoExitMeditation: RootScreenProps<"NoExitMeditation"> = ({ navigation, rou
 
 	const removeLastScreen = () => {
 		navigation.pop(2);
-		// const navigationState = navigation.getState();
-		// const lastScreen = navigationState.routes[navigationState.routes.length - 3];
-		// console.log(lastScreen.name);
-		// navigation.navigate("PracticeListByType", { typePractices: PracticesMeditation.BASIC });
 	};
 
 	return (

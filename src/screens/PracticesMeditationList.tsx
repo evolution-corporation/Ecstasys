@@ -120,9 +120,6 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 						alignItems: "center",
 						paddingHorizontal: 20,
 					}}
-					onLayout={({ nativeEvent: { layout } }) => {
-						console.log(layout, "prac");
-					}}
 				>
 					<Text style={{ ...gStyle.styles.header, color: "#FFF", width: "auto" }}>
 						{i18n.t("c08bb9d1-1769-498e-acf5-8c37c18bed05")}

@@ -18,7 +18,6 @@ type CodePhoneCountryType = keyof typeof listCodePhoneCountry;
 const ListCodePhoneCountry = (Object.keys(listCodePhoneCountry) as CodePhoneCountryType[]).filter(name =>
 	["RU", "UA", "OS", "KZ"].includes(name)
 );
-console.log(ListCodePhoneCountry);
 
 const NumberInput: FC<Properties> = properties => {
 	const {
