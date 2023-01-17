@@ -31,7 +31,7 @@ export { default as RelaxListForDMD } from "./RelaxListForDMD";
 export { default as SelectSet } from "./SelectSet";
 export { default as IntroAboutApp } from "./IntroAboutApp";
 export { default as IntroAboutYou } from "./IntroAboutYou";
-export { default as PlayerForPractice } from "./PlayerForPractice";
+export { default as PlayerForPractice } from "./player-for-practice";
 export { default as PlayerMeditationOnTheMandala } from "./PlayerMeditationOnTheMandala";
 export { default as SelectTimeForBase } from "./SelectTimeForBase";
 export { default as PlayerMeditationOnTheNose } from "./PlayerMeditationOnTheNose";

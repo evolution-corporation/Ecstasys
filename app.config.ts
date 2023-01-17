@@ -86,6 +86,7 @@ function generateConfig(): ExpoConfig {
 					},
 				},
 			],
+			"expo-community-flipper",
 		],
 		extra: {
 			eas: {

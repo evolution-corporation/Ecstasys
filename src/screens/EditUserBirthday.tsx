@@ -7,9 +7,10 @@ import Tools from "~core";
 import { RootScreenProps } from "~types";
 import i18n from "~i18n";
 import useUserInformation from "src/hooks/use-user-information";
+import {useDimensions} from "@react-native-community/hooks";
 
 const EditUserBirthday: RootScreenProps<"EditUserBirthday"> = ({ navigation }) => {
-	const { height, width } = useWindowDimensions();
+	const { window: { width, height } } = useDimensions()
 	const position = useRef<Animated.Value>(new Animated.Value(0)).current;
 
 	const { birthday, setValue } = useUserInformation(true, false);
@@ -144,6 +145,7 @@ const styles = StyleSheet.create({
 	button: {
 		marginTop: 43,
 		paddingHorizontal: 25,
+		marginHorizontal: 20
 	},
 });
 

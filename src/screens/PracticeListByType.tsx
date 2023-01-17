@@ -20,10 +20,11 @@ import { MeditationOnTheMandala, MeditationOnTheNose, PlayerMeditationDot } from
 
 import * as Instruction from "src/instruction";
 import useIsActivateSubscribe from "src/hooks/use-is-activate-subscribe";
+import useExperimentalFunction from "src/hooks/use-experimental-function";
+import {useDimensions} from "@react-native-community/hooks";
 
 const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navigation }) => {
 	const { typePractices } = route.params;
-	const { height } = useWindowDimensions();
 	const selectedPracticeId = React.useRef<string | null>(null);
 	const [practiceList, setPracticeList] = useState<State.Practice[]>([]);
 	const dispatch = useAppDispatch();
@@ -35,6 +36,11 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 	};
 	const isSubscribe = useIsActivateSubscribe();
 
+	//! Experimental
+	const DotMeditation = useExperimentalFunction("baseMeditation_dotMeditation");
+	const mandalaMeditation = useExperimentalFunction("baseMeditation_mandalaMeditation");
+	const noseMeditation = useExperimentalFunction("baseMeditation_noseMeditation");
+	//! ---
 	React.useLayoutEffect(() => {
 		navigation.setOptions({ title: i18n.t(typePractices) });
 		const init = async () => {
@@ -63,12 +69,14 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 					...newListPractice.map(item => ({ ...item, isPermission: item.isNeedSubscribe ? isSubscribe : true })),
 				]);
 			} else {
-				setPracticeList(
-					[MeditationOnTheMandala, MeditationOnTheNose, PlayerMeditationDot].map(item => ({
-						...item,
-						isPermission: true,
-					}))
-				);
+				//! Experimental
+				const listPractice: State.Practice[] = [];
+				console.log("test");
+				if (DotMeditation.status) listPractice.push({ ...PlayerMeditationDot, isPermission: true });
+				if (mandalaMeditation.status) listPractice.push({ ...MeditationOnTheMandala, isPermission: true });
+				if (noseMeditation.status) listPractice.push({ ...MeditationOnTheNose, isPermission: true });
+				setPracticeList(listPractice);
+				//! ----
 			}
 		};
 		init();
@@ -176,6 +184,7 @@ const styles = StyleSheet.create({
 		height: 45,
 		marginTop: 20,
 		marginBottom: 30,
+		marginHorizontal: 20
 	},
 	buttonText: {
 		color: "#FFFFFF",

@@ -27,3 +27,19 @@ export class RequestError extends Error {
 			: "" + "\n" + this.message;
 	}
 }
+
+// export class MeditationError extends Error {
+// 	protected payload?: string;
+
+// 	constructor(name: string, payload: string, options?: ErrorOptions) {
+// 		super(name + payload, options);
+// 		this.payload = payload;
+// 		printInformationError(name, this, payload);
+// 	}
+// }
+
+// export class MeditationNotFoundError extends MeditationError {
+// 	constructor(payload: string, options?: ErrorOptions) {
+// 		super("Meditation not found", payload, options);
+// 	}
+// }
