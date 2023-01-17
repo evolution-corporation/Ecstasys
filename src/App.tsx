@@ -40,7 +40,7 @@ const AppCore = () => {
 
 	return (
 		<SafeAreaProvider>
-			{/*<StatusBar backgroundColor={"#9765a8"} style={"light"} />*/}
+			<StatusBar backgroundColor={"#9765a8"} style={"light"} />
 			<GestureHandlerRootView style={{ flex: 1 }}>
 				<NavigationContainer>
 					<RootRoutes />

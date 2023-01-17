@@ -76,6 +76,7 @@ const InputNameAndSelectGender: RootScreenProps<"InputNameAndSelectGender"> = ({
 						paddingHorizontal: 20,
 						paddingVertical: 27,
 						alignItems: "center",
+						paddingBottom: 50,
 					}}
 				>
 					<Text style={{ fontSize: 20, ...gStyle.font("700"), textAlign: "center", color: "#3D3D3D" }}>

@@ -77,7 +77,7 @@ export const SelectImageButton = forwardRef<Reference, SelectImageButtonProperti
 		<TouchableOpacity
 			{...properties}
 			style={[
-				properties.style,
+				// properties.style,
 				{
 					overflow: "hidden",
 					alignItems: "center",
@@ -89,6 +89,7 @@ export const SelectImageButton = forwardRef<Reference, SelectImageButtonProperti
 					borderWidth: 3,
 					backgroundColor: "#E7DDEC",
 				},
+				properties.style
 			]}
 			onPress={() => {
 				openPhotoLibrary();
