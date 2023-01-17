@@ -27,7 +27,7 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 	const [isAccept, setIsAccept] = useState<boolean>(false);
 	// const modalRef = useRef<ElementRef<typeof CustomModal>>(null);
 
-	const _transporteeYButton = useSharedValue(300);
+	const _transporteeYButton = useSharedValue(0);
 	const aStyle = {
 		button: useAnimatedStyle(() => ({
 			transform: [
@@ -67,20 +67,22 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 			return [false, null, null, null];
 		}
 	});
-	useEffect(() => {
-		if (
-			(selectedSubscribeType !== null && selectedSubscribeType !== subsType) ||
-			(subsType === null && selectedSubscribeType !== null)
-		) {
-			_transporteeYButton.value = 0;
-		}
-	}, [selectedSubscribeType, subsType]);
+	// useEffect(() => {
+	// 	if (
+	// 		(selectedSubscribeType !== null && selectedSubscribeType !== subsType) ||
+	// 		(subsType === null && selectedSubscribeType !== null) || (subsType !== null && !isActiveSubs)
+	// 	) {
+	// 		_transporteeYButton.value = 0;
+	// 	}
+	// }, [selectedSubscribeType, subsType,isActiveSubs]);
 	const editSubscribe = () => {
 		if (selectedSubscribeType !== null) {
 			if (subsType === null) {
-				navigation.navigate("Payment", { selectSubscribe: selectedSubscribeType });
-			} else if (selectedSubscribeType !== subsType) {
+				navigation.navigate("Payment", { selectSubscribe: SubscribeType.WEEK });
+			} else if (selectedSubscribeType !== subsType && subsType !== SubscribeType.WEEK) {
 				navigation.navigate("ConfirmChangeSubs", { selectSubscribe: selectedSubscribeType });
+			} else {
+				navigation.navigate("Payment", { selectSubscribe: selectedSubscribeType });
 			}
 		}
 	};

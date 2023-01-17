@@ -89,7 +89,7 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 					Object.entries(practiceList[practiceIndex]).filter(([key, value]) => key !== "isPermission")
 				);
 				dispatch(actions.setPractice(practiceList[practiceIndex]));
-				if (practiceList[practiceIndex].type === "RELAXATION") {
+				if (practiceList[practiceIndex].type === "RELAXATION" || practiceList[practiceIndex].type === "BREATHING_PRACTICES") {
 					navigation.navigate("SelectTimeForRelax", { selectedPractice: practiceList[practiceIndex] });
 				} else if (typePractices === PracticesMeditation.BASIC) {
 					navigation.navigate("SelectTimeForBase", { selectedPractice: practiceList[practiceIndex] });
@@ -135,7 +135,8 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 					}}
 				/>
 			)}
-			{height >= 815 && (
+			{height >= 500 && (
+
 				<ColorButton
 					animationStyle={aStyle.button}
 					styleButton={styles.button}
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
 	background: {
 		paddingHorizontal: 20,
 		justifyContent: "space-between",
-		flex: 1,
+		width: "100%"
 	},
 	carouselMeditation: {
 		marginHorizontal: -20,
@@ -184,7 +185,7 @@ const styles = StyleSheet.create({
 		height: 45,
 		marginTop: 20,
 		marginBottom: 30,
-		marginHorizontal: 20
+
 	},
 	buttonText: {
 		color: "#FFFFFF",

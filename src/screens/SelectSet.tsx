@@ -146,20 +146,7 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 				contentContainerStyle={{ paddingTop: heightViewPart2 + 21, paddingBottom: 200 }}
 				showsVerticalScrollIndicator={false}
 			/>
-			{height >= 815 && (
-				<ColorButton
-					styleButton={styles.continueButton}
-					styleText={styles.continueButtonText}
-					onPress={() => {
-						if (selectedSetIndex !== null) {
-							appDispatch(actions.setSetForDMD(setList[selectedSetIndex]));
-							navigation.navigate("DMDSettingNotification", { selectedRelax, selectSet: setList[selectedSetIndex] });
-						}
-					}}
-				>
-					{i18n.t("1a2b0df6-fa67-4f71-8fd4-be1f0a576439")}
-				</ColorButton>
-			)}
+
 		</DoubleColorView>
 	);
 };

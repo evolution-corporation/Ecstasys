@@ -34,7 +34,7 @@ const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 				style={styles.button}
 				onPress={() => {
 					MailComposer.composeAsync({
-						recipients: ["miner.hard00@gmail.com"],
+						recipients: ["info@evodigital.one"],
 						subject: i18n.t("d9d63e50-f4af-441d-ab8c-7df1ad8adda7"),
 					});
 				}}
