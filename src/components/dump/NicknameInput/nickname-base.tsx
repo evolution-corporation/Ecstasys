@@ -160,7 +160,7 @@ const NicknameInput = forwardRef<Reference, Props>((properties, reference) => {
 					</View>
 				</View>
 			</ViewUserChange>
-			{StatusCheckText === undefined ? undefined : <DefaultText color={"#E7DDEC"}>{StatusCheckText}</DefaultText>}
+			{StatusCheckText === undefined ? undefined : <DefaultText color={"#E7DDEC"} style={{ textAlign: "center" }}>{StatusCheckText}</DefaultText>}
 		</>
 	);
 });

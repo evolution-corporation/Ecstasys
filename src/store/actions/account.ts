@@ -144,7 +144,8 @@ export const signOutAccount = createAsyncThunk(AccountAction.signOut, async () =
 		if ((await GoogleSignin.getCurrentUser()) !== null) {
 			await GoogleSignin.signOut();
 		}
-	} catch (error) {}
+	} catch (error) {
+	}
 });
 
 export const signInAccount = createAsyncThunk<

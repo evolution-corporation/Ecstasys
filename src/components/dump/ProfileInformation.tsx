@@ -11,6 +11,7 @@ import i18n from "~i18n";
 import SelectImageButton from "./Buttons/SelectImage";
 import useIsActivateSubscribe from "src/hooks/use-is-activate-subscribe";
 import { developmentConfig } from "src/read-config";
+import {actions} from "~store";
 
 interface Props extends RN.ViewProps {
 	displayName?: string;
@@ -29,20 +30,35 @@ const ProfileInformation: React.FC<Props> = props => {
 		? useIsActivateSubscribe()
 		: subscribeInformation !== undefined && subscribeInformation.endSubscribe > new Date();
 	const refSelectImage = React.useRef<React.ElementRef<typeof SelectImageButton>>(null);
+
 	React.useEffect(() => {
 		refSelectImage.current?.setImage(image);
 	}, [image]);
 
+
+
 	return (
 		<RN.View style={styles.container}>
-			<RN.Image
-				source={{
-					uri: image,
-				}}
-				style={styles.image}
-				resizeMethod={"resize"}
-				// resizeMode={"contain"}
-			/>
+			{
+				onChangeImage === undefined ? <RN.Image
+					source={{
+						uri: image,
+					}}
+					style={styles.image}
+					resizeMethod={"resize"}
+					// resizeMode={"contain"}
+				/> : <SelectImageButton
+					ref={refSelectImage}
+					style={styles.image}
+					onChangeImage={base64 => {
+						if (base64) {
+							console.log("test")
+							onChangeImage( base64 );
+						}
+					}}
+				/>
+			}
+
 			<RN.View style={styles.backgroundInfo}>
 				{displayName && <RN.Text style={styles.displayName}>{displayName}</RN.Text>}
 				<RN.Text style={styles.nameSubscribe}>

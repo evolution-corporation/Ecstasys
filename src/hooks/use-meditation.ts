@@ -2,6 +2,25 @@
 
 import React from "react";
 import { AVPlaybackSource, Audio } from "expo-av";
+import * as Notification from "expo-notifications";
+import {Platform} from "react-native";
+
+const NotificationEndMeditation = () =>
+	Notification.scheduleNotificationAsync({
+		identifier: "EndMeditation",
+		content: {
+			title: "Медитация подошла к концу",
+			body: "Благодарим за уделенное время",
+			sound: "bells.wav",
+			vibrate: [1],
+			priority: Notification.AndroidNotificationPriority.MAX,
+		},
+		trigger: {
+			seconds: 1,
+			channelId: "endMeditation"
+		}
+	})
+
 
 const useMeditation = (source: [AVPlaybackSource, AVPlaybackSource], currentTime: number) => {
 	const audioList = React.useRef<[Audio.Sound, Audio.Sound] | [Audio.Sound]>(
@@ -84,6 +103,7 @@ const useMeditation = (source: [AVPlaybackSource, AVPlaybackSource], currentTime
 		}
 	};
 
+
 	React.useEffect(() => {
 		if (audioList.length === 1) {
 			audioList[0].setOnPlaybackStatusUpdate(status => {
@@ -106,10 +126,22 @@ const useMeditation = (source: [AVPlaybackSource, AVPlaybackSource], currentTime
 			playsInSilentModeIOS: true,
 		});
 
+		Notification.setNotificationHandler({
+			handleNotification: async () => ({
+				shouldShowAlert: false,
+				shouldPlaySound: true,
+				shouldSetBadge: false,
+			}),
+		});
 		const init = async () => {
 			if (audioList.length === 1) {
 				const status = await audioList[0].getStatusAsync();
 				if (!status.isLoaded) await audioList[0].loadAsync(Array.isArray(source) ? source[0] : source, {});
+				audioList[0].setOnPlaybackStatusUpdate((statusOfSubscribe) => {
+					if (statusOfSubscribe.isLoaded && statusOfSubscribe.didJustFinish) {
+						NotificationEndMeditation();
+					}
+				})
 			} else if (audioList.length === 2 && Array.isArray(source)) {
 				const statusFirst = await audioList[0].getStatusAsync();
 				if (!statusFirst.isLoaded) await audioList[0].loadAsync(source[0], {});
@@ -121,10 +153,19 @@ const useMeditation = (source: [AVPlaybackSource, AVPlaybackSource], currentTime
 						audioList[1].playAsync();
 					}
 				});
+				audioList[1].setOnPlaybackStatusUpdate((statusOfSubscribe) => {
+					if (statusOfSubscribe.isLoaded && statusOfSubscribe.didJustFinish) {
+						NotificationEndMeditation();
+					}
+				})
 			}
 		};
 
 		init();
+
+		return () => {
+			Notification.cancelScheduledNotificationAsync("EndMeditation")
+		}
 	}, []);
 
 	return { play, pause, setPosition, isLoading: isLoaded[0] && isLoaded[1], stop };
