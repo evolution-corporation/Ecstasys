@@ -8,6 +8,13 @@ import type { useAppSelector, useAppDispatch } from "./store";
 import { ImageSourcePropType } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
+export enum TypeViewContent {
+	Image,
+	Code,
+}
+
+export type ViewContent = [TypeViewContent.Image, ImageSourcePropType] | [TypeViewContent.Code, string];
+
 /** Пол пользователя */
 export enum Gender {
 	/** Мужской */
@@ -131,6 +138,7 @@ export namespace State {
 		audio?: string;
 		isNeedSubscribe: boolean;
 		length: number;
+		viewContent?: ViewContent;
 	}
 
 	export interface BasePractice {

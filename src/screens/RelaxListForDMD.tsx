@@ -19,9 +19,9 @@ import { StatusBar } from "expo-status-bar";
 import gStyle from "~styles";
 import useIsActivateSubscribe from "src/hooks/use-is-activate-subscribe";
 import { developmentConfig } from "src/read-config";
+import {useDimensions} from "@react-native-community/hooks";
 
 const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => {
-	const { height } = useWindowDimensions();
 	const selectedPracticeId = React.useRef<string | null>(null);
 	const [practiceList, setPracticeList] = useState<State.Practice[]>([]);
 	const dispatch = useAppDispatch();
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
 		fontSize: height * 0.018,
 		...Tools.gStyle.font("400"),
 		textAlign: "center",
-		color: "rgba(255, 255, 255, 0.8)",
+		color: "rgba(255, 255, 255, 1)",
 		marginBottom: 17,
 		marginTop: height * 0.0256,
 	},

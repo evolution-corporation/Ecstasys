@@ -107,7 +107,9 @@ const PlayerMeditationOnTheMandala: RootScreenProps<"PlayerMeditationOnTheMandal
 		});
 		if (isNeedVoice && statusIsLoaded.current) {
 			audioVoice.current
-				.loadAsync(require("assets/BaseMeditaionAssets/Audio/ce3cbe90-fb99-4437-bcaa-e4b8eae0d0dc.mp3"))
+				.loadAsync({
+					uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/baseSound/ce3cbe90-fb99-4437-bcaa-e4b8eae0d0dc.mp3",
+				})
 				.then(() => {
 					statusIsLoaded.current = false;
 					startTimer();

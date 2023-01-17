@@ -1,28 +1,28 @@
 /** @format */
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {
+	Dimensions,
+	Image,
+	ImageSourcePropType,
+	ScrollView,
+	StyleSheet,
 	Text,
 	TouchableOpacity,
-	Image,
-	StyleSheet,
 	View,
-	ScrollView,
-	ImageSourcePropType,
-	Dimensions,
 } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
+import {FlatList} from "react-native-gesture-handler";
 import i18n from "~i18n";
 import gStyle from "~styles";
-import { DoubleColorView } from "~components/containers";
+import {DoubleColorView} from "~components/containers";
 import Tools from "~core";
-import { GeneralCompositeScreenProps, PracticesMeditation } from "~types";
-import { CategoryCard, UserButton } from "~components/dump";
-import { Request, Storage } from "~api";
-import { useFocusEffect } from "@react-navigation/native";
-import * as BaseMeditation from "src/baseMeditation";
-import { NameExperimentalFunction } from "src/store/reducers/experimental-config";
-import useExperimentalFunction from "src/hooks/use-experimental-function";
+import {GeneralCompositeScreenProps, PracticesMeditation} from "~types";
+import {CategoryCard, UserButton} from "~components/dump";
+import {Request, Storage} from "~api";
+import {useFocusEffect} from "@react-navigation/native";
+import {NameExperimentalFunction} from "src/store/reducers/experimental-config";
+import useBaseMeditationInformation from "../hooks/use-base-meditation-information.experimental";
+import Animated, {FadeIn} from "react-native-reanimated";
 
 //! Experimental
 const BasemeditationList: NameExperimentalFunction[] = [
@@ -31,6 +31,38 @@ const BasemeditationList: NameExperimentalFunction[] = [
 	"baseMeditation_noseMeditation",
 ];
 //! ---
+
+const CategoryMeditation: {
+	name: string;
+	image: ImageSourcePropType;
+	description: string;
+	id: PracticesMeditation;
+}[] = [
+	{
+		name: "71277706-2f5d-4ce8-bf26-d680176d3fb8",
+		image: require("assets/practicesImage/relaxation.png"),
+		description: "ec0c8421-03d1-4755-956d-66a84d81d74a",
+		id: PracticesMeditation.RELAXATION,
+	},
+	{
+		name: "8566b563-b307-4943-ab52-d51c7e806a4c",
+		image: require("assets/practicesImage/directionalVisualizations.png"),
+		description: "bb340c18-2a8b-4b7b-8250-80a865dca9b4",
+		id: PracticesMeditation.DIRECTIONAL_VISUALIZATIONS,
+	},
+	{
+		name: "c15d823e-8dd8-4eb7-b9f5-87c9845ac397",
+		image: require("assets/practicesImage/breathingPractices.png"),
+		description: "c54bff96-21eb-4f10-8ad6-090e06f2eef9",
+		id: PracticesMeditation.BREATHING_PRACTICES,
+	},
+	{
+		name: "0d63a21e-eecc-45cc-9085-86b97c88d713",
+		image: require("assets/practicesImage/basic.png"),
+		description: "ef09ec88-afda-4fef-b68b-02b433919e50",
+		id: PracticesMeditation.BASIC,
+	},
+];
 
 const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) => {
 	const [countPractices, setCountPractices] = useState<{ [key: string]: number | null }>({
@@ -41,71 +73,62 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 	});
 
 	//! Experimental
+	const baseMeditation = useBaseMeditationInformation((count) => {
+		setCountPractices(previousValue => ({ ...previousValue, basic: count  }));
+	})
 
-	const DotMeditation = useExperimentalFunction("baseMeditation_dotMeditation");
-	const mandalaMeditation = useExperimentalFunction("baseMeditation_mandalaMeditation");
-	const noseMeditation = useExperimentalFunction("baseMeditation_noseMeditation");
-
-	useEffect(() => {
-		let countBaseMeditation = 0;
-		if (DotMeditation.status) {
-			countBaseMeditation++;
-		}
-		if (mandalaMeditation.status) {
-			countBaseMeditation++;
-		}
-		if (noseMeditation.status) {
-			countBaseMeditation++;
-		}
-		setCountPractices(prevValue => ({ ...prevValue, basic: countBaseMeditation }));
-	}, [DotMeditation.status, mandalaMeditation.status, noseMeditation.status]);
 
 	//! ---
 
-	const [getPaddingTopFunc, setGetPaddingTopFunc] = useState<{
+	const [getPaddingTopFunction, setGetPaddingTopFunction] = useState<{
 		f: (width: number) => number;
 	} | null>(null);
 	const [widthTitle, setWidthTitle] = useState<number | null>(null);
 
 	const topPaddingContent = useMemo(() => {
-		if (!getPaddingTopFunc || !widthTitle) return null;
-		return getPaddingTopFunc.f(widthTitle);
-	}, [getPaddingTopFunc, widthTitle]);
+		if (!getPaddingTopFunction || !widthTitle) return null;
+		return getPaddingTopFunction.f(widthTitle);
+	}, [getPaddingTopFunction, widthTitle]);
 
 	const refFlatList = useRef<FlatList>(null);
-
+	console.log("reRender")
 	useEffect(() => {
-		(async => {
-			Promise.all([
-				Request.getCountMeditationsByType("relaxation").then(count =>
-					setCountPractices(preValue => ({ ...preValue, relaxation: count }))
-				),
-				Request.getCountMeditationsByType("directionalVisualizations").then(count =>
-					setCountPractices(preValue => ({ ...preValue, directionalVisualizations: count }))
-				),
-				Request.getCountMeditationsByType("breathtakingPractice").then(count =>
-					setCountPractices(preValue => ({ ...preValue, breathingPractices: count }))
-				),
+			const counts = Promise.all([
+				Request.getCountMeditationsByType("relaxation")
+					// setCountPractices(preValue => ({ ...preValue, relaxation: count }))
+				,
+				Request.getCountMeditationsByType("directionalVisualizations")
+				,
+				Request.getCountMeditationsByType("breathtakingPractice")
+				,
 			]);
-		})();
+			counts.then(countsResult => {
+				setCountPractices(preValue => ({ ...preValue,
+					relaxation: countsResult[0],
+					directionalVisualizations: countsResult[1],
+					breathingPractices: countsResult[2]
+				}))
+				}
+			)
 	}, []);
 
 	useFocusEffect(
 		useCallback(() => {
-			const init = async () => {
+			new Promise(async () => {
 				const result = await Storage.getStatusShowGreetingScreens();
 				if (!result.DescriptionPractices) {
 					navigation.navigate("IntroPractices");
 				}
-			};
-			init();
+			})
 		}, [])
 	);
 
+	const categoryView = CategoryMeditation.filter(item => countPractices[item.id] > 0)
+	console.log("reRender")
 	return (
 		<DoubleColorView
 			onFunctionGetPaddingTop={getPaddingTop => {
-				setGetPaddingTopFunc({ f: getPaddingTop });
+				setGetPaddingTopFunction({ f: getPaddingTop });
 			}}
 			hideElementVioletPart
 			headerElement={
@@ -158,28 +181,32 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 				>
 					{i18n.t("db8e7216-be7c-4ecc-8ddd-0cf9ff83f419")}
 				</Text>
-				<FlatList
-					ref={refFlatList}
-					data={CategoryMeditation}
-					initialScrollIndex={0}
-					renderItem={({ item }) => (
-						<TouchableOpacity onPress={() => navigation.navigate("PracticeListByType", { typePractices: item.id })}>
-							<View style={{ width: 110, alignItems: "center" }}>
-								<Image source={item.image} style={styles.imageSmall} />
-								<Text style={styles.textNameSmall}>{i18n.t(item.name)}</Text>
-							</View>
-						</TouchableOpacity>
-					)}
-					keyExtractor={item => `${item.id}_small`}
-					horizontal={true}
-					ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
-					style={styles.fastList}
-					contentContainerStyle={{ paddingHorizontal: 20 }}
-					showsHorizontalScrollIndicator={false}
-				/>
+				{
+					categoryView.length > 0 && (
+						<FlatList
+							ref={refFlatList}
+							data={categoryView}
+							initialScrollIndex={0}
+							renderItem={({ item }) => (
+								<TouchableOpacity onPress={() => navigation.navigate("PracticeListByType", { typePractices: item.id })}>
+									<View style={{ width: 110, alignItems: "center" }}>
+										<Image source={item.image} style={styles.imageSmall} />
+										<Text style={styles.textNameSmall}>{i18n.t(item.name)}</Text>
+									</View>
+								</TouchableOpacity>
+							)}
+							keyExtractor={item => `${item.id}_small`}
+							horizontal={true}
+							ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
+							style={styles.fastList}
+							contentContainerStyle={{ paddingHorizontal: 20 }}
+							showsHorizontalScrollIndicator={false}
+						/>
+					)
+				}
+
 				<View style={[styles.listFull, { top: -11 }]}>
-					{CategoryMeditation.map((item, index) => {
-						return (
+					{categoryView.map((item, index) => (
 							<CategoryCard
 								key={item.id}
 								count={countPractices[item.id]}
@@ -189,8 +216,8 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 								onPress={() => navigation.navigate("PracticeListByType", { typePractices: item.id })}
 								style={{ marginVertical: 11 }}
 							/>
-						);
-					})}
+						)
+					)}
 				</View>
 			</ScrollView>
 		</DoubleColorView>
@@ -231,36 +258,6 @@ const styles = StyleSheet.create({
 	},
 });
 
-const CategoryMeditation: {
-	name: string;
-	image: ImageSourcePropType;
-	description: string;
-	id: PracticesMeditation;
-}[] = [
-	{
-		name: "71277706-2f5d-4ce8-bf26-d680176d3fb8",
-		image: require("assets/practicesImage/relaxation.png"),
-		description: "ec0c8421-03d1-4755-956d-66a84d81d74a",
-		id: PracticesMeditation.RELAXATION,
-	},
-	{
-		name: "8566b563-b307-4943-ab52-d51c7e806a4c",
-		image: require("assets/practicesImage/directionalVisualizations.png"),
-		description: "bb340c18-2a8b-4b7b-8250-80a865dca9b4",
-		id: PracticesMeditation.DIRECTIONAL_VISUALIZATIONS,
-	},
-	{
-		name: "c15d823e-8dd8-4eb7-b9f5-87c9845ac397",
-		image: require("assets/practicesImage/breathingPractices.png"),
-		description: "c54bff96-21eb-4f10-8ad6-090e06f2eef9",
-		id: PracticesMeditation.BREATHING_PRACTICES,
-	},
-	{
-		name: "0d63a21e-eecc-45cc-9085-86b97c88d713",
-		image: require("assets/practicesImage/basic.png"),
-		description: "ef09ec88-afda-4fef-b68b-02b433919e50",
-		id: PracticesMeditation.BASIC,
-	},
-];
+
 
 export default PracticesMeditationList;

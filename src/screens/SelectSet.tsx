@@ -19,12 +19,13 @@ import Play from "assets/icons/PlayWhite.svg";
 import { ColorButton } from "~components/dump";
 import { StatusBar } from "expo-status-bar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {useDimensions} from "@react-native-community/hooks";
 
 const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 	const { selectedRelax } = route.params;
 	const [setList, setSetList] = React.useState<State.Set[]>([]);
 	const [selectedSetIndex, setSelectedSetIndex] = React.useState<number | null>(0);
-	const { width, height } = useWindowDimensions();
+	const { window: { width, height } } = useDimensions()
 	const appDispatch = useAppDispatch();
 	useFocusEffect(
 		useCallback(() => {
