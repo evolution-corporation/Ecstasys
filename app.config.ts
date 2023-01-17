@@ -22,6 +22,31 @@ function generateConfig(): ExpoConfig {
 		hour: toDay.getHours() < 10 ? "0" + toDay.getHours() : toDay.getHours(),
 	};
 	let versionCode = Number(`${date.year}${date.month}${date.date}${date.hour}`);
+
+	const plugins: (string | [] | [string] | [string, any])[] = [
+		"expo-dev-client",
+		"expo-splash-screen",
+		"expo-image-picker",
+		"expo-av",
+		"expo-updates",
+		"@react-native-firebase/app",
+		[
+			"expo-notifications",
+			{
+				sounds: ["./assets/triggerSounds/bells.wav"],
+			},
+		],
+		"@react-native-google-signin/google-signin",
+		[
+			"expo-build-properties",
+			{
+				ios: {
+					useFrameworks: "static",
+				},
+			},
+		],
+	]
+	if (process.env.APP_VARIANT === "dev") plugins.push("expo-community-flipper")
 	return {
 		jsEngine: "hermes",
 		name: appName,
@@ -64,30 +89,7 @@ function generateConfig(): ExpoConfig {
 			},
 			usesAppleSignIn: true,
 		},
-		plugins: [
-			"expo-dev-client",
-			"expo-splash-screen",
-			"expo-image-picker",
-			"expo-av",
-			"expo-updates",
-			"@react-native-firebase/app",
-			[
-				"expo-notifications",
-				{
-					sounds: ["./assets/triggerSounds/bells.wav"],
-				},
-			],
-			"@react-native-google-signin/google-signin",
-			[
-				"expo-build-properties",
-				{
-					ios: {
-						useFrameworks: "static",
-					},
-				},
-			],
-			"expo-community-flipper",
-		],
+		plugins,
 		extra: {
 			eas: {
 				projectId: "360fff0b-5a9b-41de-9bb3-016641a64554",
