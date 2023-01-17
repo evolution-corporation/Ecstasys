@@ -16,6 +16,10 @@ const ConfirmationSignOut: RootScreenProps<"ConfirmationSignOut"> = ({ navigatio
 	const dispatch = useAppDispatch();
 	const { window } = useDimensions();
 	const widthElements = window.width - 50;
+	const exit = () => {
+		dispatch(actions.signOutAccount());
+	}
+
 	return (
 		<ScreenModal
 			styleContentBlock={{
@@ -34,7 +38,7 @@ const ConfirmationSignOut: RootScreenProps<"ConfirmationSignOut"> = ({ navigatio
 					{i18n.t("02344de7-fd68-48e8-a1ff-0f5cf831e0c6")}
 				</DefaultText>
 				<ColorButton
-					onPress={() => dispatch(actions.signOutAccount())}
+					onPress={() => exit()}
 					styleText={{ color: "#FFF" }}
 					styleButton={{ backgroundColor: "#C2A9CE", alignSelf: "center", paddingHorizontal: 25 }}
 				>

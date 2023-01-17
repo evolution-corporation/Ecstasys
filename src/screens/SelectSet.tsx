@@ -49,7 +49,7 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 					<SharedElement id={`practice.item.${selectedRelax.id}`} style={styles.image}>
 						<Image source={{ uri: selectedRelax.image }} style={{ width: "100%", height: "100%", borderRadius: 20 }} />
 					</SharedElement>
-					<View style={{ marginLeft: 14, justifyContent: "space-between" }}>
+					<View style={{ marginLeft: 14, justifyContent: "space-between", marginRight: 50 }}>
 						<Text style={styles.title}>{selectedRelax.name}</Text>
 						<Text style={styles.time}>
 							{i18n.t("minute", {
@@ -143,7 +143,7 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 					</Pressable>
 				)}
 				keyExtractor={item => item.id}
-				contentContainerStyle={{ paddingTop: heightViewPart2 + 21 }}
+				contentContainerStyle={{ paddingTop: heightViewPart2 + 21, paddingBottom: 200 }}
 				showsVerticalScrollIndicator={false}
 			/>
 			{height >= 815 && (

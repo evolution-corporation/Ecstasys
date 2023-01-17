@@ -18,6 +18,7 @@ import * as StatusBar from "expo-status-bar";
 import { Storage } from "~api";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Svg, { Circle } from "react-native-svg";
+import useBaseMeditationInformation from "../../../hooks/use-base-meditation-information.experimental";
 
 const swiperContent = [
 	{
@@ -32,28 +33,39 @@ const swiperContent = [
 		text: "0808c3b7-8eda-403a-8b7d-515aa50c7723",
 		image: require("./assets/Visualizations.png"),
 	},
-	// {
-	// 	name: "breath",
-	// 	title: "6c54f2fa-93eb-495c-a51b-039aee5cfcd1",
-	// 	text: "0894c96e-83bf-4c27-b498-c3d6b51251b5",
-	// 	image: require("./assets/breath.png"),
-	// },
+	{
+		name: "breath",
+		title: "6c54f2fa-93eb-495c-a51b-039aee5cfcd1",
+		text: "0894c96e-83bf-4c27-b498-c3d6b51251b5",
+		image: require("./assets/breath.png"),
+	},
 	{
 		name: "base",
 		title: "48832a25-622d-4251-b147-ea6ebd134632",
 		text: "4cb7de64-0c26-4200-af9d-0e2cb533760c",
 		image: require("./assets/base.png"),
 	},
-	{
-		name: "dmd",
-		title: "385cfdf2-c360-404a-8618-cb65583957c0",
-		text: "d810ec3c-1d46-48b3-ba30-45e135dcad44",
-		image: require("./assets/dmd.png"),
-	},
+	// {
+	// 	name: "dmd",
+	// 	title: "385cfdf2-c360-404a-8618-cb65583957c0",
+	// 	text: "d810ec3c-1d46-48b3-ba30-45e135dcad44",
+	// 	image: require("./assets/dmd.png"),
+	// },
 ];
 
 const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation }) => {
 	const [isGreeting, setIsGreeting] = useState<boolean>(true);
+
+
+	//! Experimental
+	const baseMeditation = useBaseMeditationInformation((count) => {
+	})
+
+
+	//! ---
+
+
+	const list = swiperContent.filter(item => item.name === "base" ? baseMeditation[0] : true)
 
 	const [indexSelect, setSelectedIndex] = React.useState<number>(0);
 	useFocusEffect(
@@ -70,7 +82,7 @@ const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation })
 	const next = () => {
 		if (isGreeting) {
 			setIsGreeting(false);
-		} else if (indexSelect < swiperContent.length - 1) {
+		} else if (indexSelect < list.length - 1) {
 			setSelectedIndex(prev => prev + 1);
 		} else {
 			end();
@@ -95,8 +107,8 @@ const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation })
 			}
 		});
 	const dots = (
-		<Svg height={9} width={swiperContent.length * 9 + (swiperContent.length - 1) * 9} style={{ alignSelf: "center" }}>
-			{new Array(swiperContent.length).fill(null).map((_, index) => (
+		<Svg height={9} width={list.length * 9 + (list.length - 1) * 9} style={{ alignSelf: "center" }}>
+			{new Array(list.length).fill(null).map((_, index) => (
 				<Circle
 					r={4.5}
 					fill={indexSelect === index ? "rgb(151,101,168)" : "rgba(231, 221, 236, 1)"}
@@ -140,7 +152,7 @@ const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation })
 				<GestureDetector gesture={gesture}>
 					<View style={{ justifyContent: "space-between", flex: 1 }}>
 						{
-							swiperContent.map(item => (
+							list.map(item => (
 								<Animated.View key={item.name} style={styles.card} entering={FadeIn} exiting={FadeOut}>
 									<View style={styles.logoCategory}>
 										<Image source={item.image} style={{ width: "100%", height: "100%" }} resizeMode={"contain"} />
@@ -190,7 +202,7 @@ const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation })
 					onPress={() => {
 						if (isGreeting) {
 							setIsGreeting(false);
-						} else if (indexSelect < swiperContent.length - 1) {
+						} else if (indexSelect < list.length - 1) {
 							setSelectedIndex(prev => prev + 1);
 						} else {
 							end();

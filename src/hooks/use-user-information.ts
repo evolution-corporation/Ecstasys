@@ -53,11 +53,11 @@ const useUserInformation = (usingChangeData = true, clearUnmount = true): Return
 		appDispatch(actions.removeChangedInformationUser());
 	};
 
-	// React.useEffect(() => {
-	// 	return () => {
-	// 		if (clearUnmount) clearChangedValue();
-	// 	};
-	// }, []);
+	React.useEffect(() => {
+		return () => {
+			if (clearUnmount) clearChangedValue();
+		};
+	}, []);
 
 	return {
 		...userData,

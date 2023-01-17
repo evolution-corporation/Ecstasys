@@ -137,7 +137,11 @@ const RootRoutes: FC = () => {
 							title: i18n.t("01e5182d-f190-4bcb-9668-36a193e18325"),
 						}}
 					/>
-
+					<RootNavigation.Screen
+						name={"ConfirmationSignOut"}
+						component={Screens.ConfirmationSignOut}
+						options={{ presentation: "transparentModal", headerShown: false }}
+					/>
 					<RootNavigation.Screen name={"Greeting"} component={Screens.Greeting} options={{ headerShown: false }} />
 				</>
 			);
@@ -280,11 +284,7 @@ const RootRoutes: FC = () => {
 						component={Screens.Payment}
 						options={{ title: i18n.t("35f5ec21-d765-46a5-a33e-ff5b418170fe") }}
 					/>
-					<RootNavigation.Screen
-						name={"ConfirmationSignOut"}
-						component={Screens.ConfirmationSignOut}
-						options={{ presentation: "transparentModal", headerShown: false }}
-					/>
+
 					<RootNavigation.Screen
 						name={"InputNameAndSelectGender"}
 						component={Screens.InputNameAndSelectGender}
@@ -329,6 +329,11 @@ const RootRoutes: FC = () => {
 					<RootNavigation.Screen
 						name={"ExperimentalConfig"}
 						component={Screens.ExperimentalConfig}
+						options={{ presentation: "transparentModal", headerShown: false }}
+					/>
+					<RootNavigation.Screen
+						name={"ConfirmationSignOut"}
+						component={Screens.ConfirmationSignOut}
 						options={{ presentation: "transparentModal", headerShown: false }}
 					/>
 				</>
@@ -415,6 +420,7 @@ const RootRoutes: FC = () => {
 			}}
 		>
 			{screenList}
+
 		</RootNavigation.Navigator>
 	);
 };

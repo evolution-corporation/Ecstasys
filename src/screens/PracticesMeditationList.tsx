@@ -91,7 +91,6 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 	}, [getPaddingTopFunction, widthTitle]);
 
 	const refFlatList = useRef<FlatList>(null);
-	console.log("reRender")
 	useEffect(() => {
 			const counts = Promise.all([
 				Request.getCountMeditationsByType("relaxation")

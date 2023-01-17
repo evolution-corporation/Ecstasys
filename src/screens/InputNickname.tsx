@@ -18,6 +18,8 @@ import { StatusBar } from "expo-status-bar";
 import { useBackHandler } from "@react-native-community/hooks";
 import { Screen } from "~components/containers";
 import ViewUserChange from "~components/containers/view-user-change";
+import LogOutIcon from "Interface/Log_Out.svg"
+import DefaultText from "~components/Text/default-text";
 
 const InputLoginScreen: RootScreenProps<"InputNickname"> = ({ navigation }) => {
 	const appDispatch = useAppDispatch();
@@ -67,7 +69,8 @@ const InputLoginScreen: RootScreenProps<"InputNickname"> = ({ navigation }) => {
 	});
 	// TODO need import animation and style
 	return (
-		<Screen backgroundColor={"#9765A8"}>
+		<Screen backgroundColor={"#9765A8"} styleScreen={{ justifyContent: "space-between", paddingBottom: 20 }}>
+			<View>
 			<NicknameBase
 				ref={NicknameBaseRef}
 				onEndChange={processing}
@@ -105,6 +108,11 @@ const InputLoginScreen: RootScreenProps<"InputNickname"> = ({ navigation }) => {
 				{i18n.t("continue")}
 			</ColorButton>
 			<Text style={styles.subText}>{i18n.t("f0955b62-3ce1-49d6-bf79-aba68266ef8e")}</Text>
+			</View>
+			<Pressable onPress={() =>{navigation.navigate("ConfirmationSignOut");}} style={{ justifyContent: "center", alignItems: "center" }}>
+				<LogOutIcon />
+				<DefaultText color={"#E7DDEC"}>{i18n.t("c9bcb9a8-e59c-4ee5-97f1-94dae753a716")}</DefaultText>
+			</Pressable>
 		</Screen>
 	);
 };
