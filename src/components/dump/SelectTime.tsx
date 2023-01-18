@@ -5,18 +5,18 @@ import React from "react";
 import { View, Text, StyleSheet, FlatList, ViewabilityConfig, ViewToken, ViewStyle, Platform } from "react-native";
 import core from "~core";
 
-interface Props {
+interface Properties {
 	start: [number, number];
 	end: [number, number];
 	onChange?: (item: [number, number]) => void;
 	style?: ViewStyle;
 }
 
-interface Ref {
+interface Reference {
 	setTime: (newTime: number) => void;
 }
 
-const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
+const SelectTime = React.forwardRef<Reference, Properties>((props, ref) => {
 	const { start, end, onChange, style } = props;
 	const [selectedIndexMinute, setSelectedIndexMinute] = React.useState(0);
 	const [selectedIndexSecond, setSelectedIndexSecond] = React.useState(0);
@@ -72,7 +72,7 @@ const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
 				if (viewableItems[0].index === 0) {
 					setSelectedIndexSecond(0);
 				} else {
-					setSelectedIndexSecond(minutes.length - 1);
+					setSelectedIndexSecond(seconds.length - 1);
 				}
 			}
 		} else if (viewableItems.length > 0) {
@@ -97,11 +97,13 @@ const SelectTime = React.forwardRef<Ref, Props>((props, ref) => {
 	React.useImperativeHandle(ref, () => ({
 		setTime: (newTime: number) => {
 			const minuteIndex = minutes.findIndex(item => item.value === Math.floor(newTime / 60000));
-			const secondIndex = seconds.findIndex(item => item.value === Math.fround((newTime % 60000) / 10000));
-			if (minuteIndex !== -1 && secondIndex !== -1) {
-				minutesRef.current?.scrollToIndex({ index: minuteIndex });
-				secondsRef.current?.scrollToIndex({ index: secondIndex });
+			const secondIndex = seconds.findIndex(item => item.value === Math.floor((newTime % 60000) / 1000));
+			if (minuteIndex !== -1 || secondIndex !== -1) {
+				minutesRef.current?.scrollToIndex({ index: minuteIndex, viewOffset: 56 });
+				secondsRef.current?.scrollToIndex({ index: seconds.length < 59 ? secondIndex : 0, viewOffset: 56 })
+
 			}
+
 		},
 	}));
 
