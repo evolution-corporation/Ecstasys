@@ -134,18 +134,7 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 					}}
 				/>
 			)}
-			{height >= 815 && (
-				<ColorButton
-					animationStyle={aStyle.button}
-					styleButton={styles.button}
-					styleText={styles.buttonText}
-					onPress={() => {
-						if (selectedPracticeId.current !== null) onClick(selectedPracticeId.current);
-					}}
-				>
-					{i18n.t("1a2b0df6-fa67-4f71-8fd4-be1f0a576439")}
-				</ColorButton>
-			)}
+
 		</DoubleColorView>
 	);
 };

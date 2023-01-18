@@ -89,15 +89,10 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 					Object.entries(practiceList[practiceIndex]).filter(([key, value]) => key !== "isPermission")
 				);
 				dispatch(actions.setPractice(practiceList[practiceIndex]));
-				if (practiceList[practiceIndex].type === "RELAXATION" || practiceList[practiceIndex].type === "BREATHING_PRACTICES") {
-					navigation.navigate("SelectTimeForRelax", { selectedPractice: practiceList[practiceIndex] });
-				} else if (typePractices === PracticesMeditation.BASIC) {
+				if (typePractices === PracticesMeditation.BASIC) {
 					navigation.navigate("SelectTimeForBase", { selectedPractice: practiceList[practiceIndex] });
 				} else {
-					navigation.navigate("PlayerForPractice", {
-						practiceLength: practiceList[practiceIndex].length,
-						selectedPractice: practiceList[practiceIndex],
-					});
+					navigation.navigate("SelectTimeForRelax", { selectedPractice: practiceList[practiceIndex] })
 				}
 			} else {
 				navigation.navigate("ByMaySubscribe");

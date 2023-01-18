@@ -43,6 +43,8 @@ const SMSCodeInputScreen: RootScreenProps<"InputSMSCode"> = ({ route }) => {
 		} catch (error) {
 			if (error instanceof Error) {
 				printInformationError("requestSMSCodeError", error,  "")
+			} else {
+				printInformationError("requestSMSCodeError", new Error(error),  error)
 			}
 
 		}
