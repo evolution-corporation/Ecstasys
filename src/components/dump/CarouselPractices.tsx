@@ -25,11 +25,14 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 		if (viewableItems.length > 0) {
 			const mediumIndex = Math.floor(viewableItems.length / 2);
 			if (viewableItems[mediumIndex].index !== null) {
-				setSelectedIndex(viewableItems[mediumIndex].index ?? 0);
+				const index = viewableItems[mediumIndex].index ?? 0
+				setSelectedIndex(index);
+
 				if (onChange) {
-					const index = viewableItems[mediumIndex].index;
+
 					onChange(index !== null ? data[index].id : null);
 				}
+				refFlatList.current?.scrollToIndex({ index, animated: true, viewOffset: (widthCarousel - 254) / 2 + Math.abs(styles.flatList.left) });
 			}
 		}
 	}).current;
