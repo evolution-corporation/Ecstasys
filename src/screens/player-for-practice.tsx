@@ -11,6 +11,7 @@ import useTimer from "src/hooks/use-timer";
 import { actions, useAppDispatch } from "~store";
 
 import { Breathing, RootScreenProps } from "~types";
+import {meditationIsLisent, MeditationIsLisent} from "../api/requests";
 
 const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, route }) => {
 	const { selectedPractice, timeNotification, selectSet } = route.params;
@@ -65,7 +66,9 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 
 	React.useEffect(() => {
 		const exit = (event: { data: { action: { type: string } }; preventDefault: () => void }) => {
+
 			if (event.data.action.type === "GO_BACK" && timer.currentMilliseconds < (selectedPractice.length + (selectSet?.length ?? 0))) {
+
 				if (statusPlayer !== Status.Loading && statusPlayer !== Status.Init) {
 					event.preventDefault();
 					navigation.navigate("NoExitMeditation");
@@ -74,10 +77,15 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 				if (statusPlayer !== Status.Loading) {
 					meditation?.stop();
 					timer.edit(0);
+
 					if (timer.currentMilliseconds >= 60000) {
 						appDispatch(actions.addStatisticPractice([selectedPractice, Math.floor(timer.currentMilliseconds)]));
+						if (timer.currentMilliseconds === selectedPractice.length) {
+							meditationIsLisent(selectedPractice.id)
+						}
 					}
 				}
+
 			}
 		};
 		navigation.addListener("beforeRemove", exit);

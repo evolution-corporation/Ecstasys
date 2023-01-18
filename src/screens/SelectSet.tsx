@@ -65,12 +65,10 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 					style={{ top: -6, marginLeft: 15 }}
 					onPress={() => {
 						const index = Math.floor(Math.random() * setList.length);
-						if (height >= 815) {
-							setSelectedSetIndex(index);
-						} else {
+
 							appDispatch(actions.setSetForDMD(setList[index]));
 							navigation.navigate("DMDSettingNotification", { selectedRelax, selectSet: setList[index] });
-						}
+
 					}}
 				>
 					<LinearGradient colors={["#75348B", "#6A2382"]} style={styles.randomButton}>
@@ -88,29 +86,14 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 							selectedSetIndex === index && height >= 815 ? { backgroundColor: "#E7DDEC" } : null,
 						]}
 						onPress={() => {
-							if (height >= 815) {
-								setSelectedSetIndex(index);
-							} else {
+
 								appDispatch(actions.setSetForDMD(setList[index]));
 								navigation.navigate("DMDSettingNotification", { selectedRelax, selectSet: setList[index] });
-							}
+
 						}}
 					>
 						<View style={[{ flexDirection: "row", alignItems: "center" }]}>
-							{selectedSetIndex === index && height >= 815 ? (
-								<View
-									style={{
-										width: 56,
-										height: 56,
-										borderRadius: 28,
-										backgroundColor: "#C2A9CE",
-										justifyContent: "center",
-										alignItems: "center",
-									}}
-								>
-									<Play width={26} height={26} />
-								</View>
-							) : (
+
 								<View
 									style={{
 										width: 56,
@@ -132,7 +115,6 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 										{index + 1}
 									</Text>
 								</View>
-							)}
 							<Text style={styles.nameSet}>{item.name}</Text>
 						</View>
 						<Text style={styles.timeSet}>

@@ -46,7 +46,7 @@ function generateConfig(): ExpoConfig {
 			},
 		],
 	]
-	if (process.env.APP_VARIANT === "dev") plugins.push("expo-community-flipper")
+	// if (process.env.APP_VARIANT === "dev") plugins.push("expo-community-flipper")
 	return {
 		jsEngine: "hermes",
 		name: appName,
