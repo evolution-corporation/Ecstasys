@@ -18,7 +18,7 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 	const _viewabilityConfig = useRef<ViewabilityConfig>({
 		viewAreaCoveragePercentThreshold: 80,
 		waitForInteraction: true,
-		minimumViewTime: 10,
+		minimumViewTime: 100,
 	}).current;
 
 	const refFlatList = useRef<FlatList>(null);
