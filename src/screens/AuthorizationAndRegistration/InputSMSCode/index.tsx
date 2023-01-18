@@ -14,6 +14,7 @@ import { SMSCodeInput, SMSCodeInputInfo, SMSCodeInputInfoShow } from "./componen
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { StatusBar } from "expo-status-bar";
 import { actions, useAppDispatch } from "~store";
+import {printInformationError} from "~tools";
 
 const SMSCodeInputScreen: RootScreenProps<"InputSMSCode"> = ({ route }) => {
 	const { phoneNumber } = route.params;
@@ -34,10 +35,18 @@ const SMSCodeInputScreen: RootScreenProps<"InputSMSCode"> = ({ route }) => {
 	);
 
 	const requestSMSCode = useCallback(async () => {
-		setStatus(SMSCodeInputInfoShow.loadingIndicator);
-		const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
-		setConfirm(confirmation);
-		setStatus(SMSCodeInputInfoShow.requestSMS);
+		try {
+			setStatus(SMSCodeInputInfoShow.loadingIndicator);
+			const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+			setConfirm(confirmation);
+			setStatus(SMSCodeInputInfoShow.requestSMS);
+		} catch (error) {
+			if (error instanceof Error) {
+				printInformationError("requestSMSCodeError", error,  "")
+			}
+
+		}
+
 	}, [phoneNumber]);
 
 	useFocusEffect(

@@ -36,7 +36,8 @@
 			"channel": "production",
 			"distribution": "store",
 			"env": {
-				"APP_VARIANT": "alpha"
+				"APP_VARIANT": "alpha",
+				"FLIPPER_DISABLE": "1"
 			},
 			"android": {
 				"buildType": "apk"
@@ -46,7 +47,8 @@
 			"channel": "production",
 			"distribution": "store",
 			"env": {
-				"APP_VARIANT": "alpha"
+				"APP_VARIANT": "alpha",
+				"FLIPPER_DISABLE":  "1"
 			},
 			"ios": {
 				"prebuildCommand": "prebuild"
