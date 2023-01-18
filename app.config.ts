@@ -64,10 +64,9 @@ function generateConfig(): ExpoConfig {
 			resizeMode: "contain",
 			backgroundColor: "#FFFFFF",
 		},
-		// updates: {
-		// 	fallbackToCacheTimeout: 0,
-		// 	url: "https://u.expo.dev/fc1fa36b-31d7-4db1-b912-d882e6de7a27",
-		// },
+		updates: {
+			"url": "https://u.expo.dev/360fff0b-5a9b-41de-9bb3-016641a64554"
+		},
 		assetBundlePatterns: ["**/*"],
 		android: {
 			adaptiveIcon: {
