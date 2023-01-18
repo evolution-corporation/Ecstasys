@@ -71,7 +71,6 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 			} else {
 				//! Experimental
 				const listPractice: State.Practice[] = [];
-				console.log("test");
 				if (DotMeditation.status) listPractice.push({ ...PlayerMeditationDot, isPermission: true });
 				if (mandalaMeditation.status) listPractice.push({ ...MeditationOnTheMandala, isPermission: true });
 				if (noseMeditation.status) listPractice.push({ ...MeditationOnTheNose, isPermission: true });
@@ -130,7 +129,7 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 					}}
 				/>
 			)}
-			{height >= 500 && (
+			{height >= 800 && (
 
 				<ColorButton
 					animationStyle={aStyle.button}

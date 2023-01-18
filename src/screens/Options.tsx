@@ -13,7 +13,6 @@ import LogOut from "assets/icons/Log_Out.svg";
 import { actions, useAppDispatch } from "~store";
 import { RootScreenProps } from "~types";
 import { StatusBar } from "expo-status-bar";
-
 import { version } from "package.json";
 import DefaultText from "~components/Text/default-text";
 
@@ -70,7 +69,7 @@ const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 				>
 					<DefaultText color={"#FFFFFF"}>{i18n.t("cf2785ca-7d89-4ee5-b494-82c76175f04b")}</DefaultText>
 				</Pressable>
-				<DefaultText color={"#FFFFFF"}>{version}</DefaultText>
+				<DefaultText color={"#FFFFFF"}>v{version}</DefaultText>
 			</View>
 		</Screen>
 	);

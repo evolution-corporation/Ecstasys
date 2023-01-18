@@ -102,6 +102,7 @@ CarouselPracticesElement.defaultProps = {};
 const styles = StyleSheet.create({
 	backgroundCard: {
 		alignItems: "center",
+		width: 254
 	},
 	image: {
 		width: "100%",

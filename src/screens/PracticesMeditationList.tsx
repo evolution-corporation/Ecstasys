@@ -123,7 +123,6 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 	);
 
 	const categoryView = CategoryMeditation.filter(item => countPractices[item.id] > 0)
-	console.log("reRender")
 	return (
 		<DoubleColorView
 			onFunctionGetPaddingTop={getPaddingTop => {

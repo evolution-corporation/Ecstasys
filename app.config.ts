@@ -65,8 +65,7 @@ function generateConfig(): ExpoConfig {
 			backgroundColor: "#FFFFFF",
 		},
 		updates: {
-			fallbackToCacheTimeout: 0,
-			url: "https://u.expo.dev/360fff0b-5a9b-41de-9bb3-016641a64554",
+			"url": "https://u.expo.dev/360fff0b-5a9b-41de-9bb3-016641a64554"
 		},
 		assetBundlePatterns: ["**/*"],
 		android: {

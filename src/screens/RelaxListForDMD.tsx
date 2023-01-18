@@ -69,11 +69,16 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 	);
 
 	const onClick = (practiceId: string) => {
-		const practiceIndex = practiceList.findIndex(item => item.id === practiceId);
-		if (practiceIndex !== -1 && practiceList[practiceIndex].type === "RELAXATION" && isSubscribe) {
-			dispatch(actions.setOptionForDMD(practiceList[practiceIndex]));
-			navigation.navigate("SelectSet", { selectedRelax: practiceList[practiceIndex] });
+		if (isSubscribe) {
+			const practiceIndex = practiceList.findIndex(item => item.id === practiceId);
+			if (practiceIndex !== -1 && practiceList[practiceIndex].type === "RELAXATION" && isSubscribe) {
+				dispatch(actions.setOptionForDMD(practiceList[practiceIndex]));
+				navigation.navigate("SelectSet", { selectedRelax: practiceList[practiceIndex] });
+			}
+		} else {
+			navigation.navigate("ByMaySubscribe");
 		}
+
 	};
 
 	useFocusEffect(
