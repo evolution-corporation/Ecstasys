@@ -19,11 +19,11 @@
 				"APP_VARIANT": "dev"
 			}
 		},
-		"preview-close": {
+		"preview": {
 			"distribution": "internal",
 			"channel": "preview",
 			"env": {
-				"APP_VARIANT": "alpha"
+				"APP_VARIANT": "prev"
 			},
 			"android": {
 				"buildType": "app-bundle"
