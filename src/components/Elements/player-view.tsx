@@ -103,7 +103,7 @@ const PlayerView: React.FC<PlayerViewProperty> = property => {
 			seconds % 60 < 10 ? "0" : ""
 		}${seconds % 60}`;
 		return (
-			<Pressable onPress={() => onChangeStatus(Status.Pause)}>
+			<Pressable onPress={() => onChangeStatus(Status.Play)}>
 				<ViewFullSpace
 					style={{ backgroundColor: "rgba(0, 0, 0, 0.6)", alignItems: "center" }}
 					direction={DirectionFullSpace.TopBottom}

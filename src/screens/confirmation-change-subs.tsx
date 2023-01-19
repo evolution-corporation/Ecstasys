@@ -31,7 +31,7 @@ const ConfirmChangeSubs: RootScreenProps<"ConfirmChangeSubs"> = ({ navigation, r
 			<CloseCross />
 			<ViewPaddingList paddings={[47, 24, 17, 15, 22]} direction={Direction.Vertical}>
 				<HeaderText color={"#3D3D3D"}>Вы действительно хотите изменить тарифный план?</HeaderText>
-				<DefaultText color={"#404040"}>
+				<DefaultText color={"#404040"} style={{ textAlign: "center" }}>
 					Списание произойдет автоматически после окончания действия текущего тарифного плана
 				</DefaultText>
 				<ColorButton

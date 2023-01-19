@@ -3,9 +3,11 @@
 import React, { useEffect } from "react";
 import * as Notification from "expo-notifications";
 import { Breathing } from "~types";
+import useNotificationStatus from "./use-notification-status";
 
 const useBreathingController = () => {
 	const identifiers = React.useRef<string[]>([]);
+	const [statusNotification, updateStatusNotification] = useNotificationStatus()
 
 	const removeNotification = () => {
 		for (const identifier of identifiers.current) {
@@ -15,33 +17,36 @@ const useBreathingController = () => {
 	};
 
 	const setNotifications = async (timesNotification: { type: Breathing; time: number }[]) => {
-		for (const identifier of identifiers.current) {
-			await Notification.cancelScheduledNotificationAsync(identifier);
+		if (statusNotification) {
+			for (const identifier of identifiers.current) {
+				await Notification.cancelScheduledNotificationAsync(identifier);
+			}
+			identifiers.current = [];
+			for (const { type, time } of timesNotification) {
+				const message =
+					type === Breathing.Active
+						? "Начинайте дышать активно"
+						: type === Breathing.Free
+							? "Дышите спокойно"
+							: type === Breathing.Spontaneous
+								? "Экспериментируйте с дыханием"
+								: "Дышите свободно";
+				Notification.scheduleNotificationAsync({
+					content: {
+						title: "Пора сменить дыхание",
+						body: message,
+						sound: "bells.wav",
+						vibrate: [1],
+						priority: Notification.AndroidNotificationPriority.MAX,
+					},
+					trigger: {
+						seconds: Math.floor(time / 1000),
+						channelId: "changeBreathing",
+					},
+				}).then(identifier => identifiers.current.push(identifier));
+			}
 		}
-		identifiers.current = [];
-		for (const { type, time } of timesNotification) {
-			const message =
-				type === Breathing.Active
-					? "Начинайте дышать активно"
-					: type === Breathing.Free
-					? "Дышите спокойно"
-					: type === Breathing.Spontaneous
-					? "Экспериментируйте с дыханием"
-					: "Дышите свободно";
-			Notification.scheduleNotificationAsync({
-				content: {
-					title: "Пора сменить дыхание",
-					body: message,
-					sound: "bells.wav",
-					vibrate: [1],
-					priority: Notification.AndroidNotificationPriority.MAX,
-				},
-				trigger: {
-					seconds: Math.floor(time / 1000),
-					channelId: "changeBreathing",
-				},
-			}).then(identifier => identifiers.current.push(identifier));
-		}
+
 	};
 
 	useEffect(() => {

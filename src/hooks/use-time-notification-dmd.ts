@@ -21,6 +21,7 @@ const useTimeNotificationDMD = (): [TimeSegment, (timeSegments: TimeSegments, mi
 		store.DMD.configuratorNotification.random,
 		store.DMD.set?.length ?? 0,
 	]);
+
 	const appDispatch = useAppDispatch();
 	const setValue = (timeSegments: TimeSegments, milliseconds: number) => {
 		appDispatch(

@@ -242,7 +242,7 @@ const RootRoutes: FC = () => {
 						component={Screens.PlayerForPractice}
 						options={({ route: { params } }) => ({
 							title: params.selectedPractice.name,
-							headerRight: () => <IsFavorite practice={params.selectedPractice} />,
+							headerRight: params.selectSet === undefined ? () => <IsFavorite practice={params.selectedPractice} /> : undefined,
 						})}
 					/>
 					<RootNavigation.Screen

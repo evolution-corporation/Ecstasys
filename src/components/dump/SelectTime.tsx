@@ -199,11 +199,11 @@ const styles = StyleSheet.create({
 	},
 	numberSelected: {
 		color: "#9765A8",
-		fontSize: 48,
+		fontSize: Platform.OS === "ios" ? 42 : 48,
 	},
 	numberNoSelectedOne: {
 		color: "#D3D3D3",
-		fontSize: Platform.OS === "ios" ? 44 : 48,
+		fontSize: Platform.OS === "ios" ? 42 : 48,
 	},
 	numberNoSelectedTwo: {
 		color: "#F4F4F4",

@@ -62,7 +62,7 @@ const CarouselMeditation: FC<CarouselMeditationProps> = props => {
 			style={[{ flex: 1, overflow: "hidden" }, style]}
 			onLayout={({ nativeEvent: { layout } }) => {
 				if (widthCarousel === null) setWidthCarousel(layout.width);
-
+				if (onChange && data.length > 0) onChange(data[0].id)
 			}}
 		>
 			<FlatList

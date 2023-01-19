@@ -494,14 +494,17 @@ export async function sendErrorInformation(name: string, error: Error, payload: 
 
 export async function meditationIsLisent(meditationId: string, firebaseTokenToken?: string) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const url = URL + "meditation?meditationId=" + meditationId;
+	const url = URL + "meditation" + "?meditationId=" + meditationId + "&meditationLanguage=ru";
 	const requestServer = await fetch(url, {
 		method: "PUT",
 		headers: {
 			Authorization: firebaseTokenToken,
 			"Content-Type": "application/json",
 		},
-		body: meditationId
+		body: JSON.stringify({
+			meditationId: meditationId,
+			meditationLanguage: "ru"
+		})
 	});
 	console.log(requestServer.status, await requestServer.text())
 }
