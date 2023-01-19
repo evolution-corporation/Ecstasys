@@ -501,5 +501,7 @@ export async function meditationIsLisent(meditationId: string, firebaseTokenToke
 			Authorization: firebaseTokenToken,
 			"Content-Type": "application/json",
 		},
+		body: meditationId
 	});
+	console.log(requestServer.status, await requestServer.text())
 }

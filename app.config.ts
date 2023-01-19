@@ -7,13 +7,6 @@ function generateConfig(): ExpoConfig {
 	const appName = process.env.APP_VARIANT === "dev" ? "DMD Dev" : "dmd meditation";
 	const appUrl =
 		process.env.APP_VARIANT === "dev" ? "com.evodigital.dmdmeditation+dev" : "com.evodigital.dmdmeditation";
-	const apiURL =
-		process.env.APP_VARIANT === "prod"
-			? "api.evodigital.one"
-			: process.env.APP_VARIANT === "beta"
-			? "beta.api.evodigital.one"
-			: "dev.api.evodigital.one";
-
 	const toDay = new Date();
 	const date = {
 		date: toDay.getDate() < 10 ? "0" + toDay.getDate() : toDay.getDate(),
@@ -94,7 +87,9 @@ function generateConfig(): ExpoConfig {
 				projectId: "360fff0b-5a9b-41de-9bb3-016641a64554",
 			},
 			isDebug: process.env.APP_VARIANT !== "dev",
-			apiURL,
+			apiURL: process.env.APP_VARIANT === "prod"
+				? "api.evodigital.one"
+				: "dev.api.evodigital.one",
 			GoogleWebClientId: process.env.GOOGLE_WEB_CLIENT_ID,
 		},
 		runtimeVersion: {
