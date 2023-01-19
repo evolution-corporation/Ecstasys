@@ -21,7 +21,7 @@ export default createReducer<PracticeState>(
 	{
 		paramsPractice: {
 			currentNameBackgroundSound: null,
-			currentVolumeBackgroundSound: 0.5,
+			currentVolumeBackgroundSound: 1,
 		},
 		listPracticesListened: [],
 		listPracticesFavorite: [],

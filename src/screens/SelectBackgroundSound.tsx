@@ -19,6 +19,7 @@ import { BackgroundSound, playFragmentMeditationBackground } from "src/models/pr
 import { RootScreenProps } from "~types";
 import { actions, useAppDispatch, useAppSelector } from "~store";
 import { useDimensions } from "@react-native-community/hooks";
+import {useSafeAreaInsets} from "react-native-safe-area-context";
 
 const SelectBackgroundSound: RootScreenProps<"SelectBackgroundSound"> = ({ navigation, route }) => {
 	const { backgroundImage } = route.params;
@@ -34,13 +35,15 @@ const SelectBackgroundSound: RootScreenProps<"SelectBackgroundSound"> = ({ navig
 	const changeVolumeCancel = useRef<() => void>();
 	const widthItem = (window.width - 40 - 15 * 3) / 4;
 	const widthImageItem = widthItem * 0.8;
+	const insets = useSafeAreaInsets();
+
 	return (
 		<View style={styles.background}>
 			{backgroundImage && <Image blurRadius={2} source={backgroundImage} style={styles.background} />}
 			<View
 				style={[
 					styles.contentWrapper,
-					{ paddingTop: 55, backgroundColor: backgroundImage ? "rgba(0, 0, 0, 0.6)" : undefined },
+					{ paddingTop: 55 + insets.top, backgroundColor: backgroundImage ? "rgba(0, 0, 0, 0.6)" : undefined },
 				]}
 			>
 				<View style={styles.backgroundSoundList}>
@@ -77,7 +80,7 @@ const SelectBackgroundSound: RootScreenProps<"SelectBackgroundSound"> = ({ navig
 										: null,
 								]}
 							/>
-							<Text style={styles.nameBackgroundSound}>{i18n.t(item[1].translate)}</Text>
+								<Text style={styles.nameBackgroundSound}>{i18n.t(item[1].translate)}</Text>
 						</Pressable>
 					))}
 				</View>
@@ -104,6 +107,7 @@ const styles = StyleSheet.create({
 		width: "100%",
 		height: "100%",
 		position: "absolute",
+
 		backgroundColor: "#9765A8",
 	},
 	contentWrapper: {
@@ -123,9 +127,11 @@ const styles = StyleSheet.create({
 		marginVertical: 11,
 	},
 	nameBackgroundSound: {
-		fontSize: 12,
+		fontSize: 11,
 		color: "#FFFFFF",
 		textAlign: "center",
+		width: '100%',
+		textAlignVertical: "center",
 		...Tools.gStyle.font("500"),
 	},
 	title: {

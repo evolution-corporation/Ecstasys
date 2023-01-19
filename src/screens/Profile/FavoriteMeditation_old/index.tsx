@@ -34,8 +34,7 @@ const FavoriteMeditationScreen: RootScreenProps<"FavoriteMeditation"> = ({ navig
 						<Text style={[styles.typeName, { color: index === 0 ? "#FFFFFF" : "#3D3D3D" }]}>
 							{i18n.t(
 								typeMeditation == "DIRECTIONAL_VISUALIZATIONS"
-									? "8566b563-b307-4943-ab52-d51c7e806a4c"
-									: "71277706-2f5d-4ce8-bf26-d680176d3fb8"
+									? "8566b563-b307-4943-ab52-d51c7e806a4c" : typeMeditation === "RELAXATION" ? "71277706-2f5d-4ce8-bf26-d680176d3fb8" : "c15d823e-8dd8-4eb7-b9f5-87c9845ac397"
 							)}
 						</Text>
 						<FlatList
