@@ -14,7 +14,8 @@ const ResultSubscribeScreen = ({ route = { params: { status: "Edit" } }, navigat
 	const { params } = route;
 	const appDispatch = useAppDispatch();
 	React.useEffect(() => {
-		appDispatch(actions.getSubs());
+		setTimeout(() => appDispatch(actions.getSubs()), 500)
+
 	}, []);
 
 	return (
