@@ -73,6 +73,7 @@ const SelectTimeForBase: RootScreenProps<"SelectTimeForBase"> = ({ navigation, r
 					) : null}
 				</View>
 				<Text style={styles.mainText}>{i18n.t("0ca92b30-37c2-4604-a06f-f6f2da9e4985")} </Text>
+				<Text style={{ ...gStyle.font("600"), textAlign: "center" }} >(максимальная продолжительность 90 минут)</Text>
 			</View>
 			<View style={{ width: window.width, height: 420, justifyContent: "flex-end", paddingHorizontal: 20 }}>
 				<SelectTime

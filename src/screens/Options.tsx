@@ -62,13 +62,13 @@ const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 					alignItems: "center",
 				}}
 			>
-				<Pressable
-					onPress={() => {
-						navigation.navigate("ExperimentalConfig");
-					}}
-				>
-					<DefaultText color={"#FFFFFF"}>{i18n.t("cf2785ca-7d89-4ee5-b494-82c76175f04b")}</DefaultText>
-				</Pressable>
+				{/*<Pressable*/}
+				{/*	onPress={() => {*/}
+				{/*		navigation.navigate("ExperimentalConfig");*/}
+				{/*	}}*/}
+				{/*>*/}
+				{/*	<DefaultText color={"#FFFFFF"}>{i18n.t("cf2785ca-7d89-4ee5-b494-82c76175f04b")}</DefaultText>*/}
+				{/*</Pressable>*/}
 				<DefaultText color={"#FFFFFF"}>v{version}</DefaultText>
 			</View>
 		</Screen>

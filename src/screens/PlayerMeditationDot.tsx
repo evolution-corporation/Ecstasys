@@ -135,7 +135,7 @@ const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigatio
 		}, [])
 	);
 	const [color, setColor] = React.useState<ColorValue>("rgb(134, 201, 39)");
-	const [scaleDot, setScaleDot] = React.useState<number>(1);
+	const [scaleDot, setScaleDot] = React.useState<number>(50);
 	const [editView, setEditView] = React.useState<boolean>(false);
 
 	return (
@@ -146,12 +146,13 @@ const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigatio
 						<Text style={{ color: "#FFF", fontSize: 20, ...gStyle.font("700"), marginBottom: 24 }}>
 							{i18n.t("0ead63ec-a460-4688-9096-7310f2a10ed6")}
 						</Text>
-						<SelectColor size={250} widthBorder={30} onChange={c => setColor(c)} initColor={color} />
-						{window.height >= 815 ? (
+						<SelectColor size={250} widthBorder={30} onChange={c => setColor(c)} initColor={color} scaleDot={scaleDot}/>
+						{window.height >= 800 ? (
 							<ColorButton
 								onPress={() => {
 									setEditView(false);
 								}}
+								styleButton={{ paddingHorizontal: 25, borderRadius: 100, transform: [{ translateY: 100 }] }}
 							>
 								{i18n.t("save")}
 							</ColorButton>
@@ -161,22 +162,40 @@ const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigatio
 					<View
 						style={{
 							backgroundColor: color,
-							width: 100,
-							height: 100,
-							transform: [{ scale: scaleDot }],
+							width: scaleDot,
+							height: scaleDot,
 							borderRadius: 50,
 						}}
 					/>
 				)}
 			</View>
-
+			<Pressable
+				onPress={() => setIsShowTime(prevState => !prevState)}
+				style={{
+					alignSelf: "center",
+					width: window.width - 40,
+					height: window.width - 40,
+					alignItems: "center",
+					justifyContent: "center",
+					position: "absolute",
+					bottom: "40%",
+				}}
+			>
+				{isShowTime && !editView && (
+					<View style={styles.timesCodeBox}>
+						<Text style={styles.timeCode} key={"current"}>
+							{i18n.strftime(new Date(currentTime), "%M:%S")}
+						</Text>
+					</View>
+				)}
+			</Pressable>
 			<View style={{ flexDirection: "row" }}>
 				<View style={{ flex: 1 }}>
 					<TimeLine
 						onChange={percent => {
-							setScaleDot(percent);
+							setScaleDot(20 + 40 * percent);
 						}}
-						initValue={scaleDot}
+						initValue={(scaleDot - 20) / 40}
 					/>
 				</View>
 				<Pressable
@@ -188,7 +207,7 @@ const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigatio
 					<Image source={require("assets/rgbButton.png")} style={{ width: "100%", height: "100%" }} />
 				</Pressable>
 			</View>
-			<Pressable style={styles.buttonBackgroundSound} onPress={() => navigation.navigate("SelectBackgroundSound")}>
+			<Pressable style={styles.buttonBackgroundSound} onPress={() => navigation.navigate("SelectBackgroundSound", {})}>
 				<Headphones style={{ marginRight: 24 }} />
 				<Text style={styles.buttonBackgroundText}>
 					{i18n.t(

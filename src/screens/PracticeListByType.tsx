@@ -37,9 +37,9 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 	const isSubscribe = useIsActivateSubscribe();
 
 	//! Experimental
-	const DotMeditation = useExperimentalFunction("baseMeditation_dotMeditation");
-	const mandalaMeditation = useExperimentalFunction("baseMeditation_mandalaMeditation");
-	const noseMeditation = useExperimentalFunction("baseMeditation_noseMeditation");
+	// const DotMeditation = useExperimentalFunction("baseMeditation_dotMeditation");
+	// const mandalaMeditation = useExperimentalFunction("baseMeditation_mandalaMeditation");
+	// const noseMeditation = useExperimentalFunction("baseMeditation_noseMeditation");
 	//! ---
 	React.useLayoutEffect(() => {
 		navigation.setOptions({ title: i18n.t(typePractices) });
@@ -70,10 +70,8 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 				]);
 			} else {
 				//! Experimental
-				const listPractice: State.Practice[] = [];
-				if (DotMeditation.status) listPractice.push({ ...PlayerMeditationDot, isPermission: true });
-				if (mandalaMeditation.status) listPractice.push({ ...MeditationOnTheMandala, isPermission: true });
-				if (noseMeditation.status) listPractice.push({ ...MeditationOnTheNose, isPermission: true });
+				const listPractice: State.Practice[] = [{ ...MeditationOnTheNose, isPermission: true }, { ...PlayerMeditationDot, isPermission: true }, { ...MeditationOnTheMandala, isPermission: true }];
+
 				setPracticeList(listPractice);
 				//! ----
 			}
@@ -130,7 +128,6 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 				/>
 			)}
 			{height >= 800 && (
-
 				<ColorButton
 					animationStyle={aStyle.button}
 					styleButton={styles.button}

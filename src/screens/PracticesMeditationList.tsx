@@ -73,10 +73,6 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 	});
 
 	//! Experimental
-	const baseMeditation = useBaseMeditationInformation((count) => {
-		setCountPractices(previousValue => ({ ...previousValue, basic: count  }));
-	})
-
 
 	//! ---
 
@@ -105,7 +101,8 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 				setCountPractices(preValue => ({ ...preValue,
 					relaxation: countsResult[0],
 					directionalVisualizations: countsResult[1],
-					breathingPractices: countsResult[2]
+					breathingPractices: countsResult[2],
+					basic: 4
 				}))
 				}
 			)
