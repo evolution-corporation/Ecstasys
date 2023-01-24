@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { ElementRef, useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity, Pressable, Linking } from "react-native";
+import {StyleSheet, Text, View, Image, TouchableOpacity, Pressable, Linking, Platform} from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 
@@ -16,6 +16,7 @@ import store, { actions, useAppDispatch, useAppSelector } from "~store";
 import DefaultText from "~components/Text/default-text";
 import Group48095715 from "/Group48095715.svg";
 import Vector from "/Vector.svg";
+import BuySubscribeController from "../../../controllers/BuySubscribeController";
 
 const price = {
 	month_1: 299,
@@ -77,13 +78,21 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 	// }, [selectedSubscribeType, subsType,isActiveSubs]);
 	const editSubscribe = () => {
 		if (selectedSubscribeType !== null) {
-			if (subsType === null) {
-				navigation.navigate("Payment", { selectSubscribe: SubscribeType.WEEK });
-			} else if (selectedSubscribeType !== subsType && subsType !== SubscribeType.WEEK) {
-				navigation.navigate("ConfirmChangeSubs", { selectSubscribe: selectedSubscribeType });
+			if (Platform.OS === "ios") {
+				BuySubscribeController.inAppPurchases(selectedSubscribeType).then((result) => {
+					alert(result)
+				})
 			} else {
-				navigation.navigate("Payment", { selectSubscribe: selectedSubscribeType });
+				if (subsType === null) {
+
+					navigation.navigate("Payment", { selectSubscribe: SubscribeType.WEEK });
+				} else if (selectedSubscribeType !== subsType && subsType !== SubscribeType.WEEK) {
+					navigation.navigate("ConfirmChangeSubs", { selectSubscribe: selectedSubscribeType });
+				} else {
+					navigation.navigate("Payment", { selectSubscribe: selectedSubscribeType });
+				}
 			}
+
 		}
 	};
 
