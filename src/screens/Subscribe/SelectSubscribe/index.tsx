@@ -80,8 +80,8 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 		if (selectedSubscribeType !== null) {
 			if (Platform.OS === "ios") {
 				BuySubscribeController.inAppPurchases(selectedSubscribeType).then((result) => {
-					alert(result)
-				})
+					navigation.navigate("ResultSubscribeScreen", { status: "Designations" });
+				}).catch(() => {navigation.navigate("ResultSubscribeScreen", { status: "Fail" });})
 			} else {
 				if (subsType === null) {
 

@@ -31,8 +31,7 @@ export class BuySubscribeControllerGenerate implements BuySubscribeControllerInt
     public async inAppPurchases (type: SubscribeType): Promise<ResultPayment> {
         try {
             await InAppPurchases.connectAsync()
-            const products = await InAppPurchases.getProductsAsync([this.SubscribeTypeToSubscribeID(type)])
-            alert(products)
+            await InAppPurchases.getProductsAsync([this.SubscribeTypeToSubscribeID(type)])
             await InAppPurchases.purchaseItemAsync(this.SubscribeTypeToSubscribeID(type))
             await InAppPurchases.disconnectAsync()
             return "Success"
