@@ -45,7 +45,6 @@
 		"production": {
 			"channel": "production",
 			"distribution": "store",
-			"developmentClient": true,
 			"env": {
 				"APP_VARIANT": "prod"
 			},
