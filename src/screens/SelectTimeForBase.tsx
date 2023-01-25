@@ -44,7 +44,7 @@ const SelectTimeForBase: RootScreenProps<"SelectTimeForBase"> = ({ navigation, r
 					<SharedElement id={`practice.item.${selectedPractice.id}`} style={styles.image}>
 						<Image source={selectedPractice.image} style={{ width: "100%", height: "100%" }} />
 					</SharedElement>
-					{selectedPractice.id !== "4b134d62-3507-4d35-9168-289fd7c0172b" ? (
+
 						<View
 							style={{
 								height: 45,
@@ -58,9 +58,10 @@ const SelectTimeForBase: RootScreenProps<"SelectTimeForBase"> = ({ navigation, r
 								alignSelf: "center",
 								bottom: -22.5,
 								position: "absolute",
+								zIndex: 10
 							}}
 						>
-							<Text style={{ color: "#FFFFFF", fontSize: 14, ...gStyle.font("500") }}>
+							<Text style={{ color: "#FFFFFF", fontSize: 14, ...gStyle.font("500"),  }}>
 								{i18n.t("4cfd0240-f282-4148-a991-4deff19e7028")}
 							</Text>
 							<Switch
@@ -70,21 +71,23 @@ const SelectTimeForBase: RootScreenProps<"SelectTimeForBase"> = ({ navigation, r
 								thumbColor={"#FFFFFF"}
 							/>
 						</View>
-					) : null}
 				</View>
 				<Text style={styles.mainText}>{i18n.t("0ca92b30-37c2-4604-a06f-f6f2da9e4985")} </Text>
 				<Text style={{ ...gStyle.font("600"), textAlign: "center" }} >(максимальная продолжительность 90 минут)</Text>
 			</View>
 			<View style={{ width: window.width, height: 420, justifyContent: "flex-end", paddingHorizontal: 20 }}>
-				<SelectTime
-					ref={selectTime}
-					start={[5, 0]}
-					end={[90, 0]}
-					style={{ alignSelf: "center" }}
-					onChange={([minute, second]) => {
-						setMilliseconds((minute * 60 + second) * 1000);
-					}}
-				/>
+				<View style={{ justifyContent: "center", flex: 1, alignItems: "center", marginTop: 100 }}>
+					<SelectTime
+						ref={selectTime}
+						start={[5, 0]}
+						end={[90, 0]}
+						style={{ alignSelf: "center" }}
+						onChange={([minute, second]) => {
+							setMilliseconds((minute * 60 + second) * 1000);
+						}}
+					/>
+				</View>
+
 				<TextButton
 					styleText={styles.resetDefault}
 					onPress={() => {
@@ -126,6 +129,8 @@ const styles = StyleSheet.create({
 		borderBottomLeftRadius: 20,
 		borderBottomRightRadius: 20,
 		overflow: "hidden",
+		...gStyle.shadows(2, 3),
+
 	},
 	imageContent: {
 		width: "100%",
@@ -139,7 +144,6 @@ const styles = StyleSheet.create({
 		width: "100%",
 		left: 0,
 		right: 0,
-		...gStyle.shadows(2, 3),
 		borderBottomLeftRadius: 20,
 		borderBottomRightRadius: 20,
 	},
@@ -181,6 +185,6 @@ const styles = StyleSheet.create({
 		color: "#C2A9CE",
 		fontSize: 12,
 		...gStyle.font("500"),
-		marginBottom: 10,
+		marginBottom: 20,
 	},
 });

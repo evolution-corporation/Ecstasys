@@ -50,12 +50,15 @@ const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigatio
 	const statusIsLoaded = useRef(true);
 	const [currentTime, setCurrentTime] = React.useState<number>(0);
 	const _currentTime = useRef<number>(0);
+	const audioVoice = useRef<Audio.Sound>(new Audio.Sound());
 
 	const audioBackground = useRef<Audio.Sound | null>(null);
 
 	const [isShowTime, setIsShowTime] = React.useState(true);
 	const timerTask = React.useRef<ReturnType<typeof initializationTimer> | null>(null);
 	const appDispatch = useAppDispatch();
+
+
 
 	const [startTimer, stopTimer] = React.useRef([
 		() => {
@@ -80,7 +83,19 @@ const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigatio
 			interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
 			interruptionModeIOS: InterruptionModeIOS.DoNotMix,
 		});
-		startTimer();
+		if (isNeedVoice && statusIsLoaded.current) {
+			audioVoice.current
+				.loadAsync({
+					uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/baseSound/%D0%9C%D0%B5%D0%B4%D0%B8%D1%82%D0%B0%D1%86%D0%B8%D1%8F%20%D0%9A%D0%BE%D0%BD%D1%86%D0%B5%D0%BD%D1%82%D1%80%D0%B0%D1%86%D0%B8%D1%8F%20%D0%BD%D0%B0%20%D1%82%D0%BE%D1%87%D0%BA%D0%B5%20no%20FX.mp3",
+				})
+				.then(() => {
+					statusIsLoaded.current = false;
+					startTimer();
+					audioVoice.current.playAsync();
+				});
+		} else if (!isNeedVoice) {
+			startTimer();
+		}
 
 		return () => {
 			if (audioBackground.current !== null) {
@@ -89,6 +104,7 @@ const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigatio
 				});
 			}
 			stopTimer();
+			audioVoice.current.stopAsync();
 		};
 	}, []);
 
@@ -135,7 +151,7 @@ const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigatio
 		}, [])
 	);
 	const [color, setColor] = React.useState<ColorValue>("rgb(134, 201, 39)");
-	const [scaleDot, setScaleDot] = React.useState<number>(50);
+	const [scaleDot, setScaleDot] = React.useState<number>(100);
 	const [editView, setEditView] = React.useState<boolean>(false);
 
 	return (
@@ -164,7 +180,7 @@ const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigatio
 							backgroundColor: color,
 							width: scaleDot,
 							height: scaleDot,
-							borderRadius: 50,
+							borderRadius: 100,
 						}}
 					/>
 				)}
@@ -193,9 +209,9 @@ const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigatio
 				<View style={{ flex: 1 }}>
 					<TimeLine
 						onChange={percent => {
-							setScaleDot(20 + 40 * percent);
+							setScaleDot(40 + 80 * percent);
 						}}
-						initValue={(scaleDot - 20) / 40}
+						initValue={(scaleDot - 40) / 80}
 					/>
 				</View>
 				<Pressable
