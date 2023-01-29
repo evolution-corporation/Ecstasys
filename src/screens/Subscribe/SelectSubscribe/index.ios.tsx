@@ -1,19 +1,18 @@
 /** @format */
 
-import React, { ElementRef, useEffect, useRef, useState } from "react";
-import {StyleSheet, Text, View, Image, TouchableOpacity, Pressable, Linking, Platform} from "react-native";
-import { AntDesign } from "@expo/vector-icons";
-import { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
+import React, {useState} from "react";
+import {Linking, Platform, Pressable, StyleSheet, Text, View} from "react-native";
+import {AntDesign} from "@expo/vector-icons";
+import {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
 
-import { CustomModal, DoubleColorView } from "~components/containers";
-import { ColorButton, TextButton } from "~components/dump";
+import {DoubleColorView} from "~components/containers";
+import {ColorButton} from "~components/dump";
 import i18n from "~i18n";
 import gStyle from "~styles";
 
-import { RootScreenProps, SubscribeType } from "~types";
-import { SubscribeCard } from "./components";
-import store, { actions, useAppDispatch, useAppSelector } from "~store";
-import DefaultText from "~components/Text/default-text";
+import {RootScreenProps, SubscribeType} from "~types";
+import {SubscribeCard} from "./components";
+import {actions, useAppDispatch, useAppSelector} from "~store";
 import Group48095715 from "/Group48095715.svg";
 import Vector from "/Vector.svg";
 import BuySubscribeController from "../../../controllers/BuySubscribeController";
@@ -24,7 +23,7 @@ const price = {
 };
 
 const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation }) => {
-	const [selectedSubscribeType, setSelectedSubscribeType] = useState<SubscribeType | null>(null);
+	const [selectedSubscribeType, setSelectedSubscribeType] = useState<SubscribeType | null>(SubscribeType.MONTH);
 	const [isAccept, setIsAccept] = useState<boolean>(false);
 	// const modalRef = useRef<ElementRef<typeof CustomModal>>(null);
 
@@ -38,7 +37,7 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 			],
 		})),
 	};
-
+	const appDispatch = useAppDispatch()
 	const [isActiveSubs, subscribeEnd, isAutoPayment, subsType] = useAppSelector(store => {
 		if (store.account.subscribe !== undefined) {
 			const endSubscribe = new Date(store.account.subscribe.whenSubscribe);
@@ -77,14 +76,15 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 	// 	}
 	// }, [selectedSubscribeType, subsType,isActiveSubs]);
 	const editSubscribe = () => {
-		if (selectedSubscribeType !== null) {
-			if (Platform.OS === "ios") {
-				BuySubscribeController.inAppPurchases(selectedSubscribeType).then((result) => {
+		if (selectedSubscribeType !== null && !isActiveSubs) {
+			const useNewSystePaymentIOS = false
+			if (useNewSystePaymentIOS) {
+				BuySubscribeController.inAppPurchases(selectedSubscribeType).then(async (result) => {
+					await appDispatch(actions.getSubs()).unwrap()
 					navigation.navigate("ResultSubscribeScreen", { status: "Designations" });
 				}).catch(() => {navigation.navigate("ResultSubscribeScreen", { status: "Fail" });})
 			} else {
 				if (subsType === null) {
-
 					navigation.navigate("Payment", { selectSubscribe: SubscribeType.WEEK });
 				} else if (selectedSubscribeType !== subsType && subsType !== SubscribeType.WEEK) {
 					navigation.navigate("ConfirmChangeSubs", { selectSubscribe: selectedSubscribeType });
@@ -131,58 +131,9 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 					isShowCancelButton={isAutoPayment ?? false}
 					isFirstPayment={subscribeEnd === null}
 				/>
-				{isActiveSubs && subsType === "MONTH" && (
-					<>
-						<Text style={styles.offerToChangeSubscribeType}>{i18n.t("b6f80560-6ba6-4646-821a-a03ca72acb74")}</Text>
-					</>
-				)}
-				<SubscribeCard
-					isFirstPayment={false}
-					image={require("./assets/armchair.png")}
-					isSelected={selectedSubscribeType === SubscribeType.HALF_YEAR}
-					isUsed={isActiveSubs && subsType === "HALF_YEAR"}
-					onPress={() => setSelectedSubscribeType(SubscribeType.HALF_YEAR)}
-					price={price.month_6}
-					stylesContent={{
-						textStyle: { color: "#FFFFFF" },
-						background: { backgroundColor: "#702D87" },
-					}}
-					mainColor={"#FFFFFF"}
-					countMonth={6}
-					secondElement={
-						<View
-							style={{
-								backgroundColor: "#FFFFFF",
-								paddingHorizontal: 27,
-								paddingVertical: 7,
-								borderRadius: 15,
-								marginTop: 12,
-							}}
-						>
-							<Text
-								style={{
-									color: "#FBBC05",
-									fontSize: 13,
-									...gStyle.font("600"),
-								}}
-							>
-								{i18n.t("5b805945-9f3f-41df-a6c5-3d7d9747a118", {
-									percent: Math.ceil(100 - (price.month_6 / (price.month_1 * 6)) * 100),
-								})}
-							</Text>
-						</View>
-					}
-					textPrice={{
-						top: i18n.t("56b57ad2-f5f3-4f05-9f43-55d2edb25bdf", {
-							price: price.month_6,
-						}),
-						bottom: i18n.t("84fe380b-74a9-4d02-9463-550c2d746617"),
-					}}
-					onCancelSubscribe={() => {}}
-					// TODO: Navigation
-					isShowCancelButton={isAutoPayment ?? false}
-				/>
-				<View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+			</View>
+			<View >
+				<View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
 					<Pressable
 						onPress={() => setIsAccept(prev => !prev)}
 						style={{ width: 23, height: 23, justifyContent: "center", alignItems: "flex-start" }}
@@ -206,17 +157,20 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 						</Text>
 					</Text>
 				</View>
-			</View>
-			<ColorButton
-				styleButton={[styles.button, isAccept ? {} : { backgroundColor: "#C2A9CE" }]}
-				styleText={styles.buttonText}
-				animationStyle={aStyle.button}
-				onPress={() => {
-					if (isAccept) editSubscribe();
-				}}
-			>
-				{i18n.t("Arrange")}
-			</ColorButton>
+					{
+						!isActiveSubs && <ColorButton
+							styleButton={[styles.button, isAccept ? {} : { backgroundColor: "#C2A9CE" }]}
+							styleText={styles.buttonText}
+							animationStyle={aStyle.button}
+							onPress={() => {
+								if (isAccept) editSubscribe();
+							}}
+						>
+							{i18n.t("Arrange")}
+						</ColorButton>
+					}
+
+				</View>
 		</DoubleColorView>
 	);
 };
