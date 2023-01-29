@@ -1,0 +1,13 @@
+{
+	"Meditation": {
+		"AudioId": "c403110a-d938-46f7-b759-7d37183492e2",
+		"AudioLength": 200072,
+		"Description": "Дыхание диафрагмой является природным естественным дыханием. Посмотри, как дышат младенцы, при вдохе у них надувается живот.",
+		"Id": "a5296bee-dca3-44f1-9490-9d20f076fec0",
+		"IsSubscribed": false,
+		"Language": "ru",
+		"Name": "Диафрагментальное дыхание",
+		"PhotoId": "0f00d75a-9fbd-4d02-95e4-6d066d7e0296",
+		"TypeMeditation": "BreathtakingPractice"
+	}
+}

@@ -133,5 +133,6 @@ export default createReducer<AccountState>(
 		builder.addCase(Actions.removeSubscribe.fulfilled, state => {
 			if (state.subscribe !== undefined) state.subscribe = { ...state.subscribe, autoPayment: false };
 		});
+
 	}
 );

@@ -77,7 +77,7 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 	// }, [selectedSubscribeType, subsType,isActiveSubs]);
 	const editSubscribe = () => {
 		if (selectedSubscribeType !== null && !isActiveSubs) {
-			const useNewSystePaymentIOS = false
+			const useNewSystePaymentIOS = true
 			if (useNewSystePaymentIOS) {
 				BuySubscribeController.inAppPurchases(selectedSubscribeType).then(async (result) => {
 					await appDispatch(actions.getSubs()).unwrap()

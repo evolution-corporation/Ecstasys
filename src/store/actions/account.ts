@@ -6,6 +6,10 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { Converter, Request, Storage } from "~api";
 import { Gender, State } from "~types";
 import type { AsyncThunkConfig } from "../index";
+import {ServerEntities, Subscribe} from "../../api/types";
+import {Platform} from "react-native";
+
+import * as InAppPurchases from 'expo-in-app-purchases';
 
 enum AccountAction {
 	setChangedData = "account/setChangedData",
@@ -172,9 +176,35 @@ export const setRegistrationAccountStatus = createAction(AccountAction.setRegist
 export const setNotNewUser = createAction(AccountAction.setNotNewUser);
 
 export const getSubs = createAsyncThunk("account/subs", async () => {
-	return await Request.getSubscribeUserInformation();
+	const useNewSystePaymentIOS = true
+	if (Platform.OS === "ios" && useNewSystePaymentIOS) {
+		await InAppPurchases.connectAsync()
+		const history = await InAppPurchases.getPurchaseHistoryAsync()
+		await InAppPurchases.disconnectAsync()
+
+		if (history.results !== undefined && history.results?.length > 0) {
+			const lastItem = history.results[history.results.length - 1]
+			const subsType = lastItem.productId === "subscription.monthly" ? "Month" : lastItem.productId === "subscription.semiAnnual" ? "Month6" : "Week"
+			const whenSubs = (new Date(lastItem.purchaseTime)).toISOString()
+			const autoPayment = true
+			return {
+				RebillId: 123,
+				Type: subsType,
+				WhenSubscribe: whenSubs,
+				RemainingTime: 0,
+				UserId: "-"
+			}
+		} else {
+			return null
+		}
+
+	} else {
+		return await Request.getSubscribeUserInformation();
+	}
+
 });
 
 export const removeSubscribe = createAsyncThunk("account/removeSubscribe", async () => {
 	await Request.removeAutoPayment();
 });
+

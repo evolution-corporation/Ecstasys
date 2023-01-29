@@ -8,7 +8,7 @@ export { default as InputImageAndBirthday } from "./InputImageAndBirthday";
 export { default as Greeting } from "./AuthorizationAndRegistration/Greeting";
 export { default as EditUser } from "./EditUser";
 export { default as EditUserBirthday } from "./EditUserBirthday";
-export { default as SelectSubscribe } from "./Subscribe/SelectSubscribe";
+export { default as SelectSubscribe } from "./Subscribe/SelectSubscribe/index.ios";
 export { default as ResultSubscribe } from "./Subscribe/ResultSubscribe";
 export { default as PracticeListByType } from "./PracticeListByType";
 export { default as PlayerMeditationPractices } from "./PlayerForRelaxation";

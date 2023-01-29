@@ -110,7 +110,7 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 						navigation.navigate("Instruction", { instruction: Instruction.directionalVisualization });
 					} else {
 						const index = practiceList.findIndex(item => item.id == selectedPracticeId.current);
-						if (index !== -1) navigation.navigate("Instruction", { instruction: practiceList[index].instruction });
+						if (index !== -1) navigation.navigate("Instruction", { instruction: practiceList[index].instruction, meditationid: practiceList[index].id });
 					}
 				}}
 			>

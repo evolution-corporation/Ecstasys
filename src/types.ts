@@ -224,6 +224,7 @@ export type RootStackList = {
 	Greeting: undefined;
 	Instruction: {
 		instruction: State.Instruction;
+		meditationid?: string
 	};
 	FavoriteMeditation: undefined;
 	Options: undefined;

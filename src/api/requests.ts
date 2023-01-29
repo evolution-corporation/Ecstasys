@@ -5,13 +5,13 @@
 
 import auth from "@react-native-firebase/auth";
 import { RequestError } from "src/Errors";
-import { Gender, ServerEntities, SupportType } from "./types";
+import {Gender, ServerEntities, Subscription, SupportType} from "./types";
 import * as Storage from "./asyncStorage";
 import Constants from "expo-constants";
 
 const { extra } = Constants.manifest ?? {};
 const { apiURL } = extra;
-const URL = "http://" + apiURL + "/";
+const URL = "http://" + "api.evodigital.one" + "/";
 /**
  * Получает FirebaseToken пользователя
  * @returns FirebaseToken пользователя
@@ -201,6 +201,25 @@ export async function getMeditationById(meditationId: string, firebaseTokenToken
 	}
 	const json = await requestServer.json();
 	return json.Meditation as ServerEntities.Meditation;
+}
+
+export async function getInstructionMeditationById(meditationId: string, firebaseTokenToken?: string) {
+	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
+	const url = URL + "meditation?meditationId=" + meditationId;
+	const requestServer = await fetch(url, {
+		headers: {
+			Authorization: firebaseTokenToken,
+			"Content-Type": "application/json",
+		},
+	});
+	if (requestServer.status === 404) {
+		return null;
+	}
+	if (requestServer.status >= 500) {
+		throw new RequestError(`getMeditationById: ${await requestServer.text()}`, url, undefined, "GET", "50x");
+	}
+	const json = await requestServer.json();
+	return json.Subscription as ServerEntities.Subscription;
 }
 
 /**
