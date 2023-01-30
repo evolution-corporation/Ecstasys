@@ -11,7 +11,7 @@ import Constants from "expo-constants";
 
 const { extra } = Constants.manifest ?? {};
 const { apiURL } = extra;
-const URL = "http://" + "api.evodigital.one" + "/";
+const URL = "http://" + apiURL + "/";
 /**
  * Получает FirebaseToken пользователя
  * @returns FirebaseToken пользователя
