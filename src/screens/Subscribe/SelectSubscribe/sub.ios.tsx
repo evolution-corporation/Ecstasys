@@ -1,21 +1,22 @@
 /** @format */
 
-import React, {useState} from "react";
-import {Linking, Platform, Pressable, StyleSheet, Text, View} from "react-native";
-import {AntDesign} from "@expo/vector-icons";
-import {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
+import React, { useState } from "react";
+import { ActivityIndicator, Linking, Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
+import { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 
-import {DoubleColorView} from "~components/containers";
-import {ColorButton} from "~components/dump";
+import { DoubleColorView } from "~components/containers";
+import { ColorButton } from "~components/dump";
 import i18n from "~i18n";
 import gStyle from "~styles";
 
-import {RootScreenProps, SubscribeType} from "~types";
-import {SubscribeCard} from "./components";
-import {actions, useAppDispatch, useAppSelector} from "~store";
+import { RootScreenProps, SubscribeType } from "~types";
+import { SubscribeCard } from "./components";
+import { actions, useAppDispatch, useAppSelector } from "~store";
 import Group48095715 from "/Group48095715.svg";
 import Vector from "/Vector.svg";
 import BuySubscribeController from "../../../controllers/BuySubscribeController";
+import * as InAppPurchases from "expo-in-app-purchases";
 
 const price = {
 	month_1: 299,
@@ -26,7 +27,7 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 	const [selectedSubscribeType, setSelectedSubscribeType] = useState<SubscribeType | null>(SubscribeType.MONTH);
 	const [isAccept, setIsAccept] = useState<boolean>(false);
 	// const modalRef = useRef<ElementRef<typeof CustomModal>>(null);
-
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const _transporteeYButton = useSharedValue(0);
 	const aStyle = {
 		button: useAnimatedStyle(() => ({
@@ -37,7 +38,7 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 			],
 		})),
 	};
-	const appDispatch = useAppDispatch()
+	const appDispatch = useAppDispatch();
 	const [isActiveSubs, subscribeEnd, isAutoPayment, subsType] = useAppSelector(store => {
 		if (store.account.subscribe !== undefined) {
 			const endSubscribe = new Date(store.account.subscribe.whenSubscribe);
@@ -75,14 +76,23 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 	// 		_transporteeYButton.value = 0;
 	// 	}
 	// }, [selectedSubscribeType, subsType,isActiveSubs]);
+
 	const editSubscribe = () => {
 		if (selectedSubscribeType !== null && !isActiveSubs) {
-			const useNewSystePaymentIOS = true
+			const useNewSystePaymentIOS = true;
 			if (useNewSystePaymentIOS) {
-				BuySubscribeController.inAppPurchases(selectedSubscribeType).then(async (result) => {
-					await appDispatch(actions.getSubs()).unwrap()
-					navigation.navigate("ResultSubscribeScreen", { status: "Designations" });
-				}).catch(() => {navigation.navigate("ResultSubscribeScreen", { status: "Fail" });})
+				setIsLoading(true);
+				InAppPurchases.setPurchaseListener(async ({ responseCode }) => {
+					if (responseCode === InAppPurchases.IAPResponseCode.OK) {
+						await appDispatch(actions.getSubs()).unwrap();
+						navigation.navigate("ResultSubscribeScreen", { status: "Designations" });
+					} else if (responseCode === InAppPurchases.IAPResponseCode.ERROR) {
+						navigation.navigate("ResultSubscribeScreen", { status: "Fail" });
+					} else {
+						setIsLoading(false);
+					}
+				});
+				BuySubscribeController.inAppPurchases(selectedSubscribeType);
 			} else {
 				if (subsType === null) {
 					navigation.navigate("Payment", { selectSubscribe: SubscribeType.WEEK });
@@ -92,7 +102,6 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 					navigation.navigate("Payment", { selectSubscribe: selectedSubscribeType });
 				}
 			}
-
 		}
 	};
 
@@ -132,8 +141,16 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 					isFirstPayment={subscribeEnd === null}
 				/>
 			</View>
-			<View >
-				<View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+			<View>
+				<View
+					style={{
+						width: "100%",
+						flexDirection: "row",
+						alignItems: "center",
+						justifyContent: "space-between",
+						marginBottom: 10,
+					}}
+				>
 					<Pressable
 						onPress={() => setIsAccept(prev => !prev)}
 						style={{ width: 23, height: 23, justifyContent: "center", alignItems: "flex-start" }}
@@ -157,20 +174,23 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 						</Text>
 					</Text>
 				</View>
-					{
-						!isActiveSubs && <ColorButton
-							styleButton={[styles.button, isAccept ? {} : { backgroundColor: "#C2A9CE" }]}
-							styleText={styles.buttonText}
-							animationStyle={aStyle.button}
-							onPress={() => {
-								if (isAccept) editSubscribe();
-							}}
-						>
-							{i18n.t("Arrange")}
-						</ColorButton>
-					}
-
-				</View>
+				{!isActiveSubs && isLoading ? (
+					<View style={{ width: "100%", height: 50, justifyContent: "center", alignItems: "center" }}>
+						<ActivityIndicator color={"#C2A9CE"} />
+					</View>
+				) : (
+					<ColorButton
+						styleButton={[styles.button, isAccept ? {} : { backgroundColor: "#C2A9CE" }]}
+						styleText={styles.buttonText}
+						animationStyle={aStyle.button}
+						onPress={() => {
+							if (isAccept) editSubscribe();
+						}}
+					>
+						{i18n.t("Arrange")}
+					</ColorButton>
+				)}
+			</View>
 		</DoubleColorView>
 	);
 };
