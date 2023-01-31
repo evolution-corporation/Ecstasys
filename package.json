@@ -1,6 +1,6 @@
 {
 	"name": "dmd-meditation",
-	"version": "0.2.15",
+	"version": "0.2.17",
 	"scripts": {
 		"start": "expo start --dev-client --force-manifest-type=classic",
 		"build Dev": "eas build --platform android --profile development",

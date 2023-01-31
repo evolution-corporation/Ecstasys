@@ -178,13 +178,13 @@ export const getSubs = createAsyncThunk("account/subs", async () => {
 	const useNewSystePaymentIOS = true;
 
 	if (Platform.OS === "ios" && useNewSystePaymentIOS) {
+		let history: InAppPurchases.IAPQueryResponse<InAppPurchases.InAppPurchase>
 		try {
 			await InAppPurchases.connectAsync();
+			history = await InAppPurchases.getPurchaseHistoryAsync();
+			console.log("HIstory 123123: " + history.results, history.results?.length)
+			await InAppPurchases.disconnectAsync();
 		} catch (error) {}
-		const history = await InAppPurchases.getPurchaseHistoryAsync();
-		console.log(history.results?.length);
-		await InAppPurchases.disconnectAsync();
-
 		if (history.results !== undefined && history.results?.length > 0) {
 			const lastItem = history.results[history.results.length - 1];
 			const subsType =
