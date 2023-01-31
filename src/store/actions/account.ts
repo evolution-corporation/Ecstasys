@@ -181,6 +181,7 @@ export const getSubs = createAsyncThunk("account/subs", async () => {
 		let history: InAppPurchases.IAPQueryResponse<InAppPurchases.InAppPurchase>
 		try {
 			await InAppPurchases.connectAsync();
+			console.log("Старт получение истории")
 			history = await InAppPurchases.getPurchaseHistoryAsync();
 			console.log("HIstory 123123: " + history.results, history.results?.length)
 			await InAppPurchases.disconnectAsync();
