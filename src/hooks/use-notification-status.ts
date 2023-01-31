@@ -1,25 +1,26 @@
-import * as Notifications from 'expo-notifications';
+/** @format */
+
+import * as Notifications from "expo-notifications";
 import React from "react";
 
-
 const useNotificationStatus = (): [boolean | null, () => Promise<void>] => {
-    const [status, setStatus] = React.useState<boolean | null>(null)
+	const [status, setStatus] = React.useState<boolean | null>(null);
 
-    React.useEffect(() => {
-        Notifications.getPermissionsAsync().then(({ granted }) => setStatus(granted))
+	React.useEffect(() => {
+		Notifications.getPermissionsAsync().then(({ granted }) => setStatus(granted));
 
-        return () => {
+		return () => {};
+	}, []);
 
-        }
-    }, [])
+	const getStatus = async () => {
+		console.log("Get notification");
+		const state = await Notifications.requestPermissionsAsync();
+		setStatus(state.granted);
+		console.log(state);
+		if (!state.granted) alert("Чтобы сообщить об смене дыхания нужен доступ к уведомлениям");
+	};
 
-    const getStatus = async () => {
-        const state = await Notifications.getPermissionsAsync()
-        setStatus(state.granted)
-        if (!state.granted) alert("Чтобы сообщить об смене дыхания нужен доступ к уведомлениям")
-    }
+	return [status, getStatus];
+};
 
-    return [status, getStatus]
-}
-
-export default useNotificationStatus
+export default useNotificationStatus;

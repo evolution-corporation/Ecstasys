@@ -45,6 +45,7 @@ const useBackgroundSound = (shouldPlay: boolean) => {
 			audio.current?.getStatusAsync().then(status => {
 				if (status.isLoaded) {
 					audio.current?.stopAsync();
+					audio.current?.unloadAsync();
 				}
 			});
 		};

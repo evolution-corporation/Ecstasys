@@ -11,7 +11,8 @@
 				"prebuildCommand": "prebuild"
 			},
 			"ios": {
-				"prebuildCommand": "prebuild"
+				"prebuildCommand": "prebuild",
+				"simulator": true
 			},
 			"env": {
 				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false",

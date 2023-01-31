@@ -19,7 +19,7 @@ import { StatusBar } from "expo-status-bar";
 import gStyle from "~styles";
 import useIsActivateSubscribe from "src/hooks/use-is-activate-subscribe";
 import { developmentConfig } from "src/read-config";
-import {useDimensions} from "@react-native-community/hooks";
+import { useDimensions } from "@react-native-community/hooks";
 
 const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => {
 	const selectedPracticeId = React.useRef<string | null>(null);
@@ -69,7 +69,7 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 	);
 
 	const onClick = (practiceId: string) => {
-		if (isSubscribe) {
+		if (isSubscribe || true) {
 			const practiceIndex = practiceList.findIndex(item => item.id === practiceId);
 			if (practiceIndex !== -1 && practiceList[practiceIndex].type === "RELAXATION" && isSubscribe) {
 				dispatch(actions.setOptionForDMD(practiceList[practiceIndex]));
@@ -78,7 +78,6 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 		} else {
 			navigation.navigate("ByMaySubscribe");
 		}
-
 	};
 
 	useFocusEffect(
@@ -139,7 +138,6 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 					}}
 				/>
 			)}
-
 		</DoubleColorView>
 	);
 };

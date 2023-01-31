@@ -60,7 +60,7 @@ const SubscribeCard: FC<SubscribeCardProps> = props => {
 				</View>
 				<View style={styles.imageCard}>
 					{mainColor === "#FFFFFF" ? <BirdWhite /> : <BirdViolet />}
-					<Image source={image} style={styles.imagePeople} resizeMode={"center"} />
+					<Image source={image} style={styles.imagePeople} resizeMode={"contain"} />
 				</View>
 				{!isUsed && <CircleCheck isSelected={isSelected} style={styles.checkSelectedSubscribe} colorItem={mainColor} />}
 			</TouchableOpacity>
