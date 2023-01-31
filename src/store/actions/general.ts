@@ -42,7 +42,7 @@ export const initialization = createAsyncThunk(GeneralAction.initialization, asy
 			let subscribe: State.Subscribe | null = null;
 			if (await Request.checkAccess()) {
 				const [userServer, subscribeServer] = await Request.getInformationUser();
-				if (Platform.OS === "ios") await dispatch(getSubs());
+				if (Platform.OS === "ios") dispatch(getSubs());
 				[user, subscribe] = [
 					userServer !== null ? Converter.composeUser(userServer) : null,
 					userServer !== null && subscribeServer !== null ? Converter.composeSubscribe(subscribeServer) : null,
