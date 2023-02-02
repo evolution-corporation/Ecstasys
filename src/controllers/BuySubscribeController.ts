@@ -10,7 +10,7 @@ export interface BuySubscribeControllerInterface {
 }
 
 enum SubscribeID {
-	Month = "subs.test.month",
+	Month = "subscription.monthly",
 	SemiAnnual = "subscription.semiAnnual",
 
 	Week = "subscription.week",

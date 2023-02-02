@@ -44,14 +44,6 @@ const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 			<TouchableOpacity
 				style={styles.button}
 				onPress={() => {
-					appDispatch(actions.getSubs());
-				}}
-			>
-				<Text style={styles.buttonText}>{"Восстановить покупки"}</Text>
-			</TouchableOpacity>
-			<TouchableOpacity
-				style={styles.button}
-				onPress={() => {
 					navigation.navigate("ConfirmationSignOut");
 				}}
 			>
