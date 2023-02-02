@@ -41,7 +41,14 @@ const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 				<Mail />
 				<Text style={styles.buttonText}>{i18n.t("6f272c11-bad7-4f80-9b99-cb59688942d0")}</Text>
 			</TouchableOpacity>
-
+			<TouchableOpacity
+				style={styles.button}
+				onPress={() => {
+					appDispatch(actions.getSubs());
+				}}
+			>
+				<Text style={styles.buttonText}>{"Восстановить покупки"}</Text>
+			</TouchableOpacity>
 			<TouchableOpacity
 				style={styles.button}
 				onPress={() => {
