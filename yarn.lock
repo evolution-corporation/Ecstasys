@@ -7418,6 +7418,11 @@ react-is@^17.0.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
+react-native-adapty@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/react-native-adapty/-/react-native-adapty-2.4.0.tgz#5503f78da07b4336d3127d060415745c1ea7e7f0"
+  integrity sha512-AcKF7CKoiZ5Bxs2QU98Hj5YJXivlC6TLHZQbeuFyywhFHjovlN4vTWlSk/GOWPbnVDBrkRrGd/bIO7B709fJXg==
+
 react-native-codegen@^0.70.6:
   version "0.70.6"
   resolved "https://registry.yarnpkg.com/react-native-codegen/-/react-native-codegen-0.70.6.tgz#2ce17d1faad02ad4562345f8ee7cbe6397eda5cb"

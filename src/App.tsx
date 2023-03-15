@@ -14,8 +14,8 @@ import "./TaskManager";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import "./notification";
-import { printInformationError } from "~tools";
-import auth from "@react-native-firebase/auth";
+
+import { adapty } from "react-native-adapty";
 
 GoogleSignin.configure({
 	webClientId: "878799007977-cj3549ni87jre2rmg4eq0hiolp08igh2.apps.googleusercontent.com",
@@ -32,6 +32,7 @@ const AppCore = () => {
 			await SplashScreen.preventAutoHideAsync();
 			try {
 				await Store.dispatch(actions.initialization()).unwrap();
+				adapty.activate("public_live_yQp6zUhg.9v0LCJV8Yj5AfYeruMqt");
 				await SplashScreen.hideAsync();
 			} catch (error) {
 				if (error instanceof Error) Alert.alert(`Ошибка при загрузке. ${error.name}`, error.message);

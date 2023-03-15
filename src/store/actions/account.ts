@@ -6,10 +6,10 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { Converter, Request, Storage } from "~api";
 import { Gender, State } from "~types";
 import type { AsyncThunkConfig } from "../index";
-import { ServerEntities, Subscribe } from "../../api/types";
 import { Platform } from "react-native";
 
 import * as InAppPurchases from "expo-in-app-purchases";
+import { adapty } from "react-native-adapty";
 
 enum AccountAction {
 	setChangedData = "account/setChangedData",
@@ -24,7 +24,7 @@ enum AccountAction {
 	setNotNewUser = "account/setNotNewUser",
 }
 
-export interface SetChangedAccountDataParams {
+export interface SetChangedAccountDataParameters {
 	nickname?: string;
 	image?: string | null;
 	displayName?: string;
@@ -34,7 +34,7 @@ export interface SetChangedAccountDataParams {
 
 export const addChangedInformationUser = createAsyncThunk<
 	State.ChangedUserData,
-	SetChangedAccountDataParams,
+	SetChangedAccountDataParameters,
 	AsyncThunkConfig
 >(AccountAction.setChangedData, async ({ birthday, displayName, image, nickname, gender }) => {
 	let lastCheckNicknameAndResult: undefined | [Date, boolean];
@@ -75,30 +75,34 @@ export const updateAccount = createAsyncThunk<
 	if (gender === undefined)
 		gender = (() => {
 			switch (changeData.gender) {
-				case "FEMALE":
+				case "FEMALE": {
 					return Gender.FEMALE;
-				case "MALE":
+				}
+				case "MALE": {
 					return Gender.MALE;
-				case "OTHER":
+				}
+				case "OTHER": {
 					return Gender.OTHER;
-				default:
-					return undefined;
+				}
+				default: {
+					return;
+				}
 			}
 		})();
-	let { nickname, lastCheckNicknameAndResult } = changeData;
-	if (nickname !== undefined) {
-		if (
-			lastCheckNicknameAndResult === undefined ||
-			Date.now() - new Date(lastCheckNicknameAndResult[0]).getTime() > 300000
-		) {
-			const isFree = (await Request.getUserByNickname(nickname)) === null;
-			lastCheckNicknameAndResult = [new Date().toISOString(), isFree];
-		}
+	const { nickname } = changeData;
+	let { lastCheckNicknameAndResult } = changeData;
+	if (
+		nickname !== undefined &&
+		(lastCheckNicknameAndResult === undefined ||
+			Date.now() - new Date(lastCheckNicknameAndResult[0]).getTime() > 300000)
+	) {
+		const isFree = (await Request.getUserByNickname(nickname)) === null;
+		lastCheckNicknameAndResult = [new Date().toISOString(), isFree];
 	}
 
 	const user = Converter.composeUser(
 		await Request.updateUser({
-			birthday: birthday !== undefined ? new Date(birthday) : undefined,
+			birthday: birthday === undefined ? undefined : new Date(birthday),
 			displayName,
 			image,
 			gender,
@@ -117,7 +121,8 @@ export const updateAccount = createAsyncThunk<
 export const registrationAccount = createAsyncThunk<State.User, undefined, AsyncThunkConfig>(
 	AccountAction.registration,
 	async (_, { getState }) => {
-		let { birthday, nickname, image, lastCheckNicknameAndResult } = getState().account.changeData;
+		const { birthday, nickname, image } = getState().account.changeData;
+		let { lastCheckNicknameAndResult } = getState().account.changeData;
 		if (nickname === undefined || birthday === undefined) {
 			throw new Error("Need nickname and birthday");
 		}
@@ -147,8 +152,9 @@ export const signOutAccount = createAsyncThunk(AccountAction.signOut, async () =
 	try {
 		if ((await GoogleSignin.getCurrentUser()) !== null) {
 			await GoogleSignin.signOut();
+			await adapty.logout();
 		}
-	} catch (error) {}
+	} catch {}
 });
 
 export const signInAccount = createAsyncThunk<
@@ -158,11 +164,10 @@ export const signInAccount = createAsyncThunk<
 >(AccountAction.signIn, async () => {
 	const userFirebase = auth().currentUser;
 	if (userFirebase === null) throw new Error("");
-	let user: State.User | null;
-	let subscribe: State.Subscribe | null;
+	await adapty.identify(userFirebase.uid);
 	const [userServer, subscribeServer] = await Request.getInformationUser();
-	[user, subscribe] = [
-		userServer !== null ? Converter.composeUser(userServer) : null,
+	const [user, subscribe] = [
+		userServer === null ? null : Converter.composeUser(userServer),
 		userServer !== null && subscribeServer !== null ? Converter.composeSubscribe(subscribeServer) : null,
 	];
 	if (user !== null) {
@@ -182,9 +187,9 @@ export const getSubs = createAsyncThunk("account/subs", async () => {
 		try {
 			await InAppPurchases.connectAsync();
 		} catch (error) {}
-		console.log("Старт получение истории")
+		console.log("Старт получение истории");
 		const history = await InAppPurchases.getPurchaseHistoryAsync();
-		console.log("HIstory 123123: " + history.results, history.results?.length)
+		console.log("HIstory 123123: " + history.results, history.results?.length);
 		await InAppPurchases.disconnectAsync();
 		if (history.results !== undefined && history.results?.length > 0) {
 			const lastItem = history.results[history.results.length - 1];
