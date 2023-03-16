@@ -17,6 +17,7 @@ import Group48095715 from "/Group48095715.svg";
 import Vector from "/Vector.svg";
 import BuySubscribeController from "../../../controllers/BuySubscribeController";
 import * as InAppPurchases from "expo-in-app-purchases";
+import { adapty } from "react-native-adapty";
 
 const price = {
 	month_1: 299,
@@ -77,31 +78,21 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 	// 	}
 	// }, [selectedSubscribeType, subsType,isActiveSubs]);
 
-	const editSubscribe = () => {
-		if (selectedSubscribeType !== null && !isActiveSubs) {
-			const useNewSystePaymentIOS = true;
-			if (useNewSystePaymentIOS) {
+	const editSubscribe = async () => {
+		try {
+			if (selectedSubscribeType !== null && !isActiveSubs) {
 				setIsLoading(true);
-				InAppPurchases.setPurchaseListener(async ({ responseCode }) => {
-					if (responseCode === InAppPurchases.IAPResponseCode.OK) {
-						await appDispatch(actions.getSubs()).unwrap();
-						navigation.navigate("ResultSubscribeScreen", { status: "Designations" });
-					} else if (responseCode === InAppPurchases.IAPResponseCode.ERROR) {
-						navigation.navigate("ResultSubscribeScreen", { status: "Fail" });
-					} else {
-						setIsLoading(false);
-					}
-				});
-				BuySubscribeController.inAppPurchases(selectedSubscribeType);
-			} else {
-				if (subsType === null) {
-					navigation.navigate("Payment", { selectSubscribe: SubscribeType.WEEK });
-				} else if (selectedSubscribeType !== subsType && subsType !== SubscribeType.WEEK) {
-					navigation.navigate("ConfirmChangeSubs", { selectSubscribe: selectedSubscribeType });
-				} else {
-					navigation.navigate("Payment", { selectSubscribe: selectedSubscribeType });
-				}
+				const paywall = await adapty.getPaywall("subscribe.month.paywall");
+				const products = await adapty.getPaywallProducts(paywall);
+				console.log(products);
+				const profile = await adapty.makePurchase(products[0]);
+				console.log(profile);
+				setIsLoading(false);
+				navigation.navigate("Payment", { selectSubscribe: selectedSubscribeType });
 			}
+		} catch (error) {
+			console.log(error);
+			setIsLoading(false);
 		}
 	};
 

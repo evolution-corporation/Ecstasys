@@ -8,7 +8,6 @@ import { Gender, State } from "~types";
 import type { AsyncThunkConfig } from "../index";
 import { Platform } from "react-native";
 
-import * as InAppPurchases from "expo-in-app-purchases";
 import { adapty } from "react-native-adapty";
 
 enum AccountAction {
@@ -138,7 +137,7 @@ export const registrationAccount = createAsyncThunk<State.User, undefined, Async
 			if (user === null) {
 				throw new Error("User Not Create");
 			}
-
+			if (Platform.OS === "ios") await adapty.identify(user.uid);
 			return user;
 		} else {
 			throw new Error("nickname is use");
@@ -149,10 +148,10 @@ export const registrationAccount = createAsyncThunk<State.User, undefined, Async
 export const signOutAccount = createAsyncThunk(AccountAction.signOut, async () => {
 	await auth().signOut();
 	await Storage.clear();
+	if (Platform.OS === "ios") await adapty.logout();
 	try {
 		if ((await GoogleSignin.getCurrentUser()) !== null) {
 			await GoogleSignin.signOut();
-			await adapty.logout();
 		}
 	} catch {}
 });
@@ -164,7 +163,7 @@ export const signInAccount = createAsyncThunk<
 >(AccountAction.signIn, async () => {
 	const userFirebase = auth().currentUser;
 	if (userFirebase === null) throw new Error("");
-	await adapty.identify(userFirebase.uid);
+	if (Platform.OS === "ios") await adapty.identify(userFirebase.uid);
 	const [userServer, subscribeServer] = await Request.getInformationUser();
 	const [user, subscribe] = [
 		userServer === null ? null : Converter.composeUser(userServer),
@@ -180,37 +179,8 @@ export const setRegistrationAccountStatus = createAction(AccountAction.setRegist
 export const setNotNewUser = createAction(AccountAction.setNotNewUser);
 
 export const getSubs = createAsyncThunk("account/subs", async () => {
-	const useNewSystePaymentIOS = true;
-
-	if (Platform.OS === "ios" && useNewSystePaymentIOS) {
-		// let history: InAppPurchases.IAPQueryResponse<InAppPurchases.InAppPurchase>
-		try {
-			await InAppPurchases.connectAsync();
-		} catch (error) {}
-		console.log("Старт получение истории");
-		const history = await InAppPurchases.getPurchaseHistoryAsync();
-		console.log("HIstory 123123: " + history.results, history.results?.length);
-		await InAppPurchases.disconnectAsync();
-		if (history.results !== undefined && history.results?.length > 0) {
-			const lastItem = history.results[history.results.length - 1];
-			const subsType =
-				lastItem.productId === "subscription.monthly"
-					? "Month"
-					: lastItem.productId === "subscription.semiAnnual"
-					? "Month6"
-					: "Week";
-			const whenSubs = new Date(lastItem.purchaseTime).toISOString();
-			const autoPayment = true;
-			return {
-				RebillId: 123,
-				Type: subsType,
-				WhenSubscribe: whenSubs,
-				RemainingTime: 0,
-				UserId: "-",
-			};
-		} else {
-			return null;
-		}
+	if (Platform.OS === "ios") {
+		return null;
 	} else {
 		return await Request.getSubscribeUserInformation();
 	}

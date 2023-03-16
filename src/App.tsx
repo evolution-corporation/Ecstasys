@@ -28,11 +28,12 @@ if (Platform.OS === "android") {
 }
 const AppCore = () => {
 	React.useEffect(() => {
+		if (Platform.OS === "ios") adapty.activate("public_live_B5WK9eoU.NdcH8xOtr823XuWjQkgQ"); //adapty key
 		(async () => {
 			await SplashScreen.preventAutoHideAsync();
 			try {
 				await Store.dispatch(actions.initialization()).unwrap();
-				adapty.activate("public_live_yQp6zUhg.9v0LCJV8Yj5AfYeruMqt");
+
 				await SplashScreen.hideAsync();
 			} catch (error) {
 				if (error instanceof Error) Alert.alert(`Ошибка при загрузке. ${error.name}`, error.message);

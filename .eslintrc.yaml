@@ -15,3 +15,6 @@ extends:
   - "prettier"
 rules:
   unicorn/numeric-separators-style: "off"
+  unicorn/filename-case:
+    - "error"
+    - "case": "pascalCase"

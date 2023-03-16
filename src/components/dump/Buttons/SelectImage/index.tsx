@@ -82,14 +82,13 @@ export const SelectImageButton = forwardRef<Reference, SelectImageButtonProperti
 					overflow: "hidden",
 					alignItems: "center",
 					justifyContent: "center",
-					height: 128,
-					width: 128,
+
 					borderRadius: 40,
 					borderColor: "#FFFFFF",
 					borderWidth: 3,
 					backgroundColor: "#E7DDEC",
 				},
-				properties.style
+				properties.style,
 			]}
 			onPress={() => {
 				openPhotoLibrary();

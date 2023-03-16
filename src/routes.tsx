@@ -87,8 +87,8 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
 	);
 };
 
-const RootNavigation = createSharedElementStackNavigator<RootStackList>();
-// const RootNavigation = createNativeStackNavigator<RootStackList>();
+// const RootNavigation = createSharedElementStackNavigator<RootStackList>();
+const RootNavigation = createNativeStackNavigator<RootStackList>();
 
 const RootRoutes: FC = () => {
 	const accountStatus = useAccountStatus();
@@ -242,7 +242,8 @@ const RootRoutes: FC = () => {
 						component={Screens.PlayerForPractice}
 						options={({ route: { params } }) => ({
 							title: params.selectedPractice.name,
-							headerRight: params.selectSet === undefined ? () => <IsFavorite practice={params.selectedPractice} /> : undefined,
+							headerRight:
+								params.selectSet === undefined ? () => <IsFavorite practice={params.selectedPractice} /> : undefined,
 						})}
 					/>
 					<RootNavigation.Screen
@@ -420,7 +421,6 @@ const RootRoutes: FC = () => {
 			}}
 		>
 			{screenList}
-
 		</RootNavigation.Navigator>
 	);
 };

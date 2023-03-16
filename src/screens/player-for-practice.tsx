@@ -11,7 +11,8 @@ import useTimer from "src/hooks/use-timer";
 import { actions, useAppDispatch } from "~store";
 
 import { Breathing, RootScreenProps } from "~types";
-import {meditationIsLisent, MeditationIsLisent} from "../api/requests";
+import { meditationIsLisent, MeditationIsLisent } from "../api/requests";
+import { AVPlaybackSource } from "expo-av";
 
 const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, route }) => {
 	const { selectedPractice, timeNotification, selectSet } = route.params;
@@ -22,17 +23,20 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 	const [statusPlayer, setStatusPlayer] = React.useState<Status>(Status.Loading);
 	const breathingController = useBreathingController();
 
-	const meditation =
-		selectedPractice.audio === undefined
-			? undefined
-			: useMeditation(
-					selectSet === undefined
-						? {
-								uri: selectedPractice.audio,
-						  }
-						: [{ uri: selectedPractice.audio }, { uri: selectSet.audio }],
-					timer.currentMilliseconds
-			  );
+	let meditation: undefined | ReturnType<typeof useMeditation>;
+
+	if (selectedPractice.audio !== undefined) {
+		const sss: [AVPlaybackSource] | [AVPlaybackSource, AVPlaybackSource] = [
+			{
+				uri: selectedPractice.audio,
+			},
+		];
+
+		if (selectSet !== undefined) {
+			sss.push({ uri: selectSet.audio });
+		}
+		meditation = useMeditation(sss, timer.currentMilliseconds);
+	}
 
 	React.useEffect(() => {
 		if (meditation?.isLoading) {
@@ -66,9 +70,10 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 
 	React.useEffect(() => {
 		const exit = (event: { data: { action: { type: string } }; preventDefault: () => void }) => {
-
-			if (event.data.action.type === "GO_BACK" && timer.currentMilliseconds < (selectedPractice.length + (selectSet?.length ?? 0))) {
-
+			if (
+				event.data.action.type === "GO_BACK" &&
+				timer.currentMilliseconds < selectedPractice.length + (selectSet?.length ?? 0)
+			) {
 				if (statusPlayer !== Status.Loading && statusPlayer !== Status.Init) {
 					event.preventDefault();
 					navigation.navigate("NoExitMeditation");
@@ -81,11 +86,10 @@ const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, r
 					if (timer.currentMilliseconds >= 60000) {
 						appDispatch(actions.addStatisticPractice([selectedPractice, Math.floor(timer.currentMilliseconds)]));
 						if (timer.currentMilliseconds === selectedPractice.length) {
-							meditationIsLisent(selectedPractice.id)
+							meditationIsLisent(selectedPractice.id);
 						}
 					}
 				}
-
 			}
 		};
 		navigation.addListener("beforeRemove", exit);

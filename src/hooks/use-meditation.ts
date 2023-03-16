@@ -21,7 +21,7 @@ const NotificationEndMeditation = () =>
 		},
 	});
 
-const useMeditation = (source: [AVPlaybackSource, AVPlaybackSource], currentTime: number) => {
+const useMeditation = (source: [AVPlaybackSource, AVPlaybackSource] | [AVPlaybackSource], currentTime: number) => {
 	const audioList = React.useRef<[Audio.Sound, Audio.Sound] | [Audio.Sound]>(
 		source.length === 2 ? [new Audio.Sound(), new Audio.Sound()] : [new Audio.Sound()]
 	).current;
@@ -133,19 +133,27 @@ const useMeditation = (source: [AVPlaybackSource, AVPlaybackSource], currentTime
 			handleSuccess: console.log,
 		});
 		const init = async () => {
+			console.log(source);
+			const sourceFix = source.map(onceSource => {
+				if (typeof onceSource === "object") {
+					onceSource.uri = `${onceSource.uri}.mp3`;
+				}
+				return onceSource;
+			});
+			console.log(sourceFix);
 			if (audioList.length === 1) {
 				const status = await audioList[0].getStatusAsync();
-				if (!status.isLoaded) await audioList[0].loadAsync(Array.isArray(source) ? source[0] : source, {});
+				if (!status.isLoaded) await audioList[0].loadAsync(Array.isArray(sourceFix) ? sourceFix[0] : sourceFix, {});
 				audioList[0].setOnPlaybackStatusUpdate(statusOfSubscribe => {
 					if (statusOfSubscribe.isLoaded && statusOfSubscribe.didJustFinish) {
 						NotificationEndMeditation();
 					}
 				});
-			} else if (audioList.length === 2 && Array.isArray(source)) {
+			} else if (audioList.length === 2 && Array.isArray(sourceFix)) {
 				const statusFirst = await audioList[0].getStatusAsync();
-				if (!statusFirst.isLoaded) await audioList[0].loadAsync(source[0], {});
+				if (!statusFirst.isLoaded) await audioList[0].loadAsync(sourceFix[0], {});
 				const statusSecond = await audioList[1].getStatusAsync();
-				if (!statusSecond.isLoaded) await audioList[1].loadAsync(source[1], {});
+				if (!statusSecond.isLoaded) await audioList[1].loadAsync(sourceFix[1], {});
 				audioList[0].setOnPlaybackStatusUpdate(statusOfSubscribe => {
 					setIsLoaded(previousValue => [statusOfSubscribe.isLoaded, previousValue[1]]);
 					if (statusOfSubscribe.isLoaded && statusOfSubscribe.didJustFinish) {
