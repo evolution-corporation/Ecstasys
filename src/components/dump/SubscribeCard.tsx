@@ -12,6 +12,7 @@ import {
 	Image,
 	ImageSourcePropType,
 	ColorValue,
+	Platform,
 } from "react-native";
 import { TextButton } from "~components/dump";
 import BirdWhite from "assets/icons/BirdWhiteS.svg";
@@ -64,7 +65,7 @@ const SubscribeCard: FC<SubscribeCardProps> = props => {
 				</View>
 				{!isUsed && <CircleCheck isSelected={isSelected} style={styles.checkSelectedSubscribe} colorItem={mainColor} />}
 			</TouchableOpacity>
-			{isShowCancelButton && isUsed && (
+			{isShowCancelButton && isUsed && Platform.OS !== "ios" && (
 				<TextButton style={styles.cancelSubs} onPress={() => navigation.navigate("ConfirmationRemoveSubs")}>
 					{i18n.t("c0c032e5-8965-4703-bed6-77f919acd4d5")}
 				</TextButton>

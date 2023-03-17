@@ -180,6 +180,20 @@ export const setNotNewUser = createAction(AccountAction.setNotNewUser);
 
 export const getSubs = createAsyncThunk("account/subs", async () => {
 	if (Platform.OS === "ios") {
+		const profile = await adapty.getProfile();
+		const accessLevels = profile.accessLevels;
+		if (accessLevels?.premium) {
+			const premium = accessLevels.premium;
+			const RemainingTime = new Date(premium.activatedAt);
+			RemainingTime.setDate(RemainingTime.getDate() - 28);
+			return {
+				UserId: profile.profileId,
+				WhenSubscribe: premium.activatedAt.toDateString(),
+				RemainingTime: RemainingTime.toDateString(),
+				Type: "Month",
+				RebillId: premium.willRenew ? "123" : "-1",
+			};
+		}
 		return null;
 	} else {
 		return await Request.getSubscribeUserInformation();

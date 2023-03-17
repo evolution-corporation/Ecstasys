@@ -57,12 +57,12 @@ const GreetingScreen: RootScreenProps<"Greeting"> = ({ navigation }) => {
 	return (
 		<Animated.View style={[aStyles.background, styles.background]}>
 			{/* <StatusBar.StatusBar style="light" hidden={false} translucent backgroundColor={undefined} /> */}
-			{isShowSkipButton ? (
+			{/* {isShowSkipButton ? (
 				<Image
 					source={require("./assets/ttttttttt.png")}
 					style={{ position: "absolute", top: 0, width: "100%", height: "60%" }}
 				/>
-			) : null}
+			) : null} */}
 			<Animated.View style={[aStyles.professor, styles.professor]}>
 				<Image source={require("./assets/professor.png")} />
 			</Animated.View>

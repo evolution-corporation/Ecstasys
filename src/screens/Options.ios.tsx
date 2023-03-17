@@ -15,6 +15,7 @@ import { RootScreenProps } from "~types";
 import { StatusBar } from "expo-status-bar";
 import { version } from "package.json";
 import DefaultText from "~components/Text/default-text";
+import { adapty } from "react-native-adapty";
 
 const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 	const appDispatch = useAppDispatch();
@@ -44,7 +45,16 @@ const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 			<TouchableOpacity
 				style={styles.button}
 				onPress={() => {
-					appDispatch(actions.getSubs());
+					adapty
+						.restorePurchases()
+						.then(() => {
+							alert("Покупки восстановленны");
+						})
+						.catch(error => {
+							if (error instanceof Error && /(1004)/g.test(error.message)) {
+								alert("Покупки не найдены");
+							}
+						});
 				}}
 			>
 				<Text style={styles.buttonText}>{"Восстановить покупки"}</Text>

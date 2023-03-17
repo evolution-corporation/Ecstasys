@@ -84,15 +84,14 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 				setIsLoading(true);
 				const paywall = await adapty.getPaywall("subscribe.month.paywall");
 				const products = await adapty.getPaywallProducts(paywall);
-				console.log(products);
-				const profile = await adapty.makePurchase(products[0]);
-				console.log(profile);
+				await adapty.makePurchase(products[0]);
 				setIsLoading(false);
-				navigation.navigate("Payment", { selectSubscribe: selectedSubscribeType });
+				navigation.navigate("ResultSubscribeScreen", { status: "Designations" });
 			}
 		} catch (error) {
 			console.log(error);
 			setIsLoading(false);
+			navigation.navigate("ResultSubscribeScreen", { status: "Fail" });
 		}
 	};
 
