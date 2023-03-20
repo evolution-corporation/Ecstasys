@@ -25,7 +25,7 @@ const SelectTimeForBase: RootScreenProps<"SelectTimeForBase"> = ({ navigation, r
 	const [milliseconds, setMilliseconds] = useState<number>(300000);
 	const { window } = useDimensions();
 	const heightHeaded = useHeaderHeight();
-	const [isNeedVoice, setIsNeedVoice] = React.useState<boolean>(false);
+	const [isNeedVoice, setIsNeedVoice] = React.useState<boolean>(true);
 	useFocusEffect(
 		useCallback(() => {
 			// if (Platform.OS === "android") {
@@ -41,39 +41,37 @@ const SelectTimeForBase: RootScreenProps<"SelectTimeForBase"> = ({ navigation, r
 		<View style={styles.background}>
 			<View style={{ flex: 1, width: "100%" }}>
 				<View style={styles.topContent}>
-					<SharedElement id={`practice.item.${selectedPractice.id}`} style={styles.image}>
-						<Image source={selectedPractice.image} style={{ width: "100%", height: "100%" }} />
-					</SharedElement>
-
-						<View
-							style={{
-								height: 45,
-								alignItems: "center",
-								justifyContent: "space-between",
-								flexDirection: "row",
-								backgroundColor: "#C2A9CE",
-								borderRadius: 15,
-								paddingHorizontal: 9,
-								width: window.width - 52,
-								alignSelf: "center",
-								bottom: -22.5,
-								position: "absolute",
-								zIndex: 10
-							}}
-						>
-							<Text style={{ color: "#FFFFFF", fontSize: 14, ...gStyle.font("500"),  }}>
-								{i18n.t("4cfd0240-f282-4148-a991-4deff19e7028")}
-							</Text>
-							<Switch
-								value={isNeedVoice}
-								onValueChange={setIsNeedVoice}
-								trackColor={{ false: "#9765A8", true: "#9765A8" }}
-								thumbColor={"#FFFFFF"}
-							/>
-						</View>
+					<Image source={selectedPractice.image} style={{ ...styles.image, width: "100%", height: "100%" }} />
+					<View
+						style={{
+							height: 45,
+							alignItems: "center",
+							justifyContent: "space-between",
+							flexDirection: "row",
+							backgroundColor: "#C2A9CE",
+							borderRadius: 15,
+							paddingHorizontal: 9,
+							width: window.width - 52,
+							alignSelf: "center",
+							bottom: -22.5,
+							position: "absolute",
+							zIndex: 10,
+						}}
+					>
+						<Text style={{ color: "#FFFFFF", fontSize: 14, ...gStyle.font("500") }}>
+							{i18n.t("4cfd0240-f282-4148-a991-4deff19e7028")}
+						</Text>
+						<Switch
+							value={isNeedVoice}
+							onValueChange={setIsNeedVoice}
+							trackColor={{ false: "#9765A8", true: "#9765A8" }}
+							thumbColor={"#FFFFFF"}
+							style={{ zIndex: 100 }}
+						/>
+					</View>
 				</View>
 				<Text style={styles.mainText}>{i18n.t("0ca92b30-37c2-4604-a06f-f6f2da9e4985")} </Text>
-				<Text style={{ ...gStyle.font("600"), textAlign: "center" }} >(максимальная продолжительность 90 минут)</Text>
+				<Text style={{ ...gStyle.font("600"), textAlign: "center" }}>(максимальная продолжительность 90 минут)</Text>
 			</View>
 			<View style={{ width: window.width, height: 420, justifyContent: "flex-end", paddingHorizontal: 20 }}>
 				<View style={{ justifyContent: "center", flex: 1, alignItems: "center", marginTop: 100 }}>
@@ -130,7 +128,6 @@ const styles = StyleSheet.create({
 		borderBottomRightRadius: 20,
 		overflow: "hidden",
 		...gStyle.shadows(2, 3),
-
 	},
 	imageContent: {
 		width: "100%",

@@ -3,6 +3,7 @@
 import React from "react";
 import { Image, Pressable } from "react-native";
 import { SharedElement } from "react-navigation-shared-element";
+
 import PlayerView, { Status } from "src/components/Elements/player-view";
 import useBackgroundSound from "src/hooks/use-background-sound";
 import useBreathingController from "src/hooks/use-breathing-controller";
@@ -15,7 +16,7 @@ import { meditationIsLisent, MeditationIsLisent } from "../api/requests";
 import { AVPlaybackSource } from "expo-av";
 
 const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, route }) => {
-	const { selectedPractice, timeNotification, selectSet } = route.params;
+	const { selectedPractice, timeNotification, selectSet, nameConent } = route.params;
 	const timeTrack = selectedPractice.length + (selectSet?.length ?? 0);
 	const appDispatch = useAppDispatch();
 	const timer = useTimer(timeTrack, () => navigation.navigate("EndMeditation"));

@@ -12,25 +12,17 @@ import { RootScreenProps } from "~types";
 import BackgroundSound from "src/backgroundSound";
 import i18n from "~i18n";
 import gStyle from "~styles";
-import { Audio, InterruptionModeAndroid, InterruptionModeIOS } from "expo-av";
 import core from "~core";
-import { initializationTimer } from "src/TaskManager";
 import Headphones from "assets/icons/Headphones_white.svg";
-import { actions, useAppDispatch, useAppSelector } from "~store";
-import { useFocusEffect } from "@react-navigation/native";
-import * as StatusBar from "expo-status-bar";
-import * as BasePractice from "src/baseMeditation";
+
 import { useDimensions } from "@react-native-community/hooks";
-import { SharedElement } from "react-navigation-shared-element";
-import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
+
 import SelectColor from "src/components/SelectColor";
-import { CustomModal } from "~components/containers";
-enum StatusPractice {
-	Loading,
-	Play,
-	Pause,
-	Change,
-}
+import useMeditation from "src/hooks/use-meditation";
+import useTimer from "src/hooks/use-timer";
+import useBackgroundSound from "src/hooks/use-background-sound";
+import { useKeepAwake } from "expo-keep-awake";
+import BackgroundSoundButton from "~components/dump/background-sound-button";
 
 Notifications.setNotificationHandler({
 	handleNotification: async () => ({
@@ -43,113 +35,36 @@ Notifications.setNotificationHandler({
 const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigation, route }) => {
 	const { isNeedVoice, practiceLength } = route.params;
 	const { window } = useDimensions();
-	const [currentNameBackgroundSound, currentVolumeBackgroundSound] = useAppSelector(store => [
-		store.practice.paramsPractice.currentNameBackgroundSound,
-		store.practice.paramsPractice.currentVolumeBackgroundSound,
-	]);
-	const statusIsLoaded = useRef(true);
-	const [currentTime, setCurrentTime] = React.useState<number>(0);
-	const _currentTime = useRef<number>(0);
-	const audioVoice = useRef<Audio.Sound>(new Audio.Sound());
-
-	const audioBackground = useRef<Audio.Sound | null>(null);
 
 	const [isShowTime, setIsShowTime] = React.useState(true);
-	const timerTask = React.useRef<ReturnType<typeof initializationTimer> | null>(null);
-	const appDispatch = useAppDispatch();
 
+	const timer = useTimer(practiceLength, () => navigation.navigate("EndMeditation"));
 
+	const meditation = isNeedVoice
+		? useMeditation(
+				[
+					{
+						uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/baseSound/%D0%9C%D0%B5%D0%B4%D0%B8%D1%82%D0%B0%D1%86%D0%B8%D1%8F%20%D0%9A%D0%BE%D0%BD%D1%86%D0%B5%D0%BD%D1%82%D1%80%D0%B0%D1%86%D0%B8%D1%8F%20%D0%BD%D0%B0%20%D1%82%D0%BE%D1%87%D0%BA%D0%B5%20no%20FX",
+					},
+				],
+				timer.currentMilliseconds,
+				{ autoPlay: true }
+		  )
+		: undefined;
 
-	const [startTimer, stopTimer] = React.useRef([
-		() => {
-			timerTask.current = initializationTimer(() => {
-				setCurrentTime(prevCurrentTime => {
-					if (prevCurrentTime + 100 > practiceLength) {
-						stopTimer();
-					}
-					_currentTime.current += 100;
-					return prevCurrentTime + 100;
-				});
-			});
-		},
-		() => {
-			if (timerTask.current !== null) timerTask.current();
-		},
-	]).current;
+	const backgroundSound = useBackgroundSound(true);
+	useKeepAwake();
 
 	useEffect(() => {
-		Audio.setAudioModeAsync({
-			staysActiveInBackground: false,
-			interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
-			interruptionModeIOS: InterruptionModeIOS.DoNotMix,
-		});
-		if (isNeedVoice && statusIsLoaded.current) {
-			audioVoice.current
-				.loadAsync({
-					uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/baseSound/%D0%9C%D0%B5%D0%B4%D0%B8%D1%82%D0%B0%D1%86%D0%B8%D1%8F%20%D0%9A%D0%BE%D0%BD%D1%86%D0%B5%D0%BD%D1%82%D1%80%D0%B0%D1%86%D0%B8%D1%8F%20%D0%BD%D0%B0%20%D1%82%D0%BE%D1%87%D0%BA%D0%B5%20no%20FX.mp3",
-				})
-				.then(() => {
-					statusIsLoaded.current = false;
-					startTimer();
-					audioVoice.current.playAsync();
-				});
-		} else if (!isNeedVoice) {
-			startTimer();
+		if (meditation !== undefined) {
+			meditation.play();
 		}
+	}, [meditation]);
 
-		return () => {
-			if (audioBackground.current !== null) {
-				audioBackground.current.getStatusAsync().then(status => {
-					if (audioBackground.current !== null && status.isLoaded) audioBackground.current.stopAsync();
-				});
-			}
-			stopTimer();
-			audioVoice.current.stopAsync();
-		};
+	useEffect(() => {
+		timer.play();
 	}, []);
 
-	const setBackgroundSound = React.useCallback(
-		async (name: keyof typeof BackgroundSound, volume: number = 1) => {
-			if (name) {
-				if (audioBackground.current !== null && (await audioBackground.current.getStatusAsync()).isLoaded) {
-					await audioBackground.current.stopAsync();
-				}
-				audioBackground.current = (
-					await Audio.Sound.createAsync(BackgroundSound[name].audio, {
-						isLooping: true,
-						volume,
-						shouldPlay: true,
-					})
-				).sound;
-			}
-		},
-		[currentTime]
-	);
-
-	const removeBackgroundSound = React.useCallback(async () => {
-		if (audioBackground.current !== null && (await audioBackground.current.getStatusAsync()).isLoaded) {
-			await audioBackground.current.stopAsync();
-		}
-	}, []);
-
-	useEffect(() => {
-		if (currentNameBackgroundSound) {
-			setBackgroundSound(currentNameBackgroundSound);
-		} else {
-			removeBackgroundSound();
-		}
-	}, [currentNameBackgroundSound]);
-
-	useEffect(() => {
-		audioBackground.current?.setVolumeAsync(currentVolumeBackgroundSound);
-	}, [currentVolumeBackgroundSound]);
-
-	useFocusEffect(
-		useCallback(() => {
-			// StatusBar.setStatusBarTranslucent(true);
-			// StatusBar.setStatusBarStyle("light");
-		}, [])
-	);
 	const [color, setColor] = React.useState<ColorValue>("rgb(134, 201, 39)");
 	const [scaleDot, setScaleDot] = React.useState<number>(100);
 	const [editView, setEditView] = React.useState<boolean>(false);
@@ -162,7 +77,13 @@ const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigatio
 						<Text style={{ color: "#FFF", fontSize: 20, ...gStyle.font("700"), marginBottom: 24 }}>
 							{i18n.t("0ead63ec-a460-4688-9096-7310f2a10ed6")}
 						</Text>
-						<SelectColor size={250} widthBorder={30} onChange={c => setColor(c)} initColor={color} scaleDot={scaleDot}/>
+						<SelectColor
+							size={250}
+							widthBorder={30}
+							onChange={c => setColor(c)}
+							initColor={color}
+							scaleDot={scaleDot}
+						/>
 						{window.height >= 800 ? (
 							<ColorButton
 								onPress={() => {
@@ -200,7 +121,7 @@ const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigatio
 				{isShowTime && !editView && (
 					<View style={styles.timesCodeBox}>
 						<Text style={styles.timeCode} key={"current"}>
-							{i18n.strftime(new Date(currentTime), "%M:%S")}
+							{i18n.strftime(new Date(timer.currentMilliseconds), "%M:%S")}
 						</Text>
 					</View>
 				)}
@@ -223,16 +144,9 @@ const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigatio
 					<Image source={require("assets/rgbButton.png")} style={{ width: "100%", height: "100%" }} />
 				</Pressable>
 			</View>
-			<Pressable style={styles.buttonBackgroundSound} onPress={() => navigation.navigate("SelectBackgroundSound", {})}>
-				<Headphones style={{ marginRight: 24 }} />
-				<Text style={styles.buttonBackgroundText}>
-					{i18n.t(
-						currentNameBackgroundSound !== null
-							? BackgroundSound[currentNameBackgroundSound].translate
-							: "12ee6d3a-ad58-4c4a-9b87-63645efe9c90"
-					)}
-				</Text>
-			</Pressable>
+			<View style={{ alignSelf: "flex-start", marginTop: 17 }}>
+				<BackgroundSoundButton image={undefined} name={backgroundSound.name} />
+			</View>
 		</View>
 	);
 };

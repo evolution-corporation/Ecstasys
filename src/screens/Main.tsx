@@ -18,12 +18,11 @@ import usePopularPractice from "src/hooks/use-popular-practice";
 import useRecommendationPractice from "src/hooks/use-recomendation-practice";
 import useStaticPractice, { TimePeriod } from "src/hooks/use-statistics-practice";
 import useIsNewUser from "src/hooks/use-is-new-user";
-import ViewFullSpace from "~components/layouts/view-full-space";
+import * as Notifications from "expo-notifications";
 import ViewFullWidth, { Direction } from "~components/layouts/view-full-width";
 import TitleAndSubTitle from "~components/Text/title-and-sub-title";
 import ViewPaddingList, { Direction as DirectionForPaddingList } from "~components/containers/view-padding-list";
 import Star from "assets/icons/Star.svg";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const styles = RN.StyleSheet.create({
 	image: {
@@ -95,6 +94,13 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 		// transform: [{ translateY: translateGreeting.value }],
 	}));
 
+	const requestNotification = async () => {
+		const { granted } = await Notifications.getPermissionsAsync();
+		if (!granted) {
+			navigation.navigate("OurNeedYourNotification");
+		}
+	};
+
 	const greetingText = React.useMemo(() => {
 		let _greetingText: string | undefined;
 		if (greeting !== null) _greetingText = greeting;
@@ -107,6 +113,8 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 	useEffect(() => {
 		if (isNewUser) {
 			navigation.navigate("InputNameAndSelectGender");
+		} else {
+			requestNotification();
 		}
 	}, []);
 

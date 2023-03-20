@@ -21,7 +21,11 @@ const NotificationEndMeditation = () =>
 		},
 	});
 
-const useMeditation = (source: [AVPlaybackSource, AVPlaybackSource] | [AVPlaybackSource], currentTime: number) => {
+const useMeditation = (
+	source: [AVPlaybackSource, AVPlaybackSource] | [AVPlaybackSource],
+	currentTime: number,
+	options?: { autoPlay?: boolean }
+) => {
 	const audioList = React.useRef<[Audio.Sound, Audio.Sound] | [Audio.Sound]>(
 		source.length === 2 ? [new Audio.Sound(), new Audio.Sound()] : [new Audio.Sound()]
 	).current;
@@ -133,14 +137,12 @@ const useMeditation = (source: [AVPlaybackSource, AVPlaybackSource] | [AVPlaybac
 			handleSuccess: console.log,
 		});
 		const init = async () => {
-			console.log(source);
 			const sourceFix = source.map(onceSource => {
 				if (typeof onceSource === "object") {
 					onceSource.uri = `${onceSource.uri}.mp3`;
 				}
 				return onceSource;
 			});
-			console.log(sourceFix);
 			if (audioList.length === 1) {
 				const status = await audioList[0].getStatusAsync();
 				if (!status.isLoaded) await audioList[0].loadAsync(Array.isArray(sourceFix) ? sourceFix[0] : sourceFix, {});
@@ -149,6 +151,7 @@ const useMeditation = (source: [AVPlaybackSource, AVPlaybackSource] | [AVPlaybac
 						NotificationEndMeditation();
 					}
 				});
+				if (options?.autoPlay ?? false) audioList[0].playAsync();
 			} else if (audioList.length === 2 && Array.isArray(sourceFix)) {
 				const statusFirst = await audioList[0].getStatusAsync();
 				if (!statusFirst.isLoaded) await audioList[0].loadAsync(sourceFix[0], {});
@@ -165,6 +168,10 @@ const useMeditation = (source: [AVPlaybackSource, AVPlaybackSource] | [AVPlaybac
 						NotificationEndMeditation();
 					}
 				});
+				if (options?.autoPlay ?? false) {
+					audioList[0].playAsync();
+					audioList[1].playAsync();
+				}
 			}
 		};
 
@@ -183,7 +190,11 @@ const useMeditation = (source: [AVPlaybackSource, AVPlaybackSource] | [AVPlaybac
 		};
 		return () => {
 			Notification.cancelScheduledNotificationAsync("EndMeditation");
-			end();
+			// end();
+			audioList.forEach(audio => {
+				audio.stopAsync();
+				audio.unloadAsync();
+			});
 		};
 	}, []);
 

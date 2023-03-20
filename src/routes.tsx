@@ -29,6 +29,7 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 import ArrowBack from "assets/icons/ArrowBack.svg";
 import useAccountStatus from "./hooks/use-account-status";
 import IsFavorite from "~components/dump/IsFavorite";
+import OurNeedYourNotification from "./screens/OurNeedYourNotification";
 
 const TabNavigator = createBottomTabNavigator<TabNavigatorList>();
 
@@ -163,6 +164,11 @@ const RootRoutes: FC = () => {
 			screenList = (
 				<>
 					<RootNavigation.Screen name={"TabNavigator"} component={TabRoutes} options={{ headerShown: false }} />
+					<RootNavigation.Screen
+						name={"OurNeedYourNotification"}
+						component={OurNeedYourNotification}
+						options={{ presentation: "transparentModal", headerShown: false }}
+					/>
 					<RootNavigation.Screen name={"Options"} component={Screens.Options} options={{ title: i18n.t("options") }} />
 					<RootNavigation.Screen
 						name={"FavoriteMeditation"}

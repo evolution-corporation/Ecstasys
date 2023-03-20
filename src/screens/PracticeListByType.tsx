@@ -20,8 +20,6 @@ import { MeditationOnTheMandala, MeditationOnTheNose, PlayerMeditationDot } from
 
 import * as Instruction from "src/instruction";
 import useIsActivateSubscribe from "src/hooks/use-is-activate-subscribe";
-import useExperimentalFunction from "src/hooks/use-experimental-function";
-import {useDimensions} from "@react-native-community/hooks";
 
 const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navigation }) => {
 	const { typePractices } = route.params;
@@ -36,11 +34,6 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 	};
 	const isSubscribe = useIsActivateSubscribe();
 
-	//! Experimental
-	// const DotMeditation = useExperimentalFunction("baseMeditation_dotMeditation");
-	// const mandalaMeditation = useExperimentalFunction("baseMeditation_mandalaMeditation");
-	// const noseMeditation = useExperimentalFunction("baseMeditation_noseMeditation");
-	//! ---
 	React.useLayoutEffect(() => {
 		navigation.setOptions({ title: i18n.t(typePractices) });
 		const init = async () => {
@@ -70,7 +63,11 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 				]);
 			} else {
 				//! Experimental
-				const listPractice: State.Practice[] = [{ ...MeditationOnTheNose, isPermission: true }, { ...PlayerMeditationDot, isPermission: true }, { ...MeditationOnTheMandala, isPermission: true }];
+				const listPractice: State.Practice[] = [
+					{ ...MeditationOnTheNose, isPermission: true },
+					{ ...PlayerMeditationDot, isPermission: true },
+					{ ...MeditationOnTheMandala, isPermission: true },
+				];
 
 				setPracticeList(listPractice);
 				//! ----
@@ -78,6 +75,7 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 		};
 		init();
 	}, [isSubscribe]);
+
 	const onClick = (practiceId: string) => {
 		const practiceIndex = practiceList.findIndex(item => item.id === practiceId);
 		if (practiceIndex !== -1) {
@@ -89,7 +87,7 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 				if (typePractices === PracticesMeditation.BASIC) {
 					navigation.navigate("SelectTimeForBase", { selectedPractice: practiceList[practiceIndex] });
 				} else {
-					navigation.navigate("SelectTimeForRelax", { selectedPractice: practiceList[practiceIndex] })
+					navigation.navigate("SelectTimeForRelax", { selectedPractice: practiceList[practiceIndex] });
 				}
 			} else {
 				navigation.navigate("ByMaySubscribe");
@@ -104,13 +102,20 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 				styleText={styles.buttonTextInstruction}
 				colors={["#75348B", "#6A2382"]}
 				onPress={() => {
+					const index = practiceList.findIndex(item => item.id == selectedPracticeId.current);
+
 					if (typePractices === PracticesMeditation.RELAXATION) {
 						navigation.navigate("Instruction", { instruction: Instruction.relaxation });
 					} else if (typePractices === PracticesMeditation.DIRECTIONAL_VISUALIZATIONS) {
 						navigation.navigate("Instruction", { instruction: Instruction.directionalVisualization });
+					} else if (typePractices === PracticesMeditation.BASIC) {
+						navigation.navigate("Instruction", { instruction: practiceList[index].instruction });
 					} else {
-						const index = practiceList.findIndex(item => item.id == selectedPracticeId.current);
-						if (index !== -1) navigation.navigate("Instruction", { instruction: practiceList[index].instruction, meditationid: practiceList[index].id });
+						if (index !== -1)
+							navigation.navigate("Instruction", {
+								instruction: practiceList[index].instruction,
+								meditationid: practiceList[index].id,
+							});
 					}
 				}}
 			>
@@ -157,7 +162,7 @@ const styles = StyleSheet.create({
 	background: {
 		paddingHorizontal: 20,
 		justifyContent: "space-between",
-		width: "100%"
+		width: "100%",
 	},
 	carouselMeditation: {
 		marginHorizontal: -20,
@@ -176,7 +181,6 @@ const styles = StyleSheet.create({
 		height: 45,
 		marginTop: 20,
 		marginBottom: 30,
-
 	},
 	buttonText: {
 		color: "#FFFFFF",

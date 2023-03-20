@@ -224,7 +224,7 @@ export type RootStackList = {
 	Greeting: undefined;
 	Instruction: {
 		instruction: State.Instruction;
-		meditationid?: string
+		meditationid?: string;
 	};
 	FavoriteMeditation: undefined;
 	Options: undefined;
@@ -274,6 +274,7 @@ export type RootStackList = {
 		selectedPractice: State.Practice;
 		timeNotification?: { type: Breathing; time: number }[];
 		selectSet?: State.Set;
+		nameConent?: string;
 	};
 	PlayerMeditationOnTheMandala: {
 		isNeedVoice: boolean;
@@ -306,6 +307,7 @@ export type RootStackList = {
 	ConfirmChangeSubs: { selectSubscribe: State.SubscribeType };
 	NoHaveInternet: undefined;
 	ExperimentalConfig: undefined;
+	OurNeedYourNotification: undefined;
 };
 
 export type RootScreenProps<T extends keyof RootStackList> = FC<NativeStackScreenProps<RootStackList, T>>;

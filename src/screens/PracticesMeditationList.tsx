@@ -58,7 +58,7 @@ const CategoryMeditation: {
 
 const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) => {
 	const [countPractices, setCountPractices] = useState<{ [key: string]: number | null }>({
-		// basic: null,
+		basic: null,
 		relaxation: null,
 		breathingPractices: null,
 		directionalVisualizations: null,
@@ -88,7 +88,7 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 				relaxation: countsResult[0],
 				directionalVisualizations: countsResult[1],
 				breathingPractices: countsResult[2],
-				// basic: 4
+				basic: 3,
 			}));
 		});
 	}, []);
