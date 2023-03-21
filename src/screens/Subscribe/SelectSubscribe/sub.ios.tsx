@@ -82,7 +82,7 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 		try {
 			if (selectedSubscribeType !== null && !isActiveSubs) {
 				setIsLoading(true);
-				const paywall = await adapty.getPaywall("subscribe.month.paywall");
+				const paywall = await adapty.getPaywall("buy_my_subscribe");
 				const products = await adapty.getPaywallProducts(paywall);
 				await adapty.makePurchase(products[0]);
 				setIsLoading(false);

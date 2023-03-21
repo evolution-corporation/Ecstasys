@@ -28,7 +28,7 @@ if (Platform.OS === "android") {
 }
 const AppCore = () => {
 	React.useEffect(() => {
-		if (Platform.OS === "ios") adapty.activate("public_live_B5WK9eoU.NdcH8xOtr823XuWjQkgQ"); //adapty key
+		if (Platform.OS === "ios") adapty.activate("public_live_yQp6zUhg.9v0LCJV8Yj5AfYeruMqt"); //adapty key
 		(async () => {
 			await SplashScreen.preventAutoHideAsync();
 			try {

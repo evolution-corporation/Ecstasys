@@ -98,6 +98,8 @@ export const updateAccount = createAsyncThunk<
 		const isFree = (await Request.getUserByNickname(nickname)) === null;
 		lastCheckNicknameAndResult = [new Date().toISOString(), isFree];
 	}
+	const currentGender = getState().account.currentData?.gender; //! Fix
+	if (gender === undefined && currentGender !== undefined) gender = Gender[currentGender];
 
 	const user = Converter.composeUser(
 		await Request.updateUser({

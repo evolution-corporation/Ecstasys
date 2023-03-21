@@ -10,6 +10,7 @@ import { Screen } from "~components/containers";
 import User from "assets/icons/User.svg";
 import Mail from "assets/icons/Mail.svg";
 import LogOut from "assets/icons/Log_Out.svg";
+import ShoppingBag from "assets/icons/Interface-Shopping_Bag_01.svg";
 import { actions, useAppDispatch } from "~store";
 import { RootScreenProps } from "~types";
 import { StatusBar } from "expo-status-bar";
@@ -57,6 +58,7 @@ const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 						});
 				}}
 			>
+				<ShoppingBag />
 				<Text style={styles.buttonText}>{"Восстановить покупки"}</Text>
 			</TouchableOpacity>
 			<TouchableOpacity

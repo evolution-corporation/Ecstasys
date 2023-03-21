@@ -5,7 +5,7 @@
 
 import auth from "@react-native-firebase/auth";
 import { RequestError } from "src/Errors";
-import {Gender, ServerEntities, Subscription, SupportType} from "./types";
+import { Gender, ServerEntities, Subscription, SupportType } from "./types";
 import * as Storage from "./asyncStorage";
 import Constants from "expo-constants";
 
@@ -510,7 +510,6 @@ export async function sendErrorInformation(name: string, error: Error, payload: 
 	});
 }
 
-
 export async function meditationIsLisent(meditationId: string, firebaseTokenToken?: string) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
 	const url = URL + "meditation" + "?meditationId=" + meditationId + "&meditationLanguage=ru";
@@ -522,8 +521,8 @@ export async function meditationIsLisent(meditationId: string, firebaseTokenToke
 		},
 		body: JSON.stringify({
 			meditationId: meditationId,
-			meditationLanguage: "ru"
-		})
+			meditationLanguage: "ru",
+		}),
 	});
-	console.log(requestServer.status, await requestServer.text())
+	console.log(requestServer.status, await requestServer.text());
 }
