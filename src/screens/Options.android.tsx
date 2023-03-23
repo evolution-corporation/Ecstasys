@@ -48,7 +48,7 @@ const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 				}}
 			>
 				<LogOut />
-				<Text style={styles.buttonText}>{i18n.t("c9bcb9a8-e59c-4ee5-97f1-94dae753a716")}</Text>
+				<Text style={[styles.buttonText]}>{i18n.t("c9bcb9a8-e59c-4ee5-97f1-94dae753a716")}</Text>
 			</TouchableOpacity>
 			<View
 				style={{
@@ -68,7 +68,7 @@ const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 				{/*>*/}
 				{/*	<DefaultText color={"#FFFFFF"}>{i18n.t("cf2785ca-7d89-4ee5-b494-82c76175f04b")}</DefaultText>*/}
 				{/*</Pressable>*/}
-				<DefaultText color={"#FFFFFF"}>v{version}</DefaultText>
+				{/* <DefaultText color={"#FFFFFF"}>v{version}</DefaultText> */}
 			</View>
 		</Screen>
 	);

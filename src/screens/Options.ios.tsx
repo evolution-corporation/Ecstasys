@@ -11,15 +11,19 @@ import User from "assets/icons/User.svg";
 import Mail from "assets/icons/Mail.svg";
 import LogOut from "assets/icons/Log_Out.svg";
 import ShoppingBag from "assets/icons/Interface-Shopping_Bag_01.svg";
-import { actions, useAppDispatch } from "~store";
+import { actions, useAppDispatch, useAppSelector } from "~store";
 import { RootScreenProps } from "~types";
 import { StatusBar } from "expo-status-bar";
 import { version } from "package.json";
 import DefaultText from "~components/Text/default-text";
 import { adapty } from "react-native-adapty";
+import Trash from "assets/icons/Interface-Trash_Full.svg";
 
 const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 	const appDispatch = useAppDispatch();
+
+	const uid = useAppSelector(store => store.account.uid);
+
 	return (
 		<Screen backgroundColor={"#9765A8"}>
 			<TouchableOpacity
@@ -76,11 +80,28 @@ const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 					bottom: 20,
 					right: 20,
 					left: 20,
-					flexDirection: "row",
+					flexDirection: "column",
 					justifyContent: "space-between",
 					alignItems: "center",
 				}}
 			>
+				<View style={{ justifyContent: "flex-start" }}>
+					<TouchableOpacity
+						style={styles.button}
+						onPress={() => {
+							MailComposer.composeAsync({
+								recipients: ["info@evodigital.one"],
+								subject: `Удалить аккаунт ${uid}`,
+							});
+						}}
+					>
+						<Trash />
+						<Text style={styles.buttonText}>Удалить учетную запись</Text>
+					</TouchableOpacity>
+					<Text style={[styles.buttonText, { marginLeft: 0 }]}>
+						Для удаления своего аккаунта и личных данных необходимо отправить запрос на почту: info@evodigital.one
+					</Text>
+				</View>
 				{/*<Pressable*/}
 				{/*	onPress={() => {*/}
 				{/*		navigation.navigate("ExperimentalConfig");*/}
@@ -88,7 +109,7 @@ const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 				{/*>*/}
 				{/*	<DefaultText color={"#FFFFFF"}>{i18n.t("cf2785ca-7d89-4ee5-b494-82c76175f04b")}</DefaultText>*/}
 				{/*</Pressable>*/}
-				<DefaultText color={"#FFFFFF"}>v{version}</DefaultText>
+				{/* <DefaultText color={"#FFFFFF"}>v{version}</DefaultText> */}
 			</View>
 		</Screen>
 	);
