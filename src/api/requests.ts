@@ -12,6 +12,8 @@ import Constants from "expo-constants";
 const { extra } = Constants.manifest ?? {};
 const { apiURL } = extra;
 const URL = "http://" + apiURL + "/";
+const fixUrl = "http://" + (apiURL === "api.evodigital.one" ? "51.250.8.125:5000" : "84.252.131.99:5000");
+
 /**
  * Получает FirebaseToken пользователя
  * @returns FirebaseToken пользователя
@@ -84,6 +86,15 @@ export async function createUser({ birthday, nickname, image }: CreateUserParams
 			Image: image,
 		}),
 	});
+	const fix = await fetch(`${fixUrl}/image`, {
+		method: "POST",
+		headers: {
+			Authorization: firebaseTokenToken,
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(image),
+	});
+	const Image = await fix.text();
 	if (requestServer.status >= 500) {
 		throw new RequestError(
 			`createUser: ${await requestServer.text()}`,
@@ -98,8 +109,7 @@ export async function createUser({ birthday, nickname, image }: CreateUserParams
 		);
 	}
 	const json = await requestServer.json();
-
-	return json as ServerEntities.User;
+	return { ...json, Image } as ServerEntities.User;
 }
 interface CreateUserParams {
 	readonly nickname: string;
@@ -126,9 +136,18 @@ export async function updateUser(
 	if (nickname !== undefined) body.push(["NickName", nickname]);
 	if (displayName !== undefined) body.push(["DisplayName", displayName]);
 	if (birthday !== undefined) body.push(["Birthday", birthday.toISOString()]);
-	if (image !== undefined) body.push(["Image", image]);
 	if (gender !== undefined) body.push(["Gender", gender]);
 	const url = URL + "users";
+	if (image !== undefined) {
+		await fetch(`${fixUrl}/image`, {
+			method: "POST",
+			headers: {
+				Authorization: firebaseTokenToken,
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(image),
+		});
+	}
 	const requestServer = await fetch(url, {
 		method: "PATCH",
 		headers: {
@@ -137,6 +156,7 @@ export async function updateUser(
 		},
 		body: JSON.stringify(Object.fromEntries(body)),
 	});
+
 	if (requestServer.status >= 500) {
 		throw new RequestError(
 			`updateUser: ${await requestServer.text()}`,
@@ -147,7 +167,7 @@ export async function updateUser(
 		);
 	}
 	const json = await requestServer.json();
-	return json as ServerEntities.User;
+	return { ...json } as ServerEntities.User;
 }
 interface UpdateUserParams {
 	nickname?: string;
@@ -525,4 +545,15 @@ export async function meditationIsLisent(meditationId: string, firebaseTokenToke
 		}),
 	});
 	console.log(requestServer.status, await requestServer.text());
+}
+
+export async function deleteUSer(firebaseTokenToken?: string) {
+	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
+	await fetch(`${fixUrl}/user`, {
+		method: "DELETE",
+		headers: {
+			Authorization: firebaseTokenToken,
+			"Content-Type": "application/json",
+		},
+	});
 }

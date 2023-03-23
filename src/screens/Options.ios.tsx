@@ -2,7 +2,7 @@
 import i18n from "~i18n";
 
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Switch, Pressable } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Switch, Pressable, Alert } from "react-native";
 import * as MailComposer from "expo-mail-composer";
 
 import gStyles from "~styles";
@@ -18,6 +18,7 @@ import { version } from "package.json";
 import DefaultText from "~components/Text/default-text";
 import { adapty } from "react-native-adapty";
 import Trash from "assets/icons/Interface-Trash_Full.svg";
+import { deleteUSer } from "src/api/requests";
 
 const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 	const appDispatch = useAppDispatch();
@@ -89,18 +90,25 @@ const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 					<TouchableOpacity
 						style={styles.button}
 						onPress={() => {
-							MailComposer.composeAsync({
-								recipients: ["info@evodigital.one"],
-								subject: `Удалить аккаунт ${uid}`,
-							});
+							Alert.alert(
+								"Удалить учетную запись",
+								"Если Вы продолжите, то данные будут удаленны навсегда!. Если у Вас есть действующая подписка, то её необходимо отменить в AppStore, чтобы избежать дальнейшего списания денежных средств. Вы действительно хотите удалить данный аккаунт?",
+								[
+									{ text: "Отмена", style: "cancel" },
+									{
+										text: "Да, я подтверждаю удаление",
+										onPress: () => {
+											deleteUSer();
+											appDispatch(actions.signOutAccount());
+										},
+									},
+								]
+							);
 						}}
 					>
 						<Trash />
 						<Text style={styles.buttonText}>Удалить учетную запись</Text>
 					</TouchableOpacity>
-					<Text style={[styles.buttonText, { marginLeft: 0 }]}>
-						Для удаления своего аккаунта и личных данных необходимо отправить запрос на почту: info@evodigital.one
-					</Text>
 				</View>
 				{/*<Pressable*/}
 				{/*	onPress={() => {*/}
