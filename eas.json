@@ -23,7 +23,7 @@
 			"distribution": "internal",
 			"channel": "preview",
 			"env": {
-				"APP_VARIANT": "prev"
+				"APP_VARIANT": "prod"
 			},
 			"android": {
 				"buildType": "app-bundle"
