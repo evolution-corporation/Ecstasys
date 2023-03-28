@@ -4,7 +4,12 @@ import type { ExpoConfig } from "expo/config";
 import { version } from "./package.json";
 
 function generateConfig(): ExpoConfig {
-	const appName = process.env.APP_VARIANT === "dev" ? "DMD Dev" : process.env.APP_VARIANT === "prev" ? "dmd meditation beta" : "dmd meditation";
+	const appName =
+		process.env.APP_VARIANT === "dev"
+			? "DMD Dev"
+			: process.env.APP_VARIANT === "prev"
+			? "dmd meditation beta"
+			: "dmd meditation";
 	const appUrl =
 		process.env.APP_VARIANT === "dev" ? "com.evodigital.dmdmeditation+dev" : "com.evodigital.dmdmeditation";
 	const toDay = new Date();
@@ -19,10 +24,12 @@ function generateConfig(): ExpoConfig {
 	const plugins: (string | [] | [string] | [string, any])[] = [
 		"expo-dev-client",
 		"expo-splash-screen",
-		["expo-image-picker",
+		[
+			"expo-image-picker",
 			{
-				"photosPermission": "Используется для следующих целей:  Персонализация продукта"
-			}],
+				photosPermission: "Используется для следующих целей:  Персонализация продукта",
+			},
+		],
 		"expo-av",
 		"expo-updates",
 		"@react-native-firebase/app",
@@ -41,7 +48,7 @@ function generateConfig(): ExpoConfig {
 				},
 			},
 		],
-	]
+	];
 	// if (process.env.APP_VARIANT === "dev") plugins.push("expo-community-flipper")
 	return {
 		jsEngine: "hermes",
@@ -61,7 +68,7 @@ function generateConfig(): ExpoConfig {
 			backgroundColor: "#FFFFFF",
 		},
 		updates: {
-			"url": "https://u.expo.dev/360fff0b-5a9b-41de-9bb3-016641a64554"
+			url: "https://u.expo.dev/360fff0b-5a9b-41de-9bb3-016641a64554",
 		},
 		assetBundlePatterns: ["**/*"],
 		android: {
@@ -90,10 +97,10 @@ function generateConfig(): ExpoConfig {
 				projectId: "360fff0b-5a9b-41de-9bb3-016641a64554",
 			},
 			isDebug: process.env.APP_VARIANT !== "dev",
-			apiURL: process.env.APP_VARIANT === "prod"
-				? "api.evodigital.one"
-				: "dev.api.evodigital.one",
-			GoogleWebClientId: process.env.GOOGLE_WEB_CLIENT_ID,
+			apiURL:
+				/* process.env.APP_VARIANT === "prod"
+				?  */ "api.evodigital.one",
+			/* : "dev.api.evodigital.one" */ GoogleWebClientId: process.env.GOOGLE_WEB_CLIENT_ID,
 		},
 		runtimeVersion: {
 			policy: "sdkVersion",

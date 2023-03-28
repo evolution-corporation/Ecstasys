@@ -168,16 +168,20 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 					marginTop: 28,
 				}}
 				onPress={() => {
-					if (toDayPopularMeditation) {
-						if (toDayPopularMeditation.type === "RELAXATION") {
-							navigation.navigate("SelectTimeForRelax", {
-								selectedPractice: toDayPopularMeditation,
-							});
-						} else {
-							navigation.navigate("PlayerForPractice", {
-								selectedPractice: toDayPopularMeditation,
-							});
+					if (toDayPopularMeditation?.isNeedSubscribe ?? false) {
+						if (toDayPopularMeditation) {
+							if (toDayPopularMeditation.type === "RELAXATION") {
+								navigation.navigate("SelectTimeForRelax", {
+									selectedPractice: toDayPopularMeditation,
+								});
+							} else {
+								navigation.navigate("PlayerForPractice", {
+									selectedPractice: toDayPopularMeditation,
+								});
+							}
 						}
+					} else {
+						navigation.navigate("ByMaySubscribe");
 					}
 				}}
 				pointerEvents={"box-only"}
