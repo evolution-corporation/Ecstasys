@@ -45,7 +45,7 @@ const EndMeditation: RootScreenProps<"EndMeditation"> = ({ navigation, route }) 
 				/>
 
 				<ColorButton
-					styleButton={{ backgroundColor: "#C2A9CE", paddingHorizontal: 25 }}
+					styleButton={{ backgroundColor: "#9765A8", paddingHorizontal: 25 }}
 					styleText={{ color: "#FFF" }}
 					onPress={() => {
 						removeLastScreen();

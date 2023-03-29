@@ -102,7 +102,7 @@ const InstructionForDMD: RootScreenProps<"InstructionForDMD"> = ({ route, naviga
 					onPress={() => {
 						navigation.goBack();
 					}}
-					styleButton={{ backgroundColor: "#C2A9CE", marginBottom: 50 }}
+					styleButton={{ backgroundColor: "#9765A8", marginBottom: 50 }}
 					styleText={{ color: "#FFFFFF" }}
 				>
 					К практике

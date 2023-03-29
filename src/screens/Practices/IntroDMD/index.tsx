@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
 		...Core.gStyle.font("400"),
 	},
 	button: {
-		backgroundColor: "rgba(194, 169, 206, 1)",
+		backgroundColor: "#9765A8",
 		borderRadius: 15,
 		marginTop: 30,
 	},

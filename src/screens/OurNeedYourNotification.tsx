@@ -44,11 +44,11 @@ const OurNeedYourNotification: RootScreenProps<"OurNeedYourNotification"> = ({ n
 				</DefaultText>
 
 				<ColorButton
-					styleButton={{ backgroundColor: "#C2A9CE", paddingHorizontal: 25 }}
+					styleButton={{ backgroundColor: "#9765A8", paddingHorizontal: 25 }}
 					styleText={{ color: "#FFF" }}
 					onPress={() => requestNotification()}
 				>
-					Дасть доступ
+					Дать доступ
 				</ColorButton>
 				<TextButton styleText={{ color: "#9765A8" }} onPress={() => navigation.goBack()}>
 					Назад
