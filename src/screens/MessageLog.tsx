@@ -29,7 +29,7 @@ const MessageLog: RootScreenProps<"MessageLog"> = ({ navigation, route }) => {
 				</Text>
 				<Text style={styles.message}>{message}</Text>
 				<ColorButton
-					styleButton={{ backgroundColor: "#C2A9C3", paddingHorizontal: 40 }}
+					styleButton={{ backgroundColor: "#9765A8", paddingHorizontal: 40 }}
 					styleText={{ color: "#FFFFFF" }}
 					onPress={onPress}
 				>
