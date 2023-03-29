@@ -69,7 +69,7 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 	);
 
 	const onClick = (practiceId: string) => {
-		if (isSubscribe || true) {
+		if (isSubscribe) {
 			const practiceIndex = practiceList.findIndex(item => item.id === practiceId);
 			if (practiceIndex !== -1 && practiceList[practiceIndex].type === "RELAXATION" && isSubscribe) {
 				dispatch(actions.setOptionForDMD(practiceList[practiceIndex]));
