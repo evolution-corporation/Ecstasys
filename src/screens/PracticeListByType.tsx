@@ -1,25 +1,29 @@
 /** @format */
 
 import React, { useState } from "react";
-import { Text, StyleSheet, useWindowDimensions, Dimensions } from "react-native";
+import { Dimensions, StyleSheet, Text } from "react-native";
 import { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 import Tools from "~core";
 import { PracticesMeditation, RootScreenProps, State } from "~types";
-var height = Dimensions.get("window").height;
-
-import { ColorButton } from "~components/dump";
+import { CarouselPractices, ColorButton } from "~components/dump";
 import { DoubleColorView } from "~components/containers";
 import i18n from "~i18n";
 import DescriptionPrentices from "assets/descriptionPrentices.json";
-import { CarouselPractices } from "~components/dump";
 import { actions, useAppDispatch } from "~store";
 import { Converter, Request } from "~api";
 import { SupportType } from "src/api/types";
-import { MeditationOnTheMandala, MeditationOnTheNose, PlayerMeditationDot } from "src/baseMeditation";
+import {
+	MeditationOnTheCandle,
+	MeditationOnTheMandala,
+	MeditationOnTheNose,
+	PlayerMeditationDot,
+} from "src/baseMeditation";
 
 import * as Instruction from "src/instruction";
 import useIsActivateSubscribe from "src/hooks/use-is-activate-subscribe";
+
+var height = Dimensions.get("window").height;
 
 const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navigation }) => {
 	const { typePractices } = route.params;
@@ -67,6 +71,7 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 					{ ...MeditationOnTheNose, isPermission: true },
 					{ ...PlayerMeditationDot, isPermission: true },
 					{ ...MeditationOnTheMandala, isPermission: true },
+					{ ...MeditationOnTheCandle, isPermission: true },
 				];
 
 				setPracticeList(listPractice);

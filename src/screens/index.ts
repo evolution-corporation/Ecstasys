@@ -47,3 +47,4 @@ export { default as ConfirmationRemoveSubs } from "./confirmation-remove-subs";
 export { default as ConfirmChangeSubs } from "./confirmation-change-subs";
 export { default as NoHaveInternet } from "./no-have-internet";
 export { default as ExperimentalConfig } from "./experimental-config";
+export { default as PlayerMeditationOnTheCandle } from "./PlayerMeditationOnTheCandle";

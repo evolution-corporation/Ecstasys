@@ -3,19 +3,16 @@
 //! 50% Не работает нормально
 //TODO: требуется рефракторинг
 
-import { LinearGradient } from "expo-linear-gradient";
 import React, { useCallback, useState } from "react";
 import { useHeaderHeight } from "@react-navigation/elements";
 
-import { Dimensions, Image, Platform, StyleSheet, Switch, Text, View } from "react-native";
+import { Image, StyleSheet, Switch, Text, View } from "react-native";
 import { ColorButton, SelectTime, TextButton } from "~components/dump";
 
 import gStyle from "~styles";
 import i18n from "~i18n";
 
 import { RootScreenProps } from "~types";
-import { SharedElement } from "react-navigation-shared-element";
-import * as StatusBar from "expo-status-bar";
 import { useFocusEffect } from "@react-navigation/native";
 import { useDimensions } from "@react-native-community/hooks";
 
@@ -104,6 +101,8 @@ const SelectTimeForBase: RootScreenProps<"SelectTimeForBase"> = ({ navigation, r
 							navigation.navigate("PlayerMeditationOnTheNose", { isNeedVoice, practiceLength: milliseconds });
 						} else if (selectedPractice.id === "4b134d62-3507-4d35-9168-289fd7c0172b") {
 							navigation.navigate("PlayerMeditationDot", { isNeedVoice, practiceLength: milliseconds });
+						} else if (selectedPractice.id === "e6e39f7b-d2c7-4e57-8f97-773838695f7e") {
+							navigation.navigate("PlayerMeditationOnTheCandle", { isNeedVoice, practiceLength: milliseconds });
 						}
 					}}
 				>

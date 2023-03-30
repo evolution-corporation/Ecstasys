@@ -3,7 +3,7 @@
 	"version": "0.2.22",
 	"scripts": {
 		"start": "expo start --dev-client --force-manifest-type=classic",
-		"build Dev": "eas build --platform android --profile development --local",
+		"build Dev": "eas build --platform android --profile development",
 		"android": "expo run:android",
 		"ios": "expo run:ios"
 	},

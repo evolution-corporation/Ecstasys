@@ -1,12 +1,10 @@
 /** @format */
 
-import { BottomTabNavigationProp, BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import { CompositeNavigationProp, CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native";
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import { CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { FC } from "react";
-import type { useAppSelector, useAppDispatch } from "./store";
 import { ImageSourcePropType } from "react-native";
-import { StackNavigationProp } from "@react-navigation/stack";
 
 export enum TypeViewContent {
 	Image,
@@ -48,6 +46,7 @@ export enum PracticesMeditation {
 	/** Практики базовой медитации */
 	BASIC = "basic",
 }
+
 /** Список экранов с приветствием */
 export enum GreetingScreen {
 	INTRO = "Intro",
@@ -84,10 +83,11 @@ export namespace State {
 		| "DIRECTIONAL_VISUALIZATIONS"
 		| "RELAXATION";
 	export type SubscribeType = "WEEK" | "MONTH" | "HALF_YEAR";
+
 	export interface User {
 		/** Уникальный идентификатор пользователя в Firebase */
 		readonly uid: string;
-		/**	Отображаемое имя пользователя */
+		/**  Отображаемое имя пользователя */
 		readonly displayName?: string;
 		/** Ссылка на изображения пользователя */
 		readonly image: string;
@@ -98,6 +98,7 @@ export namespace State {
 		/** Пол пользователя */
 		readonly gender: Gender;
 	}
+
 	export interface Account {
 		/** Уникальный идентификатор пользователя в системе */
 		readonly uid?: string;
@@ -110,12 +111,14 @@ export namespace State {
 		//!
 		readonly subscribe: State.Subscribe | null;
 	}
+
 	export interface Instruction {
 		readonly id: string;
 		readonly title: string;
 		readonly description: string;
 		readonly body: { text: string }[];
 	}
+
 	export interface ChangedUserData {
 		/** Обновленное уникальное имя пользователя */
 		readonly nickname?: string;
@@ -128,6 +131,7 @@ export namespace State {
 		/** Когда был проверка вернула успешный результат nickname на валидность */
 		readonly lastCheckNicknameAndResult?: [string, boolean];
 	}
+
 	export interface Practice {
 		id: string;
 		description: string;
@@ -148,12 +152,14 @@ export namespace State {
 		instruction: Instruction;
 		image: ImageSourcePropType;
 	}
+
 	export interface StatisticUnit {
 		id: string;
 		dateListen: string;
 		timeListen: number;
 		meditation: Practice;
 	}
+
 	export interface Statistic {
 		[index: string]: State.StatisticUnit;
 	}
@@ -284,6 +290,10 @@ export type RootStackList = {
 		selectedPractice: State.BasePractice;
 	};
 	PlayerMeditationOnTheNose: {
+		isNeedVoice: boolean;
+		practiceLength: number;
+	};
+	PlayerMeditationOnTheCandle: {
 		isNeedVoice: boolean;
 		practiceLength: number;
 	};

@@ -20,9 +20,6 @@ import { GeneralCompositeScreenProps, PracticesMeditation } from "~types";
 import { CategoryCard, UserButton } from "~components/dump";
 import { Request, Storage } from "~api";
 import { useFocusEffect } from "@react-navigation/native";
-import { NameExperimentalFunction } from "src/store/reducers/experimental-config";
-import useBaseMeditationInformation from "../hooks/use-base-meditation-information.experimental";
-import Animated, { FadeIn } from "react-native-reanimated";
 
 const CategoryMeditation: {
 	name: string;
@@ -88,7 +85,7 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 				relaxation: countsResult[0],
 				directionalVisualizations: countsResult[1],
 				breathingPractices: countsResult[2],
-				basic: 3,
+				basic: 4,
 			}));
 		});
 	}, []);
