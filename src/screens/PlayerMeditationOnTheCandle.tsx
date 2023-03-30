@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { useEffect, useRef } from "react";
-import { Image, ImageSourcePropType, Pressable, StyleSheet, Text, View } from "react-native";
+import { FlatList, Image, ImageSourcePropType, Pressable, StyleSheet, Text, View } from "react-native";
 import * as Notifications from "expo-notifications";
 import { useKeepAwake } from "expo-keep-awake";
 
@@ -18,6 +18,7 @@ import useBackgroundSound from "src/hooks/use-background-sound";
 import useTimer from "src/hooks/use-timer";
 import BackgroundSoundButton from "~components/dump/background-sound-button";
 import { ResizeMode, Video } from "expo-av";
+import LockIcon from "~assets/icons/Lock.svg";
 
 Notifications.setNotificationHandler({
 	handleNotification: async () => ({
@@ -30,9 +31,7 @@ Notifications.setNotificationHandler({
 const PlayerMeditationOnTheCandle: RootScreenProps<"PlayerMeditationOnTheCandle"> = ({ navigation, route }) => {
 	const { isNeedVoice, practiceLength } = route.params;
 
-	const [mandala, setMandala] = React.useState<ImageSourcePropType>(
-		require("assets/BaseMeditaionAssets/Mandala/Base.png")
-	);
+	const [candle, setCandle] = React.useState<ImageSourcePropType>(require("~assets/Candle.gif"));
 
 	const [isShowTime, setIsShowTime] = React.useState(true);
 
@@ -84,7 +83,7 @@ const PlayerMeditationOnTheCandle: RootScreenProps<"PlayerMeditationOnTheCandle"
 					style={styles.video}
 					// source={require("~assets/Candle.mp4")}
 					resizeMode={ResizeMode.CONTAIN}
-					source={require("~assets/Candle.gif")}
+					source={candle}
 					// isLooping
 				/>
 				{isShowTime && (
@@ -96,6 +95,48 @@ const PlayerMeditationOnTheCandle: RootScreenProps<"PlayerMeditationOnTheCandle"
 				)}
 			</Pressable>
 			<View style={[styles.timeInfoBox]}>
+				<FlatList
+					data={[
+						{ name: "Base", uri: require("assets/BaseMeditaionAssets/Mandala/Base.png") },
+						{ name: "Premium1", uri: require("assets/BaseMeditaionAssets/Mandala/Premium1.png") },
+						{ name: "Premium2", uri: require("assets/BaseMeditaionAssets/Mandala/Premium2.png") },
+						{ name: "Premium3", uri: require("assets/BaseMeditaionAssets/Mandala/Premium3.png") },
+					]}
+					renderItem={({ item }) => (
+						<Pressable
+							onPress={() => {
+								if (item.name === "Base" || isSubscribe) {
+									setCandle(item.uri);
+								} else {
+									navigation.navigate("ByMaySubscribe");
+								}
+							}}
+						>
+							<Image source={item.uri} style={{ width: 70, height: 70 }} />
+							{item.name === "Base" || isSubscribe ? null : (
+								<View
+									style={{
+										width: 70,
+										height: 70,
+										justifyContent: "center",
+										alignItems: "center",
+										position: "absolute",
+										backgroundColor: "rgba(0,0,0,0.5)",
+									}}
+								>
+									<View style={{ transform: [{ scale: 0.6 }] }}>
+										<LockIcon />
+									</View>
+								</View>
+							)}
+						</Pressable>
+					)}
+					horizontal
+					keyExtractor={item => item.name}
+					style={{ left: 0, right: 0, marginHorizontal: -20, marginBottom: 30 }}
+					ItemSeparatorComponent={() => <View style={{ width: 29 }} />}
+					contentContainerStyle={{ paddingHorizontal: 20 }}
+				/>
 				<View style={{ alignSelf: "flex-start", marginTop: 17 }}>
 					<BackgroundSoundButton image={undefined} name={backgroundSound.name} />
 				</View>
