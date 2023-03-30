@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { useEffect, useRef } from "react";
-import { FlatList, Image, ImageSourcePropType, Pressable, StyleSheet, Text, View } from "react-native";
+import { FlatList, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import * as Notifications from "expo-notifications";
 import { useKeepAwake } from "expo-keep-awake";
 
@@ -17,7 +17,7 @@ import useMeditation from "src/hooks/use-meditation";
 import useBackgroundSound from "src/hooks/use-background-sound";
 import useTimer from "src/hooks/use-timer";
 import BackgroundSoundButton from "~components/dump/background-sound-button";
-import { ResizeMode, Video } from "expo-av";
+import { AVPlaybackSource, ResizeMode, Video } from "expo-av";
 import LockIcon from "~assets/icons/Lock.svg";
 
 Notifications.setNotificationHandler({
@@ -31,7 +31,7 @@ Notifications.setNotificationHandler({
 const PlayerMeditationOnTheCandle: RootScreenProps<"PlayerMeditationOnTheCandle"> = ({ navigation, route }) => {
 	const { isNeedVoice, practiceLength } = route.params;
 
-	const [candle, setCandle] = React.useState<ImageSourcePropType>(require("~assets/Candle.gif"));
+	const [candle, setCandle] = React.useState<AVPlaybackSource>(require("~assets/Candle/Candle1.mp4"));
 
 	const [isShowTime, setIsShowTime] = React.useState(true);
 
@@ -53,13 +53,16 @@ const PlayerMeditationOnTheCandle: RootScreenProps<"PlayerMeditationOnTheCandle"
 
 	useEffect(() => {
 		timer.play();
+	}, []);
+
+	const backgroundSound = useBackgroundSound(true);
+
+	useEffect(() => {
 		if (video.current) video.current.playAsync();
 		return () => {
 			if (video.current) video.current.stopAsync();
 		};
-	}, []);
-
-	const backgroundSound = useBackgroundSound(true);
+	}, [candle]);
 
 	useKeepAwake();
 
@@ -78,14 +81,8 @@ const PlayerMeditationOnTheCandle: RootScreenProps<"PlayerMeditationOnTheCandle"
 					bottom: "40%",
 				}}
 			>
-				<Image
-					// ref={video}
-					style={styles.video}
-					// source={require("~assets/Candle.mp4")}
-					resizeMode={ResizeMode.CONTAIN}
-					source={candle}
-					// isLooping
-				/>
+				<Video ref={video} style={styles.video} source={candle} resizeMode={ResizeMode.CONTAIN} isLooping />
+
 				{isShowTime && (
 					<View style={styles.timesCodeBox}>
 						<Text style={styles.timeCode} key={"current"}>
@@ -97,16 +94,32 @@ const PlayerMeditationOnTheCandle: RootScreenProps<"PlayerMeditationOnTheCandle"
 			<View style={[styles.timeInfoBox]}>
 				<FlatList
 					data={[
-						{ name: "Base", uri: require("assets/BaseMeditaionAssets/Mandala/Base.png") },
-						{ name: "Premium1", uri: require("assets/BaseMeditaionAssets/Mandala/Premium1.png") },
-						{ name: "Premium2", uri: require("assets/BaseMeditaionAssets/Mandala/Premium2.png") },
-						{ name: "Premium3", uri: require("assets/BaseMeditaionAssets/Mandala/Premium3.png") },
+						{
+							name: "Base",
+							uri: require("../../assets/Candle/Candle1.png"),
+							video: require("../../assets/Candle/Candle1.mp4"),
+						},
+						{
+							name: "Premium1",
+							uri: require("../../assets/Candle/Candle2.png"),
+							video: require("../../assets/Candle/Candle2.mp4"),
+						},
+						{
+							name: "Premium2",
+							uri: require("../../assets/Candle/Candle3.png"),
+							video: require("../../assets/Candle/Candle3.mp4"),
+						},
+						{
+							name: "Premium3",
+							uri: require("../../assets/Candle/Candle4.png"),
+							video: require("../../assets/Candle/Candle4.mp4"),
+						},
 					]}
 					renderItem={({ item }) => (
 						<Pressable
 							onPress={() => {
 								if (item.name === "Base" || isSubscribe) {
-									setCandle(item.uri);
+									setCandle(item.video);
 								} else {
 									navigation.navigate("ByMaySubscribe");
 								}
@@ -238,6 +251,5 @@ const styles = StyleSheet.create({
 		width: "100%",
 		height: 458,
 		position: "absolute",
-		right: "-15%",
 	},
 });
