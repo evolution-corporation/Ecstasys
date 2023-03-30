@@ -39,8 +39,8 @@ const OurNeedYourNotification: RootScreenProps<"OurNeedYourNotification"> = ({ n
 				<HeaderText>Разрешение{"\n"}уведомлений</HeaderText>
 
 				<DefaultText color="rgba(64, 64, 64, 0.71)" style={{ textAlign: "center" }}>
-					Предоставь нам доступ к уводмлениям, что бы мы могли уведомить о том что медитация закончена и что пора
-					сменить режим дыхания в дмд
+					Предоставь нам доступ к уведомлениям, чтобы мы могли уведомить о том, что медитация закончена и что пора
+					сменить режим дыхания в сессии дмд
 				</DefaultText>
 
 				<ColorButton
