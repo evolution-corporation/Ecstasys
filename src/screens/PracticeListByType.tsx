@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
 		transform: [{ translateY: 120 }],
 	},
 	button: {
-		backgroundColor: "#C2A9CE",
+		backgroundColor: "#9765A8",
 		borderRadius: 15,
 		width: "100%",
 		height: 45,

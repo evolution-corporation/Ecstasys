@@ -56,7 +56,7 @@ const SubscribeCard: FC<SubscribeCardProps> = props => {
 						<Text style={styles.price}>{textPrice.top}</Text>
 						{"\n"}
 						{textPrice.bottom}
-						{isFirstPayment && i18n.t("a8ffa396-e17e-4836-817a-f4f61bad261d")}
+						{isFirstPayment ? Platform.OS === "ios" ? null : i18n.t("a8ffa396-e17e-4836-817a-f4f61bad261d") : null}
 					</Text>
 				</View>
 				<View style={styles.imageCard}>

@@ -36,7 +36,7 @@ const Instruction: RootScreenProps<"Instruction"> = ({ route, navigation }) => {
 			<ScrollView style={{ backgroundColor: "#FFFFFF", paddingHorizontal: 20 }} showsVerticalScrollIndicator={false}>
 				{isLoading ? (
 					<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-						<ActivityIndicator color={"#C2A9CE"} />
+						<ActivityIndicator color={"#9765A8"} />
 					</View>
 				) : (
 					<InstructionPattern data={data.body} description={data.description} title={data.title} />
@@ -45,7 +45,7 @@ const Instruction: RootScreenProps<"Instruction"> = ({ route, navigation }) => {
 					onPress={() => {
 						navigation.goBack();
 					}}
-					styleButton={{ backgroundColor: "#C2A9CE", marginBottom: 50 }}
+					styleButton={{ backgroundColor: "#9765A8", marginBottom: 50 }}
 					styleText={{ color: "#FFFFFF" }}
 				>
 					К практике

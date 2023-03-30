@@ -132,7 +132,8 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 				/>
 			</View>
 			<View>
-				<View
+				{
+					!isActiveSubs && <View
 					style={{
 						width: "100%",
 						flexDirection: "row",
@@ -164,6 +165,8 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 						</Text>
 					</Text>
 				</View>
+				}
+				
 				{!isActiveSubs && isLoading ? (
 					<View style={{ width: "100%", height: 50, justifyContent: "center", alignItems: "center" }}>
 						<ActivityIndicator color={"#C2A9CE"} />

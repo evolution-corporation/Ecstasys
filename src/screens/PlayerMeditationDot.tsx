@@ -89,7 +89,7 @@ const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigatio
 								onPress={() => {
 									setEditView(false);
 								}}
-								styleButton={{ paddingHorizontal: 25, borderRadius: 100, transform: [{ translateY: 100 }] }}
+								styleButton={{ paddingHorizontal: 25, borderRadius: 15, transform: [{ translateY: 100 }] }}
 							>
 								{i18n.t("save")}
 							</ColorButton>

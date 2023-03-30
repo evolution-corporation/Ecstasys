@@ -168,7 +168,7 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 					marginTop: 28,
 				}}
 				onPress={() => {
-					if (toDayPopularMeditation?.isNeedSubscribe ?? false) {
+					if ((toDayPopularMeditation?.isNeedSubscribe ?? false) && isSubscribe) {
 						if (toDayPopularMeditation) {
 							if (toDayPopularMeditation.type === "RELAXATION") {
 								navigation.navigate("SelectTimeForRelax", {

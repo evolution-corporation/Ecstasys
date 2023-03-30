@@ -40,7 +40,7 @@ const ConfirmationSignOut: RootScreenProps<"ConfirmationSignOut"> = ({ navigatio
 				<ColorButton
 					onPress={() => exit()}
 					styleText={{ color: "#FFF" }}
-					styleButton={{ backgroundColor: "#C2A9CE", alignSelf: "center", paddingHorizontal: 25 }}
+					styleButton={{ backgroundColor: "#9765A8", alignSelf: "center", paddingHorizontal: 25 }}
 				>
 					{i18n.t("c9bcb9a8-e59c-4ee5-97f1-94dae753a716")}
 				</ColorButton>

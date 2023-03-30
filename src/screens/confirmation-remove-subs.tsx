@@ -41,7 +41,7 @@ const ConfirmationRemoveSubs: RootScreenProps<"ConfirmationRemoveSubs"> = ({ nav
 						navigation.goBack();
 					}}
 					styleText={{ color: "#FFF" }}
-					styleButton={{ backgroundColor: "#C2A9CE", alignSelf: "center", paddingHorizontal: 25 }}
+					styleButton={{ backgroundColor: "#9765A8", alignSelf: "center", paddingHorizontal: 25 }}
 				>
 					Отключить
 				</ColorButton>

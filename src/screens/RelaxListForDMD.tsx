@@ -69,7 +69,7 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 	);
 
 	const onClick = (practiceId: string) => {
-		if (isSubscribe || true) {
+		if (isSubscribe) {
 			const practiceIndex = practiceList.findIndex(item => item.id === practiceId);
 			if (practiceIndex !== -1 && practiceList[practiceIndex].type === "RELAXATION" && isSubscribe) {
 				dispatch(actions.setOptionForDMD(practiceList[practiceIndex]));
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
 		transform: [{ translateY: 120 }],
 	},
 	button: {
-		backgroundColor: "#C2A9CE",
+		backgroundColor: "#9765A8",
 		borderRadius: 15,
 		width: "100%",
 		height: 45,

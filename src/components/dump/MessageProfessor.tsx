@@ -56,7 +56,7 @@ const MessageProfessor: React.FC<Props> = props => {
 								...gStyle.styles.default,
 								color: "#FFFFFF",
 								textAlign: "center",
-								maxHeight: 100,
+								// maxHeight: 100,
 								maxWidth: "75%",
 								lineHeight: undefined,
 							}}

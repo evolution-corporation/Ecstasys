@@ -143,9 +143,13 @@ const PlayerMeditationOnTheMandala: RootScreenProps<"PlayerMeditationOnTheMandal
 										justifyContent: "center",
 										alignItems: "center",
 										position: "absolute",
+										backgroundColor: "rgba(0,0,0,0.5)"
 									}}
 								>
+									<View style={{ transform: [{ scale: 0.6 }] }}>
 									<LockIcon />
+									</View>
+									
 								</View>
 							)}
 						</Pressable>
