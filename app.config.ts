@@ -4,7 +4,7 @@ import type { ExpoConfig } from "expo/config";
 import { version } from "./package.json";
 
 function generateConfig(): ExpoConfig {
-	const appName = process.env.APP_VARIANT === "dev" ? "DMD Dev" : process.env.APP_VARIANT === "prev" ? "dmd meditation beta" : "DMD";
+	const appName = process.env.APP_VARIANT === "dev" ? "DMD Dev" : process.env.APP_VARIANT === "prev" ? "dmd meditation beta" : "dmd meditation";
 	const appUrl =
 		process.env.APP_VARIANT === "dev" ? "com.evodigital.dmdmeditation+dev" : "com.evodigital.dmdmeditation";
 	const toDay = new Date();
