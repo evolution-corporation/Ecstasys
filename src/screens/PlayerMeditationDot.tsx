@@ -1,19 +1,16 @@
 /** @format */
 
-import React, { useCallback, useEffect, useRef } from "react";
-import { Image, StyleSheet, View, Text, FlatList, Pressable, ColorValue } from "react-native";
-import Animated, { Easing, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
+import React, { useEffect } from "react";
+import { ColorValue, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import * as Notifications from "expo-notifications";
 
 import Tools from "~core";
+import core from "~core";
 import { ColorButton, TimeLine } from "~components/dump";
 
 import { RootScreenProps } from "~types";
-import BackgroundSound from "src/backgroundSound";
 import i18n from "~i18n";
 import gStyle from "~styles";
-import core from "~core";
-import Headphones from "assets/icons/Headphones_white.svg";
 
 import { useDimensions } from "@react-native-community/hooks";
 
@@ -130,7 +127,7 @@ const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigatio
 				<View style={{ flex: 1 }}>
 					<TimeLine
 						onChange={percent => {
-							setScaleDot(40 + 80 * percent);
+							setScaleDot(20 + 150 * percent);
 						}}
 						initValue={(scaleDot - 40) / 80}
 					/>
