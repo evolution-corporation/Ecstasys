@@ -9,12 +9,12 @@ import Animated, {
 	useSharedValue,
 	withTiming,
 } from "react-native-reanimated";
-import Arrow from "assets/icons/Arrow/Chevron_Down.svg";
+import Arrow from "assets/icons/Shavron22.svg";
 import Tools from "~core";
+import core from "~core";
 import i18n from "~i18n";
 
 import { StatisticPeriod } from "~types";
-import core from "~core";
 
 interface Props extends RN.ViewProps {
 	onChangePeriod?: (period: StatisticPeriod) => void;
@@ -96,7 +96,7 @@ const SelectTimePeriodStatistic: React.FC<Props> = props => {
 					</RN.Pressable>
 				))}
 			</RN.View>
-			<Animated.View style={[{ alignSelf: "center" }, positionArrowStyle]}>
+			<Animated.View style={[{ alignSelf: "center", marginTop: 12 }, positionArrowStyle]}>
 				<Arrow />
 			</Animated.View>
 		</RN.View>
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
 	},
 	namePeriod: {
 		fontSize: 14,
-		color: "#FFFFFF",
+		color: "#9765A8",
 		...core.gStyle.font("500"),
 	},
 });
