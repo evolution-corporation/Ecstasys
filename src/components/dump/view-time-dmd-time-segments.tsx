@@ -23,7 +23,7 @@ const ViewTimeDMDTimeSegments: React.FC<ViewTimeDMDTimeSegmentsProperties> = pro
 	const [statusNotification, updateStatusNotification] = useNotificationStatus()
 	let indexElementTimeDMDSegment = 1;
 	const getIndexElementTimeDMDSegment = () => indexElementTimeDMDSegment++;
-	const color = statusNotification  ? "#C2A9CE" : "#E2E2E2"
+	const color = statusNotification  ? "#9765A8" : "#E2E2E2"
 	const onPress = (function_: () => void) => statusNotification ? function_() : updateStatusNotification()
 
 	return (
@@ -34,7 +34,7 @@ const ViewTimeDMDTimeSegments: React.FC<ViewTimeDMDTimeSegmentsProperties> = pro
 			<ViewPaddingList direction={Direction.Vertical} paddings={10}>
 				<ElementTimeDMDSegment
 					index={getIndexElementTimeDMDSegment()}
-					color={color}
+					color="#C2A9CE"
 					name={i18n.t("489177eb-1aa7-4fb7-9963-8abfe4cbf63e")}
 					time={new DateTime(timeSegments.setup)}
 					key={"Setup"}
@@ -57,7 +57,7 @@ const ViewTimeDMDTimeSegments: React.FC<ViewTimeDMDTimeSegmentsProperties> = pro
 				/>
 				<ElementTimeDMDSegment
 					index={getIndexElementTimeDMDSegment()}
-					color={statusNotification ? "#9765A8" : "#E2E2E2"}
+					color={statusNotification ? "#C2A9CE" : "#E2E2E2"}
 					name={i18n.t("5031cd30-0010-42e1-8d47-7516d63e2a6a")}
 					time={new DateTime(timeSegments.freeBreathing)}
 					key={"freeBreathing"}

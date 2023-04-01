@@ -44,6 +44,7 @@ export interface PlayerViewProperty {
 	onChangeEnd: () => Promise<void>;
 	backgroundImageForBackgroundSound?: ImageSourcePropType;
 	nameBackgroundSound?: string;
+	children?: JSX.Element;
 }
 
 const PlayerView: React.FC<PlayerViewProperty> = property => {
@@ -117,58 +118,61 @@ const PlayerView: React.FC<PlayerViewProperty> = property => {
 	}
 
 	const patternVisibleTime = lengthMilliseconds > 3600 * 1000 ? "%-H:%M:%S" : "%M:%S";
+
 	return (
-		<ViewFullSpace
-			direction={DirectionFullSpace.TopBottom}
-			mainPositionElements={PositionElements.StartEnd}
-			style={{ paddingHorizontal: 20 }}
-		>
-			<View />
-			<PlayerControl
-				isPlay={status === Status.Play || status === Status.Change}
-				pause={() => onChangeStatus(Status.Pause)}
-				play={() => onChangeStatus(Status.Play)}
-				stepBack={async () => {
-					await onChangeCurrentMilliseconds(
-						currentMilliseconds > rewindMillisecond ? currentMilliseconds - rewindMillisecond : 0
-					);
-					await onChangeEnd();
-				}}
-				stepForward={async () => {
-					onChangeCurrentMilliseconds(
-						currentMilliseconds + rewindMillisecond < lengthMilliseconds
-							? currentMilliseconds + rewindMillisecond
-							: lengthMilliseconds
-					).then(() => onChangeEnd());
-				}}
-				rewindMillisecond={rewindMillisecond}
-			/>
-			<ViewFullWidth direction={DirectionFullWidth.TopBottom} style={{ height: 122, marginBottom: 20 }}>
-				<TimeLine
-					ref={referenceTimeLine}
-					onChange={async percent => {
-						onChangeCurrentMilliseconds(lengthMilliseconds * percent);
+		<Pressable style={{ flex: 1 }} onPress={() => console.log("Press")}>
+			<ViewFullSpace
+				direction={DirectionFullSpace.TopBottom}
+				mainPositionElements={PositionElements.StartEnd}
+				style={{ paddingHorizontal: 20 }}
+			>
+				<View />
+				<PlayerControl
+					isPlay={status === Status.Play || status === Status.Change}
+					pause={() => onChangeStatus(Status.Pause)}
+					play={() => onChangeStatus(Status.Play)}
+					stepBack={async () => {
+						await onChangeCurrentMilliseconds(
+							currentMilliseconds > rewindMillisecond ? currentMilliseconds - rewindMillisecond : 0
+						);
+						await onChangeEnd();
 					}}
-					onStartChange={() => onChangeStart()}
-					onEndChange={() => onChangeEnd()}
+					stepForward={async () => {
+						onChangeCurrentMilliseconds(
+							currentMilliseconds + rewindMillisecond < lengthMilliseconds
+								? currentMilliseconds + rewindMillisecond
+								: lengthMilliseconds
+						).then(() => onChangeEnd());
+					}}
+					rewindMillisecond={rewindMillisecond}
 				/>
-				<ViewFullWidth direction={DirectionFullWidth.LeftRight} mainPositionElements={PositionElements.StartEnd}>
-					<DefaultText color={"#FFFFFF"} key={"current"}>
-						{i18n.strftime(new Date(currentMilliseconds - 5 * 3600 * 1000), patternVisibleTime)}
-					</DefaultText>
-					<DefaultText color={"#FFFFFF"} key={"all"}>
-						{i18n.strftime(new Date(lengthMilliseconds - 5 * 3600 * 1000), patternVisibleTime)}
-					</DefaultText>
+				<ViewFullWidth direction={DirectionFullWidth.TopBottom} style={{ height: 122, marginBottom: 20 }}>
+					<TimeLine
+						ref={referenceTimeLine}
+						onChange={async percent => {
+							onChangeCurrentMilliseconds(lengthMilliseconds * percent);
+						}}
+						onStartChange={() => onChangeStart()}
+						onEndChange={() => onChangeEnd()}
+					/>
+					<ViewFullWidth direction={DirectionFullWidth.LeftRight} mainPositionElements={PositionElements.StartEnd}>
+						<DefaultText color={"#FFFFFF"} key={"current"}>
+							{i18n.strftime(new Date(currentMilliseconds - 5 * 3600 * 1000), patternVisibleTime)}
+						</DefaultText>
+						<DefaultText color={"#FFFFFF"} key={"all"}>
+							{i18n.strftime(new Date(lengthMilliseconds - 5 * 3600 * 1000), patternVisibleTime)}
+						</DefaultText>
+					</ViewFullWidth>
+					{isSupportBackgroundSound && nameBackgroundSound ? (
+						<View style={{ alignSelf: "flex-start", marginTop: 17 }}>
+							{<BackgroundSoundButton image={backgroundImageForBackgroundSound} name={nameBackgroundSound} />}
+						</View>
+					) : (
+						<></>
+					)}
 				</ViewFullWidth>
-				{isSupportBackgroundSound && nameBackgroundSound ? (
-					<View style={{ alignSelf: "flex-start", marginTop: 17 }}>
-						{<BackgroundSoundButton image={backgroundImageForBackgroundSound} name={nameBackgroundSound} />}
-					</View>
-				) : (
-					<></>
-				)}
-			</ViewFullWidth>
-		</ViewFullSpace>
+			</ViewFullSpace>
+		</Pressable>
 	);
 };
 

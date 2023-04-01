@@ -19,7 +19,7 @@ import { StatusBar } from "expo-status-bar";
 import gStyle from "~styles";
 import useIsActivateSubscribe from "src/hooks/use-is-activate-subscribe";
 import { developmentConfig } from "src/read-config";
-import {useDimensions} from "@react-native-community/hooks";
+import { useDimensions } from "@react-native-community/hooks";
 
 const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => {
 	const selectedPracticeId = React.useRef<string | null>(null);
@@ -78,7 +78,6 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 		} else {
 			navigation.navigate("ByMaySubscribe");
 		}
-
 	};
 
 	useFocusEffect(
@@ -139,7 +138,6 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 					}}
 				/>
 			)}
-
 		</DoubleColorView>
 	);
 };
@@ -171,7 +169,7 @@ const styles = StyleSheet.create({
 		transform: [{ translateY: 120 }],
 	},
 	button: {
-		backgroundColor: "#C2A9CE",
+		backgroundColor: "#9765A8",
 		borderRadius: 15,
 		width: "100%",
 		height: 45,

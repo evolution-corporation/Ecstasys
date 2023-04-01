@@ -108,14 +108,14 @@ const SelectMethodAuthentication: RootScreenProps<"SelectMethodAuthentication"> 
 						<ActivityIndicator color={"#FFFFFF"} size={"large"} />
 					) : (
 						<>
-							<ColorButton
+							{/* <ColorButton
 								styleButton={styles.button}
 								onPress={() => {
 									navigation.navigate("InputNumberPhone");
 								}}
 							>
 								{i18n.t("526fba9f-2b69-4fe6-aefd-d491e86e59da")}
-							</ColorButton>
+							</ColorButton> */}
 
 							<ColorWithIconButton
 								icon={<AppleLogo style={{ marginLeft: 7, transform: [{ translateY: -2 }] }} />}
@@ -156,7 +156,7 @@ const SelectMethodAuthentication: RootScreenProps<"SelectMethodAuthentication"> 
 								>
 									<Text style={styles.document}>{i18n.t("privacyPolicy")}</Text>
 								</Pressable>
-								<Text style={styles.terms}> ecstasys</Text>
+								<Text style={styles.terms}> dmd meditation</Text>
 							</View>
 						</>
 					)}

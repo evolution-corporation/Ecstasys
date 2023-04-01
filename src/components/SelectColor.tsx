@@ -1,7 +1,7 @@
 /** @format */
 
 import React from "react";
-import { ColorValue, View } from "react-native";
+import {ColorValue, View, ViewStyle} from "react-native";
 import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 import { runOnJS } from "react-native-reanimated";
 import Svg, { Circle, Defs, G, LinearGradient, Path, Rect, Stop } from "react-native-svg";
@@ -11,6 +11,7 @@ export interface SelectColorProps {
 	widthBorder: number;
 	onChange?: (color: ColorValue) => void;
 	initColor?: ColorValue;
+	scaleDot: number
 }
 
 type NumberColor = { r: number; g: number; b: number };
@@ -80,7 +81,7 @@ async function getColor(grade: number): Promise<ColorValue> {
 }
 
 const SelectColor: React.FC<SelectColorProps> = props => {
-	const { size, widthBorder, onChange, initColor = "rgb(134, 201, 39)" } = props;
+	const { size, widthBorder, onChange, initColor = "rgb(134, 201, 39)", scaleDot } = props;
 	const sizeSelecor = size - widthBorder;
 
 	const [color, setColor] = React.useState<ColorValue>("rgb(134, 201, 39)");
@@ -146,6 +147,7 @@ const SelectColor: React.FC<SelectColorProps> = props => {
 	return (
 		<>
 			<GestureDetector gesture={circuleGestore}>
+
 				<Svg width={size} height={size}>
 					<G y={size / 2} x={size / 2}>
 						{numberIndex.map((index, prevIndex) => (
@@ -160,7 +162,7 @@ const SelectColor: React.FC<SelectColorProps> = props => {
 							/>
 						))}
 					</G>
-					<Circle r={30} fill={colorCircule} cx={size / 2} cy={size / 2} />
+					<Circle r={scaleDot / 2} fill={colorCircule} cx={size / 2} cy={size / 2} />
 					<Defs>
 						<LinearGradient id="CirculeColor_1" x1={0} y1={0.25} x2={0.75} y2={0.75}>
 							<Stop offset="0" stopColor="#ffb600" stopOpacity="1" />

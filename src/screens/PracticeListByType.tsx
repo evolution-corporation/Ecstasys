@@ -1,27 +1,29 @@
 /** @format */
 
 import React, { useState } from "react";
-import { Text, StyleSheet, useWindowDimensions, Dimensions } from "react-native";
+import { Dimensions, StyleSheet, Text } from "react-native";
 import { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 import Tools from "~core";
 import { PracticesMeditation, RootScreenProps, State } from "~types";
-var height = Dimensions.get("window").height;
-
-import { ColorButton } from "~components/dump";
+import { CarouselPractices, ColorButton } from "~components/dump";
 import { DoubleColorView } from "~components/containers";
 import i18n from "~i18n";
 import DescriptionPrentices from "assets/descriptionPrentices.json";
-import { CarouselPractices } from "~components/dump";
 import { actions, useAppDispatch } from "~store";
 import { Converter, Request } from "~api";
 import { SupportType } from "src/api/types";
-import { MeditationOnTheMandala, MeditationOnTheNose, PlayerMeditationDot } from "src/baseMeditation";
+import {
+	MeditationOnTheCandle,
+	MeditationOnTheMandala,
+	MeditationOnTheNose,
+	PlayerMeditationDot,
+} from "src/baseMeditation";
 
 import * as Instruction from "src/instruction";
 import useIsActivateSubscribe from "src/hooks/use-is-activate-subscribe";
-import useExperimentalFunction from "src/hooks/use-experimental-function";
-import {useDimensions} from "@react-native-community/hooks";
+
+var height = Dimensions.get("window").height;
 
 const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navigation }) => {
 	const { typePractices } = route.params;
@@ -36,11 +38,6 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 	};
 	const isSubscribe = useIsActivateSubscribe();
 
-	//! Experimental
-	const DotMeditation = useExperimentalFunction("baseMeditation_dotMeditation");
-	const mandalaMeditation = useExperimentalFunction("baseMeditation_mandalaMeditation");
-	const noseMeditation = useExperimentalFunction("baseMeditation_noseMeditation");
-	//! ---
 	React.useLayoutEffect(() => {
 		navigation.setOptions({ title: i18n.t(typePractices) });
 		const init = async () => {
@@ -70,16 +67,20 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 				]);
 			} else {
 				//! Experimental
-				const listPractice: State.Practice[] = [];
-				if (DotMeditation.status) listPractice.push({ ...PlayerMeditationDot, isPermission: true });
-				if (mandalaMeditation.status) listPractice.push({ ...MeditationOnTheMandala, isPermission: true });
-				if (noseMeditation.status) listPractice.push({ ...MeditationOnTheNose, isPermission: true });
+				const listPractice: State.Practice[] = [
+					{ ...MeditationOnTheNose, isPermission: true },
+					{ ...PlayerMeditationDot, isPermission: true },
+					{ ...MeditationOnTheMandala, isPermission: true },
+					{ ...MeditationOnTheCandle, isPermission: true },
+				];
+
 				setPracticeList(listPractice);
 				//! ----
 			}
 		};
 		init();
 	}, [isSubscribe]);
+
 	const onClick = (practiceId: string) => {
 		const practiceIndex = practiceList.findIndex(item => item.id === practiceId);
 		if (practiceIndex !== -1) {
@@ -91,7 +92,7 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 				if (typePractices === PracticesMeditation.BASIC) {
 					navigation.navigate("SelectTimeForBase", { selectedPractice: practiceList[practiceIndex] });
 				} else {
-					navigation.navigate("SelectTimeForRelax", { selectedPractice: practiceList[practiceIndex] })
+					navigation.navigate("SelectTimeForRelax", { selectedPractice: practiceList[practiceIndex] });
 				}
 			} else {
 				navigation.navigate("ByMaySubscribe");
@@ -106,13 +107,20 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 				styleText={styles.buttonTextInstruction}
 				colors={["#75348B", "#6A2382"]}
 				onPress={() => {
+					const index = practiceList.findIndex(item => item.id == selectedPracticeId.current);
+
 					if (typePractices === PracticesMeditation.RELAXATION) {
 						navigation.navigate("Instruction", { instruction: Instruction.relaxation });
 					} else if (typePractices === PracticesMeditation.DIRECTIONAL_VISUALIZATIONS) {
 						navigation.navigate("Instruction", { instruction: Instruction.directionalVisualization });
+					} else if (typePractices === PracticesMeditation.BASIC) {
+						navigation.navigate("Instruction", { instruction: practiceList[index].instruction });
 					} else {
-						const index = practiceList.findIndex(item => item.id == selectedPracticeId.current);
-						if (index !== -1) navigation.navigate("Instruction", { instruction: practiceList[index].instruction });
+						if (index !== -1)
+							navigation.navigate("Instruction", {
+								instruction: practiceList[index].instruction,
+								meditationid: practiceList[index].id,
+							});
 					}
 				}}
 			>
@@ -130,7 +138,6 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 				/>
 			)}
 			{height >= 800 && (
-
 				<ColorButton
 					animationStyle={aStyle.button}
 					styleButton={styles.button}
@@ -160,7 +167,7 @@ const styles = StyleSheet.create({
 	background: {
 		paddingHorizontal: 20,
 		justifyContent: "space-between",
-		width: "100%"
+		width: "100%",
 	},
 	carouselMeditation: {
 		marginHorizontal: -20,
@@ -173,13 +180,12 @@ const styles = StyleSheet.create({
 		transform: [{ translateY: 120 }],
 	},
 	button: {
-		backgroundColor: "#C2A9CE",
+		backgroundColor: "#9765A8",
 		borderRadius: 15,
 		width: "100%",
 		height: 45,
 		marginTop: 20,
 		marginBottom: 30,
-
 	},
 	buttonText: {
 		color: "#FFFFFF",

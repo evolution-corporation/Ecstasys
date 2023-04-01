@@ -1,22 +1,16 @@
-import useExperimentalFunction from "./use-experimental-function";
-import {useEffect} from "react";
+/** @format */
 
-const useBaseMeditationInformation = (callbackCount: (count: number) => void): [boolean, {[key: string]: boolean}] => {
-    const dotMeditation = useExperimentalFunction("baseMeditation_dotMeditation");
-    const mandalaMeditation = useExperimentalFunction("baseMeditation_mandalaMeditation");
-    const noseMeditation = useExperimentalFunction("baseMeditation_noseMeditation");
+import { useEffect } from "react";
 
-    const listStatus = [dotMeditation.status, mandalaMeditation.status, noseMeditation.status]
+const useBaseMeditationInformation = (): [boolean, { [key: string]: boolean }] => {
+	return [
+		true,
+		{
+			dotMeditation: true,
+			mandalaMeditation: true,
+			noseMeditation: true,
+		},
+	];
+};
 
-    useEffect(()=>{
-        callbackCount(listStatus.filter(Boolean).length)
-    }, listStatus)
-
-    return [dotMeditation.status || mandalaMeditation.status || noseMeditation.status, {
-        dotMeditation: dotMeditation.status,
-        mandalaMeditation: mandalaMeditation.status,
-        noseMeditation: noseMeditation.status
-    }]
-}
-
-export default useBaseMeditationInformation
+export default useBaseMeditationInformation;

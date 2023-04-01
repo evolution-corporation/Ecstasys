@@ -1,9 +1,24 @@
 /** @format */
 
+import { useEffect, useState } from "react";
+import { Platform } from "react-native";
+import { adapty } from "react-native-adapty";
 import { useAppSelector } from "src/store/index";
 
-const useIsActivateSubscribe = () =>
-	useAppSelector(store => {
+const useIsActivateSubscribe = () => {
+	// if (Platform.OS === "ios") {
+	// 	const [subscribe, setSubscribe] = useState(false);
+
+	// 	useEffect(() => {
+	// 		adapty.addEventListener("onLatestProfileLoad", profile => {
+	// 			const accessLevels = profile.accessLevels;
+	// 			setSubscribe(accessLevels === undefined ? false : accessLevels.premium?.isActive ?? false);
+	// 		});
+	// 	}, []);
+
+	// 	return subscribe;
+	// } else {
+	return useAppSelector(store => {
 		if (store.account.subscribe === undefined) {
 			return false;
 		} else {
@@ -31,5 +46,7 @@ const useIsActivateSubscribe = () =>
 			return endSubscribe.getTime() > Date.now();
 		}
 	});
+	// }
+};
 
 export default useIsActivateSubscribe;

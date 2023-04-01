@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { ElementRef, useCallback, useRef, useState } from "react";
+import React, { ElementRef, useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View, Image, Button, Pressable, Dimensions } from "react-native";
 import Animated, { FadeIn, FadeOut, runOnJS } from "react-native-reanimated";
 import Swiper from "react-native-swiper";
@@ -39,12 +39,12 @@ const swiperContent = [
 		text: "0894c96e-83bf-4c27-b498-c3d6b51251b5",
 		image: require("./assets/breath.png"),
 	},
-	{
-		name: "base",
-		title: "48832a25-622d-4251-b147-ea6ebd134632",
-		text: "4cb7de64-0c26-4200-af9d-0e2cb533760c",
-		image: require("./assets/base.png"),
-	},
+	// {
+	// 	name: "base",
+	// 	title: "48832a25-622d-4251-b147-ea6ebd134632",
+	// 	text: "4cb7de64-0c26-4200-af9d-0e2cb533760c",
+	// 	image: require("./assets/base.png"),
+	// },
 	// {
 	// 	name: "dmd",
 	// 	title: "385cfdf2-c360-404a-8618-cb65583957c0",
@@ -56,16 +56,7 @@ const swiperContent = [
 const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation }) => {
 	const [isGreeting, setIsGreeting] = useState<boolean>(true);
 
-
-	//! Experimental
-	const baseMeditation = useBaseMeditationInformation((count) => {
-	})
-
-
-	//! ---
-
-
-	const list = swiperContent.filter(item => item.name === "base" ? baseMeditation[0] : true)
+	const list = swiperContent;
 
 	const [indexSelect, setSelectedIndex] = React.useState<number>(0);
 	useFocusEffect(
@@ -76,6 +67,7 @@ const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation })
 
 	const end = async () => {
 		await Storage.setStatusShowGreetingScreen(GreetingScreen.DESCRIPTION_PRACTICES);
+
 		navigation.navigate("PracticesList");
 	};
 
@@ -97,15 +89,15 @@ const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation })
 		}
 	};
 
-	const gesture = Gesture.Pan()
-		.onChange(({}) => {})
-		.onFinalize(({ translationX }) => {
-			if (translationX > 0) {
-				runOnJS(prev)();
-			} else if (translationX < 0) {
-				runOnJS(next)();
-			}
-		});
+	// const gesture = Gesture.Pan()
+	// 	.onChange(({}) => {})
+	// 	.onFinalize(({ translationX }) => {
+	// 		if (translationX > 0) {
+	// 			runOnJS(prev)();
+	// 		} else if (translationX < 0) {
+	// 			runOnJS(next)();
+	// 		}
+	// 	});
 	const dots = (
 		<Svg height={9} width={list.length * 9 + (list.length - 1) * 9} style={{ alignSelf: "center" }}>
 			{new Array(list.length).fill(null).map((_, index) => (
@@ -149,31 +141,31 @@ const IntroPracticesScreen: RootScreenProps<"IntroPractices"> = ({ navigation })
 					</View>
 				</View>
 			) : (
-				<GestureDetector gesture={gesture}>
-					<View style={{ justifyContent: "space-between", flex: 1 }}>
-						{
-							list.map(item => (
-								<Animated.View key={item.name} style={styles.card} entering={FadeIn} exiting={FadeOut}>
-									<View style={styles.logoCategory}>
-										<Image source={item.image} style={{ width: "100%", height: "100%" }} resizeMode={"contain"} />
-									</View>
-									<Text style={[styles.titleCategory]}>{i18n.t(item.title)}</Text>
-									<Text style={styles.textCategory}>{i18n.t(item.text)}</Text>
-								</Animated.View>
-							))[indexSelect]
-						}
-						<View
-							style={{
-								alignItems: "center",
-								flex: 1,
-								justifyContent: "flex-start",
-								paddingTop: 15,
-							}}
-						>
-							{Dimensions.get("window").height > 815 ? dots : null}
-						</View>
+				// <GestureDetector gesture={gesture}>
+				<View style={{ justifyContent: "space-between", flex: 1 }}>
+					{
+						list.map(item => (
+							<Animated.View key={item.name} style={styles.card} entering={FadeIn} exiting={FadeOut}>
+								<View style={styles.logoCategory}>
+									<Image source={item.image} style={{ width: "100%", height: "100%" }} resizeMode={"contain"} />
+								</View>
+								<Text style={[styles.titleCategory]}>{i18n.t(item.title)}</Text>
+								<Text style={styles.textCategory}>{i18n.t(item.text)}</Text>
+							</Animated.View>
+						))[indexSelect]
+					}
+					<View
+						style={{
+							alignItems: "center",
+							flex: 1,
+							justifyContent: "flex-start",
+							paddingTop: 15,
+						}}
+					>
+						{Dimensions.get("window").height > 815 ? dots : null}
 					</View>
-				</GestureDetector>
+				</View>
+				// </GestureDetector>
 			)}
 
 			<View style={styles.buttonControl}>

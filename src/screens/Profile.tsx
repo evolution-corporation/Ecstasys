@@ -102,7 +102,9 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 							navigation.navigate("Options");
 						}}
 					>
-						<TreeLine />
+						<View style={{ flex: 1 }}>
+							<TreeLine />
+						</View>
 					</Pressable>
 				</View>
 			}

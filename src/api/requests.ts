@@ -5,13 +5,15 @@
 
 import auth from "@react-native-firebase/auth";
 import { RequestError } from "src/Errors";
-import { Gender, ServerEntities, SupportType } from "./types";
+import { Gender, ServerEntities, Subscription, SupportType } from "./types";
 import * as Storage from "./asyncStorage";
 import Constants from "expo-constants";
 
 const { extra } = Constants.manifest ?? {};
 const { apiURL } = extra;
-const URL = "http://" + apiURL + "/";
+const URL = "http://api.evodigital.one/";
+const fixUrl = "http://" + "51.250.8.125:5000";
+
 /**
  * Получает FirebaseToken пользователя
  * @returns FirebaseToken пользователя
@@ -84,6 +86,15 @@ export async function createUser({ birthday, nickname, image }: CreateUserParams
 			Image: image,
 		}),
 	});
+	const fix = await fetch(`${fixUrl}/image`, {
+		method: "POST",
+		headers: {
+			Authorization: firebaseTokenToken,
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(image),
+	});
+	const Image = await fix.text();
 	if (requestServer.status >= 500) {
 		throw new RequestError(
 			`createUser: ${await requestServer.text()}`,
@@ -98,8 +109,7 @@ export async function createUser({ birthday, nickname, image }: CreateUserParams
 		);
 	}
 	const json = await requestServer.json();
-
-	return json as ServerEntities.User;
+	return { ...json, Image } as ServerEntities.User;
 }
 interface CreateUserParams {
 	readonly nickname: string;
@@ -126,9 +136,18 @@ export async function updateUser(
 	if (nickname !== undefined) body.push(["NickName", nickname]);
 	if (displayName !== undefined) body.push(["DisplayName", displayName]);
 	if (birthday !== undefined) body.push(["Birthday", birthday.toISOString()]);
-	if (image !== undefined) body.push(["Image", image]);
 	if (gender !== undefined) body.push(["Gender", gender]);
 	const url = URL + "users";
+	if (image !== undefined) {
+		await fetch(`${fixUrl}/image`, {
+			method: "POST",
+			headers: {
+				Authorization: firebaseTokenToken,
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(image),
+		});
+	}
 	const requestServer = await fetch(url, {
 		method: "PATCH",
 		headers: {
@@ -137,6 +156,7 @@ export async function updateUser(
 		},
 		body: JSON.stringify(Object.fromEntries(body)),
 	});
+
 	if (requestServer.status >= 500) {
 		throw new RequestError(
 			`updateUser: ${await requestServer.text()}`,
@@ -147,7 +167,7 @@ export async function updateUser(
 		);
 	}
 	const json = await requestServer.json();
-	return json as ServerEntities.User;
+	return { ...json } as ServerEntities.User;
 }
 interface UpdateUserParams {
 	nickname?: string;
@@ -201,6 +221,25 @@ export async function getMeditationById(meditationId: string, firebaseTokenToken
 	}
 	const json = await requestServer.json();
 	return json.Meditation as ServerEntities.Meditation;
+}
+
+export async function getInstructionMeditationById(meditationId: string, firebaseTokenToken?: string) {
+	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
+	const url = URL + "meditation?meditationId=" + meditationId;
+	const requestServer = await fetch(url, {
+		headers: {
+			Authorization: firebaseTokenToken,
+			"Content-Type": "application/json",
+		},
+	});
+	if (requestServer.status === 404) {
+		return null;
+	}
+	if (requestServer.status >= 500) {
+		throw new RequestError(`getMeditationById: ${await requestServer.text()}`, url, undefined, "GET", "50x");
+	}
+	const json = await requestServer.json();
+	return json.Subscription as ServerEntities.Subscription;
 }
 
 /**
@@ -491,7 +530,6 @@ export async function sendErrorInformation(name: string, error: Error, payload: 
 	});
 }
 
-
 export async function meditationIsLisent(meditationId: string, firebaseTokenToken?: string) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
 	const url = URL + "meditation" + "?meditationId=" + meditationId + "&meditationLanguage=ru";
@@ -503,8 +541,19 @@ export async function meditationIsLisent(meditationId: string, firebaseTokenToke
 		},
 		body: JSON.stringify({
 			meditationId: meditationId,
-			meditationLanguage: "ru"
-		})
+			meditationLanguage: "ru",
+		}),
 	});
-	console.log(requestServer.status, await requestServer.text())
+	console.log(requestServer.status, await requestServer.text());
+}
+
+export async function deleteUSer(firebaseTokenToken?: string) {
+	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
+	await fetch(`${fixUrl}/user`, {
+		method: "DELETE",
+		headers: {
+			Authorization: firebaseTokenToken,
+			"Content-Type": "application/json",
+		},
+	});
 }

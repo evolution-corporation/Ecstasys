@@ -4,32 +4,25 @@ import React, { useCallback, useEffect, useRef } from "react";
 import { Image, StyleSheet, View, Text, FlatList, Pressable, ImageSourcePropType, Platform } from "react-native";
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
 import * as Notifications from "expo-notifications";
+import { useKeepAwake } from "expo-keep-awake";
 
 import Tools from "~core";
-import { ColorButton } from "~components/dump";
 
 import { RootScreenProps } from "~types";
-import BackgroundSound from "src/backgroundSound";
 import i18n from "~i18n";
 
-import { Audio, InterruptionModeAndroid, InterruptionModeIOS } from "expo-av";
 import core from "~core";
-import { initializationTimer } from "src/TaskManager";
-import Headphones from "assets/icons/Headphones_white.svg";
-import { actions, useAppDispatch, useAppSelector } from "~store";
+import { useAppSelector } from "~store";
 import { useFocusEffect } from "@react-navigation/native";
-import * as StatusBar from "expo-status-bar";
-import * as BasePractice from "src/baseMeditation";
+
 import { useDimensions } from "@react-native-community/hooks";
 import useIsActivateSubscribe from "src/hooks/use-is-activate-subscribe";
-import { developmentConfig } from "src/read-config";
+import useMeditation from "src/hooks/use-meditation";
+import useBackgroundSound from "src/hooks/use-background-sound";
+import useTimer from "src/hooks/use-timer";
+import BackgroundSoundButton from "~components/dump/background-sound-button";
 
-enum StatusPractice {
-	Loading,
-	Play,
-	Pause,
-	Change,
-}
+import LockIcon from "assets/icons/Lock.svg";
 
 Notifications.setNotificationHandler({
 	handleNotification: async () => ({
@@ -41,121 +34,43 @@ Notifications.setNotificationHandler({
 
 const PlayerMeditationOnTheMandala: RootScreenProps<"PlayerMeditationOnTheMandala"> = ({ navigation, route }) => {
 	const { isNeedVoice, practiceLength } = route.params;
-	const [currentNameBackgroundSound, currentVolumeBackgroundSound] = useAppSelector(store => [
-		store.practice.paramsPractice.currentNameBackgroundSound,
-		store.practice.paramsPractice.currentVolumeBackgroundSound,
-	]);
-	const statusIsLoaded = useRef(true);
-	const [currentTime, setCurrentTime] = React.useState<number>(0);
-	const _currentTime = useRef<number>(0);
+
 	const [mandala, setMandala] = React.useState<ImageSourcePropType>(
 		require("assets/BaseMeditaionAssets/Mandala/Base.png")
 	);
-	const audioBackground = useRef<Audio.Sound | null>(null);
-	const audioVoice = useRef<Audio.Sound>(new Audio.Sound());
 
 	const [isShowTime, setIsShowTime] = React.useState(true);
-	const timerTask = React.useRef<ReturnType<typeof initializationTimer> | null>(null);
-	const appDispatch = useAppDispatch();
-	const isSubscribe = developmentConfig("customHook")
-		? useIsActivateSubscribe()
-		: useAppSelector(store => {
-				if (store.account.subscribe !== undefined) {
-					const endSubscribe = new Date(store.account.subscribe.whenSubscribe);
-					endSubscribe.setDate(
-						endSubscribe.getDate() +
-							(() => {
-								switch (store.account.subscribe.type) {
-									case "WEEK":
-										return 7;
-									case "MONTH":
-										return 30;
-									case "HALF_YEAR":
-										return 180;
-									default:
-										return 0;
-								}
-							})()
-					);
-					return endSubscribe.getTime() > Date.now();
-				} else {
-					return false;
-				}
-		  });
-	const [startTimer, stopTimer] = React.useRef([
-		() => {
-			timerTask.current = initializationTimer(() => {
-				setCurrentTime(prevCurrentTime => {
-					if (prevCurrentTime + 100 > practiceLength) {
-						stopTimer();
-					}
-					_currentTime.current += 100;
-					return prevCurrentTime + 100;
-				});
-			});
-		},
-		() => {
-			if (timerTask.current !== null) timerTask.current();
-		},
-	]).current;
+
+	const isSubscribe = useIsActivateSubscribe();
+
+	const timer = useTimer(practiceLength, () => navigation.navigate("EndMeditation"));
+
+	const meditation = isNeedVoice
+		? useMeditation(
+				[
+					{
+						uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/baseSound/ce3cbe90-fb99-4437-bcaa-e4b8eae0d0dc",
+					},
+				],
+				timer.currentMilliseconds,
+				{ autoPlay: true }
+		  )
+		: undefined;
 
 	useEffect(() => {
-		Audio.setAudioModeAsync({
-			staysActiveInBackground: false,
-			interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
-			interruptionModeIOS: InterruptionModeIOS.DoNotMix,
-		});
-		if (isNeedVoice && statusIsLoaded.current) {
-			audioVoice.current
-				.loadAsync({
-					uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/baseSound/ce3cbe90-fb99-4437-bcaa-e4b8eae0d0dc.mp3",
-				})
-				.then(() => {
-					statusIsLoaded.current = false;
-					startTimer();
-					audioVoice.current.playAsync();
-				});
-		} else if (!isNeedVoice) {
-			startTimer();
+		if (meditation !== undefined) {
+			meditation.play();
 		}
+	}, [meditation]);
 
-		return () => {
-			if (audioBackground.current !== null) {
-				audioBackground.current.getStatusAsync().then(status => {
-					if (audioBackground.current !== null && status.isLoaded) audioBackground.current.stopAsync();
-				});
-			}
-			stopTimer();
-			audioVoice.current.stopAsync();
-		};
+	useEffect(() => {
+		timer.play();
 	}, []);
 
-	const setBackgroundSound = React.useCallback(
-		async (name: keyof typeof BackgroundSound, volume: number = 1) => {
-			if (name) {
-				if (audioBackground.current !== null && (await audioBackground.current.getStatusAsync()).isLoaded) {
-					await audioBackground.current.stopAsync();
-				}
-				audioBackground.current = (
-					await Audio.Sound.createAsync(BackgroundSound[name].audio, {
-						isLooping: true,
-						volume,
-						shouldPlay: true,
-					})
-				).sound;
-			}
-		},
-		[currentTime]
-	);
-
-	const removeBackgroundSound = React.useCallback(async () => {
-		if (audioBackground.current !== null && (await audioBackground.current.getStatusAsync()).isLoaded) {
-			await audioBackground.current.stopAsync();
-		}
-	}, []);
+	const backgroundSound = useBackgroundSound(true);
 
 	const rotateMandala = useSharedValue("0deg");
-
+	useKeepAwake();
 	const styleMandala = useAnimatedStyle(() => ({
 		transform: [{ rotate: rotateMandala.value }],
 		position: "absolute",
@@ -163,25 +78,8 @@ const PlayerMeditationOnTheMandala: RootScreenProps<"PlayerMeditationOnTheMandal
 		height: "100%",
 	}));
 
-	useEffect(() => {
-		if (currentNameBackgroundSound) {
-			setBackgroundSound(currentNameBackgroundSound);
-		} else {
-			removeBackgroundSound();
-		}
-	}, [currentNameBackgroundSound]);
-
-	useEffect(() => {
-		audioBackground.current?.setVolumeAsync(currentVolumeBackgroundSound);
-	}, [currentVolumeBackgroundSound]);
-
 	useFocusEffect(
 		useCallback(() => {
-			// if (Platform.OS === "android") {
-			// 	StatusBar.setStatusBarTranslucent(true);
-			// }
-			// StatusBar.setStatusBarStyle("light");
-
 			const circlingMandala = () => {
 				rotateMandala.value = withRepeat(
 					withTiming("36000deg", { duration: 3600000, easing: Easing.linear }),
@@ -213,7 +111,7 @@ const PlayerMeditationOnTheMandala: RootScreenProps<"PlayerMeditationOnTheMandal
 				{isShowTime && (
 					<View style={styles.timesCodeBox}>
 						<Text style={styles.timeCode} key={"current"}>
-							{i18n.strftime(new Date(currentTime), "%M:%S")}
+							{i18n.strftime(new Date(timer.currentMilliseconds), "%M:%S")}
 						</Text>
 					</View>
 				)}
@@ -229,10 +127,31 @@ const PlayerMeditationOnTheMandala: RootScreenProps<"PlayerMeditationOnTheMandal
 					renderItem={({ item }) => (
 						<Pressable
 							onPress={() => {
-								if (item.name === "Base" || isSubscribe) setMandala(item.uri);
+								if (item.name === "Base" || isSubscribe) {
+									setMandala(item.uri);
+								} else {
+									navigation.navigate("ByMaySubscribe");
+								}
 							}}
 						>
 							<Image source={item.uri} style={{ width: 70, height: 70 }} />
+							{item.name === "Base" || isSubscribe ? null : (
+								<View
+									style={{
+										width: 70,
+										height: 70,
+										justifyContent: "center",
+										alignItems: "center",
+										position: "absolute",
+										backgroundColor: "rgba(0,0,0,0.5)"
+									}}
+								>
+									<View style={{ transform: [{ scale: 0.6 }] }}>
+									<LockIcon />
+									</View>
+									
+								</View>
+							)}
 						</Pressable>
 					)}
 					horizontal
@@ -241,19 +160,9 @@ const PlayerMeditationOnTheMandala: RootScreenProps<"PlayerMeditationOnTheMandal
 					ItemSeparatorComponent={() => <View style={{ width: 29 }} />}
 					contentContainerStyle={{ paddingHorizontal: 20 }}
 				/>
-				<Pressable
-					style={styles.buttonBackgroundSound}
-					onPress={() => navigation.navigate("SelectBackgroundSound", {})}
-				>
-					<Headphones style={{ marginRight: 24 }} />
-					<Text style={styles.buttonBackgroundText}>
-						{i18n.t(
-							currentNameBackgroundSound !== null
-								? BackgroundSound[currentNameBackgroundSound].translate
-								: "12ee6d3a-ad58-4c4a-9b87-63645efe9c90"
-						)}
-					</Text>
-				</Pressable>
+				<View style={{ alignSelf: "flex-start", marginTop: 17 }}>
+					<BackgroundSoundButton image={undefined} name={backgroundSound.name} />
+				</View>
 			</View>
 		</View>
 	);

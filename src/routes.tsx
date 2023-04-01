@@ -1,9 +1,7 @@
 /** @format */
 
-import React, { FC, memo } from "react";
-import { Dimensions, Pressable, StyleSheet, Text, View, ActivityIndicator } from "react-native";
-
-import { createSharedElementStackNavigator } from "react-navigation-shared-element";
+import React, { FC } from "react";
+import { ActivityIndicator, Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
@@ -22,13 +20,14 @@ import PracticesIconNoSelected from "assets/icons/PracticeNoSelectedIcon.svg";
 import ProfileIconNoSelected from "assets/icons/ProfileNoSelectedIcon.svg";
 import DMDIconNoSelected from "assets/icons/DMDNoSelectedIcon.svg";
 
-import { RootScreenProps, RootStackList, State, TabNavigatorList } from "~types";
+import { RootScreenProps, RootStackList, TabNavigatorList } from "~types";
 
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import ArrowBack from "assets/icons/ArrowBack.svg";
 import useAccountStatus from "./hooks/use-account-status";
 import IsFavorite from "~components/dump/IsFavorite";
+import OurNeedYourNotification from "./screens/OurNeedYourNotification";
 
 const TabNavigator = createBottomTabNavigator<TabNavigatorList>();
 
@@ -87,8 +86,8 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
 	);
 };
 
-const RootNavigation = createSharedElementStackNavigator<RootStackList>();
-// const RootNavigation = createNativeStackNavigator<RootStackList>();
+// const RootNavigation = createSharedElementStackNavigator<RootStackList>();
+const RootNavigation = createNativeStackNavigator<RootStackList>();
 
 const RootRoutes: FC = () => {
 	const accountStatus = useAccountStatus();
@@ -163,6 +162,11 @@ const RootRoutes: FC = () => {
 			screenList = (
 				<>
 					<RootNavigation.Screen name={"TabNavigator"} component={TabRoutes} options={{ headerShown: false }} />
+					<RootNavigation.Screen
+						name={"OurNeedYourNotification"}
+						component={OurNeedYourNotification}
+						options={{ presentation: "transparentModal", headerShown: false }}
+					/>
 					<RootNavigation.Screen name={"Options"} component={Screens.Options} options={{ title: i18n.t("options") }} />
 					<RootNavigation.Screen
 						name={"FavoriteMeditation"}
@@ -242,7 +246,8 @@ const RootRoutes: FC = () => {
 						component={Screens.PlayerForPractice}
 						options={({ route: { params } }) => ({
 							title: params.selectedPractice.name,
-							headerRight: params.selectSet === undefined ? () => <IsFavorite practice={params.selectedPractice} /> : undefined,
+							headerRight:
+								params.selectSet === undefined ? () => <IsFavorite practice={params.selectedPractice} /> : undefined,
 						})}
 					/>
 					<RootNavigation.Screen
@@ -255,6 +260,14 @@ const RootRoutes: FC = () => {
 						component={Screens.PlayerMeditationOnTheMandala}
 						options={{
 							title: i18n.t("db679041-5c95-4487-a86a-7bbb38d7d220"),
+						}}
+						initialParams={{ isNeedVoice: false, practiceLength: 600000 }}
+					/>
+					<RootNavigation.Screen
+						name={"PlayerMeditationOnTheCandle"}
+						component={Screens.PlayerMeditationOnTheCandle}
+						options={{
+							title: "Медитация на пламя свечи «Тратака»",
 						}}
 						initialParams={{ isNeedVoice: false, practiceLength: 600000 }}
 					/>
@@ -420,7 +433,6 @@ const RootRoutes: FC = () => {
 			}}
 		>
 			{screenList}
-
 		</RootNavigation.Navigator>
 	);
 };

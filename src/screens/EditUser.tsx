@@ -205,11 +205,11 @@ const styles = StyleSheet.create({
 		marginLeft: 20,
 	},
 	saveButton: {
-		backgroundColor: "#C2A9CE",
+		backgroundColor: "#FFF",
 		borderRadius: 10,
 	},
 	saveButtonText: {
-		color: "#FFFFFF",
+		color: "#555",
 	},
 	selectImage: {
 		height: 92,

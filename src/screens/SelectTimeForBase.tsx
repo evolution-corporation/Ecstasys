@@ -3,19 +3,16 @@
 //! 50% Не работает нормально
 //TODO: требуется рефракторинг
 
-import { LinearGradient } from "expo-linear-gradient";
 import React, { useCallback, useState } from "react";
 import { useHeaderHeight } from "@react-navigation/elements";
 
-import { Dimensions, Image, Platform, StyleSheet, Switch, Text, View } from "react-native";
+import { Image, StyleSheet, Switch, Text, View } from "react-native";
 import { ColorButton, SelectTime, TextButton } from "~components/dump";
 
 import gStyle from "~styles";
 import i18n from "~i18n";
 
 import { RootScreenProps } from "~types";
-import { SharedElement } from "react-navigation-shared-element";
-import * as StatusBar from "expo-status-bar";
 import { useFocusEffect } from "@react-navigation/native";
 import { useDimensions } from "@react-native-community/hooks";
 
@@ -25,7 +22,7 @@ const SelectTimeForBase: RootScreenProps<"SelectTimeForBase"> = ({ navigation, r
 	const [milliseconds, setMilliseconds] = useState<number>(300000);
 	const { window } = useDimensions();
 	const heightHeaded = useHeaderHeight();
-	const [isNeedVoice, setIsNeedVoice] = React.useState<boolean>(false);
+	const [isNeedVoice, setIsNeedVoice] = React.useState<boolean>(true);
 	useFocusEffect(
 		useCallback(() => {
 			// if (Platform.OS === "android") {
@@ -41,49 +38,51 @@ const SelectTimeForBase: RootScreenProps<"SelectTimeForBase"> = ({ navigation, r
 		<View style={styles.background}>
 			<View style={{ flex: 1, width: "100%" }}>
 				<View style={styles.topContent}>
-					<SharedElement id={`practice.item.${selectedPractice.id}`} style={styles.image}>
-						<Image source={selectedPractice.image} style={{ width: "100%", height: "100%" }} />
-					</SharedElement>
-					{selectedPractice.id !== "4b134d62-3507-4d35-9168-289fd7c0172b" ? (
-						<View
-							style={{
-								height: 45,
-								alignItems: "center",
-								justifyContent: "space-between",
-								flexDirection: "row",
-								backgroundColor: "#C2A9CE",
-								borderRadius: 15,
-								paddingHorizontal: 9,
-								width: window.width - 52,
-								alignSelf: "center",
-								bottom: -22.5,
-								position: "absolute",
-							}}
-						>
-							<Text style={{ color: "#FFFFFF", fontSize: 14, ...gStyle.font("500") }}>
-								{i18n.t("4cfd0240-f282-4148-a991-4deff19e7028")}
-							</Text>
-							<Switch
-								value={isNeedVoice}
-								onValueChange={setIsNeedVoice}
-								trackColor={{ false: "#9765A8", true: "#9765A8" }}
-								thumbColor={"#FFFFFF"}
-							/>
-						</View>
-					) : null}
+					<Image source={selectedPractice.image} style={{ ...styles.image, width: "100%", height: "100%" }} />
+					<View
+						style={{
+							height: 45,
+							alignItems: "center",
+							justifyContent: "space-between",
+							flexDirection: "row",
+							backgroundColor: "#C2A9CE",
+							borderRadius: 15,
+							paddingHorizontal: 9,
+							width: window.width - 52,
+							alignSelf: "center",
+							bottom: -22.5,
+							position: "absolute",
+							zIndex: 10,
+						}}
+					>
+						<Text style={{ color: "#FFFFFF", fontSize: 14, ...gStyle.font("500") }}>
+							{i18n.t("4cfd0240-f282-4148-a991-4deff19e7028")}
+						</Text>
+						<Switch
+							value={isNeedVoice}
+							onValueChange={setIsNeedVoice}
+							trackColor={{ false: "#9765A8", true: "#9765A8" }}
+							thumbColor={"#FFFFFF"}
+							style={{ zIndex: 100 }}
+						/>
+					</View>
 				</View>
 				<Text style={styles.mainText}>{i18n.t("0ca92b30-37c2-4604-a06f-f6f2da9e4985")} </Text>
+				<Text style={{ ...gStyle.font("600"), textAlign: "center" }}>(максимальная продолжительность 90 минут)</Text>
 			</View>
 			<View style={{ width: window.width, height: 420, justifyContent: "flex-end", paddingHorizontal: 20 }}>
-				<SelectTime
-					ref={selectTime}
-					start={[5, 0]}
-					end={[90, 0]}
-					style={{ alignSelf: "center" }}
-					onChange={([minute, second]) => {
-						setMilliseconds((minute * 60 + second) * 1000);
-					}}
-				/>
+				<View style={{ justifyContent: "center", flex: 1, alignItems: "center", marginTop: 100 }}>
+					<SelectTime
+						ref={selectTime}
+						start={[5, 0]}
+						end={[90, 0]}
+						style={{ alignSelf: "center" }}
+						onChange={([minute, second]) => {
+							setMilliseconds((minute * 60 + second) * 1000);
+						}}
+					/>
+				</View>
+
 				<TextButton
 					styleText={styles.resetDefault}
 					onPress={() => {
@@ -102,6 +101,8 @@ const SelectTimeForBase: RootScreenProps<"SelectTimeForBase"> = ({ navigation, r
 							navigation.navigate("PlayerMeditationOnTheNose", { isNeedVoice, practiceLength: milliseconds });
 						} else if (selectedPractice.id === "4b134d62-3507-4d35-9168-289fd7c0172b") {
 							navigation.navigate("PlayerMeditationDot", { isNeedVoice, practiceLength: milliseconds });
+						} else if (selectedPractice.id === "e6e39f7b-d2c7-4e57-8f97-773838695f7e") {
+							navigation.navigate("PlayerMeditationOnTheCandle", { isNeedVoice, practiceLength: milliseconds });
 						}
 					}}
 				>
@@ -125,6 +126,7 @@ const styles = StyleSheet.create({
 		borderBottomLeftRadius: 20,
 		borderBottomRightRadius: 20,
 		overflow: "hidden",
+		...gStyle.shadows(2, 3),
 	},
 	imageContent: {
 		width: "100%",
@@ -138,7 +140,6 @@ const styles = StyleSheet.create({
 		width: "100%",
 		left: 0,
 		right: 0,
-		...gStyle.shadows(2, 3),
 		borderBottomLeftRadius: 20,
 		borderBottomRightRadius: 20,
 	},
@@ -180,6 +181,6 @@ const styles = StyleSheet.create({
 		color: "#C2A9CE",
 		fontSize: 12,
 		...gStyle.font("500"),
-		marginBottom: 10,
+		marginBottom: 20,
 	},
 });

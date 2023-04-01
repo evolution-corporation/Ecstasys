@@ -34,7 +34,7 @@ const NoHaveInternet: RootScreenProps<"NoHaveInternet"> = ({ navigation, route }
 						a + 1;
 					}}
 					styleText={{ color: "#FFF" }}
-					styleButton={{ backgroundColor: "#C2A9CE", alignSelf: "center", paddingHorizontal: 25 }}
+					styleButton={{ backgroundColor: "#9765A8", alignSelf: "center", paddingHorizontal: 25 }}
 				>
 					Ок
 				</ColorButton>

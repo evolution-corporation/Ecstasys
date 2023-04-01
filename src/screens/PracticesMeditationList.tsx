@@ -1,6 +1,6 @@
 /** @format */
 
-import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
 	Dimensions,
 	Image,
@@ -11,26 +11,15 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native";
-import {FlatList} from "react-native-gesture-handler";
+import { FlatList } from "react-native-gesture-handler";
 import i18n from "~i18n";
 import gStyle from "~styles";
-import {DoubleColorView} from "~components/containers";
+import { DoubleColorView } from "~components/containers";
 import Tools from "~core";
-import {GeneralCompositeScreenProps, PracticesMeditation} from "~types";
-import {CategoryCard, UserButton} from "~components/dump";
-import {Request, Storage} from "~api";
-import {useFocusEffect} from "@react-navigation/native";
-import {NameExperimentalFunction} from "src/store/reducers/experimental-config";
-import useBaseMeditationInformation from "../hooks/use-base-meditation-information.experimental";
-import Animated, {FadeIn} from "react-native-reanimated";
-
-//! Experimental
-const BasemeditationList: NameExperimentalFunction[] = [
-	"baseMeditation_dotMeditation",
-	"baseMeditation_mandalaMeditation",
-	"baseMeditation_noseMeditation",
-];
-//! ---
+import { GeneralCompositeScreenProps, PracticesMeditation } from "~types";
+import { CategoryCard, UserButton } from "~components/dump";
+import { Request, Storage } from "~api";
+import { useFocusEffect } from "@react-navigation/native";
 
 const CategoryMeditation: {
 	name: string;
@@ -72,14 +61,6 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 		directionalVisualizations: null,
 	});
 
-	//! Experimental
-	const baseMeditation = useBaseMeditationInformation((count) => {
-		setCountPractices(previousValue => ({ ...previousValue, basic: count  }));
-	})
-
-
-	//! ---
-
 	const [getPaddingTopFunction, setGetPaddingTopFunction] = useState<{
 		f: (width: number) => number;
 	} | null>(null);
@@ -92,37 +73,39 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 
 	const refFlatList = useRef<FlatList>(null);
 	useEffect(() => {
-			const counts = Promise.all([
-				Request.getCountMeditationsByType("relaxation")
-					// setCountPractices(preValue => ({ ...preValue, relaxation: count }))
-				,
-				Request.getCountMeditationsByType("directionalVisualizations")
-				,
-				Request.getCountMeditationsByType("breathtakingPractice")
-				,
-			]);
-			counts.then(countsResult => {
-				setCountPractices(preValue => ({ ...preValue,
-					relaxation: countsResult[0],
-					directionalVisualizations: countsResult[1],
-					breathingPractices: countsResult[2]
-				}))
-				}
-			)
+		const counts = Promise.all([
+			Request.getCountMeditationsByType("relaxation"),
+			// setCountPractices(preValue => ({ ...preValue, relaxation: count }))
+			Request.getCountMeditationsByType("directionalVisualizations"),
+			Request.getCountMeditationsByType("breathtakingPractice"),
+		]);
+		counts.then(countsResult => {
+			setCountPractices(preValue => ({
+				...preValue,
+				relaxation: countsResult[0],
+				directionalVisualizations: countsResult[1],
+				breathingPractices: countsResult[2],
+				basic: 4,
+			}));
+		});
 	}, []);
 
+	//! BUG
 	useFocusEffect(
 		useCallback(() => {
-			new Promise(async () => {
+			const init = async () => {
 				const result = await Storage.getStatusShowGreetingScreens();
+				console.log({ status: result.DescriptionPractices });
 				if (!result.DescriptionPractices) {
 					navigation.navigate("IntroPractices");
 				}
-			})
+			};
+			init();
 		}, [])
 	);
+	//!
 
-	const categoryView = CategoryMeditation.filter(item => countPractices[item.id] > 0)
+	const categoryView = CategoryMeditation.filter(item => countPractices[item.id] > 0);
 	return (
 		<DoubleColorView
 			onFunctionGetPaddingTop={getPaddingTop => {
@@ -179,43 +162,40 @@ const PracticesMeditationList: GeneralCompositeScreenProps = ({ navigation }) =>
 				>
 					{i18n.t("db8e7216-be7c-4ecc-8ddd-0cf9ff83f419")}
 				</Text>
-				{
-					categoryView.length > 0 && (
-						<FlatList
-							ref={refFlatList}
-							data={categoryView}
-							initialScrollIndex={0}
-							renderItem={({ item }) => (
-								<TouchableOpacity onPress={() => navigation.navigate("PracticeListByType", { typePractices: item.id })}>
-									<View style={{ width: 110, alignItems: "center" }}>
-										<Image source={item.image} style={styles.imageSmall} />
-										<Text style={styles.textNameSmall}>{i18n.t(item.name)}</Text>
-									</View>
-								</TouchableOpacity>
-							)}
-							keyExtractor={item => `${item.id}_small`}
-							horizontal={true}
-							ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
-							style={styles.fastList}
-							contentContainerStyle={{ paddingHorizontal: 20 }}
-							showsHorizontalScrollIndicator={false}
-						/>
-					)
-				}
+				{categoryView.length > 0 && (
+					<FlatList
+						ref={refFlatList}
+						data={categoryView}
+						initialScrollIndex={0}
+						renderItem={({ item }) => (
+							<TouchableOpacity onPress={() => navigation.navigate("PracticeListByType", { typePractices: item.id })}>
+								<View style={{ width: 110, alignItems: "center" }}>
+									<Image source={item.image} style={styles.imageSmall} />
+									<Text style={styles.textNameSmall}>{i18n.t(item.name)}</Text>
+								</View>
+							</TouchableOpacity>
+						)}
+						keyExtractor={item => `${item.id}_small`}
+						horizontal={true}
+						ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
+						style={styles.fastList}
+						contentContainerStyle={{ paddingHorizontal: 20 }}
+						showsHorizontalScrollIndicator={false}
+					/>
+				)}
 
 				<View style={[styles.listFull, { top: -11 }]}>
 					{categoryView.map((item, index) => (
-							<CategoryCard
-								key={item.id}
-								count={countPractices[item.id]}
-								description={i18n.t(item.description)}
-								image={item.image}
-								name={i18n.t(item.name)}
-								onPress={() => navigation.navigate("PracticeListByType", { typePractices: item.id })}
-								style={{ marginVertical: 11 }}
-							/>
-						)
-					)}
+						<CategoryCard
+							key={item.id}
+							count={countPractices[item.id]}
+							description={i18n.t(item.description)}
+							image={item.image}
+							name={i18n.t(item.name)}
+							onPress={() => navigation.navigate("PracticeListByType", { typePractices: item.id })}
+							style={{ marginVertical: 11 }}
+						/>
+					))}
 				</View>
 			</ScrollView>
 		</DoubleColorView>
@@ -255,7 +235,5 @@ const styles = StyleSheet.create({
 		width: Dimensions.get("window").width,
 	},
 });
-
-
 
 export default PracticesMeditationList;

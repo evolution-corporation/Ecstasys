@@ -19,8 +19,9 @@ import { State } from "~types";
 import { Request, Converter, Storage } from "~api";
 
 import { AsyncThunkConfig } from "~store";
-import { registrationAccount, signInAccount } from "./account";
+import { getSubs, registrationAccount, signInAccount } from "./account";
 import { getPracticeDay } from "./practice";
+import { Platform } from "react-native";
 
 enum GeneralAction {
 	initialization = "general/initialization",
@@ -29,7 +30,7 @@ enum GeneralAction {
 	signOut = "generl/signOut",
 }
 
-export const initialization = createAsyncThunk(GeneralAction.initialization, async (_, {}) => {
+export const initialization = createAsyncThunk(GeneralAction.initialization, async (_, { dispatch }) => {
 	let [accountInformation, __, practicesInformation, messageProfessor] = await Promise.all([
 		// авторизация данных об аккаунте и их перезапись в памяти
 		(async () => {
@@ -41,6 +42,7 @@ export const initialization = createAsyncThunk(GeneralAction.initialization, asy
 			let subscribe: State.Subscribe | null = null;
 			if (await Request.checkAccess()) {
 				const [userServer, subscribeServer] = await Request.getInformationUser();
+				if (Platform.OS === "ios") dispatch(getSubs());
 				[user, subscribe] = [
 					userServer !== null ? Converter.composeUser(userServer) : null,
 					userServer !== null && subscribeServer !== null ? Converter.composeSubscribe(subscribeServer) : null,

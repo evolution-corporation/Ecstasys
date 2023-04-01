@@ -37,7 +37,7 @@ const ConfirmChangeSubs: RootScreenProps<"ConfirmChangeSubs"> = ({ navigation, r
 				<ColorButton
 					onPress={() => navigation.dispatch(StackActions.replace("Payment", { selectSubscribe }))}
 					styleText={{ color: "#FFF" }}
-					styleButton={{ backgroundColor: "#C2A9CE", alignSelf: "center", paddingHorizontal: 25 }}
+					styleButton={{ backgroundColor: "#9765A8", alignSelf: "center", paddingHorizontal: 25 }}
 				>
 					Изменить
 				</ColorButton>

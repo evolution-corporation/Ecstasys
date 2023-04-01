@@ -12,6 +12,7 @@ import {
 	Image,
 	ImageSourcePropType,
 	ColorValue,
+	Platform,
 } from "react-native";
 import { TextButton } from "~components/dump";
 import BirdWhite from "assets/icons/BirdWhiteS.svg";
@@ -55,16 +56,16 @@ const SubscribeCard: FC<SubscribeCardProps> = props => {
 						<Text style={styles.price}>{textPrice.top}</Text>
 						{"\n"}
 						{textPrice.bottom}
-						{isFirstPayment && i18n.t("a8ffa396-e17e-4836-817a-f4f61bad261d")}
+						{isFirstPayment ? Platform.OS === "ios" ? null : i18n.t("a8ffa396-e17e-4836-817a-f4f61bad261d") : null}
 					</Text>
 				</View>
 				<View style={styles.imageCard}>
 					{mainColor === "#FFFFFF" ? <BirdWhite /> : <BirdViolet />}
-					<Image source={image} style={styles.imagePeople} resizeMode={"center"} />
+					<Image source={image} style={styles.imagePeople} resizeMode={"contain"} />
 				</View>
 				{!isUsed && <CircleCheck isSelected={isSelected} style={styles.checkSelectedSubscribe} colorItem={mainColor} />}
 			</TouchableOpacity>
-			{isShowCancelButton && isUsed && (
+			{isShowCancelButton && isUsed && Platform.OS !== "ios" && (
 				<TextButton style={styles.cancelSubs} onPress={() => navigation.navigate("ConfirmationRemoveSubs")}>
 					{i18n.t("c0c032e5-8965-4703-bed6-77f919acd4d5")}
 				</TextButton>

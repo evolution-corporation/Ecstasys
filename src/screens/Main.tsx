@@ -18,7 +18,7 @@ import usePopularPractice from "src/hooks/use-popular-practice";
 import useRecommendationPractice from "src/hooks/use-recomendation-practice";
 import useStaticPractice, { TimePeriod } from "src/hooks/use-statistics-practice";
 import useIsNewUser from "src/hooks/use-is-new-user";
-import ViewFullSpace from "~components/layouts/view-full-space";
+import * as Notifications from "expo-notifications";
 import ViewFullWidth, { Direction } from "~components/layouts/view-full-width";
 import TitleAndSubTitle from "~components/Text/title-and-sub-title";
 import ViewPaddingList, { Direction as DirectionForPaddingList } from "~components/containers/view-padding-list";
@@ -94,6 +94,13 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 		// transform: [{ translateY: translateGreeting.value }],
 	}));
 
+	const requestNotification = async () => {
+		const { granted } = await Notifications.getPermissionsAsync();
+		if (!granted) {
+			navigation.navigate("OurNeedYourNotification");
+		}
+	};
+
 	const greetingText = React.useMemo(() => {
 		let _greetingText: string | undefined;
 		if (greeting !== null) _greetingText = greeting;
@@ -106,6 +113,8 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 	useEffect(() => {
 		if (isNewUser) {
 			navigation.navigate("InputNameAndSelectGender");
+		} else {
+			requestNotification();
 		}
 	}, []);
 
@@ -117,6 +126,7 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 				styleTitle={styles.nameSection}
 				styleSubTitle={styles.descriptionSection}
 			/>
+
 			<Dump.PracticeCard
 				id={recommendationPractice.id}
 				style={{ marginTop: 12 }}
@@ -158,16 +168,20 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 					marginTop: 28,
 				}}
 				onPress={() => {
-					if (toDayPopularMeditation) {
-						if (toDayPopularMeditation.type === "RELAXATION") {
-							navigation.navigate("SelectTimeForRelax", {
-								selectedPractice: toDayPopularMeditation,
-							});
-						} else {
-							navigation.navigate("PlayerForPractice", {
-								selectedPractice: toDayPopularMeditation,
-							});
+					if ((toDayPopularMeditation?.isNeedSubscribe ?? false) && isSubscribe) {
+						if (toDayPopularMeditation) {
+							if (toDayPopularMeditation.type === "RELAXATION") {
+								navigation.navigate("SelectTimeForRelax", {
+									selectedPractice: toDayPopularMeditation,
+								});
+							} else {
+								navigation.navigate("PlayerForPractice", {
+									selectedPractice: toDayPopularMeditation,
+								});
+							}
 						}
+					} else {
+						navigation.navigate("ByMaySubscribe");
 					}
 				}}
 				pointerEvents={"box-only"}
@@ -216,75 +230,77 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 		);
 
 	return (
-		<RN.ScrollView
-			onScroll={({ nativeEvent }) => {
-				if (!!heightGreeting) {
-					let value = 20;
-					// let hiddenStatusBar = false;
-					if (nativeEvent.contentOffset.y <= 20) {
-						// hiddenStatusBar = false;
-						value = 20;
-					} else if (nativeEvent.contentOffset.y < heightGreeting) {
-						// hiddenStatusBar = true;
-						value = nativeEvent.contentOffset.y * 0.3 - 20;
+		<RN.View style={{ flex: 1 }}>
+			<RN.ScrollView
+				onScroll={({ nativeEvent }) => {
+					if (!!heightGreeting) {
+						let value = 20;
+						// let hiddenStatusBar = false;
+						if (nativeEvent.contentOffset.y <= 20) {
+							// hiddenStatusBar = false;
+							value = 20;
+						} else if (nativeEvent.contentOffset.y < heightGreeting) {
+							// hiddenStatusBar = true;
+							value = nativeEvent.contentOffset.y * 0.3 - 20;
+						}
+						// setStatusBarHidden(hiddenStatusBar, "slide");
+						translateGreeting.value = value;
 					}
-					// setStatusBarHidden(hiddenStatusBar, "slide");
-					translateGreeting.value = value;
-				}
-			}}
-			style={{
-				position: "absolute",
-				height: RN.Dimensions.get("window").height + 100,
-				width: "100%",
-				top: -70,
-				bottom: -50,
-			}}
-			showsVerticalScrollIndicator={false}
-			stickyHeaderHiddenOnScroll
-			contentContainerStyle={{ paddingVertical: 50 }}
-			bounces={false}
-		>
-			<Animated.View
-				style={greetingStyle}
-				onLayout={({ nativeEvent: { layout } }) => {
-					setHeightGreeting(layout.height);
 				}}
+				style={{
+					position: "absolute",
+					height: RN.Dimensions.get("window").height + 100,
+					width: "100%",
+					top: -70,
+					bottom: -50,
+				}}
+				showsVerticalScrollIndicator={false}
+				stickyHeaderHiddenOnScroll
+				contentContainerStyle={{ paddingVertical: 50 }}
+				bounces={false}
 			>
-				<RN.ImageBackground
-					source={require("assets/mount-kilimanjaro-g2cd7e043a_19202.png")}
-					style={styles.imageGreeting}
-					imageStyle={{ top: -40 }}
+				<Animated.View
+					style={greetingStyle}
+					onLayout={({ nativeEvent: { layout } }) => {
+						setHeightGreeting(layout.height);
+					}}
 				>
-					<Dump.UserButton
-						onPress={() => navigation.navigate("Profile")}
-						style={{ alignSelf: "flex-start", left: 20, marginBottom: 20 }}
-					/>
-					<Dump.MessageProfessor
-						greeting={greetingText}
-						message={i18n.t(messageProfessor)}
-						style={{ marginBottom: 41 }}
-					/>
-				</RN.ImageBackground>
-			</Animated.View>
-			<Animated.View
-				style={[
-					viewStyle.white,
-					viewStyle.temple.feed,
-					{
-						// minHeight: height,
-						paddingBottom: 80,
-						top: -20,
-						paddingTop: 20,
-					},
-				]}
-			>
-				<ViewFullWidth direction={Direction.TopBottom} standardHorizontalPadding>
-					{RecommendationPracticeBlock}
-					<Dump.StatisticsMeditation style={viewStyle.margin.mediumV} count={countMeditation} time={timeMeditation} />
-					{PopularPracticeBlock}
-				</ViewFullWidth>
-			</Animated.View>
-		</RN.ScrollView>
+					<RN.ImageBackground
+						source={require("assets/mount-kilimanjaro-g2cd7e043a_19202.png")}
+						style={styles.imageGreeting}
+						imageStyle={{ top: -40 }}
+					>
+						<Dump.UserButton
+							onPress={() => navigation.navigate("Profile")}
+							style={{ alignSelf: "flex-start", left: 20, marginBottom: 20 }}
+						/>
+						<Dump.MessageProfessor
+							greeting={greetingText}
+							message={i18n.t(messageProfessor)}
+							style={{ marginBottom: 41 }}
+						/>
+					</RN.ImageBackground>
+				</Animated.View>
+				<Animated.View
+					style={[
+						viewStyle.white,
+						viewStyle.temple.feed,
+						{
+							// minHeight: height,
+							paddingBottom: 80,
+							top: -20,
+							paddingTop: 20,
+						},
+					]}
+				>
+					<ViewFullWidth direction={Direction.TopBottom} standardHorizontalPadding>
+						{RecommendationPracticeBlock}
+						<Dump.StatisticsMeditation style={viewStyle.margin.mediumV} count={countMeditation} time={timeMeditation} />
+						{PopularPracticeBlock}
+					</ViewFullWidth>
+				</Animated.View>
+			</RN.ScrollView>
+		</RN.View>
 	);
 };
 

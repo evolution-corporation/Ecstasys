@@ -96,6 +96,12 @@ export namespace ServerEntities {
 		readonly PhotoId?: string;
 	}
 
+	export interface Subscription {
+		Body: string[],
+		Description: string,
+		Title: string
+	}
+
 	/** Сущность подписки которая возвращается с сервера */
 	export interface Subscribe {
 		/** Идентификатор пользователя, которому принадлежит подписка информация которой получена */

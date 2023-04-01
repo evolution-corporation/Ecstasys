@@ -8,7 +8,7 @@ import i18n from "~i18n";
 import Tools from "~core";
 
 const StatisticsMeditation: React.FC<Props> = props => {
-	const { style, colorR = "#702d87", colorL = "#9765A8", count, time } = props;
+	const { style, colorR = "#7C3C90", colorL = "#7C3C90", count, time } = props;
 	const minutes = Math.floor(time / 60000);
 	return (
 		<View style={[style, { flexDirection: "row" }]}>

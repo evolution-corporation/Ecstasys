@@ -11,8 +11,8 @@
 				"prebuildCommand": "prebuild"
 			},
 			"ios": {
-				"simulator": true,
-				"prebuildCommand": "prebuild"
+				"prebuildCommand": "prebuild",
+				"simulator": false
 			},
 			"env": {
 				"YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
@@ -23,7 +23,7 @@
 			"distribution": "internal",
 			"channel": "preview",
 			"env": {
-				"APP_VARIANT": "prev"
+				"APP_VARIANT": "prod"
 			},
 			"android": {
 				"buildType": "app-bundle"
@@ -61,6 +61,5 @@
 			},
 			"ios": {}
 		}
-	},
-
+	}
 }

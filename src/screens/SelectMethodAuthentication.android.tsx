@@ -149,7 +149,7 @@ const SelectMethodAuthentication: RootScreenProps<"SelectMethodAuthentication"> 
 								>
 									<Text style={styles.document}>{i18n.t("privacyPolicy")}</Text>
 								</Pressable>
-								<Text style={styles.terms}> ecstasys</Text>
+								<Text style={styles.terms}> dmd meditation</Text>
 							</View>
 						</>
 					)}

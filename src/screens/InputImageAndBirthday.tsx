@@ -1,9 +1,9 @@
 /** @format */
 
-import { useBackHandler } from "@react-native-community/hooks";
+import { useBackHandler, useDimensions } from "@react-native-community/hooks";
 import { useFocusEffect } from "@react-navigation/native";
 import React, { useCallback } from "react";
-import { View, StyleSheet, Text, Platform, BackHandler } from "react-native";
+import { View, StyleSheet, Text, Platform, BackHandler, Dimensions } from "react-native";
 import auth from "@react-native-firebase/auth";
 import i18n from "~i18n";
 import { Screen } from "~components/containers";
@@ -18,7 +18,7 @@ import useUserInformation from "src/hooks/use-user-information";
 
 const InputImageAndBirthdayScreen: RootScreenProps<"InputImageAndBirthday"> = ({ navigation }) => {
 	const appDispatch = useAppDispatch();
-
+	const { window } = useDimensions();
 	const SelectImageButtonRef = React.useRef<React.ElementRef<typeof SelectImageButton>>(null);
 	const countBack = React.useRef<number>(0);
 	const registration = async () => {
@@ -51,20 +51,28 @@ const InputImageAndBirthdayScreen: RootScreenProps<"InputImageAndBirthday"> = ({
 			return true;
 		}
 	});
+	console.log(Platform.OS, Dimensions.get("window"));
 
+	let imageVerticalMargin = 72;
+	if (window.height < 732) {
+		imageVerticalMargin *= window.height / 732 / window.scale;
+	}
+	console.log(imageVerticalMargin, Platform.OS);
 	return (
 		<Screen styleScreen={{ justifyContent: "space-between", paddingBottom: 20 }}>
 			<View style={{ alignItems: "center" }}>
 				<Text style={styles.helper}>{i18n.t("f22ace97-97e5-4f87-b1b7-c179f1d7e893")}</Text>
-				<SelectImageButton
-					ref={SelectImageButtonRef}
-					style={styles.selectImage}
-					onChangeImage={base64 => {
-						if (base64) {
-							appDispatch(actions.addChangedInformationUser({ image: base64 }));
-						}
-					}}
-				/>
+				<View style={{ marginVertical: imageVerticalMargin }}>
+					<SelectImageButton
+						ref={SelectImageButtonRef}
+						style={styles.selectImage}
+						onChangeImage={base64 => {
+							if (base64) {
+								appDispatch(actions.addChangedInformationUser({ image: base64 }));
+							}
+						}}
+					/>
+				</View>
 				<SelectBirthday
 					onChange={date => {
 						appDispatch(actions.addChangedInformationUser({ birthday: date }));
@@ -82,7 +90,7 @@ const styles = StyleSheet.create({
 		paddingBottom: 75,
 		justifyContent: "space-between",
 		backgroundColor: "#9765A8",
-		flex: 1,
+		// flex: 1,
 	},
 	ColorButtonStyle: {
 		width: "100%",
@@ -95,7 +103,7 @@ const styles = StyleSheet.create({
 		borderColor: "#C2A9CE",
 		borderWidth: 3,
 		backgroundColor: "rgba(255, 255, 255, 0.2)",
-		marginVertical: 72,
+		// marginVertical: 72,
 	},
 	helper: {
 		marginTop: 10,

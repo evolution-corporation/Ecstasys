@@ -3,7 +3,7 @@
 import React from "react";
 import { AVPlaybackSource, Audio } from "expo-av";
 import * as Notification from "expo-notifications";
-import {Platform} from "react-native";
+import { Platform } from "react-native";
 
 const NotificationEndMeditation = () =>
 	Notification.scheduleNotificationAsync({
@@ -17,12 +17,15 @@ const NotificationEndMeditation = () =>
 		},
 		trigger: {
 			seconds: 1,
-			channelId: "endMeditation"
-		}
-	})
+			channelId: "endMeditation",
+		},
+	});
 
-
-const useMeditation = (source: [AVPlaybackSource, AVPlaybackSource], currentTime: number) => {
+const useMeditation = (
+	source: [AVPlaybackSource, AVPlaybackSource] | [AVPlaybackSource],
+	currentTime: number,
+	options?: { autoPlay?: boolean }
+) => {
 	const audioList = React.useRef<[Audio.Sound, Audio.Sound] | [Audio.Sound]>(
 		source.length === 2 ? [new Audio.Sound(), new Audio.Sound()] : [new Audio.Sound()]
 	).current;
@@ -103,7 +106,6 @@ const useMeditation = (source: [AVPlaybackSource, AVPlaybackSource], currentTime
 		}
 	};
 
-
 	React.useEffect(() => {
 		if (audioList.length === 1) {
 			audioList[0].setOnPlaybackStatusUpdate(status => {
@@ -132,40 +134,68 @@ const useMeditation = (source: [AVPlaybackSource, AVPlaybackSource], currentTime
 				shouldPlaySound: true,
 				shouldSetBadge: false,
 			}),
+			handleSuccess: console.log,
 		});
 		const init = async () => {
+			const sourceFix = source.map(onceSource => {
+				if (typeof onceSource === "object") {
+					onceSource.uri = `${onceSource.uri}.mp3`;
+				}
+				return onceSource;
+			});
 			if (audioList.length === 1) {
 				const status = await audioList[0].getStatusAsync();
-				if (!status.isLoaded) await audioList[0].loadAsync(Array.isArray(source) ? source[0] : source, {});
-				audioList[0].setOnPlaybackStatusUpdate((statusOfSubscribe) => {
+				if (!status.isLoaded) await audioList[0].loadAsync(Array.isArray(sourceFix) ? sourceFix[0] : sourceFix, {});
+				audioList[0].setOnPlaybackStatusUpdate(statusOfSubscribe => {
 					if (statusOfSubscribe.isLoaded && statusOfSubscribe.didJustFinish) {
 						NotificationEndMeditation();
 					}
-				})
-			} else if (audioList.length === 2 && Array.isArray(source)) {
+				});
+				if (options?.autoPlay ?? false) audioList[0].playAsync();
+			} else if (audioList.length === 2 && Array.isArray(sourceFix)) {
 				const statusFirst = await audioList[0].getStatusAsync();
-				if (!statusFirst.isLoaded) await audioList[0].loadAsync(source[0], {});
+				if (!statusFirst.isLoaded) await audioList[0].loadAsync(sourceFix[0], {});
 				const statusSecond = await audioList[1].getStatusAsync();
-				if (!statusSecond.isLoaded) await audioList[1].loadAsync(source[1], {});
+				if (!statusSecond.isLoaded) await audioList[1].loadAsync(sourceFix[1], {});
 				audioList[0].setOnPlaybackStatusUpdate(statusOfSubscribe => {
 					setIsLoaded(previousValue => [statusOfSubscribe.isLoaded, previousValue[1]]);
 					if (statusOfSubscribe.isLoaded && statusOfSubscribe.didJustFinish) {
 						audioList[1].playAsync();
 					}
 				});
-				audioList[1].setOnPlaybackStatusUpdate((statusOfSubscribe) => {
+				audioList[1].setOnPlaybackStatusUpdate(statusOfSubscribe => {
 					if (statusOfSubscribe.isLoaded && statusOfSubscribe.didJustFinish) {
 						NotificationEndMeditation();
 					}
-				})
+				});
+				if (options?.autoPlay ?? false) {
+					audioList[0].playAsync();
+					audioList[1].playAsync();
+				}
 			}
 		};
 
 		init();
 
+		const end = async () => {
+			if (audioList.length === 1) {
+				const status = await audioList[0].getStatusAsync();
+				if (!status.isLoaded) await audioList[0].unloadAsync();
+			} else if (audioList.length === 2 && Array.isArray(source)) {
+				const statusFirst = await audioList[0].getStatusAsync();
+				if (!statusFirst.isLoaded) await audioList[0].unloadAsync();
+				const statusSecond = await audioList[1].getStatusAsync();
+				if (!statusSecond.isLoaded) await audioList[1].unloadAsync();
+			}
+		};
 		return () => {
-			Notification.cancelScheduledNotificationAsync("EndMeditation")
-		}
+			Notification.cancelScheduledNotificationAsync("EndMeditation");
+			// end();
+			audioList.forEach(audio => {
+				audio.stopAsync();
+				audio.unloadAsync();
+			});
+		};
 	}, []);
 
 	return { play, pause, setPosition, isLoading: isLoaded[0] && isLoaded[1], stop };

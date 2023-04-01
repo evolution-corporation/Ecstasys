@@ -29,6 +29,8 @@ const ResultSubscribeScreen = ({ route = { params: { status: "Edit" } }, navigat
 							? "36665b8a-3801-4b54-928a-22d9291e279d"
 							: params.status === "Edit"
 							? "3c0d4097-a685-4141-9459-fdade7175b3b"
+							: params.status === "Fail"
+							? "348bcad7-3176-405d-94f7-3e88d6d6d939"
 							: "274347f0-628b-4128-8595-d6be9611ea03"
 					)}
 					!
@@ -39,6 +41,8 @@ const ResultSubscribeScreen = ({ route = { params: { status: "Edit" } }, navigat
 							? "cd6eba3d-0d93-4e46-bb3c-d809ee76b181"
 							: params.status === "Edit"
 							? "b952bec5-f5b6-439b-ab66-5e118673c19f"
+							: params.status === "Fail"
+							? "ab0de326-0612-451b-8f3d-b3bb894337f4"
 							: "2b2951bd-0ee8-42c7-b37e-2a7059596b6a"
 					)}
 				</Text>

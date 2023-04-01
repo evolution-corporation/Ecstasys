@@ -19,13 +19,15 @@ import Play from "assets/icons/PlayWhite.svg";
 import { ColorButton } from "~components/dump";
 import { StatusBar } from "expo-status-bar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import {useDimensions} from "@react-native-community/hooks";
+import { useDimensions } from "@react-native-community/hooks";
 
 const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 	const { selectedRelax } = route.params;
 	const [setList, setSetList] = React.useState<State.Set[]>([]);
 	const [selectedSetIndex, setSelectedSetIndex] = React.useState<number | null>(0);
-	const { window: { width, height } } = useDimensions()
+	const {
+		window: { width, height },
+	} = useDimensions();
 	const appDispatch = useAppDispatch();
 	useFocusEffect(
 		useCallback(() => {
@@ -66,9 +68,8 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 					onPress={() => {
 						const index = Math.floor(Math.random() * setList.length);
 
-							appDispatch(actions.setSetForDMD(setList[index]));
-							navigation.navigate("DMDSettingNotification", { selectedRelax, selectSet: setList[index] });
-
+						appDispatch(actions.setSetForDMD(setList[index]));
+						navigation.navigate("DMDSettingNotification", { selectedRelax, selectSet: setList[index] });
 					}}
 				>
 					<LinearGradient colors={["#75348B", "#6A2382"]} style={styles.randomButton}>
@@ -77,7 +78,9 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 				</Pressable>
 			</View>
 			<FlatList
-				data={setList}
+				data={setList.sort((set1, set2) =>
+					Number(set1.name.replaceAll(/\D/g, "")) > Number(set2.name.replaceAll(/\D/g, "")) ? 1 : -1
+				)}
 				style={{ width, top: 133 }}
 				renderItem={({ item, index }) => (
 					<Pressable
@@ -86,35 +89,32 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 							selectedSetIndex === index && height >= 815 ? { backgroundColor: "#E7DDEC" } : null,
 						]}
 						onPress={() => {
-
-								appDispatch(actions.setSetForDMD(setList[index]));
-								navigation.navigate("DMDSettingNotification", { selectedRelax, selectSet: setList[index] });
-
+							appDispatch(actions.setSetForDMD(setList[index]));
+							navigation.navigate("DMDSettingNotification", { selectedRelax, selectSet: setList[index] });
 						}}
 					>
 						<View style={[{ flexDirection: "row", alignItems: "center" }]}>
-
-								<View
+							<View
+								style={{
+									width: 56,
+									height: 56,
+									borderRadius: 28,
+									backgroundColor: "#E6E6E6",
+									alignItems: "center",
+									justifyContent: "center",
+								}}
+							>
+								<Text
 									style={{
-										width: 56,
-										height: 56,
-										borderRadius: 28,
+										color: "#606060",
 										backgroundColor: "#E6E6E6",
-										alignItems: "center",
-										justifyContent: "center",
+										fontSize: 18,
+										...gStyle.font("600"),
 									}}
 								>
-									<Text
-										style={{
-											color: "#606060",
-											backgroundColor: "#E6E6E6",
-											fontSize: 18,
-											...gStyle.font("600"),
-										}}
-									>
-										{index + 1}
-									</Text>
-								</View>
+									{index + 1}
+								</Text>
+							</View>
 							<Text style={styles.nameSet}>{item.name}</Text>
 						</View>
 						<Text style={styles.timeSet}>
@@ -128,7 +128,6 @@ const SelectSet: RootScreenProps<"SelectSet"> = ({ navigation, route }) => {
 				contentContainerStyle={{ paddingTop: heightViewPart2 + 21, paddingBottom: 200 }}
 				showsVerticalScrollIndicator={false}
 			/>
-
 		</DoubleColorView>
 	);
 };
