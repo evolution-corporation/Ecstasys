@@ -93,10 +93,8 @@ function generateConfig(): ExpoConfig {
 				projectId: "360fff0b-5a9b-41de-9bb3-016641a64554",
 			},
 			isDebug: process.env.APP_VARIANT === "dev",
-			apiURL:
-				/* process.env.APP_VARIANT === "prod"
-  ?  */ "api.evodigital.one",
-			/* : "dev.api.evodigital.one" */ GoogleWebClientId: process.env.GOOGLE_WEB_CLIENT_ID,
+			apiURL: "api.evodigital.one",
+			GoogleWebClientId: process.env.GOOGLE_WEB_CLIENT_ID,
 		},
 		runtimeVersion: {
 			policy: "sdkVersion",
