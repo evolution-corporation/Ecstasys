@@ -121,7 +121,7 @@ const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigatio
 								<Pressable>
 									<TimeLine
 										onChange={percent => {
-											setScaleDot(40 + 80 * percent);
+											setScaleDot(20 + 150 * percent);
 										}}
 										initValue={(scaleDot - 40) / 80}
 									/>
