@@ -4,7 +4,8 @@ import type { ExpoConfig } from "expo/config";
 import { version } from "./package.json";
 
 function generateConfig(): ExpoConfig {
-	const appName = process.env.APP_VARIANT === "dev" ? "DMD Dev" : process.env.APP_VARIANT === "prev" ? "dmd meditation beta" : "dmd meditation";
+	const appName =
+		process.env.APP_VARIANT === "dev" ? "DMD Dev" : process.env.APP_VARIANT === "prev" ? "DMD beta" : "DMD";
 	const appUrl =
 		process.env.APP_VARIANT === "dev" ? "com.evodigital.dmdmeditation+dev" : "com.evodigital.dmdmeditation";
 	const toDay = new Date();
@@ -91,11 +92,9 @@ function generateConfig(): ExpoConfig {
 			eas: {
 				projectId: "360fff0b-5a9b-41de-9bb3-016641a64554",
 			},
-			isDebug: process.env.APP_VARIANT !== "dev",
-			apiURL:
-				/* process.env.APP_VARIANT === "prod"
-				?  */ "api.evodigital.one",
-			/* : "dev.api.evodigital.one" */ GoogleWebClientId: process.env.GOOGLE_WEB_CLIENT_ID,
+			isDebug: process.env.APP_VARIANT === "dev",
+			apiURL: "api.evodigital.one",
+			GoogleWebClientId: process.env.GOOGLE_WEB_CLIENT_ID,
 		},
 		runtimeVersion: {
 			policy: "sdkVersion",
