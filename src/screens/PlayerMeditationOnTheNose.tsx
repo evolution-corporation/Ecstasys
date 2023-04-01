@@ -1,16 +1,15 @@
 /** @format */
 
 import React, { useEffect } from "react";
-import { Image, StyleSheet, View, Text, Pressable } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import * as Notifications from "expo-notifications";
 import { useKeepAwake } from "expo-keep-awake";
 
 import Tools from "~core";
+import core from "~core";
 
 import { RootScreenProps } from "~types";
 import i18n from "~i18n";
-
-import core from "~core";
 
 import { useDimensions } from "@react-native-community/hooks";
 import { SharedElement } from "react-navigation-shared-element";
@@ -18,6 +17,7 @@ import useTimer from "src/hooks/use-timer";
 import useMeditation from "src/hooks/use-meditation";
 import useBackgroundSound from "src/hooks/use-background-sound";
 import BackgroundSoundButton from "~components/dump/background-sound-button";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 Notifications.setNotificationHandler({
 	handleNotification: async () => ({
@@ -30,7 +30,7 @@ Notifications.setNotificationHandler({
 const PlayerMeditationOnTheNose: RootScreenProps<"PlayerMeditationOnTheNose"> = ({ navigation, route }) => {
 	const { isNeedVoice, practiceLength } = route.params;
 
-	const [isShowTime, setIsShowTime] = React.useState(true);
+	const [hiddenUI, setHiddenUI] = React.useState(false);
 
 	const timer = useTimer(practiceLength, () => navigation.navigate("EndMeditation"));
 
@@ -61,36 +61,45 @@ const PlayerMeditationOnTheNose: RootScreenProps<"PlayerMeditationOnTheNose"> = 
 
 	const { window } = useDimensions();
 
+	useEffect(() => {
+		navigation.setOptions({
+			headerShown: !hiddenUI,
+		});
+	}, [hiddenUI]);
+
 	return (
 		<View style={styles.background}>
 			<SharedElement id={"image"} style={{ width: "100%", height: "100%", position: "absolute" }}>
 				<Image source={require("assets/BaseMeditationImage/Nose.png")} style={{ width: "100%", height: "100%" }} />
 			</SharedElement>
-			<View style={{ flex: 1, paddingHorizontal: 20 }}>
-				<Pressable
-					onPress={() => setIsShowTime(prevState => !prevState)}
-					style={{
-						alignSelf: "center",
-						width: window.width - 40,
-						height: window.width - 40,
-						alignItems: "center",
-						justifyContent: "center",
-						position: "absolute",
-						bottom: "40%",
-					}}
-				>
-					{isShowTime && (
-						<View style={styles.timesCodeBox}>
-							<Text style={styles.timeCode} key={"current"}>
-								{i18n.strftime(new Date(timer.currentMilliseconds), "%M:%S")}
-							</Text>
-						</View>
-					)}
-				</Pressable>
-				<View style={[styles.timeInfoBox]}>
-					<BackgroundSoundButton image={undefined} name={backgroundSound.name} />
-				</View>
-			</View>
+			<Pressable style={{ flex: 1, paddingHorizontal: 20 }} onPress={() => setHiddenUI(prevState => !prevState)}>
+				{hiddenUI ? null : (
+					<>
+						<Animated.View
+							style={{
+								alignSelf: "center",
+								width: window.width - 40,
+								height: window.width - 40,
+								alignItems: "center",
+								justifyContent: "center",
+								position: "absolute",
+								bottom: "40%",
+							}}
+							entering={FadeIn}
+							exiting={FadeOut}
+						>
+							<View style={styles.timesCodeBox}>
+								<Text style={styles.timeCode} key={"current"}>
+									{i18n.strftime(new Date(timer.currentMilliseconds), "%M:%S")}
+								</Text>
+							</View>
+						</Animated.View>
+						<Animated.View style={[styles.timeInfoBox]} entering={FadeIn} exiting={FadeOut}>
+							<BackgroundSoundButton image={undefined} name={backgroundSound.name} />
+						</Animated.View>
+					</>
+				)}
+			</Pressable>
 		</View>
 	);
 };
