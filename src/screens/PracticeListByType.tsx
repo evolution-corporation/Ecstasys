@@ -6,7 +6,7 @@ import { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reani
 
 import Tools from "~core";
 import { PracticesMeditation, RootScreenProps, State } from "~types";
-import { CarouselPractices, ColorButton } from "~components/dump";
+import { CarouselPractices, ColorButton, IsFavorite } from "~components/dump";
 import { DoubleColorView } from "~components/containers";
 import i18n from "~i18n";
 import DescriptionPrentices from "assets/descriptionPrentices.json";
@@ -173,20 +173,28 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 					data={practiceList}
 					renderItem={({ item }) => (
 						<Pressable
-							style={{ flexDirection: "row", width: "100%", marginVertical: 6, paddingHorizontal: 20 }}
+							style={{
+								flexDirection: "row",
+								width: "100%",
+								marginVertical: 6,
+								paddingHorizontal: 20,
+							}}
 							onPress={() => onClick(item.id)}
 						>
 							<Image
 								source={{ uri: item.image }}
 								style={{ width: 90, height: 90, borderRadius: 10, marginRight: 26 }}
 							/>
-							<View>
+							<View style={{ flex: 1 }}>
 								<Text style={{ color: "#3D3D3D", fontSize: 16, ...Tools.gStyle.font("700"), marginBottom: 7 }}>
 									{item.name}
 								</Text>
 								<Text style={{ color: "#9E9E9E", fontSize: 13, ...Tools.gStyle.font("600") }}>
 									{i18n.t("minute", { count: Math.floor(item.length / 60000) })}
 								</Text>
+							</View>
+							<View style={{ justifyContent: "center", alignItems: "center" }}>
+								<IsFavorite practice={item} noShowWereNoFavorite />
 							</View>
 						</Pressable>
 					)}
