@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
+import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from "react";
 
 import { ColorValue, StyleSheet, View, ViewProps } from "react-native";
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
@@ -13,7 +13,7 @@ const TimeLine = forwardRef<Ref, TimeLineProps>((props, ref) => {
 	const { color = "#FFFFFF", onChange, onStartChange, onEndChange, disable = false, initValue = 0 } = props;
 
 	const [maxWidth, setMaxWidth] = useState<number | null>(null);
-	let _value = useRef(initValue);
+	let _value = initValue;
 	const _colorBackground = setColorOpacity(color);
 	const _colorBorderCircle = setColorOpacity(color, 0.5);
 	const _frontLineWidth = useSharedValue(initValue ?? 0);
@@ -30,7 +30,7 @@ const TimeLine = forwardRef<Ref, TimeLineProps>((props, ref) => {
 	useImperativeHandle(ref, () => ({
 		setValue: currentValue => {
 			if (maxWidth) _frontLineWidth.value = withTiming(currentValue * maxWidth);
-			_value.current = currentValue;
+			_value = currentValue;
 		},
 	}));
 
@@ -49,7 +49,7 @@ const TimeLine = forwardRef<Ref, TimeLineProps>((props, ref) => {
 				.enabled(!disable)
 				.onBegin(event => {
 					_frontLineWidth.value = withTiming(event.x);
-					if (maxWidth) _value.current = maxWidth / event.x;
+					if (maxWidth) _value = maxWidth / event.x;
 					_scaleCircle.value = 1;
 
 					if (onStartChange) runOnJS(onStartChange)();
@@ -57,7 +57,7 @@ const TimeLine = forwardRef<Ref, TimeLineProps>((props, ref) => {
 				.onUpdate(event => {
 					if (maxWidth && event.x >= 0 && event.x <= maxWidth) {
 						_frontLineWidth.value = event.x;
-						_value.current = maxWidth / event.x;
+						_value = maxWidth / event.x;
 						runOnJS(returnUpdate)(event.x);
 					}
 				})
@@ -72,7 +72,7 @@ const TimeLine = forwardRef<Ref, TimeLineProps>((props, ref) => {
 	);
 
 	useEffect(() => {
-		if (maxWidth !== null) _frontLineWidth.value = maxWidth * _value.current;
+		if (maxWidth !== null) _frontLineWidth.value = maxWidth * _value;
 	}, [maxWidth]);
 
 	return (

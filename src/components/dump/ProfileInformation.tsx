@@ -1,20 +1,20 @@
 /** @format */
 
 import React from "react";
-import RN, { StyleSheet } from "react-native";
+import RN, { StyleSheet, View } from "react-native";
 
 import Tools from "~core";
 import TextButton from "./Buttons/Text";
-import * as UIText from "../UIText";
 import i18n from "~i18n";
 
 import SelectImageButton from "./Buttons/SelectImage";
 import useIsActivateSubscribe from "src/hooks/use-is-activate-subscribe";
 import { developmentConfig } from "src/read-config";
-import {actions} from "~store";
+
+import Star from "assets/icons/Star22.svg";
 
 interface Props extends RN.ViewProps {
-	displayName?: string;
+	name: string;
 	image: string;
 	subscribeInformation?: {
 		isAutoPayment: boolean;
@@ -25,7 +25,7 @@ interface Props extends RN.ViewProps {
 }
 
 const ProfileInformation: React.FC<Props> = props => {
-	const { image, displayName, subscribeInformation, onPress, onChangeImage } = props;
+	const { image, name, subscribeInformation, onPress, onChangeImage } = props;
 	const isActivateSubscribe = developmentConfig("customHook")
 		? useIsActivateSubscribe()
 		: subscribeInformation !== undefined && subscribeInformation.endSubscribe > new Date();
@@ -35,32 +35,35 @@ const ProfileInformation: React.FC<Props> = props => {
 		refSelectImage.current?.setImage(image);
 	}, [image]);
 
-
-
 	return (
 		<RN.View style={styles.container}>
-			{
-				onChangeImage === undefined ? <RN.Image
+			{onChangeImage === undefined ? (
+				<RN.Image
 					source={{
 						uri: image,
 					}}
 					style={styles.image}
 					resizeMethod={"resize"}
 					// resizeMode={"contain"}
-				/> : <SelectImageButton
+				/>
+			) : (
+				<SelectImageButton
 					ref={refSelectImage}
 					style={styles.image}
 					onChangeImage={base64 => {
 						if (base64) {
-							console.log("test")
-							onChangeImage( base64 );
+							console.log("test");
+							onChangeImage(base64);
 						}
 					}}
 				/>
-			}
+			)}
 
 			<RN.View style={styles.backgroundInfo}>
-				{displayName && <RN.Text style={styles.displayName}>{displayName}</RN.Text>}
+				<RN.Text style={styles.displayName}>
+					{name}
+					{isActivateSubscribe && <Star />}
+				</RN.Text>
 				<RN.Text style={styles.nameSubscribe}>
 					{i18n.t("d275f2aa-4a42-47cd-86a5-0ae9cbc3ab30", {
 						name: isActivateSubscribe ? "Premium" : "Base",
@@ -79,7 +82,9 @@ const ProfileInformation: React.FC<Props> = props => {
 						  )
 						: i18n.t("indefinitely")}
 				</RN.Text>
-				{onPress && <TextButton onPress={onPress}>{i18n.t("edit")}</TextButton>}
+				<View style={{ alignItems: "flex-start", marginTop: 10 }}>
+					{onPress && <TextButton onPress={onPress}>{i18n.t("edit")}</TextButton>}
+				</View>
 			</RN.View>
 		</RN.View>
 	);
@@ -90,28 +95,24 @@ ProfileInformation.defaultProps = {};
 const styles = StyleSheet.create({
 	container: {
 		width: "100%",
-		paddingTop: 46,
+		flexDirection: "row",
+		paddingHorizontal: 20,
 	},
 	background: {
 		width: "100%",
 		marginBottom: 55,
 	},
 	backgroundInfo: {
-		borderRadius: 20,
-		backgroundColor: "#7C3D91",
 		width: "100%",
-		paddingTop: 58,
-		paddingBottom: 11,
-		alignItems: "center",
+		paddingLeft: 13,
 	},
 	image: {
-		width: 92,
-		height: 92,
-		borderRadius: 30,
+		width: 123,
+		height: 123,
+		borderRadius: 62,
 		borderWidth: 3,
 		borderColor: "#FFFFFF",
 		alignSelf: "center",
-		position: "absolute",
 
 		zIndex: 1,
 	},
@@ -124,19 +125,18 @@ const styles = StyleSheet.create({
 		color: "#FFFFFF",
 		fontSize: 16,
 		...Tools.gStyle.font("700"),
-		marginTop: 9,
+		marginTop: 11,
 	},
 	timeSubscribe: {
 		color: "#FFFFFF",
 		fontSize: 14,
 		...Tools.gStyle.font("400"),
-		textAlign: "center",
+		backgroundColor: "Red",
 	},
 	editButton: {
 		color: "#E7DDEC",
 		fontSize: 13,
 		...Tools.gStyle.font("600"),
-		marginTop: 9,
 	},
 });
 
