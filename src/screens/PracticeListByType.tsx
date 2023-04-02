@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { useState } from "react";
-import { Dimensions, StyleSheet, Text } from "react-native";
+import { Dimensions, FlatList, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 import Tools from "~core";
@@ -22,6 +22,9 @@ import {
 
 import * as Instruction from "src/instruction";
 import useIsActivateSubscribe from "src/hooks/use-is-activate-subscribe";
+import CarouselIcon from "assets/icons/CarouselIcon.svg";
+import TreeLine from "assets/icons/bigThreeLine.svg";
+import { useDimensions } from "@react-native-community/hooks";
 
 var height = Dimensions.get("window").height;
 
@@ -81,6 +84,8 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 		init();
 	}, [isSubscribe]);
 
+	const [typeShowScreen, setTypeShowScreen] = useState<"carousel" | "list">("list");
+
 	const onClick = (practiceId: string) => {
 		const practiceIndex = practiceList.findIndex(item => item.id === practiceId);
 		if (practiceIndex !== -1) {
@@ -99,8 +104,10 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 			}
 		}
 	};
-	return (
-		<DoubleColorView style={styles.background} heightViewPart={height / 2 - 100}>
+
+	const subHeader = (
+		<View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+			<View style={{ width: 50 }} />
 			<ColorButton
 				animationStyle={aStyle.button}
 				styleButton={styles.buttonInstruction}
@@ -126,6 +133,91 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 			>
 				{i18n.t("ce174d00-e4df-42f3-bb19-82ed6c987750")}
 			</ColorButton>
+			{typePractices === "relaxation" || typePractices === "directionalVisualizations" ? (
+				typeShowScreen === "carousel" ? (
+					<Pressable key={"list"} onPress={() => setTypeShowScreen("list")} style={styles.changeType}>
+						<TreeLine />
+					</Pressable>
+				) : (
+					<Pressable key={"carousel"} onPress={() => setTypeShowScreen("carousel")} style={styles.changeType}>
+						<CarouselIcon />
+					</Pressable>
+				)
+			) : (
+				<View style={styles.changeType} />
+			)}
+		</View>
+	);
+
+	const { window } = useDimensions();
+
+	const [fVar, setFVar] = useState(0);
+
+	if ((typePractices === "relaxation" || typePractices === "directionalVisualizations") && typeShowScreen === "list") {
+		return (
+			<DoubleColorView
+				style={[styles.background, { height: window.height, paddingHorizontal: 0 }]}
+				heightViewPart={150}
+				hideElementVioletPart
+				headerElement={
+					<View style={{ top: 55, width: window.width, paddingHorizontal: 20 }}>
+						{subHeader}
+						<Text style={styles.descriptionType}>{i18n.t(DescriptionPrentices[route.params.typePractices])}</Text>
+					</View>
+				}
+				onFunctionGetPaddingTop={getPaddingTop => {
+					setFVar(getPaddingTop);
+				}}
+			>
+				<FlatList
+					data={practiceList}
+					renderItem={({ item }) => (
+						<Pressable
+							style={{ flexDirection: "row", width: "100%", marginVertical: 6, paddingHorizontal: 20 }}
+							onPress={() => onClick(item.id)}
+						>
+							<Image
+								source={{ uri: item.image }}
+								style={{ width: 90, height: 90, borderRadius: 10, marginRight: 26 }}
+							/>
+							<View>
+								<Text style={{ color: "#3D3D3D", fontSize: 16, ...Tools.gStyle.font("700"), marginBottom: 7 }}>
+									{item.name}
+								</Text>
+								<Text style={{ color: "#9E9E9E", fontSize: 13, ...Tools.gStyle.font("600") }}>
+									{i18n.t("minute", { count: Math.floor(item.length / 60000) })}
+								</Text>
+							</View>
+						</Pressable>
+					)}
+					keyExtractor={item => `practice-${item.id}`}
+					showsVerticalScrollIndicator={false}
+					contentContainerStyle={{
+						marginTop: 40,
+						paddingBottom: 40,
+					}}
+					style={{ marginTop: fVar }}
+					ItemSeparatorComponent={() => (
+						<View style={{ width: "100%", alignItems: "flex-end" }}>
+							<View
+								style={{
+									height: 0,
+									width: window.width - 122,
+									borderColor: "rgba(231, 221, 236, 0.2)",
+									borderWidth: 2,
+									right: 0,
+								}}
+							/>
+						</View>
+					)}
+				/>
+			</DoubleColorView>
+		);
+	}
+
+	return (
+		<DoubleColorView style={styles.background} heightViewPart={height / 2 - 100}>
+			{subHeader}
 			<Text style={styles.descriptionType}>{i18n.t(DescriptionPrentices[route.params.typePractices])}</Text>
 			{practiceList.length > 0 && (
 				<CarouselPractices
@@ -202,5 +294,11 @@ const styles = StyleSheet.create({
 		color: "#FFFFFF",
 		fontSize: 13,
 		...Tools.gStyle.font("600"),
+	},
+	changeType: {
+		height: 50,
+		width: 50,
+		justifyContent: "center",
+		alignItems: "center",
 	},
 });
