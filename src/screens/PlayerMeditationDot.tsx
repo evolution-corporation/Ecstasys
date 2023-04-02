@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { useEffect } from "react";
-import { ColorValue, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import * as Notifications from "expo-notifications";
 
 import Tools from "~core";
@@ -18,6 +18,7 @@ import useBackgroundSound from "src/hooks/use-background-sound";
 import { useKeepAwake } from "expo-keep-awake";
 import BackgroundSoundButton from "~components/dump/background-sound-button";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import { useAppSelector } from "~store";
 
 Notifications.setNotificationHandler({
 	handleNotification: async () => ({
@@ -60,7 +61,8 @@ const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigatio
 		timer.play();
 	}, []);
 
-	const [color, setColor] = React.useState<ColorValue>("rgb(134, 201, 39)");
+	const currentColor = useAppSelector(store => store.practice.colorDor as string);
+
 	const [scaleDot, setScaleDot] = React.useState<number>(100);
 	const [editView, setEditView] = React.useState<boolean>(false);
 
@@ -86,7 +88,7 @@ const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigatio
 					<Pressable>
 						<View
 							style={{
-								backgroundColor: color,
+								backgroundColor: currentColor,
 								width: scaleDot,
 								height: scaleDot,
 								borderRadius: 100,
@@ -130,7 +132,7 @@ const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigatio
 							<Pressable
 								style={{ width: 90, height: 41, borderRadius: 20.5, marginLeft: 30 }}
 								onPress={() => {
-									setEditView(prevValue => !prevValue);
+									navigation.navigate("ChangeColorDot");
 								}}
 							>
 								<Image source={require("assets/rgbButton.png")} style={{ width: "100%", height: "100%" }} />

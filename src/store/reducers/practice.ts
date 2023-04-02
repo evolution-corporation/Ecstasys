@@ -15,6 +15,7 @@ export interface PracticeState {
 	listPracticesListened: { dateListen: string; msListened: number; practice: State.Practice }[];
 	listPracticesFavorite: State.Practice[];
 	recommendationPracticeToDay?: State.Practice;
+	colorDor: string;
 }
 
 export default createReducer<PracticeState>(
@@ -25,6 +26,7 @@ export default createReducer<PracticeState>(
 		},
 		listPracticesListened: [],
 		listPracticesFavorite: [],
+		colorDor: "#FFF",
 	},
 	builder => {
 		builder.addCase(Actions.initialization.fulfilled, (state, { payload }) => {
@@ -73,13 +75,16 @@ export default createReducer<PracticeState>(
 		builder.addCase(Actions.removeFavoritePractice.fulfilled, (state, { payload }) => {
 			state.listPracticesFavorite = [...state.listPracticesFavorite.filter(({ id }) => payload.id !== id)];
 		});
-		builder.addCase(Actions.signOutAccount.fulfilled, (state) => {
+		builder.addCase(Actions.signOutAccount.fulfilled, state => {
 			state.listPracticesListened = [];
-state.listPracticesFavorite = [];
-state.recommendationPracticeToDay = undefined;
-		} )
+			state.listPracticesFavorite = [];
+			state.recommendationPracticeToDay = undefined;
+		});
 		builder.addCase(Actions.getPracticeDay.fulfilled, (state, { payload }) => {
 			if (payload !== null) state.recommendationPracticeToDay = payload;
-		})
+		});
+		builder.addCase(Actions.changeColorDot, (state, { payload }) => {
+			state.colorDor = payload;
+		});
 	}
 );

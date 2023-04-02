@@ -313,6 +313,9 @@ const RootRoutes: FC = () => {
 						name={"PlayerMeditationDot"}
 						component={Screens.PlayerMeditationDot}
 						options={{ title: i18n.t("8106b051-caea-44ff-a001-8636d3596275") }}
+						initialParams={{
+							color: "#FFF",
+						}}
 					/>
 					<RootNavigation.Screen
 						name={"NoExitMeditation"}
@@ -347,6 +350,11 @@ const RootRoutes: FC = () => {
 					<RootNavigation.Screen
 						name={"ConfirmationSignOut"}
 						component={Screens.ConfirmationSignOut}
+						options={{ presentation: "transparentModal", headerShown: false }}
+					/>
+					<RootNavigation.Screen
+						name={"ChangeColorDot"}
+						component={Screens.ChangeColorDot}
 						options={{ presentation: "transparentModal", headerShown: false }}
 					/>
 				</>
