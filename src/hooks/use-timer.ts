@@ -1,6 +1,6 @@
 /** @format */
 import React from "react";
-import { InteractionManager, AppState } from "react-native";
+import { AppState, InteractionManager } from "react-native";
 
 const timeUpdate = 100;
 
@@ -54,14 +54,23 @@ const useTimer = (maxMilliseconds: number, onFinish: () => void) => {
 	const edit = (update_value: number) => {
 		clearIntervalDecorator();
 		TimerPromise.current?.cancel();
-		setCurrentMilliseconds(_previous => update_value);
+		setCurrentMilliseconds(_previous => {
+			if (update_value <= 0) return 0;
+			if (update_value >= maxMilliseconds) return maxMilliseconds;
+			return maxMilliseconds;
+		});
 	};
 
 	React.useEffect(() => {
 		const subscribe = AppState.addEventListener("change", state => {
 			if (state === "active" && timeStartBackgroundApplication.current !== undefined) {
 				const deltaTime = Date.now() - timeStartBackgroundApplication.current.getTime();
-				setCurrentMilliseconds(previousTime => (previousTime += deltaTime));
+				setCurrentMilliseconds(previousTime => {
+					const time = previousTime + deltaTime;
+					if (time <= 0) return 0;
+					if (time >= maxMilliseconds) return maxMilliseconds;
+					return maxMilliseconds;
+				});
 				play();
 				timeStartBackgroundApplication.current = undefined;
 			} else if (state === "background" && cancelInterval.current !== undefined) {
