@@ -43,6 +43,12 @@ function generateConfig(): ExpoConfig {
 				},
 			},
 		],
+		[
+			"@config-plugins/ffmpeg-kit-react-native",
+			{
+				package: "full",
+			},
+		],
 	];
 	// if (process.env.APP_VARIANT === "dev") plugins.push("expo-community-flipper")
 	return {

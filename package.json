@@ -1,6 +1,6 @@
 {
 	"name": "dmd-meditation",
-	"version": "0.2.25",
+	"version": "1.0.0",
 	"scripts": {
 		"start": "expo start --dev-client --force-manifest-type=classic",
 		"build Dev": "eas build --platform android --profile development",
@@ -76,6 +76,7 @@
 		"@babel/core": "^7.19.3",
 		"@babel/preset-env": "^7.19.3",
 		"@babel/preset-typescript": "^7.18.6",
+		"@config-plugins/ffmpeg-kit-react-native": "^5.0.0",
 		"@expo/eas-build-job": "^0.2.102",
 		"@types/babel__preset-env": "^7",
 		"@types/react": "~18.0.24",

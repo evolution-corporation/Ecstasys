@@ -1062,6 +1062,13 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
+"@config-plugins/ffmpeg-kit-react-native@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@config-plugins/ffmpeg-kit-react-native/-/ffmpeg-kit-react-native-5.0.0.tgz#dadd469873bbd499f4cc69a102a92ddbafb7ce84"
+  integrity sha512-E6s459YlF02qH11z7HkHjOvt7xDuycuN6qzrxoGMq3l+qGJ9IAlrxzy7QXjnSW91Un2XnuAvl+8FshJJRVelaQ==
+  dependencies:
+    semver "^7.3.5"
+
 "@egjs/hammerjs@^2.0.17":
   version "2.0.17"
   resolved "https://registry.yarnpkg.com/@egjs/hammerjs/-/hammerjs-2.0.17.tgz#5dc02af75a6a06e4c2db0202cae38c9263895124"
