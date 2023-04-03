@@ -166,7 +166,7 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 					</View>
 				}
 				onFunctionGetPaddingTop={getPaddingTop => {
-					setFVar(getPaddingTop);
+					if (fVar === 0) setFVar(getPaddingTop);
 				}}
 			>
 				<FlatList
