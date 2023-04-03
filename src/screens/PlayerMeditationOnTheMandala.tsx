@@ -116,22 +116,29 @@ const PlayerMeditationOnTheMandala: RootScreenProps<"PlayerMeditationOnTheMandal
 	return (
 		<View style={styles.background}>
 			<Pressable style={{ flex: 1 }} onPress={() => setHiddenUI(prevState => !prevState)}>
-				<Pressable
-					onPress={() => setIsRotateMandala(prevState => !prevState)}
+				<View
 					style={{
-						alignSelf: "center",
-						width: window.width - 40,
-						height: window.width - 40,
+						width: window.width,
+						height: window.height,
+						position: "absolute",
 						alignItems: "center",
 						justifyContent: "center",
-						position: "absolute",
-						bottom: "40%",
 					}}
 				>
-					<Animated.View style={styleMandala}>
-						<Image source={mandala} style={{ width: "100%", height: "100%" }} />
-					</Animated.View>
-				</Pressable>
+					<Pressable
+						onPress={() => setIsRotateMandala(prevState => !prevState)}
+						style={{
+							width: window.width - 40,
+							height: window.width - 40,
+							// alignItems: "center",
+							// justifyContent: "center",
+						}}
+					>
+						<Animated.View style={styleMandala}>
+							<Image source={mandala} style={{ width: "100%", height: "100%" }} />
+						</Animated.View>
+					</Pressable>
+				</View>
 				{!hiddenUI && (
 					<>
 						<Animated.View
