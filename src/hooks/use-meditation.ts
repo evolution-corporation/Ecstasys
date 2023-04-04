@@ -1,25 +1,8 @@
 /** @format */
 
 import React from "react";
-import { AVPlaybackSource, Audio } from "expo-av";
+import { Audio, AVPlaybackSource } from "expo-av";
 import * as Notification from "expo-notifications";
-import { Platform } from "react-native";
-
-const NotificationEndMeditation = () =>
-	Notification.scheduleNotificationAsync({
-		identifier: "EndMeditation",
-		content: {
-			title: "Медитация подошла к концу",
-			body: "Благодарим за уделенное время",
-			sound: "bells.wav",
-			vibrate: [1],
-			priority: Notification.AndroidNotificationPriority.MAX,
-		},
-		trigger: {
-			seconds: 1,
-			channelId: "endMeditation",
-		},
-	});
 
 const useMeditation = (
 	source: [AVPlaybackSource, AVPlaybackSource] | [AVPlaybackSource],
@@ -146,11 +129,7 @@ const useMeditation = (
 			if (audioList.length === 1) {
 				const status = await audioList[0].getStatusAsync();
 				if (!status.isLoaded) await audioList[0].loadAsync(Array.isArray(sourceFix) ? sourceFix[0] : sourceFix, {});
-				audioList[0].setOnPlaybackStatusUpdate(statusOfSubscribe => {
-					if (statusOfSubscribe.isLoaded && statusOfSubscribe.didJustFinish) {
-						NotificationEndMeditation();
-					}
-				});
+
 				if (options?.autoPlay ?? false) audioList[0].playAsync();
 			} else if (audioList.length === 2 && Array.isArray(sourceFix)) {
 				const statusFirst = await audioList[0].getStatusAsync();
@@ -163,11 +142,7 @@ const useMeditation = (
 						audioList[1].playAsync();
 					}
 				});
-				audioList[1].setOnPlaybackStatusUpdate(statusOfSubscribe => {
-					if (statusOfSubscribe.isLoaded && statusOfSubscribe.didJustFinish) {
-						NotificationEndMeditation();
-					}
-				});
+
 				if (options?.autoPlay ?? false) {
 					audioList[0].playAsync();
 					audioList[1].playAsync();

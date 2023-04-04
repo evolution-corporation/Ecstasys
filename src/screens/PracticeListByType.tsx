@@ -25,13 +25,16 @@ import useIsActivateSubscribe from "src/hooks/use-is-activate-subscribe";
 import CarouselIcon from "assets/icons/CarouselIcon.svg";
 import TreeLine from "assets/icons/bigThreeLine.svg";
 import { useDimensions } from "@react-native-community/hooks";
+import Lock2 from "assets/icons/Interface-Lock.svg";
 
 var height = Dimensions.get("window").height;
+
+type dataList = (State.Practice | State.BasePractice) & { isPermission: boolean };
 
 const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navigation }) => {
 	const { typePractices } = route.params;
 	const selectedPracticeId = React.useRef<string | null>(null);
-	const [practiceList, setPracticeList] = useState<State.Practice[]>([]);
+	const [practiceList, setPracticeList] = useState<dataList[]>([]);
 	const dispatch = useAppDispatch();
 	const opacityButton = useSharedValue(1);
 	const aStyle = {
@@ -70,7 +73,7 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 				]);
 			} else {
 				//! Experimental
-				const listPractice: State.Practice[] = [
+				const listPractice: dataList[] = [
 					{ ...MeditationOnTheNose, isPermission: true },
 					{ ...PlayerMeditationDot, isPermission: true },
 					{ ...MeditationOnTheMandala, isPermission: true },
@@ -93,11 +96,13 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 				const practice = Object.fromEntries(
 					Object.entries(practiceList[practiceIndex]).filter(([key, value]) => key !== "isPermission")
 				);
-				dispatch(actions.setPractice(practiceList[practiceIndex]));
+				const cPractice = practiceList[practiceIndex];
+
+				dispatch(actions.setPractice(cPractice));
 				if (typePractices === PracticesMeditation.BASIC) {
-					navigation.navigate("SelectTimeForBase", { selectedPractice: practiceList[practiceIndex] });
+					navigation.navigate("SelectTimeForBase", { selectedPractice: cPractice });
 				} else {
-					navigation.navigate("SelectTimeForRelax", { selectedPractice: practiceList[practiceIndex] });
+					navigation.navigate("SelectTimeForRelax", { selectedPractice: cPractice });
 				}
 			} else {
 				navigation.navigate("ByMaySubscribe");
@@ -181,10 +186,23 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 							}}
 							onPress={() => onClick(item.id)}
 						>
-							<Image
-								source={{ uri: item.image }}
-								style={{ width: 90, height: 90, borderRadius: 10, marginRight: 26 }}
-							/>
+							<View style={{ width: 90, height: 90, borderRadius: 10, marginRight: 26, overflow: "hidden" }}>
+								<Image source={{ uri: item.image }} style={{ width: "100%", height: "100%" }} />
+								{!item.isPermission && (
+									<View
+										style={{
+											width: "100%",
+											height: "100%",
+											position: "absolute",
+											justifyContent: "center",
+											backgroundColor: "rgba(0, 0,0,0.5)",
+											alignItems: "center",
+										}}
+									>
+										<Lock2 />
+									</View>
+								)}
+							</View>
 							<View style={{ flex: 1 }}>
 								<Text style={{ color: "#3D3D3D", fontSize: 16, ...Tools.gStyle.font("700"), marginBottom: 7 }}>
 									{item.name}

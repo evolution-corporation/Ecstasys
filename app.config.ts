@@ -82,7 +82,10 @@ function generateConfig(): ExpoConfig {
 			bundleIdentifier: appUrl.replace("+", "-"),
 			buildNumber: versionCode.toString(),
 			infoPlist: {
-				UIBackgroundModes: ["audio"],
+				UIBackgroundModes: [
+					"audio",
+					// "notificationController"
+				],
 			},
 			usesAppleSignIn: true,
 		},

@@ -12,7 +12,7 @@ import useTimer from "src/hooks/use-timer";
 import { actions, useAppDispatch } from "~store";
 
 import { Breathing, RootScreenProps } from "~types";
-import { meditationIsLisent, MeditationIsLisent } from "../api/requests";
+import { meditationIsLisent } from "../api/requests";
 import { AVPlaybackSource } from "expo-av";
 
 const PlayerForPractice: RootScreenProps<"PlayerForPractice"> = ({ navigation, route }) => {
