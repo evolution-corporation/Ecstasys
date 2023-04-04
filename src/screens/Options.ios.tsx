@@ -2,7 +2,7 @@
 import i18n from "~i18n";
 
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Switch, Pressable, Alert } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import * as MailComposer from "expo-mail-composer";
 
 import gStyles from "~styles";
@@ -13,9 +13,6 @@ import LogOut from "assets/icons/Log_Out.svg";
 import ShoppingBag from "assets/icons/Interface-Shopping_Bag_01.svg";
 import { actions, useAppDispatch, useAppSelector } from "~store";
 import { RootScreenProps } from "~types";
-import { StatusBar } from "expo-status-bar";
-import { version } from "package.json";
-import DefaultText from "~components/Text/default-text";
 import { adapty } from "react-native-adapty";
 import Trash from "assets/icons/Interface-Trash_Full.svg";
 import { deleteUSer } from "src/api/requests";
@@ -86,7 +83,7 @@ const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 					alignItems: "center",
 				}}
 			>
-				<View style={{ justifyContent: "flex-start" }}>
+				<View style={{ justifyContent: "flex-start", width: "100%" }}>
 					<TouchableOpacity
 						style={styles.button}
 						onPress={() => {

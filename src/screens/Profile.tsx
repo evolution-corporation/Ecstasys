@@ -85,6 +85,7 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 						paddingHorizontal: 20,
 						marginBottom: 15,
 						height: 54,
+						backgroundColor: "red",
 					}}
 				>
 					<Text
@@ -92,8 +93,7 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 							...gStyle.styles.header,
 							color: "#FFFFFF",
 							width: "auto",
-							height: "100%",
-							textAlignVertical: "center",
+							alignSelf: "center",
 						}}
 					>
 						Профиль

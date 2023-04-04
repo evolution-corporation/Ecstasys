@@ -125,7 +125,7 @@ const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigatio
 										onChange={percent => {
 											setScaleDot(20 + 150 * percent);
 										}}
-										initValue={(scaleDot - 40) / 80}
+										initValue={(scaleDot - 20) / 150}
 									/>
 								</Pressable>
 							</View>
