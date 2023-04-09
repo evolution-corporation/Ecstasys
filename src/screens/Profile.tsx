@@ -70,7 +70,7 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 	const insets = useSafeAreaInsets();
 
 	return (
-		<View style={{ flex: 1, paddingTop: insets.top }}>
+		<View style={{ flex: 1, paddingTop: insets.top, backgroundColor: "#9765A8" }}>
 			<ScrollView
 				style={{ flex: 1, backgroundColor: "#9765A8" }}
 				contentContainerStyle={{ minHeight: window.height }}
@@ -85,7 +85,6 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 						paddingHorizontal: 20,
 						marginBottom: 15,
 						height: 54,
-						backgroundColor: "red",
 					}}
 				>
 					<Text

@@ -1,25 +1,18 @@
 /** @format */
 
-import React, { ElementRef, useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, Image, View, Pressable } from "react-native";
+import React, { ElementRef, useRef } from "react";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import i18n from "~i18n";
 
 import { TimeLine } from "~components/dump";
 import Tools from "~core";
-import Animated, {
-	interpolate,
-	SharedValue,
-	useAnimatedStyle,
-	useSharedValue,
-	withTiming,
-} from "react-native-reanimated";
-import { useHeaderHeight } from "@react-navigation/elements";
 
 import { BackgroundSound, playFragmentMeditationBackground } from "src/models/practices";
 import { RootScreenProps } from "~types";
 import { actions, useAppDispatch, useAppSelector } from "~store";
 import { useDimensions } from "@react-native-community/hooks";
-import {useSafeAreaInsets} from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Headphones from "assets/icons/iPhone 11 Pro-Media-Headphones.svg";
 
 const SelectBackgroundSound: RootScreenProps<"SelectBackgroundSound"> = ({ navigation, route }) => {
 	const { backgroundImage } = route.params;
@@ -80,21 +73,37 @@ const SelectBackgroundSound: RootScreenProps<"SelectBackgroundSound"> = ({ navig
 										: null,
 								]}
 							/>
-								<Text style={styles.nameBackgroundSound}>{i18n.t(item[1].translate)}</Text>
+							<Text style={styles.nameBackgroundSound}>{i18n.t(item[1].translate)}</Text>
 						</Pressable>
 					))}
 				</View>
-				<TimeLine
-					ref={TimeLineReference}
-					initValue={volume}
-					onChange={percent => {
-						if (changeVolumeCancel.current) changeVolumeCancel.current();
-						const lastId = setTimeout(() => dispatch(actions.editBackgroundVolume(percent)), 100);
-						changeVolumeCancel.current = () => {
-							clearTimeout(lastId);
-						};
-					}}
-				/>
+				<View style={{ transform: [{ translateY: -30 }], paddingHorizontal: 5 }}>
+					<View
+						style={{
+							flexDirection: "row",
+							justifyContent: "flex-start",
+							width: "100%",
+							alignItems: "center",
+							paddingLeft: 2.5,
+						}}
+					>
+						<Headphones />
+						<Text style={{ color: "#FFF", ...Tools.gStyle.font("400"), fontSize: 14, marginLeft: 7 }}>
+							Громкость музыки
+						</Text>
+					</View>
+					<TimeLine
+						ref={TimeLineReference}
+						initValue={volume}
+						onChange={percent => {
+							if (changeVolumeCancel.current) changeVolumeCancel.current();
+							const lastId = setTimeout(() => dispatch(actions.editBackgroundVolume(percent)), 100);
+							changeVolumeCancel.current = () => {
+								clearTimeout(lastId);
+							};
+						}}
+					/>
+				</View>
 			</View>
 		</View>
 	);
@@ -130,7 +139,7 @@ const styles = StyleSheet.create({
 		fontSize: 11,
 		color: "#FFFFFF",
 		textAlign: "center",
-		width: '100%',
+		width: "100%",
 		textAlignVertical: "center",
 		...Tools.gStyle.font("500"),
 	},

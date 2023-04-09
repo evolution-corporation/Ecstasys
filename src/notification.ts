@@ -1,7 +1,7 @@
 /** @format */
 
 import * as Notifications from "expo-notifications";
-
+// import * as TaskManager from "expo-task-manager";
 import { Platform } from "react-native";
 
 if (Platform.OS === "android") {
@@ -18,7 +18,7 @@ if (Platform.OS === "android") {
 	});
 }
 
-// const NotificationControllerTask = "notificationController";
+// const NotificationControllerTask = "remote-notification";
 //
 // TaskManager.defineTask(NotificationControllerTask, ({ error, executionInfo, data }) => {
 // 	console.log(data);

@@ -86,7 +86,6 @@ const useTimer = (maxMilliseconds: number, onFinish: () => void) => {
 	const notificationID = useRef<string | null>(null);
 
 	const getEndTime = () => {
-		console.log(maxMilliseconds, fixTime.current);
 		return new Date(Date.now() + maxMilliseconds - fixTime.current);
 	};
 
@@ -99,7 +98,7 @@ const useTimer = (maxMilliseconds: number, onFinish: () => void) => {
 					const time = previousTime + deltaTime;
 					if (time <= 0) return 0;
 					if (time >= maxMilliseconds) return maxMilliseconds;
-					return previousTime;
+					return time;
 				});
 				play();
 				timeStartBackgroundApplication.current = undefined;

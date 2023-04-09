@@ -84,7 +84,7 @@ function generateConfig(): ExpoConfig {
 			infoPlist: {
 				UIBackgroundModes: [
 					"audio",
-					// "notificationController"
+					// "remote-notification"
 				],
 			},
 			usesAppleSignIn: true,
