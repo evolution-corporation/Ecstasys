@@ -318,6 +318,7 @@ export type RootStackList = {
 	NoHaveInternet: undefined;
 	ExperimentalConfig: undefined;
 	OurNeedYourNotification: undefined;
+	ChangeColorDot: undefined;
 };
 
 export type RootScreenProps<T extends keyof RootStackList> = FC<NativeStackScreenProps<RootStackList, T>>;

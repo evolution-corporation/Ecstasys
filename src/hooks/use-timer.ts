@@ -1,14 +1,36 @@
 /** @format */
-import React from "react";
-import { InteractionManager, AppState } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { AppState, InteractionManager } from "react-native";
+import * as Notification from "expo-notifications";
 
 const timeUpdate = 100;
+
+const NotificationEndMeditation = (date: Date) =>
+	Notification.scheduleNotificationAsync({
+		identifier: "EndMeditation",
+		content: {
+			title: "Медитация подошла к концу",
+			body: "Благодарим за уделенное время",
+			sound: "bells.wav",
+			vibrate: [1],
+			priority: Notification.AndroidNotificationPriority.MAX,
+		},
+		trigger: {
+			date,
+			channelId: "endMeditation",
+		},
+	});
 
 const useTimer = (maxMilliseconds: number, onFinish: () => void) => {
 	const [currentMilliseconds, setCurrentMilliseconds] = React.useState(0);
 	const TimerPromise = React.useRef<ReturnType<typeof InteractionManager.runAfterInteractions>>();
 	const cancelInterval = React.useRef<NodeJS.Timer>();
 	const timeStartBackgroundApplication = React.useRef<Date>();
+	const fixTime = useRef<number>(0);
+
+	useEffect(() => {
+		fixTime.current = Math.floor(currentMilliseconds);
+	}, [currentMilliseconds]);
 
 	const clearIntervalDecorator = () => {
 		if (cancelInterval.current !== undefined) clearInterval(cancelInterval.current);
@@ -54,18 +76,38 @@ const useTimer = (maxMilliseconds: number, onFinish: () => void) => {
 	const edit = (update_value: number) => {
 		clearIntervalDecorator();
 		TimerPromise.current?.cancel();
-		setCurrentMilliseconds(_previous => update_value);
+		setCurrentMilliseconds(_previous => {
+			if (update_value <= 0) return 0;
+			if (update_value >= maxMilliseconds) return maxMilliseconds;
+			return update_value;
+		});
+	};
+
+	const notificationID = useRef<string | null>(null);
+
+	const getEndTime = () => {
+		return new Date(Date.now() + maxMilliseconds - fixTime.current);
 	};
 
 	React.useEffect(() => {
 		const subscribe = AppState.addEventListener("change", state => {
 			if (state === "active" && timeStartBackgroundApplication.current !== undefined) {
+				if (notificationID.current !== null) Notification.cancelScheduledNotificationAsync(notificationID.current);
 				const deltaTime = Date.now() - timeStartBackgroundApplication.current.getTime();
-				setCurrentMilliseconds(previousTime => (previousTime += deltaTime));
+				setCurrentMilliseconds(previousTime => {
+					const time = previousTime + deltaTime;
+					if (time <= 0) return 0;
+					if (time >= maxMilliseconds) return maxMilliseconds;
+					return time;
+				});
 				play();
 				timeStartBackgroundApplication.current = undefined;
 			} else if (state === "background" && cancelInterval.current !== undefined) {
 				timeStartBackgroundApplication.current = new Date();
+
+				const endMeditation = getEndTime();
+				NotificationEndMeditation(endMeditation).then(id => (notificationID.current = id));
+
 				pause();
 			}
 		});

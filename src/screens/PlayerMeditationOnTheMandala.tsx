@@ -1,19 +1,24 @@
 /** @format */
 
-import React, { useCallback, useEffect, useRef } from "react";
-import { Image, StyleSheet, View, Text, FlatList, Pressable, ImageSourcePropType, Platform } from "react-native";
-import Animated, { Easing, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
+import React, { useEffect, useState } from "react";
+import { FlatList, Image, ImageSourcePropType, Pressable, StyleSheet, Text, View } from "react-native";
+import Animated, {
+	cancelAnimation,
+	Easing,
+	FadeIn,
+	FadeOut,
+	useAnimatedStyle,
+	useSharedValue,
+	withRepeat,
+	withTiming,
+} from "react-native-reanimated";
 import * as Notifications from "expo-notifications";
 import { useKeepAwake } from "expo-keep-awake";
 
 import Tools from "~core";
+import core from "~core";
 
 import { RootScreenProps } from "~types";
-import i18n from "~i18n";
-
-import core from "~core";
-import { useAppSelector } from "~store";
-import { useFocusEffect } from "@react-navigation/native";
 
 import { useDimensions } from "@react-native-community/hooks";
 import useIsActivateSubscribe from "src/hooks/use-is-activate-subscribe";
@@ -23,6 +28,7 @@ import useTimer from "src/hooks/use-timer";
 import BackgroundSoundButton from "~components/dump/background-sound-button";
 
 import LockIcon from "assets/icons/Lock.svg";
+import i18n from "~i18n";
 
 Notifications.setNotificationHandler({
 	handleNotification: async () => ({
@@ -39,7 +45,7 @@ const PlayerMeditationOnTheMandala: RootScreenProps<"PlayerMeditationOnTheMandal
 		require("assets/BaseMeditaionAssets/Mandala/Base.png")
 	);
 
-	const [isShowTime, setIsShowTime] = React.useState(true);
+	const [hiddenUI, setHiddenUI] = React.useState(false);
 
 	const isSubscribe = useIsActivateSubscribe();
 
@@ -72,98 +78,132 @@ const PlayerMeditationOnTheMandala: RootScreenProps<"PlayerMeditationOnTheMandal
 	const rotateMandala = useSharedValue("0deg");
 	useKeepAwake();
 	const styleMandala = useAnimatedStyle(() => ({
-		transform: [{ rotate: rotateMandala.value }],
+		transform: [{ rotateZ: rotateMandala.value }],
 		position: "absolute",
 		width: "100%",
 		height: "100%",
 	}));
 
-	useFocusEffect(
-		useCallback(() => {
-			const circlingMandala = () => {
-				rotateMandala.value = withRepeat(
-					withTiming("36000deg", { duration: 3600000, easing: Easing.linear }),
-					-1,
-					false
-				);
-			};
-			circlingMandala();
-		}, [])
-	);
+	const [isRotateMandala, setIsRotateMandala] = useState<boolean>(true);
+
+	const startRotateMandala = () => {
+		const nextValue = Number(rotateMandala.value.replace("deg", ""));
+		rotateMandala.value = withRepeat(
+			withTiming(`${nextValue + 360}deg`, { duration: 60000, easing: Easing.linear }),
+			-1,
+			false
+		);
+	};
+
+	const stopRotateMandala = () => {
+		cancelAnimation(rotateMandala);
+	};
+
+	useEffect(() => {
+		if (isRotateMandala) {
+			startRotateMandala();
+		} else {
+			stopRotateMandala();
+		}
+	}, [isRotateMandala]);
+
 	const { window } = useDimensions();
+
+	useEffect(() => {
+		navigation.setOptions({ headerShown: !hiddenUI });
+	}, [hiddenUI]);
+
 	return (
 		<View style={styles.background}>
-			<Pressable
-				onPress={() => setIsShowTime(prevState => !prevState)}
-				style={{
-					alignSelf: "center",
-					width: window.width - 40,
-					height: window.width - 40,
-					alignItems: "center",
-					justifyContent: "center",
-					position: "absolute",
-					bottom: "40%",
-				}}
-			>
-				<Animated.View style={styleMandala}>
-					<Image source={mandala} style={{ width: "100%", height: "100%" }} />
-				</Animated.View>
-				{isShowTime && (
-					<View style={styles.timesCodeBox}>
-						<Text style={styles.timeCode} key={"current"}>
-							{i18n.strftime(new Date(timer.currentMilliseconds), "%M:%S")}
-						</Text>
-					</View>
+			<Pressable style={{ flex: 1 }} onPress={() => setHiddenUI(prevState => !prevState)}>
+				<View
+					style={{
+						width: window.width,
+						height: window.height,
+						position: "absolute",
+						alignItems: "center",
+						justifyContent: "center",
+					}}
+				>
+					<Pressable
+						onPress={() => setIsRotateMandala(prevState => !prevState)}
+						style={{
+							width: window.width - 40,
+							height: window.width - 40,
+							// alignItems: "center",
+							// justifyContent: "center",
+						}}
+					>
+						<Animated.View style={styleMandala}>
+							<Image source={mandala} style={{ width: "100%", height: "100%" }} />
+						</Animated.View>
+					</Pressable>
+				</View>
+				{!hiddenUI && (
+					<>
+						<Animated.View
+							style={{ width: window.width, height: window.height, justifyContent: "center", alignItems: "center" }}
+							entering={FadeIn}
+							exiting={FadeOut}
+						>
+							<View style={styles.timesCodeBox}>
+								<Text style={styles.timeCode} key={"current"}>
+									{i18n.strftime(new Date(timer.currentMilliseconds), "%M:%S")}
+								</Text>
+							</View>
+						</Animated.View>
+						<Animated.View style={[styles.timeInfoBox]} entering={FadeIn} exiting={FadeOut}>
+							<FlatList
+								data={[
+									{ name: "Base", uri: require("assets/BaseMeditaionAssets/Mandala/Base.png") },
+									{ name: "Premium1", uri: require("assets/BaseMeditaionAssets/Mandala/Premium1.png") },
+									{ name: "Premium2", uri: require("assets/BaseMeditaionAssets/Mandala/Premium2.png") },
+									{ name: "Premium3", uri: require("assets/BaseMeditaionAssets/Mandala/Premium3.png") },
+									{ name: "Premium4", uri: require("assets/BaseMeditaionAssets/Mandala/Premium4.png") },
+									{ name: "Premium4", uri: require("assets/BaseMeditaionAssets/Mandala/Premium5.png") },
+								]}
+								renderItem={({ item }) => (
+									<Pressable
+										onPress={() => {
+											if (item.name === "Base" || isSubscribe) {
+												setMandala(item.uri);
+											} else {
+												navigation.navigate("ByMaySubscribe");
+											}
+										}}
+									>
+										<Image source={item.uri} style={{ width: 70, height: 70 }} />
+										{item.name === "Base" || isSubscribe ? null : (
+											<View
+												style={{
+													width: 70,
+													height: 70,
+													justifyContent: "center",
+													alignItems: "center",
+													position: "absolute",
+													backgroundColor: "rgba(0,0,0,0.5)",
+												}}
+											>
+												<View style={{ transform: [{ scale: 0.6 }] }}>
+													<LockIcon />
+												</View>
+											</View>
+										)}
+									</Pressable>
+								)}
+								horizontal
+								keyExtractor={item => item.name}
+								style={{ left: 0, right: 0, marginHorizontal: -20, marginBottom: 30 }}
+								ItemSeparatorComponent={() => <View style={{ width: 29 }} />}
+								contentContainerStyle={{ paddingHorizontal: 20 }}
+							/>
+							<View style={{ alignSelf: "flex-start", marginTop: 17 }}>
+								<BackgroundSoundButton image={undefined} name={backgroundSound.name} />
+							</View>
+						</Animated.View>
+					</>
 				)}
 			</Pressable>
-			<View style={[styles.timeInfoBox]}>
-				<FlatList
-					data={[
-						{ name: "Base", uri: require("assets/BaseMeditaionAssets/Mandala/Base.png") },
-						{ name: "Premium1", uri: require("assets/BaseMeditaionAssets/Mandala/Premium1.png") },
-						{ name: "Premium2", uri: require("assets/BaseMeditaionAssets/Mandala/Premium2.png") },
-						{ name: "Premium3", uri: require("assets/BaseMeditaionAssets/Mandala/Premium3.png") },
-					]}
-					renderItem={({ item }) => (
-						<Pressable
-							onPress={() => {
-								if (item.name === "Base" || isSubscribe) {
-									setMandala(item.uri);
-								} else {
-									navigation.navigate("ByMaySubscribe");
-								}
-							}}
-						>
-							<Image source={item.uri} style={{ width: 70, height: 70 }} />
-							{item.name === "Base" || isSubscribe ? null : (
-								<View
-									style={{
-										width: 70,
-										height: 70,
-										justifyContent: "center",
-										alignItems: "center",
-										position: "absolute",
-										backgroundColor: "rgba(0,0,0,0.5)"
-									}}
-								>
-									<View style={{ transform: [{ scale: 0.6 }] }}>
-									<LockIcon />
-									</View>
-									
-								</View>
-							)}
-						</Pressable>
-					)}
-					horizontal
-					keyExtractor={item => item.name}
-					style={{ left: 0, right: 0, marginHorizontal: -20, marginBottom: 30 }}
-					ItemSeparatorComponent={() => <View style={{ width: 29 }} />}
-					contentContainerStyle={{ paddingHorizontal: 20 }}
-				/>
-				<View style={{ alignSelf: "flex-start", marginTop: 17 }}>
-					<BackgroundSoundButton image={undefined} name={backgroundSound.name} />
-				</View>
-			</View>
 		</View>
 	);
 };
@@ -175,8 +215,6 @@ const styles = StyleSheet.create({
 		backgroundColor: "#000000",
 		flex: 1,
 		justifyContent: "space-between",
-		paddingHorizontal: 20,
-		paddingBottom: 37,
 		width: "100%",
 		height: "100%",
 		position: "absolute",
@@ -191,6 +229,7 @@ const styles = StyleSheet.create({
 		alignSelf: "center",
 		bottom: 28,
 		alignItems: "flex-start",
+		paddingHorizontal: 20,
 	},
 	timesCodeBox: {
 		width: 196,

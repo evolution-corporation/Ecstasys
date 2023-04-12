@@ -19,6 +19,7 @@ import useTimer from "src/hooks/use-timer";
 import BackgroundSoundButton from "~components/dump/background-sound-button";
 import { AVPlaybackSource, ResizeMode, Video } from "expo-av";
 import LockIcon from "~assets/icons/Lock.svg";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 Notifications.setNotificationHandler({
 	handleNotification: async () => ({
@@ -33,7 +34,7 @@ const PlayerMeditationOnTheCandle: RootScreenProps<"PlayerMeditationOnTheCandle"
 
 	const [candle, setCandle] = React.useState<AVPlaybackSource>(require("~assets/Candle/Candle1.mp4"));
 
-	const [isShowTime, setIsShowTime] = React.useState(true);
+	const [hiddenUI, setHiddenUI] = React.useState(false);
 
 	const isSubscribe = useIsActivateSubscribe();
 
@@ -67,93 +68,113 @@ const PlayerMeditationOnTheCandle: RootScreenProps<"PlayerMeditationOnTheCandle"
 	useKeepAwake();
 
 	const { window } = useDimensions();
+
+	useEffect(() => {
+		navigation.setOptions({ headerShown: !hiddenUI });
+	}, [hiddenUI]);
+
 	return (
 		<View style={styles.background}>
-			<Pressable
-				onPress={() => setIsShowTime(prevState => !prevState)}
-				style={{
-					alignSelf: "center",
-					width: window.width - 40,
-					height: window.width - 40,
-					alignItems: "center",
-					justifyContent: "center",
-					position: "absolute",
-					bottom: "40%",
-				}}
-			>
-				<Video ref={video} style={styles.video} source={candle} resizeMode={ResizeMode.CONTAIN} isLooping />
+			<Pressable onPress={() => setHiddenUI(prevState => !prevState)} style={{ flex: 1 }}>
+				<View
+					style={{
+						alignSelf: "center",
+						width: window.width - 40,
+						height: window.width - 40,
+						alignItems: "center",
+						justifyContent: "center",
+						position: "absolute",
+						bottom: "30%",
+					}}
+				>
+					<Video ref={video} style={styles.video} source={candle} resizeMode={ResizeMode.CONTAIN} isLooping />
+				</View>
 
-				{isShowTime && (
-					<View style={styles.timesCodeBox}>
-						<Text style={styles.timeCode} key={"current"}>
-							{i18n.strftime(new Date(timer.currentMilliseconds), "%M:%S")}
-						</Text>
-					</View>
-				)}
-			</Pressable>
-			<View style={[styles.timeInfoBox]}>
-				<FlatList
-					data={[
-						{
-							name: "Base",
-							uri: require("../../assets/Candle/Candle1.png"),
-							video: require("../../assets/Candle/Candle1.mp4"),
-						},
-						{
-							name: "Premium1",
-							uri: require("../../assets/Candle/Candle2.png"),
-							video: require("../../assets/Candle/Candle2.mp4"),
-						},
-						{
-							name: "Premium2",
-							uri: require("../../assets/Candle/Candle3.png"),
-							video: require("../../assets/Candle/Candle3.mp4"),
-						},
-						{
-							name: "Premium3",
-							uri: require("../../assets/Candle/Candle4.png"),
-							video: require("../../assets/Candle/Candle4.mp4"),
-						},
-					]}
-					renderItem={({ item }) => (
-						<Pressable
-							onPress={() => {
-								if (item.name === "Base" || isSubscribe) {
-									setCandle(item.video);
-								} else {
-									navigation.navigate("ByMaySubscribe");
-								}
+				{!hiddenUI && (
+					<>
+						<Animated.View
+							entering={FadeIn}
+							exiting={FadeOut}
+							style={{
+								width: window.width,
+								height: window.height,
+								justifyContent: "center",
+								alignItems: "center",
+								position: "absolute",
 							}}
 						>
-							<Image source={item.uri} style={{ width: 70, height: 70 }} />
-							{item.name === "Base" || isSubscribe ? null : (
-								<View
-									style={{
-										width: 70,
-										height: 70,
-										justifyContent: "center",
-										alignItems: "center",
-										position: "absolute",
-										backgroundColor: "rgba(0,0,0,0.5)",
-									}}
-								>
-									<View style={{ transform: [{ scale: 0.6 }] }}>
-										<LockIcon />
-									</View>
-								</View>
-							)}
-						</Pressable>
-					)}
-					horizontal
-					keyExtractor={item => item.name}
-					style={{ left: 0, right: 0, marginHorizontal: -20, marginBottom: 30 }}
-					ItemSeparatorComponent={() => <View style={{ width: 29 }} />}
-					contentContainerStyle={{ paddingHorizontal: 20 }}
-				/>
-				<View style={{ alignSelf: "flex-start", marginTop: 17 }}>
-					<BackgroundSoundButton image={undefined} name={backgroundSound.name} />
-				</View>
-			</View>
+							<View style={styles.timesCodeBox}>
+								<Text style={styles.timeCode} key={"current"}>
+									{i18n.strftime(new Date(timer.currentMilliseconds), "%M:%S")}
+								</Text>
+							</View>
+						</Animated.View>
+						<Animated.View style={[styles.timeInfoBox]} entering={FadeIn} exiting={FadeOut}>
+							<FlatList
+								data={[
+									{
+										name: "Base",
+										uri: require("../../assets/Candle/Candle1.png"),
+										video: require("../../assets/Candle/Candle1.mp4"),
+									},
+									{
+										name: "Premium1",
+										uri: require("../../assets/Candle/Candle2.png"),
+										video: require("../../assets/Candle/Candle2.mp4"),
+									},
+									{
+										name: "Premium2",
+										uri: require("../../assets/Candle/Candle3.png"),
+										video: require("../../assets/Candle/Candle3.mp4"),
+									},
+									{
+										name: "Premium3",
+										uri: require("../../assets/Candle/Candle4.png"),
+										video: require("../../assets/Candle/Candle4.mp4"),
+									},
+								]}
+								renderItem={({ item }) => (
+									<Pressable
+										onPress={() => {
+											if (item.name === "Base" || isSubscribe) {
+												setCandle(item.video);
+											} else {
+												navigation.navigate("ByMaySubscribe");
+											}
+										}}
+									>
+										<Image source={item.uri} style={{ width: 70, height: 70 }} />
+										{item.name === "Base" || isSubscribe ? null : (
+											<View
+												style={{
+													width: 70,
+													height: 70,
+													justifyContent: "center",
+													alignItems: "center",
+													position: "absolute",
+													backgroundColor: "rgba(0,0,0,0.5)",
+												}}
+											>
+												<View style={{ transform: [{ scale: 0.6 }] }}>
+													<LockIcon />
+												</View>
+											</View>
+										)}
+									</Pressable>
+								)}
+								horizontal
+								keyExtractor={item => item.name}
+								style={{ left: 0, right: 0, marginHorizontal: -20, marginBottom: 30 }}
+								ItemSeparatorComponent={() => <View style={{ width: 29 }} />}
+								contentContainerStyle={{ paddingHorizontal: 20 }}
+							/>
+							<View style={{ alignSelf: "flex-start" }}>
+								<BackgroundSoundButton image={undefined} name={backgroundSound.name} />
+							</View>
+						</Animated.View>
+					</>
+				)}
+			</Pressable>
 		</View>
 	);
 };
@@ -164,12 +185,6 @@ const styles = StyleSheet.create({
 	background: {
 		backgroundColor: "#000000",
 		flex: 1,
-		justifyContent: "space-between",
-		paddingHorizontal: 20,
-		paddingBottom: 37,
-		width: "100%",
-		height: "100%",
-		position: "absolute",
 	},
 	imageBackground: {
 		width: "100%",
@@ -181,6 +196,7 @@ const styles = StyleSheet.create({
 		alignSelf: "center",
 		bottom: 28,
 		alignItems: "flex-start",
+		paddingHorizontal: 20,
 	},
 	timesCodeBox: {
 		width: 196,

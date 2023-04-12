@@ -1,12 +1,12 @@
 /** @format */
 
 import React, { useState } from "react";
-import { Dimensions, StyleSheet, Text } from "react-native";
+import { Dimensions, FlatList, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 import Tools from "~core";
 import { PracticesMeditation, RootScreenProps, State } from "~types";
-import { CarouselPractices, ColorButton } from "~components/dump";
+import { CarouselPractices, ColorButton, IsFavorite } from "~components/dump";
 import { DoubleColorView } from "~components/containers";
 import i18n from "~i18n";
 import DescriptionPrentices from "assets/descriptionPrentices.json";
@@ -22,13 +22,19 @@ import {
 
 import * as Instruction from "src/instruction";
 import useIsActivateSubscribe from "src/hooks/use-is-activate-subscribe";
+import CarouselIcon from "assets/icons/CarouselIcon.svg";
+import TreeLine from "assets/icons/bigThreeLine.svg";
+import { useDimensions } from "@react-native-community/hooks";
+import Lock2 from "assets/icons/Interface-Lock.svg";
 
 var height = Dimensions.get("window").height;
+
+type dataList = (State.Practice | State.BasePractice) & { isPermission: boolean };
 
 const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navigation }) => {
 	const { typePractices } = route.params;
 	const selectedPracticeId = React.useRef<string | null>(null);
-	const [practiceList, setPracticeList] = useState<State.Practice[]>([]);
+	const [practiceList, setPracticeList] = useState<dataList[]>([]);
 	const dispatch = useAppDispatch();
 	const opacityButton = useSharedValue(1);
 	const aStyle = {
@@ -67,7 +73,7 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 				]);
 			} else {
 				//! Experimental
-				const listPractice: State.Practice[] = [
+				const listPractice: dataList[] = [
 					{ ...MeditationOnTheNose, isPermission: true },
 					{ ...PlayerMeditationDot, isPermission: true },
 					{ ...MeditationOnTheMandala, isPermission: true },
@@ -81,6 +87,8 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 		init();
 	}, [isSubscribe]);
 
+	const [typeShowScreen, setTypeShowScreen] = useState<"carousel" | "list">("list");
+
 	const onClick = (practiceId: string) => {
 		const practiceIndex = practiceList.findIndex(item => item.id === practiceId);
 		if (practiceIndex !== -1) {
@@ -88,24 +96,28 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 				const practice = Object.fromEntries(
 					Object.entries(practiceList[practiceIndex]).filter(([key, value]) => key !== "isPermission")
 				);
-				dispatch(actions.setPractice(practiceList[practiceIndex]));
+				const cPractice = practiceList[practiceIndex];
+
+				dispatch(actions.setPractice(cPractice));
 				if (typePractices === PracticesMeditation.BASIC) {
-					navigation.navigate("SelectTimeForBase", { selectedPractice: practiceList[practiceIndex] });
+					navigation.navigate("SelectTimeForBase", { selectedPractice: cPractice });
 				} else {
-					navigation.navigate("SelectTimeForRelax", { selectedPractice: practiceList[practiceIndex] });
+					navigation.navigate("SelectTimeForRelax", { selectedPractice: cPractice });
 				}
 			} else {
 				navigation.navigate("ByMaySubscribe");
 			}
 		}
 	};
-	return (
-		<DoubleColorView style={styles.background} heightViewPart={height / 2 - 100}>
+
+	const subHeader = (
+		<View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+			<View style={{ width: 50 }} />
 			<ColorButton
 				animationStyle={aStyle.button}
 				styleButton={styles.buttonInstruction}
 				styleText={styles.buttonTextInstruction}
-				colors={["#75348B", "#6A2382"]}
+				colors={["#fff", "#fff"]}
 				onPress={() => {
 					const index = practiceList.findIndex(item => item.id == selectedPracticeId.current);
 
@@ -126,6 +138,112 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 			>
 				{i18n.t("ce174d00-e4df-42f3-bb19-82ed6c987750")}
 			</ColorButton>
+			{typePractices === "relaxation" || typePractices === "directionalVisualizations" ? (
+				typeShowScreen === "carousel" ? (
+					<Pressable key={"list"} onPress={() => setTypeShowScreen("list")} style={styles.changeType}>
+						<TreeLine />
+					</Pressable>
+				) : (
+					<Pressable key={"carousel"} onPress={() => setTypeShowScreen("carousel")} style={styles.changeType}>
+						<CarouselIcon />
+					</Pressable>
+				)
+			) : (
+				<View style={styles.changeType} />
+			)}
+		</View>
+	);
+
+	const { window } = useDimensions();
+
+	const [fVar, setFVar] = useState(0);
+
+	if ((typePractices === "relaxation" || typePractices === "directionalVisualizations") && typeShowScreen === "list") {
+		return (
+			<DoubleColorView
+				style={[styles.background, { height: window.height, paddingHorizontal: 0 }]}
+				heightViewPart={150}
+				hideElementVioletPart
+				headerElement={
+					<View style={{ top: 55, width: window.width, paddingHorizontal: 20 }}>
+						{subHeader}
+						<Text style={styles.descriptionType}>{i18n.t(DescriptionPrentices[route.params.typePractices])}</Text>
+					</View>
+				}
+				onFunctionGetPaddingTop={getPaddingTop => {
+					if (fVar === 0) setFVar(getPaddingTop);
+				}}
+			>
+				<FlatList
+					data={practiceList}
+					renderItem={({ item }) => (
+						<Pressable
+							style={{
+								flexDirection: "row",
+								width: "100%",
+								marginVertical: 6,
+								paddingHorizontal: 20,
+							}}
+							onPress={() => onClick(item.id)}
+						>
+							<View style={{ width: 90, height: 90, borderRadius: 10, marginRight: 26, overflow: "hidden" }}>
+								<Image source={{ uri: item.image }} style={{ width: "100%", height: "100%" }} />
+								{!item.isPermission && (
+									<View
+										style={{
+											width: "100%",
+											height: "100%",
+											position: "absolute",
+											justifyContent: "center",
+											backgroundColor: "rgba(0, 0,0,0.5)",
+											alignItems: "center",
+										}}
+									>
+										<Lock2 />
+									</View>
+								)}
+							</View>
+							<View style={{ flex: 1 }}>
+								<Text style={{ color: "#3D3D3D", fontSize: 16, ...Tools.gStyle.font("700"), marginBottom: 7 }}>
+									{item.name}
+								</Text>
+								<Text style={{ color: "#9E9E9E", fontSize: 13, ...Tools.gStyle.font("600") }}>
+									{i18n.t("minute", { count: Math.floor(item.length / 60000) })}
+								</Text>
+							</View>
+							<View style={{ justifyContent: "center", alignItems: "center" }}>
+								<IsFavorite practice={item} noShowWereNoFavorite />
+							</View>
+						</Pressable>
+					)}
+					keyExtractor={item => `practice-${item.id}`}
+					showsVerticalScrollIndicator={false}
+					contentContainerStyle={{
+						marginTop: 40,
+						paddingBottom: 40,
+					}}
+					style={{ marginTop: fVar }}
+					ItemSeparatorComponent={() => (
+						<View style={{ width: "100%", alignItems: "flex-end" }}>
+							<View
+								style={{
+									height: 0,
+									width: window.width - 122,
+									borderColor: "rgba(231, 221, 236, 0.2)",
+									borderWidth: 2,
+									right: 0,
+								}}
+							/>
+						</View>
+					)}
+				/>
+			</DoubleColorView>
+		);
+	}
+
+	return (
+		<DoubleColorView style={styles.background} heightViewPart={height / 2 - 100}>
+			{subHeader}
 			<Text style={styles.descriptionType}>{i18n.t(DescriptionPrentices[route.params.typePractices])}</Text>
 			{practiceList.length > 0 && (
 				<CarouselPractices
@@ -199,8 +317,14 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 	},
 	buttonTextInstruction: {
-		color: "#FFFFFF",
-		fontSize: 13,
-		...Tools.gStyle.font("600"),
+		color: "#555555",
+		fontSize: 14,
+		...Tools.gStyle.font("400"),
+	},
+	changeType: {
+		height: 50,
+		width: 50,
+		justifyContent: "center",
+		alignItems: "center",
 	},
 });

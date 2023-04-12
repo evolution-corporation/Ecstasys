@@ -1,14 +1,14 @@
 /** @format */
 
 import React from "react";
-import { ColorValue, View, Text, StyleSheet, ViewProps } from "react-native";
+import { ColorValue, StyleSheet, Text, View, ViewProps } from "react-native";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import i18n from "~i18n";
 
 import Tools from "~core";
 
 const StatisticsMeditation: React.FC<Props> = props => {
-	const { style, colorR = "#7C3C90", colorL = "#7C3C90", count, time } = props;
+	const { style, colorR = "#9765A8", colorL = "#9765A8", count, time } = props;
 	const minutes = Math.floor(time / 60000);
 	return (
 		<View style={[style, { flexDirection: "row" }]}>

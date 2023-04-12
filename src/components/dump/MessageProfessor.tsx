@@ -58,7 +58,12 @@ const MessageProfessor: React.FC<Props> = props => {
 								textAlign: "center",
 								// maxHeight: 100,
 								maxWidth: "75%",
+								fontSize: 15,
 								lineHeight: undefined,
+								elevation: 100,
+								shadowColor: "rgba(0,0,0,0.25)",
+								shadowRadius: 6,
+								shadowOffset: { height: 4, width: 0 },
 							}}
 						>
 							{message}

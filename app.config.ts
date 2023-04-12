@@ -6,8 +6,7 @@ import { version } from "./package.json";
 function generateConfig(): ExpoConfig {
 	const appName =
 		process.env.APP_VARIANT === "dev" ? "DMD Dev" : process.env.APP_VARIANT === "prev" ? "DMD beta" : "DMD";
-	const appUrl =
-		process.env.APP_VARIANT === "dev" ? "com.evodigital.dmdmeditation+dev" : "com.evodigital.dmdmeditation";
+	const appUrl = "com.evodigital.dmdmeditation";
 	const toDay = new Date();
 	const date = {
 		date: toDay.getDate() < 10 ? "0" + toDay.getDate() : toDay.getDate(),
@@ -83,7 +82,10 @@ function generateConfig(): ExpoConfig {
 			bundleIdentifier: appUrl.replace("+", "-"),
 			buildNumber: versionCode.toString(),
 			infoPlist: {
-				UIBackgroundModes: ["audio"],
+				UIBackgroundModes: [
+					"audio",
+					// "remote-notification"
+				],
 			},
 			usesAppleSignIn: true,
 		},

@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 	},
 	title: {
-		color: "rgba(112, 45, 135, 1)",
+		color: "#9765A8",
 		fontSize: 24,
 		...Tools.gStyle.font("600"),
 		alignSelf: "flex-start",

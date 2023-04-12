@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { useState } from "react";
-import { ActivityIndicator, Linking, Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, Linking, Pressable, StyleSheet, Text, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 
@@ -12,22 +12,25 @@ import gStyle from "~styles";
 
 import { RootScreenProps, SubscribeType } from "~types";
 import { SubscribeCard } from "./components";
-import { actions, useAppDispatch, useAppSelector } from "~store";
+import { useAppDispatch, useAppSelector } from "~store";
 import Group48095715 from "/Group48095715.svg";
 import Vector from "/Vector.svg";
-import BuySubscribeController from "../../../controllers/BuySubscribeController";
-import * as InAppPurchases from "expo-in-app-purchases";
 import { adapty } from "react-native-adapty";
+import { useDimensions } from "@react-native-community/hooks";
 
 const price = {
 	month_1: 299,
-	month_6: 1249,
+	month_6: 1290,
+};
+
+const aliasId: { [key: string]: string } = {
+	MONTH: "subscription.monthly",
+	HALF_YEAR: "subscription.halfyear",
 };
 
 const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation }) => {
 	const [selectedSubscribeType, setSelectedSubscribeType] = useState<SubscribeType | null>(SubscribeType.MONTH);
 	const [isAccept, setIsAccept] = useState<boolean>(false);
-	// const modalRef = useRef<ElementRef<typeof CustomModal>>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const _transporteeYButton = useSharedValue(0);
 	const aStyle = {
@@ -69,14 +72,6 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 			return [false, null, null, null];
 		}
 	});
-	// useEffect(() => {
-	// 	if (
-	// 		(selectedSubscribeType !== null && selectedSubscribeType !== subsType) ||
-	// 		(subsType === null && selectedSubscribeType !== null) || (subsType !== null && !isActiveSubs)
-	// 	) {
-	// 		_transporteeYButton.value = 0;
-	// 	}
-	// }, [selectedSubscribeType, subsType,isActiveSubs]);
 
 	const editSubscribe = async () => {
 		try {
@@ -84,7 +79,15 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 				setIsLoading(true);
 				const paywall = await adapty.getPaywall("buy_my_subscribe");
 				const products = await adapty.getPaywallProducts(paywall);
-				await adapty.makePurchase(products[0]);
+				const name = selectedSubscribeType as string;
+
+				for (const product of products) {
+					if (product.vendorProductId === aliasId[name]) {
+						await adapty.makePurchase(product);
+						break;
+					}
+				}
+
 				setIsLoading(false);
 				navigation.navigate("ResultSubscribeScreen", { status: "Designations" });
 			}
@@ -94,6 +97,8 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 			navigation.navigate("ResultSubscribeScreen", { status: "Fail" });
 		}
 	};
+
+	const { window } = useDimensions();
 
 	return (
 		<DoubleColorView heightViewPart={229} style={styles.background}>
@@ -108,32 +113,79 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 						  })
 						: i18n.t("636763b2-80fc-4bd3-84ac-63c21cd34d77")}
 				</Text>
-				<SubscribeCard
-					image={require("./assets/pillow.png")}
-					isSelected={selectedSubscribeType === SubscribeType.MONTH}
-					isUsed={isActiveSubs && subsType === "MONTH"}
-					onPress={() => setSelectedSubscribeType(SubscribeType.MONTH)}
-					price={price.month_1}
-					stylesContent={{
-						textStyle: { color: "#702D87" },
-						background: { backgroundColor: "#F3F3F3" },
-					}}
-					mainColor={"#702D87"}
-					countMonth={1}
-					textPrice={{
-						top: i18n.t("1d05ec08-f140-4774-b71b-7e1ce078cd94", {
+				<FlatList
+					data={[
+						{
+							image: require("./assets/pillow.png"),
+							type: SubscribeType.MONTH,
+							name: "MONTH",
 							price: price.month_1,
-						}),
-						bottom: i18n.t("4415fe5e-bd86-41b1-91ca-5b20c685172b"),
+							textColor: "#702D87",
+							backgroundColor: "#F3F3F3",
+							mainColor: "#702D87",
+							countMonth: 1,
+							textTop: i18n.t("1d05ec08-f140-4774-b71b-7e1ce078cd94", {
+								price: price.month_1,
+							}),
+							textBottom: i18n.t("4415fe5e-bd86-41b1-91ca-5b20c685172b"),
+						},
+						{
+							image: require("./assets/armchair.png"),
+							type: SubscribeType.HALF_YEAR,
+							name: "HALF_YEAR",
+							price: price.month_6,
+							textColor: "#FFF",
+							backgroundColor: "#702D87",
+							mainColor: "#FFF",
+							countMonth: 6,
+							textTop: i18n.t("56b57ad2-f5f3-4f05-9f43-55d2edb25bdf", {
+								price: price.month_6,
+							}),
+							textBottom: i18n.t("84fe380b-74a9-4d02-9463-550c2d746617"),
+						},
+					]}
+					renderItem={({ item }) => (
+						<View style={{ width: window.width - 40 }}>
+							<SubscribeCard
+								image={item.image}
+								isSelected={selectedSubscribeType === item.type}
+								isUsed={isActiveSubs && subsType === item.name}
+								onPress={() => setSelectedSubscribeType(item.type)}
+								price={item.price}
+								stylesContent={{
+									textStyle: { color: item.textColor },
+									background: { backgroundColor: item.backgroundColor },
+								}}
+								mainColor={item.mainColor}
+								countMonth={item.countMonth}
+								textPrice={{
+									top: item.textTop,
+									bottom: item.textBottom,
+								}}
+								onCancelSubscribe={() => {}}
+								isShowCancelButton={isAutoPayment ?? false}
+								isFirstPayment={subscribeEnd === null}
+							/>
+						</View>
+					)}
+					keyExtractor={item => `Key-${item.name}`}
+					style={{
+						left: 0,
+						right: 0,
+						width: window.width,
 					}}
-					onCancelSubscribe={() => {}}
-					isShowCancelButton={isAutoPayment ?? false}
-					isFirstPayment={subscribeEnd === null}
+					contentContainerStyle={{ paddingHorizontal: 20 }}
+					horizontal={window.height <= 600}
+					showsHorizontalScrollIndicator={false}
+					showsVerticalScrollIndicator={false}
+					snapToInterval={window.height <= 600 ? window.width : undefined}
+					pagingEnabled
+					disableIntervalMomentum
+					ItemSeparatorComponent={() => <View style={{ width: 40, height: 20 }} />}
 				/>
 			</View>
 			<View>
-				{
-					!isActiveSubs && <View
+				<View
 					style={{
 						width: "100%",
 						flexDirection: "row",
@@ -165,8 +217,7 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 						</Text>
 					</Text>
 				</View>
-				}
-				
+
 				{!isActiveSubs && isLoading ? (
 					<View style={{ width: "100%", height: 50, justifyContent: "center", alignItems: "center" }}>
 						<ActivityIndicator color={"#C2A9CE"} />

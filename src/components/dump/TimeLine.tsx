@@ -1,13 +1,13 @@
 /** @format */
 
-import React, { useState, forwardRef, useImperativeHandle, useRef, useEffect } from "react";
+import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from "react";
 
-import { StyleSheet, View, ViewProps, ColorValue, Button } from "react-native";
+import { ColorValue, StyleSheet, View, ViewProps } from "react-native";
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
-import Tools, { setColorOpacity } from "~core";
+import { setColorOpacity } from "~core";
 
 const TimeLine = forwardRef<Ref, TimeLineProps>((props, ref) => {
 	const { color = "#FFFFFF", onChange, onStartChange, onEndChange, disable = false, initValue = 0 } = props;
@@ -16,7 +16,7 @@ const TimeLine = forwardRef<Ref, TimeLineProps>((props, ref) => {
 	let _value = initValue;
 	const _colorBackground = setColorOpacity(color);
 	const _colorBorderCircle = setColorOpacity(color, 0.5);
-	const _frontLineWidth = useSharedValue(0);
+	const _frontLineWidth = useSharedValue(initValue ?? 0);
 	const _scaleCircle = useSharedValue(1);
 	const aStyles = {
 		frontLine: useAnimatedStyle(() => ({
@@ -43,32 +43,36 @@ const TimeLine = forwardRef<Ref, TimeLineProps>((props, ref) => {
 		}
 	};
 
-	const lineGestureTap = Gesture.Pan()
-		.enabled(!disable)
-		.onBegin(event => {
-			_frontLineWidth.value = withTiming(event.x);
-			if (maxWidth) _value = maxWidth / event.x;
-			_scaleCircle.value = 1;
+	const lineGestureTap = useMemo(
+		() =>
+			Gesture.Pan()
+				.enabled(!disable)
+				.onBegin(event => {
+					_frontLineWidth.value = withTiming(event.x);
+					if (maxWidth) _value = maxWidth / event.x;
+					_scaleCircle.value = 1;
 
-			if (onStartChange) runOnJS(onStartChange)();
-		})
-		.onUpdate(event => {
-			if (maxWidth && event.x >= 0 && event.x <= maxWidth) {
-				_frontLineWidth.value = event.x;
-				_value = maxWidth / event.x;
-				runOnJS(returnUpdate)(event.x);
-			}
-		})
-		.onFinalize(event => {
-			if (maxWidth && onChange) {
-				runOnJS(returnUpdate)(event.x);
-			}
-			_scaleCircle.value = 1;
-			if (onEndChange) runOnJS(onEndChange)();
-		});
+					if (onStartChange) runOnJS(onStartChange)();
+				})
+				.onUpdate(event => {
+					if (maxWidth && event.x >= 0 && event.x <= maxWidth) {
+						_frontLineWidth.value = event.x;
+						_value = maxWidth / event.x;
+						runOnJS(returnUpdate)(event.x);
+					}
+				})
+				.onFinalize(event => {
+					if (maxWidth && onChange) {
+						runOnJS(returnUpdate)(event.x);
+					}
+					_scaleCircle.value = 1;
+					if (onEndChange) runOnJS(onEndChange)();
+				}),
+		[maxWidth]
+	);
 
 	useEffect(() => {
-		if (maxWidth !== null) _frontLineWidth.value = withTiming(maxWidth * _value);
+		if (maxWidth !== null) _frontLineWidth.value = maxWidth * _value;
 	}, [maxWidth]);
 
 	return (

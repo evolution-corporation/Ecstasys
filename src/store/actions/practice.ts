@@ -3,10 +3,11 @@
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { BackgroundSound } from "src/models/practices";
 import { State } from "~types";
-import { Converter, Storage, Request } from "~api";
+import { Converter, Request, Storage } from "~api";
 import type { AsyncThunkConfig } from "../index";
 import { SupportType } from "src/api/types";
 import * as Crypto from "expo-crypto";
+import { ColorValue } from "react-native";
 
 enum PracticeAction {
 	addFavorite = "practice/addFavorite",
@@ -15,15 +16,18 @@ enum PracticeAction {
 	editBackgroundMusic = "practice/editBackgroundMusic",
 	editBackgroundVolume = "practice/editBackgroundVolume",
 	setPractice = "practice/setPractice",
-	getPracticeDay = "practice/getPracticeDay"
+	getPracticeDay = "practice/getPracticeDay",
+	changeColorDot = "practice/ChangeColorDot",
 }
+
+export const changeColorDot = createAction<ColorValue>(PracticeAction.changeColorDot);
 
 export const getPracticeDay = createAsyncThunk<State.Practice | null, void, AsyncThunkConfig>(
 	PracticeAction.getPracticeDay,
 	async () => {
-		return Converter.composePractice(await Request.getRecommendationMeditation())
+		return Converter.composePractice(await Request.getRecommendationMeditation());
 	}
-)
+);
 
 export const addFavoritePractice = createAsyncThunk<State.Practice, State.Practice, AsyncThunkConfig>(
 	PracticeAction.addFavorite,
