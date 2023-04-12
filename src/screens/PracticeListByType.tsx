@@ -117,7 +117,7 @@ const PracticeListByType: RootScreenProps<"PracticeListByType"> = ({ route, navi
 				animationStyle={aStyle.button}
 				styleButton={styles.buttonInstruction}
 				styleText={styles.buttonTextInstruction}
-				colors={["#75348B", "#6A2382"]}
+				colors={["#fff", "#fff"]}
 				onPress={() => {
 					const index = practiceList.findIndex(item => item.id == selectedPracticeId.current);
 
@@ -317,9 +317,9 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 	},
 	buttonTextInstruction: {
-		color: "#FFFFFF",
-		fontSize: 13,
-		...Tools.gStyle.font("600"),
+		color: "#555555",
+		fontSize: 14,
+		...Tools.gStyle.font("400"),
 	},
 	changeType: {
 		height: 50,

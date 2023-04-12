@@ -89,7 +89,7 @@ const SelectBackgroundSound: RootScreenProps<"SelectBackgroundSound"> = ({ navig
 					>
 						<Headphones />
 						<Text style={{ color: "#FFF", ...Tools.gStyle.font("400"), fontSize: 14, marginLeft: 7 }}>
-							Громкость музыки
+							Громкость фоновой музыки
 						</Text>
 					</View>
 					<TimeLine

@@ -160,7 +160,7 @@ const InputNameAndSelectGender: RootScreenProps<"InputNameAndSelectGender"> = ({
 					)}
 					<ColorButton
 						styleText={{ color: "#FFF" }}
-						styleButton={{ backgroundColor: "#C2A9CE", paddingHorizontal: 25, marginBottom: 20, borderRadius: 15 }}
+						styleButton={{ backgroundColor: "#9765a8", paddingHorizontal: 25, marginBottom: 20, borderRadius: 15 }}
 						onPress={() => {
 							save();
 						}}
