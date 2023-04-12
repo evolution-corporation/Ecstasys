@@ -21,7 +21,7 @@ const GradientShowTimeMeditation: React.FC<GradientShowTimeMeditationProperty> =
 				justifyContent: "center",
 				width: "auto",
 			}}
-			colors={["#75348B", "#6A2382"]}
+			colors={["#9765A8", "#9765A8"]}
 		>
 			<ElementSimpleText color={"#FFFFFF"}>
 				{i18n.t("minute", {

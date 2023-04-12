@@ -159,6 +159,8 @@ const PlayerMeditationOnTheMandala: RootScreenProps<"PlayerMeditationOnTheMandal
 									{ name: "Premium1", uri: require("assets/BaseMeditaionAssets/Mandala/Premium1.png") },
 									{ name: "Premium2", uri: require("assets/BaseMeditaionAssets/Mandala/Premium2.png") },
 									{ name: "Premium3", uri: require("assets/BaseMeditaionAssets/Mandala/Premium3.png") },
+									{ name: "Premium4", uri: require("assets/BaseMeditaionAssets/Mandala/Premium4.png") },
+									{ name: "Premium4", uri: require("assets/BaseMeditaionAssets/Mandala/Premium5.png") },
 								]}
 								renderItem={({ item }) => (
 									<Pressable

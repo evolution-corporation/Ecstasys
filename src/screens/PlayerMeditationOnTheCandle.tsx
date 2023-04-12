@@ -84,7 +84,7 @@ const PlayerMeditationOnTheCandle: RootScreenProps<"PlayerMeditationOnTheCandle"
 						alignItems: "center",
 						justifyContent: "center",
 						position: "absolute",
-						bottom: "40%",
+						bottom: "30%",
 					}}
 				>
 					<Video ref={video} style={styles.video} source={candle} resizeMode={ResizeMode.CONTAIN} isLooping />
