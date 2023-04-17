@@ -1,5 +1,6 @@
 /** @format */
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Audio } from "expo-av";
 import React from "react";
 import BackgroundSound from "src/backgroundSound";
@@ -28,8 +29,19 @@ const useBackgroundSound = (shouldPlay: boolean) => {
 				isLooping: true,
 				volume,
 				shouldPlay,
+				progressUpdateIntervalMillis: 1000,
 			});
 			audio.current = sound;
+			audio.current.setOnPlaybackStatusUpdate(() => {
+				AsyncStorage.getItem("EndMeditationTime").then(r => {
+					if (!!r) {
+						const endMeditationTime = new Date(r);
+						if (endMeditationTime.getTime() < Date.now()) {
+							audio.current?.pauseAsync();
+						}
+					}
+				});
+			});
 		}
 	};
 
@@ -43,6 +55,7 @@ const useBackgroundSound = (shouldPlay: boolean) => {
 
 		return () => {
 			audio.current?.getStatusAsync().then(status => {
+				console.log(status.isLoaded);
 				if (status.isLoaded) {
 					audio.current?.stopAsync();
 					audio.current?.unloadAsync();

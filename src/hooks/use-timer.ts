@@ -2,6 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import { AppState, InteractionManager } from "react-native";
 import * as Notification from "expo-notifications";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const timeUpdate = 100;
 
@@ -62,9 +63,18 @@ const useTimer = (maxMilliseconds: number, onFinish: () => void) => {
 		);
 	};
 
+	const getEndTime = () => {
+		return new Date(Date.now() + maxMilliseconds - fixTime.current);
+	};
+
+	const addEndTimeMeditationInStorage = async () => {
+		await AsyncStorage.setItem("EndMeditationTime", getEndTime().toISOString());
+	};
+
 	const play = () => {
 		TimerPromise.current?.cancel();
 		timer();
+		addEndTimeMeditationInStorage();
 		// TimerPromise.current = InteractionManager.runAfterInteractions(() => timer());
 	};
 
@@ -85,10 +95,6 @@ const useTimer = (maxMilliseconds: number, onFinish: () => void) => {
 
 	const notificationID = useRef<string | null>(null);
 
-	const getEndTime = () => {
-		return new Date(Date.now() + maxMilliseconds - fixTime.current);
-	};
-
 	React.useEffect(() => {
 		const subscribe = AppState.addEventListener("change", state => {
 			if (state === "active" && timeStartBackgroundApplication.current !== undefined) {
@@ -107,7 +113,6 @@ const useTimer = (maxMilliseconds: number, onFinish: () => void) => {
 
 				const endMeditation = getEndTime();
 				NotificationEndMeditation(endMeditation).then(id => (notificationID.current = id));
-
 				pause();
 			}
 		});
