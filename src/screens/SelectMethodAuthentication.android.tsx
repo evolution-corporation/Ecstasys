@@ -90,13 +90,13 @@ const SelectMethodAuthentication: RootScreenProps<"SelectMethodAuthentication"> 
 							{ text: i18n.t("c26411fd-d759-4215-af1f-8bfc62f164d2") },
 							{ text: i18n.t("5d03c5b2-39c8-4889-983f-9d2d268e6226") },
 						].map((item, index) => (
-							<View key={index} style={{ maxHeight: 120, paddingHorizontal: 20 }}>
+							<View key={index} style={{ maxHeight: 120, paddingHorizontal: 20, paddingTop:10}}>
 								<Text style={{ ...gStyle.styles.description, color: "#FFFFFF" }}>{item.text}</Text>
 							</View>
 						))}
 					</Swiper>
 				</View>
-				<View style={{ flex: 1, justifyContent: "flex-end", paddingHorizontal: 20, paddingBottom: 15 }}>
+				<View style={{ flex: 1, justifyContent: "flex-end", paddingHorizontal: 20, paddingBottom: 20 }}>
 					{isLoading ? (
 						<ActivityIndicator color={"#FFFFFF"} size={"large"} />
 					) : (
