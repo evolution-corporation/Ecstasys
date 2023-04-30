@@ -47,12 +47,6 @@ const PlayerMeditationOnTheNose: RootScreenProps<"PlayerMeditationOnTheNose"> = 
 		: undefined;
 
 	useEffect(() => {
-		if (meditation !== undefined) {
-			meditation.play();
-		}
-	}, [meditation]);
-
-	useEffect(() => {
 		timer.play();
 	}, []);
 

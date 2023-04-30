@@ -52,12 +52,6 @@ const PlayerMeditationDot: RootScreenProps<"PlayerMeditationDot"> = ({ navigatio
 	useKeepAwake();
 
 	useEffect(() => {
-		if (meditation !== undefined) {
-			meditation.play();
-		}
-	}, [meditation]);
-
-	useEffect(() => {
 		timer.play();
 	}, []);
 
