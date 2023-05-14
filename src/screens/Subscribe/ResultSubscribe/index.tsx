@@ -3,7 +3,7 @@
 import React from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { ColorButton } from "~components/dump";
-
+import Fail from "~assets/Menu/Close_MD.svg"
 import Tools from "~core";
 
 import Check from "./assets/Check.svg";
@@ -21,8 +21,8 @@ const ResultSubscribeScreen = ({ route = { params: { status: "Edit" } }, navigat
 		<View style={styles.background}>
 			<View style={{ flex: 1 }} />
 			<View style={styles.middleBlock}>
-				<Check />
-				<Text style={[styles.textTitle, { marginTop: 28 }]}>{i18n.t("ready")}!</Text>
+				{params.status === "Fail" ? <Fail /> : <Check />}
+				{params.status !== "Fail" ? <Text style={[styles.textTitle, { marginTop: 28 }]}>{i18n.t("ready")}!</Text> : null}
 				<Text style={[styles.textTitle, { marginTop: 30, marginBottom: 11 }]}>
 					{i18n.t(
 						params.status === "Designations"
