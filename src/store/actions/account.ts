@@ -184,15 +184,25 @@ export const getSubs = createAsyncThunk("account/subs", async () => {
 	if (Platform.OS === "ios") {
 		const profile = await adapty.getProfile();
 		const accessLevels = profile.accessLevels;
-		if (accessLevels?.premium) {
+		if (accessLevels?.premium?.isActive ?? false) {
 			const premium = accessLevels.premium;
-			const RemainingTime = new Date(premium.activatedAt);
-			RemainingTime.setDate(RemainingTime.getDate() - 28);
+			const subscribes = profile.subscriptions;
+			const monthlySubscribe = subscribes ? subscribes["subscription.monthly"] : undefined;
+			const halfyearSubscribe = subscribes ? subscribes["subscription.halfyear"] : undefined;
+			let WhenSubscribe = monthlySubscribe?.isActive ? (monthlySubscribe.renewedAt ?? monthlySubscribe.activatedAt) : ((halfyearSubscribe?.renewedAt ?? halfyearSubscribe?.activatedAt!) ?? new Date());
+			let RemainingTime = monthlySubscribe?.isActive ? monthlySubscribe.expiresAt : (halfyearSubscribe?.expiresAt! ?? new Date());
+			console.log({
+				UserId: profile.profileId,
+				WhenSubscribe: WhenSubscribe,
+				RemainingTime: RemainingTime,
+				Type: monthlySubscribe.isActive ? "Month" : "Month6",
+				RebillId: premium.willRenew ? "123" : "-1",
+			})
 			return {
 				UserId: profile.profileId,
-				WhenSubscribe: premium.activatedAt.toDateString(),
+				WhenSubscribe: WhenSubscribe.toDateString(),
 				RemainingTime: RemainingTime.toDateString(),
-				Type: "Month",
+				Type: monthlySubscribe.isActive ? "Month" : "Month6",
 				RebillId: premium.willRenew ? "123" : "-1",
 			};
 		}
