@@ -186,8 +186,11 @@ export const getSubs = createAsyncThunk("account/subs", async () => {
 		const accessLevels = profile.accessLevels;
 		if (accessLevels?.premium) {
 			const premium = accessLevels.premium;
-			const RemainingTime = new Date(premium.activatedAt);
+			let RemainingTime = new Date(premium.activatedAt);
 			RemainingTime.setDate(RemainingTime.getDate() - 28);
+			if (premium.expiresAt !== undefined) {
+				RemainingTime = premium.expiresAt
+			}
 			return {
 				UserId: profile.profileId,
 				WhenSubscribe: premium.activatedAt.toDateString(),
