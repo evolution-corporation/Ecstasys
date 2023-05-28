@@ -88,6 +88,7 @@ function generateConfig(): ExpoConfig {
 				],
 			},
 			usesAppleSignIn: true,
+			icon: "./assets/iconIOs.png"
 		},
 		plugins,
 		extra: {
