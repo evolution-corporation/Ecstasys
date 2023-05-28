@@ -29,6 +29,7 @@ export interface AccountState {
 		type: "WEEK" | "MONTH" | "HALF_YEAR";
 		whenSubscribe: string;
 		autoPayment: boolean;
+		endSubscribe: string;
 	};
 	status: "REGISTRATION" | "NO_REGISTRATION" | "NO_AUTHENTICATION" | "IS_LOADING";
 	isNewUser: boolean;

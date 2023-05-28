@@ -45,23 +45,8 @@ const SelectSubscribeScreen: RootScreenProps<"SelectSubscribe"> = ({ navigation 
 	const appDispatch = useAppDispatch();
 	const [isActiveSubs, subscribeEnd, isAutoPayment, subsType] = useAppSelector(store => {
 		if (store.account.subscribe !== undefined) {
-			const endSubscribe = new Date(store.account.subscribe.whenSubscribe);
-
-			endSubscribe.setDate(
-				endSubscribe.getDate() +
-					(() => {
-						switch (store.account.subscribe.type) {
-							case "WEEK":
-								return 7;
-							case "MONTH":
-								return 30;
-							case "HALF_YEAR":
-								return 180;
-							default:
-								return 0;
-						}
-					})()
-			);
+			const endSubscribe = new Date(store.account.subscribe.endSubscribe);
+			
 			return [
 				endSubscribe.getTime() > Date.now(),
 				endSubscribe,
