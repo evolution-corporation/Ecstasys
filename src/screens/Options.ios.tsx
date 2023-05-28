@@ -2,7 +2,7 @@
 import i18n from "~i18n";
 
 import React from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View, Linking } from "react-native";
 import * as MailComposer from "expo-mail-composer";
 
 import gStyles from "~styles";
@@ -36,10 +36,7 @@ const Options: RootScreenProps<"Options"> = ({ navigation }) => {
 			<TouchableOpacity
 				style={styles.button}
 				onPress={() => {
-					MailComposer.composeAsync({
-						recipients: ["info@evodigital.one"],
-						subject: i18n.t("d9d63e50-f4af-441d-ab8c-7df1ad8adda7"),
-					});
+					Linking.openURL("http://dmdapp.tilda.ws/support")
 				}}
 			>
 				<Mail />
