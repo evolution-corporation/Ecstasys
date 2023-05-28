@@ -175,6 +175,7 @@ export namespace State {
 		type: State.SubscribeType;
 		whenSubscribe: string;
 		autoPayment: boolean;
+		endSubscribe: string
 	}
 
 	export interface Set {

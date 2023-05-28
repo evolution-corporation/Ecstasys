@@ -43,6 +43,7 @@ export function composeSubscribe(data: ServerEntities.Subscribe | null): State.S
 		type: type,
 		autoPayment: data.RebillId !== -1,
 		whenSubscribe: data.WhenSubscribe,
+		endSubscribe: typeof data.RemainingTime === "number" ? new Date(data.RemainingTime).toDateString() : data.RemainingTime,
 	};
 }
 

@@ -109,7 +109,7 @@ export namespace ServerEntities {
 		/** Дата оформления подписки */
 		readonly WhenSubscribe: SupportType.DateISOString;
 		/** Оставшиеся время действия подписки */
-		readonly RemainingTime: number;
+		readonly RemainingTime: number | string;
 		/** Тип оформляемой подписки */
 		readonly Type: SupportType.SubscribeType;
 		/** Id автоплатежа */
