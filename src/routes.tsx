@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { FC } from "react";
+import React, { FC, useRef } from "react";
 import { ActivityIndicator, Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -28,6 +28,15 @@ import ArrowBack from "assets/icons/ArrowBack.svg";
 import useAccountStatus from "./hooks/use-account-status";
 import IsFavorite from "~components/dump/IsFavorite";
 import OurNeedYourNotification from "./screens/OurNeedYourNotification";
+
+import { SharedElementNode, SharedElementTransition } from "react-native-shared-element";
+import { useSharedValue } from "react-native-reanimated";
+import { createSharedElementStackNavigator } from "react-navigation-shared-element";
+import { NavigationContainer } from "@react-navigation/native";
+import { useAppSelector } from "./core/redux/Store";
+import { currentRootStackSelector } from "./core/redux/Selector";
+import { ApplicationRootStack } from "./core/redux/ApplicationSlice";
+
 
 const TabNavigator = createBottomTabNavigator<TabNavigatorList>();
 
@@ -89,6 +98,49 @@ const TabRoutes: RootScreenProps<"TabNavigator"> = ({ navigation }) => {
 // const RootNavigation = createSharedElementStackNavigator<RootStackList>();
 const RootNavigation = createNativeStackNavigator<RootStackList>();
 
+const AuthNavigationStack = createSharedElementStackNavigator()
+const RegistrationNavigationStack = createSharedElementStackNavigator()
+
+
+const AuthNavigator: FC = () => {
+	return (
+			<AuthNavigationStack.Navigator>
+				<AuthNavigationStack.Screen
+					name={"IntroAboutApp"}
+					options={{ headerShown: false }}
+					component={Screens.IntroAboutApp}
+					sharedElements={() => ["Logo", "Welcome", "WelcomeAppName"]}
+				/>
+				<AuthNavigationStack.Screen
+					name={"SelectMethodAuthentication"}
+					component={Screens.SelectMethodAuthentication}
+					options={{ headerShown: false }}
+					sharedElements={() => ["Logo", "Welcome", "WelcomeAppName"]}
+				/>
+				<AuthNavigationStack.Screen
+					name={"PhoneAuth"}
+					component={Screens.PhoneAuth}
+					options={{ headerShown: true }}
+				/>
+			</AuthNavigationStack.Navigator>
+	)
+}
+
+
+const RegistrationNavigator: FC = () => {
+	return (
+			<RegistrationNavigationStack.Navigator>
+				<RegistrationNavigationStack.Screen
+					name={"IntroAboutApp"}
+					options={{ headerShown: false }}
+					component={Screens.IntroAboutApp}
+					sharedElements={() => ["Logo", "Welcome", "WelcomeAppName"]}
+				/>
+			</RegistrationNavigationStack.Navigator>
+	)
+}
+
+
 const RootRoutes: FC = () => {
 	const accountStatus = useAccountStatus();
 	let screenList;
@@ -101,11 +153,7 @@ const RootRoutes: FC = () => {
 						component={Screens.IntroAboutApp}
 						options={{ headerShown: false }}
 					/>
-					<RootNavigation.Screen
-						name={"IntroAboutYou"}
-						component={Screens.IntroAboutYou}
-						options={{ headerShown: false }}
-					/>
+					
 					<RootNavigation.Screen
 						name={"SelectMethodAuthentication"}
 						component={Screens.SelectMethodAuthentication}
@@ -445,35 +493,32 @@ const RootRoutes: FC = () => {
 	);
 };
 
-const styles = StyleSheet.create({
-	meditationName: {
-		color: "#FFFFFF",
-		fontSize: 20,
-		...Core.gStyle.font("700"),
-		textAlign: "center",
-		width: "100%",
-		height: 20,
-	},
-	meditationType: {
-		color: "#FFFFFF",
-		fontSize: 14,
-		...Core.gStyle.font("400"),
-		textAlign: "center",
-	},
-	screenLoading: {
-		flex: 1,
-		alignItems: "center",
-		justifyContent: "center",
-		backgroundColor: "#9765A8",
-	},
-	tabBarBackground: {
-		flexDirection: "row",
-		height: 74,
-		backgroundColor: "#FFFFFF",
-		position: "absolute",
-		width: "100%",
-		bottom: 0,
-	},
-});
 
-export default RootRoutes;
+
+export const ApplicationRoutes = () => {
+	const currentRootStack = useAppSelector(currentRootStackSelector)
+
+	const Navigator = (() => {
+		switch (currentRootStack) {
+			case ApplicationRootStack.Auth: {
+				return AuthNavigator;
+			}
+			case ApplicationRootStack.Registration: {
+				return RegistrationNavigator;
+			}
+			default: {
+				return RegistrationNavigator
+			}
+		} 
+	})()
+
+	
+
+	return (
+		<NavigationContainer>
+			<Navigator />
+		</NavigationContainer>
+	)
+}
+
+export default AuthNavigator;

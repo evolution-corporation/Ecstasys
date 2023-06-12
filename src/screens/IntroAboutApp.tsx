@@ -1,89 +1,109 @@
 /** @format */
 
-import React from "react";
-import { StyleSheet, Text, Image, View, Pressable, Dimensions } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
 
-import i18n from "~i18n";
-import gStyle from "~styles";
-import { RootScreenProps } from "~types";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Screen } from "~components/containers";
+import { Box, Flex, Text } from "@react-native-material/core";
+import { AuthScreenProperties } from "~types";
+import Logo from "~assets/svg/Logo.svg"
+import AppName from "~assets/svg/AppName.svg"
 
-import Chevron from "assets/Arrow/Chevron_Right.svg";
+
 import { useDimensions } from "@react-native-community/hooks";
+import Animated, { FadeIn } from "react-native-reanimated";
+import Button from "src/core/components/Button";
+import { SharedElement } from "react-navigation-shared-element";
 
-const IntroScreen: RootScreenProps<"IntroAboutApp"> = ({ navigation }) => {
+
+const IntroScreen: AuthScreenProperties<"IntroAboutApp"> = ({ navigation }) => {
 	const { window } = useDimensions();
-	return (
-		<Screen backgroundColor={"#FFFFFF"} styleScreen={{ justifyContent: "flex-end", paddingBottom: 45 }} headerHidden>
-			<View
-				style={{
-					flex: 1,
-					bottom: 0,
-					width: window.width,
-					justifyContent: "flex-end",
-				}}
-			>
-				<Image
-					source={require("assets/professorNoHaveFoot.png")}
-					resizeMode={"contain"}
-					style={{
-						width: "180%",
-						height: "90%",
-						bottom: 0,
-						left: "-21.5%", //21.5
-					}}
-				/>
-			</View>
-			<Text style={{ ...gStyle.styles.title, color: "#3D3D3D" }}>
-				{i18n.t("ff867b49-717d-4611-a2b2-22349439f76f")} <Text style={[{ color: "#9765A8" }]}>dmd meditation!</Text>
-			</Text>
 
-			<Text style={{ ...gStyle.styles.description, color: "#404040", marginVertical: 20 }}>
-				{i18n.t("74547c57-8c9a-48d5-afd0-de9521e37c29")}
-			</Text>
-			<View style={styles.menuButton}>
-				<Pressable
-					onPress={() => {
-						navigation.navigate("SelectMethodAuthentication");
-					}}
-				>
-					<Text style={styles.skipButton}>{i18n.t("skip")}</Text>
-				</Pressable>
-				<Pressable
-					style={styles.nextScreen}
-					onPress={() => {
-						navigation.navigate("IntroAboutYou");
-					}}
-				>
-					<Chevron />
-				</Pressable>
-			</View>
-		</Screen>
+	const [showElementAnimated, setShowElementAnimated] = useState(0);
+
+	const countElement = 5;
+
+	const showNextElement = useCallback(() => {
+		if (showElementAnimated <= countElement) {
+			setShowElementAnimated(previous => ++previous)
+			setTimeout(() => showNextElement(), 700)
+		}
+	}, [showElementAnimated, countElement])
+
+	useEffect(() => {
+		showNextElement()
+	}, [])
+
+	const openNextScreen = useCallback(() => {
+		navigation.navigate("SelectMethodAuthentication")
+	}, [])
+
+	return (
+		<Flex content="center" style={{ backgroundColor: "#F3F3F3", paddingHorizontal: 20, flex: 1 }}>
+			<Flex center fill>
+				{
+					showElementAnimated >= 1 &&
+					<Animated.View 
+						entering={FadeIn}
+					>
+						<SharedElement id={"Logo"}>
+							<Logo />
+						</SharedElement>
+					</Animated.View>
+				}
+			</Flex>
+			<Flex fill>
+				<Flex>
+					{
+						showElementAnimated >= 2 && 
+							<Animated.View entering={FadeIn}>
+								<Text color="#3D3D3D" variant="h4">
+									Добро пожаловать в
+								</Text>
+							</Animated.View>
+					}
+					{
+						showElementAnimated >= 3 &&
+						<Animated.View entering={FadeIn}>
+							<SharedElement id={"WelcomeAppName"}>
+								<AppName />
+							</SharedElement>
+						</Animated.View>
+					}
+				</Flex>
+				<Flex fill justify="between" pb={50}>
+					<Box>
+						{
+							showElementAnimated >= 4 &&
+							<Animated.View entering={FadeIn}>
+								<Text color="#555555" variant="body1">
+									Повышай свои способности концентрации, телесного и умственного 
+									расслабления. Снимай ментальные ограничения и восстанавливай 
+									образное мышление с помощью простых и эффективных техник.
+								</Text>
+							</Animated.View>
+						}
+						{
+							window.height >= 500 && showElementAnimated >= 5 &&
+							<Animated.View entering={FadeIn}>
+								<Text color="#555555" variant="body1" style={{ marginTop: 12 }}>
+									Целью нашего приложения является реализация твоего потенциала.
+									Здесь собраны медитации и техники для работы с сознанием, которые 
+									исследованы наукой и проверены временем!
+								</Text>
+							</Animated.View>
+						}
+					</Box>
+					<Box mt={20}>
+					{
+						showElementAnimated >= 5 &&
+						<Animated.View entering={FadeIn}>
+							<Button title={"Приступим"} color="primary" onPress={openNextScreen}/>
+						</Animated.View>
+					}
+					</Box>
+				</Flex>
+			</Flex>
+		</Flex>
 	);
 };
-
-const styles = StyleSheet.create({
-	skipButton: {
-		fontSize: 16,
-		opacity: 1,
-		...gStyle.font("400"),
-		color: "rgba(194, 169, 206, 1)",
-	},
-	menuButton: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
-		height: 50,
-	},
-	nextScreen: {
-		backgroundColor: "rgba(151, 101, 168, 1)",
-		borderRadius: 10,
-		alignItems: "center",
-		justifyContent: "center",
-		width: 38,
-		height: 38,
-	},
-});
 
 export default IntroScreen;

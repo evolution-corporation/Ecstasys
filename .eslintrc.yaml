@@ -18,3 +18,5 @@ rules:
   unicorn/filename-case:
     - "error"
     - "case": "pascalCase"
+  unicorn/prefer-module: "off"
+  unicorn/no-null: "off"

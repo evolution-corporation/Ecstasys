@@ -322,6 +322,28 @@ export type RootStackList = {
 	ChangeColorDot: undefined;
 };
 
+
+export type AuthStackList = {
+	IntroAboutApp: undefined,
+	SelectMethodAuthentication: undefined,
+	PhoneAuth: undefined,
+}
+
+export type AuthScreenProperties<T extends keyof AuthStackList> = FC<NativeStackScreenProps<AuthStackList, T>>;
+
+
+export type RegistrationStackList = {
+	Registration: {
+		name?: string,
+		avatar?: string,
+		nickname?: string
+	},
+}
+
+export type RegistrationScreenProperties<T extends keyof RegistrationStackList> = FC<NativeStackScreenProps<RegistrationStackList, T>>;
+
+
+
 export type RootScreenProps<T extends keyof RootStackList> = FC<NativeStackScreenProps<RootStackList, T>>;
 
 export enum Breathing {
