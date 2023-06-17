@@ -2,7 +2,7 @@
 
 import React, { ElementRef, useCallback, useEffect, useRef, useState } from "react";
 import { View, StyleSheet, Text, Pressable, BackHandler, Platform } from "react-native";
-import auth from "@react-native-firebase/auth";
+// import auth from "@react-native-firebase/auth";
 
 import { ColorButton } from "~components/dump";
 import Tools from "~core";

@@ -11,7 +11,7 @@ import Tools from "~core";
 import type { RootScreenProps } from "~types";
 
 import { SMSCodeInput, SMSCodeInputInfo, SMSCodeInputInfoShow } from "./components";
-import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
+// import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { StatusBar } from "expo-status-bar";
 import { actions, useAppDispatch } from "~store";
 import {printInformationError} from "~tools";

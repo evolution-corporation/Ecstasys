@@ -4,7 +4,7 @@
  * TODO Добавить в меню разработчика возможность отключать работу с api
  * @format
  */
-import auth from "@react-native-firebase/auth";
+// import auth from "@react-native-firebase/auth";
 import { State } from "~types";
 
 import * as Types from "./types";

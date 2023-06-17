@@ -1,10 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
+import {MethodAuth} from "../models/UserAuth";
 
 
 export const SignInAction = createAsyncThunk(
     "user/SignIn",
-    async (userData: string, {  }) => {
-        return userData
+    async (payload: { method: MethodAuth, userID: string }, {  }) => {
+        return payload
     }
 )
 

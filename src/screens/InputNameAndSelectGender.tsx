@@ -8,7 +8,7 @@ import i18n from "~i18n";
 import { actions, useAppDispatch } from "~store";
 import gStyle from "~styles";
 import { Gender, RootScreenProps } from "~types";
-import auth from "@react-native-firebase/auth";
+// import auth from "@react-native-firebase/auth";
 import useUserInformation from "src/hooks/use-user-information";
 
 const InputNameAndSelectGender: RootScreenProps<"InputNameAndSelectGender"> = ({ navigation }) => {

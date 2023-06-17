@@ -1,6 +1,6 @@
 /** @format */
 import { loadAsync } from "expo-font";
-import auth from "@react-native-firebase/auth";
+// import auth from "@react-native-firebase/auth";
 import MessageId from "~assets/messageProfessor.json";
 
 import {

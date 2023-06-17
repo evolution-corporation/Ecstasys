@@ -20,3 +20,5 @@ rules:
     - "case": "pascalCase"
   unicorn/prefer-module: "off"
   unicorn/no-null: "off"
+  unicorn/no-useless-undefined: "off"
+  unicorn/prefer-spread: "off"

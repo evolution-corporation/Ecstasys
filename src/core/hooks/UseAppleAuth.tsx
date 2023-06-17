@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Platform } from "react-native"
 
-import auth from "@react-native-firebase/auth";
+// import auth from "@react-native-firebase/auth";
 
 
 const useAppleAuth = () => {

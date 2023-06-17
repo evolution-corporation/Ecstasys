@@ -19,12 +19,10 @@ import { adapty } from "react-native-adapty";
 const { extra } = Constants.manifest ?? {};
 const { isDebug } = extra;
 
-import "./core/effects/FirebaseEffect"
-
-GoogleSignin.configure({
-	webClientId: "878799007977-cj3549ni87jre2rmg4eq0hiolp08igh2.apps.googleusercontent.com",
-	offlineAccess: true
-});
+// GoogleSignin.configure({
+// 	webClientId: "878799007977-cj3549ni87jre2rmg4eq0hiolp08igh2.apps.googleusercontent.com",
+// 	offlineAccess: true
+// });
 
 
 const AppCore = () => {

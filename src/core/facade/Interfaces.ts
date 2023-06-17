@@ -33,4 +33,6 @@ export interface IUserSignInOut {
     ): () => void
 
     getJWT(): Promise<string | null>
+
+    onChangeJWT(callback: (jwt: string | null) => void): () => void
 }

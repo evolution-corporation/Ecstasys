@@ -1,5 +1,5 @@
 /** @format */
-import auth from "@react-native-firebase/auth";
+// import auth from "@react-native-firebase/auth";
 
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";

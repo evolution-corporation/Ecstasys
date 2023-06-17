@@ -3,7 +3,7 @@
  * Файл содержит в себе функции которые выполняют запрос к серверу
  */
 
-import auth from "@react-native-firebase/auth";
+// import auth from "@react-native-firebase/auth";
 import { RequestError } from "src/Errors";
 import { Gender, ServerEntities, Subscription, SupportType } from "./types";
 import * as Storage from "./asyncStorage";

@@ -19,7 +19,7 @@ import i18n from "~i18n";
 import { Box, Flex, Stack, Text } from "@react-native-material/core";
 import Animated, { FadeInDown } from "react-native-reanimated";
 
-import { MaterialIcons, Ionicons } from '@expo/vector-icons'; 
+import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 
 
 import Logo from "~assets/svg/Logo.svg"
@@ -29,17 +29,19 @@ import { SharedElement } from "react-navigation-shared-element";
 import Button from "src/core/components/Button";
 import useGoogleAuth from "src/core/hooks/UseGoogleAuth";
 import useAppleAuth from "src/core/hooks/UseAppleAuth";
+import {useAppDispatch} from "../core/redux/Store";
+import {applicationReady} from "../core/redux/ApplicationSlice";
 
 
 const SelectMethodAuthentication: AuthScreenProperties<"SelectMethodAuthentication"> = ({ navigation }) => {
-	
+
 	useBackHandler(() => {
 		if (Platform.OS === "android") {
 			BackHandler.exitApp();
 		}
 		return true;
 	});
-	
+
 
 	const { window } = useDimensions();
 
@@ -47,17 +49,19 @@ const SelectMethodAuthentication: AuthScreenProperties<"SelectMethodAuthenticati
 
 	const appleAuth = useAppleAuth()
 
+	const dispatch = useAppDispatch()
+
 	const phoneAuth = useCallback(() => {
-		navigation.navigate("PhoneAuth")
+		dispatch(applicationReady())
 	}, [navigation])
 
 	return (
 		<Flex content="center" style={{ backgroundColor: "#F3F3F3" }} fill>
-			<Flex 
-				fill={1} 
-				content={"center"} 
-				justify="center" 
-				items={"center"} 
+			<Flex
+				fill={1}
+				content={"center"}
+				justify="center"
+				items={"center"}
 			>
 					<SharedElement id={"Logo"} style={{ transform: [{ scale: 0.5 }] }}>
 						<Logo />
@@ -104,12 +108,12 @@ const SelectMethodAuthentication: AuthScreenProperties<"SelectMethodAuthenticati
 									spacing={24}
 									mt={18}
 								>
-								<Button 
+								<Button
 									title={"Войти по номеру телефона"}
 									color="primary"
 									leading={
-										<MaterialIcons 
-											name="phone" 
+										<MaterialIcons
+											name="phone"
 											size={24}
 											color="secondary"
 										/>
@@ -118,15 +122,15 @@ const SelectMethodAuthentication: AuthScreenProperties<"SelectMethodAuthenticati
 									onPress={phoneAuth}
 								/>
 								{
-									googleAuth.isSupport && 
-									<Button 
+									googleAuth.isSupport &&
+									<Button
 										title={"Войти с Google"}
 										color="primary"
 										leading={
-											<Ionicons 
-												name="logo-google" 
-												size={24} 
-												color="secondary" 
+											<Ionicons
+												name="logo-google"
+												size={24}
+												color="secondary"
 											/>
 										}
 										tintColor="secondary"
@@ -135,15 +139,15 @@ const SelectMethodAuthentication: AuthScreenProperties<"SelectMethodAuthenticati
 									/>
 								}
 								{
-									appleAuth.isSupport && 
-									<Button 
+									appleAuth.isSupport &&
+									<Button
 										title={"Войти с Apple"}
 										color="primary"
 										leading={
-											<Ionicons 
-												name="logo-google" 
-												size={24} 
-												color="secondary" 
+											<Ionicons
+												name="logo-google"
+												size={24}
+												color="secondary"
 											/>
 										}
 										tintColor="secondary"

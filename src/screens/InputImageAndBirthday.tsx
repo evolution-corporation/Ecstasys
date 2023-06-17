@@ -4,7 +4,7 @@ import { useBackHandler, useDimensions } from "@react-native-community/hooks";
 import { useFocusEffect } from "@react-navigation/native";
 import React, { useCallback } from "react";
 import { View, StyleSheet, Text, Platform, BackHandler, Dimensions } from "react-native";
-import auth from "@react-native-firebase/auth";
+// import auth from "@react-native-firebase/auth";
 import i18n from "~i18n";
 import { Screen } from "~components/containers";
 
