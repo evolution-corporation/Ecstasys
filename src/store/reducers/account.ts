@@ -63,6 +63,7 @@ export default createReducer<AccountState>(
 							autoPayment: subscribe.autoPayment,
 							type: subscribe.type,
 							whenSubscribe: subscribe.whenSubscribe,
+							endSubscribe: subscribe.endSubscribe
 						};
 					}
 				} else {
@@ -88,6 +89,7 @@ export default createReducer<AccountState>(
 						autoPayment: subscribe.autoPayment,
 						type: subscribe.type,
 						whenSubscribe: subscribe.whenSubscribe,
+						endSubscribe: subscribe.endSubscribe,
 					};
 				}
 			} else {

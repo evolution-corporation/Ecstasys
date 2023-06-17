@@ -39,11 +39,17 @@ export function composeSubscribe(data: ServerEntities.Subscribe | null): State.S
 			type = "HALF_YEAR";
 			break;
 	}
+
+	const endSubscribe = new Date(data.WhenSubscribe)
+	endSubscribe.setDate(
+		endSubscribe.getDate() + Number(data.RemainingTime)
+	)
+
 	return {
 		type: type,
 		autoPayment: data.RebillId !== -1,
 		whenSubscribe: data.WhenSubscribe,
-		endSubscribe: typeof data.RemainingTime === "number" ? new Date(data.RemainingTime).toDateString() : data.RemainingTime,
+		endSubscribe: endSubscribe.toString(),
 	};
 }
 
