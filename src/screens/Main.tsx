@@ -137,7 +137,10 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 				typePractice={recommendationPractice.type}
 				isPermission={recommendationPractice.isNeedSubscribe ? isSubscribe : true}
 				onPress={() => {
-					if (recommendationPractice.isNeedSubscribe ? isSubscribe : true) {
+					if (!recommendationPractice) return
+					let isAccess = true
+					if (recommendationPractice.isNeedSubscribe) isAccess = isSubscribe
+					if (isAccess) {
 						if (recommendationPractice.type === "RELAXATION") {
 							navigation.navigate("SelectTimeForRelax", {
 								selectedPractice: recommendationPractice,
