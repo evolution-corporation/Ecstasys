@@ -168,17 +168,18 @@ const Main: GeneralCompositeScreenProps = ({ navigation }) => {
 					marginTop: 28,
 				}}
 				onPress={() => {
-					if ((toDayPopularMeditation?.isNeedSubscribe ?? false) && isSubscribe) {
-						if (toDayPopularMeditation) {
-							if (toDayPopularMeditation.type === "RELAXATION") {
-								navigation.navigate("SelectTimeForRelax", {
-									selectedPractice: toDayPopularMeditation,
-								});
-							} else {
-								navigation.navigate("PlayerForPractice", {
-									selectedPractice: toDayPopularMeditation,
-								});
-							}
+					if (!toDayPopularMeditation) return
+					let isAccess = true
+					if (toDayPopularMeditation.isNeedSubscribe) isAccess = isSubscribe
+					if (isAccess) {
+						if (toDayPopularMeditation.type === "RELAXATION") {
+							navigation.navigate("SelectTimeForRelax", {
+								selectedPractice: toDayPopularMeditation,
+							});
+						} else {
+							navigation.navigate("PlayerForPractice", {
+								selectedPractice: toDayPopularMeditation,
+							});
 						}
 					} else {
 						navigation.navigate("ByMaySubscribe");
