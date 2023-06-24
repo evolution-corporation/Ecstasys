@@ -3,10 +3,10 @@
   "version": "1.0.6",
   "scripts": {
     "start": "expo start --dev-client --force-manifest-type=classic",
-    "build Dev": "eas build --profile development",
-    "build prod": "eas build --profile production",
-    "submit ios": "eas submit --platform ios --latest",
-    "submit android": "eas submit --platform android --latest"
+    "buildDev": "eas build --profile development",
+    "buildProd": "eas build --profile production",
+    "submitIos": "eas submit --platform ios --latest",
+    "submitAndroid": "eas submit --platform android --latest"
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.2.2",
