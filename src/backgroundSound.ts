@@ -17,7 +17,7 @@ const BackgroundSound = {
 	rain: {
 		image: require("../assets/backgroundMusic/image/rain.jpg"),
 		audio: {
-			uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/Background/%D0%94%D0%BE%D0%B6%D0%B4%D1%8C%20%2B%20%D0%B3%D1%80%D0%BE%D0%B7%D0%B0.mp3",
+			uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/Background/%D0%94%D0%BE%D0%B6%D0%B4%D1%8C%20%2B%20%D0%B3%D1%80%D0%BE%D0%B7%D0%B0%2090.mp3",
 		},
 		translate: "0a61e4e9-fbcc-428a-99ef-7172d276b2d8",
 	},
@@ -31,7 +31,7 @@ const BackgroundSound = {
 	river: {
 		image: require("assets/backgroundMusic/image/river.jpg"),
 		audio: {
-			uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/Background/%D0%96%D1%83%D1%80%D1%87%D0%B0%D0%BD%D0%B8%D0%B5%20%D0%A0%D1%83%D1%87%D1%8C%D1%8F.mp3",
+			uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/Background/%D0%96%D1%83%D1%80%D1%87%D0%B0%D0%BD%D0%B8%D0%B5%20%D0%A0%D1%83%D1%87%D1%8C%D1%8F%2090.mp3",
 		},
 		translate: "245a500f-3b28-46c5-99d2-3203da4ea156",
 	},
@@ -45,42 +45,42 @@ const BackgroundSound = {
 	windAndRain: {
 		image: require("assets/backgroundMusic/image/windAndRain.jpg"),
 		audio: {
-			uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/Background/%D0%92%D0%B5%D1%82%D0%B5%D1%80%20%D0%B8%20%D0%B4%D0%BE%D0%B6%D0%B4%D1%8C.mp3",
+			uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/Background/%D0%92%D0%B5%D1%82%D0%B5%D1%80%20%D0%B8%20%D0%B4%D0%BE%D0%B6%D0%B4%D1%8C%2090.mp3",
 		},
 		translate: "bc7a7ff7-6112-4fde-8082-91f2e7cd6b87",
 	},
 	magicForest: {
 		image: require("assets/backgroundMusic/image/magicForest.jpg"),
 		audio: {
-			uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/Background/%D0%92%D0%BE%D0%BB%D1%88%D0%B5%D0%B1%D0%BD%D1%8B%D0%B9%20%D0%BB%D0%B5%D1%81.mp3",
+			uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/Background/%D0%92%D0%BE%D0%BB%D1%88%D0%B5%D0%B1%D0%BD%D1%8B%D0%B9%20%D0%BB%D0%B5%D1%81%2090.mp3",
 		},
 		translate: "36bd17e2-fa93-4643-ab5b-36a9ceb42112",
 	},
 	theSilenceOfTheMoon: {
 		image: require("assets/backgroundMusic/image/theSilenceOfTheMoon.jpg"),
 		audio: {
-			uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/Background/%D0%9C%D0%BE%D0%BB%D1%87%D0%B0%D0%BD%D0%B8%D0%B5%20%D0%BB%D1%83%D0%BD%D1%8B.mp3",
+			uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/Background/%D0%9C%D0%BE%D0%BB%D1%87%D0%B0%D0%BD%D0%B8%D0%B5%20%D0%BB%D1%83%D0%BD%D1%8B%2090.mp3",
 		},
 		translate: "31cc5c55-e0b1-4e07-81b1-9f03ae1ae5d2",
 	},
 	timeLoop: {
 		image: require("assets/backgroundMusic/image/timeLoop.jpg"),
 		audio: {
-			uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/Background/%D0%9F%D0%B5%D1%82%D0%BB%D1%8F%20%D0%B2%D1%80%D0%B5%D0%BC%D0%B5%D0%BD%D0%B8.mp3",
+			uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/Background/%D0%9F%D0%B5%D1%82%D0%BB%D1%8F%20%D0%B2%D1%80%D0%B5%D0%BC%D0%B5%D0%BD%D0%B8%2090.mp3",
 		},
 		translate: "59645ee2-a71e-4b56-992c-cc577e92ab34",
 	},
 	resonance: {
 		image: require("assets/backgroundMusic/image/resonance.jpg"),
 		audio: {
-			uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/Background/%D0%A0%D0%B5%D0%B7%D0%BE%D0%BD%D0%B0%D0%BD%D1%81.mp3",
+			uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/Background/%D0%A0%D0%B5%D0%B7%D0%BE%D0%BD%D0%B0%D0%BD%D1%81%2090.mp3",
 		},
 		translate: "cdcd4c74-f2f5-4c77-a52f-458c2accc937",
 	},
 	diving: {
 		image: require("assets/backgroundMusic/image/diving.jpg"),
 		audio: {
-			uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/Background/%D0%9F%D0%BE%D0%B3%D1%80%D1%83%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5.mp3",
+			uri: "https://storage.yandexcloud.net/dmdmeditatonaudio/Background/%D0%9F%D0%BE%D0%B3%D1%80%D1%83%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5%2090.mp3",
 		},
 		translate: "91f1b838-5ba6-43df-9197-52999bb3a03a",
 	},

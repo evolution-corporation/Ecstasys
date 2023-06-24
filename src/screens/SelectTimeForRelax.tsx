@@ -69,7 +69,7 @@ const SelectTimeForRelax: RootScreenProps<"SelectTimeForRelax"> = ({ navigation,
 					<SelectTime
 						ref={selectTime}
 						start={[Math.floor(selectedPractice.length / 60000), Math.floor((selectedPractice.length % 60000) / 1000)]}
-						end={[25, 0]}
+						end={[90, 0]}
 						onChange={([minute, second]) => {
 							setMilliseconds((minute * 60 + second) * 1000);
 						}}

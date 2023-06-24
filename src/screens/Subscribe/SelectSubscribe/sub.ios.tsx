@@ -19,8 +19,8 @@ import { adapty } from "react-native-adapty";
 import { useDimensions } from "@react-native-community/hooks";
 
 const price = {
-	month_1: 299,
-	month_6: 1290,
+	month_1: 199,
+	month_6: 990,
 };
 
 const aliasId: { [key: string]: string } = {
