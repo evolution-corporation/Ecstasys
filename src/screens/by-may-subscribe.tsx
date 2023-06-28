@@ -36,7 +36,7 @@ const ByMaySubscribe: RootScreenProps<"ByMaySubscribe"> = ({ navigation }) => {
 				<Image source={require("assets/sofaMan.png")} style={{ height: 90, width: 138 }} resizeMode={"contain"} />
 				<DescriptionText color={"#9765A8"} textAlign={TextAlign.Center}>
 					{
-						Platform.OS === 'ios' ? "Первые 14 дней бесплатно, 299₽ в месяц,\nежемесячная оплата" : <><CustomPartText fontWeight="500">{i18n.t("e9abbcbe-6d0b-46b6-a777-dc3e73a3dbac")}</CustomPartText>
+						Platform.OS === 'ios' ? "Первые 14 дней бесплатно, 199₽ в месяц,\nежемесячная оплата" : <><CustomPartText fontWeight="500">{i18n.t("e9abbcbe-6d0b-46b6-a777-dc3e73a3dbac")}</CustomPartText>
 						{i18n.t("3d2b0890-e1e2-4abe-9fa1-a2bc531e38b6")}</>
 
 					}
