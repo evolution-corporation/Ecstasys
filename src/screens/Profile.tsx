@@ -43,11 +43,8 @@ const Profile: GeneralCompositeScreenProps = ({ navigation }) => {
 
 	const subscribe = useAppSelector(store => {
 		if (store.account.subscribe === undefined) return null;
-		const endSubscribe = new Date(store.account.subscribe.whenSubscribe);
-		endSubscribe.setDate(
-			endSubscribe.getDate() +
-				(store.account.subscribe.type === "WEEK" ? 7 : store.account.subscribe.type === "MONTH" ? 30 : 180)
-		);
+		const endSubscribe = new Date(store.account.subscribe.endSubscribe);
+
 		if (endSubscribe.getTime() >= Date.now())
 			return {
 				endSubscribe: new Date(endSubscribe),

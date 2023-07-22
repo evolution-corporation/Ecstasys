@@ -35,23 +35,9 @@ const RelaxListForDMD: GeneralCompositeScreenProps = ({ route, navigation }) => 
 		? useIsActivateSubscribe()
 		: useAppSelector(store => {
 				if (store.account.subscribe !== undefined) {
-					const endSubscribe = new Date(store.account.subscribe.whenSubscribe);
+					const endSubscribe = new Date(store.account.subscribe.endSubscribe);
 
-					endSubscribe.setDate(
-						endSubscribe.getDate() +
-							(() => {
-								switch (store.account.subscribe.type) {
-									case "WEEK":
-										return 7;
-									case "MONTH":
-										return 30;
-									case "HALF_YEAR":
-										return 180;
-									default:
-										return 0;
-								}
-							})()
-					);
+
 					return endSubscribe.getTime() > Date.now();
 				} else {
 					return false;
