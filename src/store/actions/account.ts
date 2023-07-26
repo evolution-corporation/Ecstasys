@@ -139,7 +139,7 @@ export const registrationAccount = createAsyncThunk<State.User, undefined, Async
 			if (user === null) {
 				throw new Error("User Not Create");
 			}
-			if (Platform.OS === "ios") await adapty.identify(user.uid);
+			await adapty.identify("nAEg7t89tCht9Vr6ZcdkGjy41373");
 			return user;
 		} else {
 			throw new Error("nickname is use");
@@ -190,18 +190,20 @@ export const getSubs = createAsyncThunk("account/subs", async () => {
 			const monthlySubscribe = subscribes ? subscribes["subscription.monthly"] : undefined;
 			const halfyearSubscribe = subscribes ? subscribes["subscription.halfyear"] : undefined;
 			const WhenSubscribe = monthlySubscribe?.isActive ? (monthlySubscribe.renewedAt ?? monthlySubscribe.activatedAt) : ((halfyearSubscribe?.renewedAt ?? halfyearSubscribe?.activatedAt!) ?? new Date());
-			const RemainingTime = monthlySubscribe?.isActive ? monthlySubscribe.expiresAt : (halfyearSubscribe?.expiresAt! ?? new Date());
+			const EndTime = monthlySubscribe?.isActive ? monthlySubscribe.expiresAt : (halfyearSubscribe?.expiresAt! ?? new Date());
 
-			if (RemainingTime === undefined || monthlySubscribe === undefined) {
+			if (EndTime === undefined || monthlySubscribe === undefined) {
 				return null
 			}
+
+			const RemainingTime = (EndTime.getTime() - WhenSubscribe.getTime()) / (24 * 60 * 60 * 1000)
 
 		    return {
 				UserId: profile.profileId,
 				WhenSubscribe: WhenSubscribe.toDateString(),
-				RemainingTime: RemainingTime.toDateString(),
+				RemainingTime: RemainingTime,
 				Type: monthlySubscribe.isActive ? "Month" : "Month6",
-				RebillId: premium.willRenew ? "123" : "-1",
+				RebillId: premium.willRenew ? 123 : -1,
 			};
 		}
 		return null;
