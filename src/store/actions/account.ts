@@ -139,7 +139,7 @@ export const registrationAccount = createAsyncThunk<State.User, undefined, Async
 			if (user === null) {
 				throw new Error("User Not Create");
 			}
-			await adapty.identify("nAEg7t89tCht9Vr6ZcdkGjy41373");
+			if (Platform.OS === "ios") await adapty.identify(user.uid);
 			return user;
 		} else {
 			throw new Error("nickname is use");
