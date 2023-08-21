@@ -6,7 +6,8 @@
     "buildDev": "eas build --profile development",
     "buildProd": "eas build --profile production",
     "submitIos": "eas submit --platform ios --latest",
-    "submitAndroid": "eas submit --platform android --latest"
+    "submitAndroid": "eas submit --platform android --latest",
+    "generateTextCode": "node ./GetAllCode.js"
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.2.2",
