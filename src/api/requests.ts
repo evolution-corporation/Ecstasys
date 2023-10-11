@@ -10,9 +10,8 @@ import * as Storage from "./asyncStorage";
 import Constants from "expo-constants";
 
 const { extra } = Constants.manifest ?? {};
-const { apiURL } = extra;
-const URL = "http://api.evodigital.one/";
-const fixUrl = "http://" + "51.250.8.125:5000";
+const apiURL = "http://dev.api.evodigital.one";
+const fixUrl = "84.252.131.99:5000";
 
 /**
  * Получает FirebaseToken пользователя
@@ -44,7 +43,7 @@ async function getFirebaseToken(firebaseToken: string | undefined) {
  */
 export async function getUserById(userId: string, firebaseTokenToken?: string): Promise<ServerEntities.User | null> {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const url = URL + "users?id=" + userId;
+	const url = apiURL + "/" + "users?id=" + userId;
 	const requestServer = await fetch(url, {
 		method: "GET",
 		headers: {
@@ -73,7 +72,7 @@ export async function getUserById(userId: string, firebaseTokenToken?: string): 
  */
 export async function createUser({ birthday, nickname, image }: CreateUserParams, firebaseTokenToken?: string) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const url = URL + "users";
+	const url = apiURL + "/" +"users";
 	const requestServer = await fetch(url, {
 		method: "POST",
 		headers: {
@@ -137,7 +136,7 @@ export async function updateUser(
 	if (displayName !== undefined) body.push(["DisplayName", displayName]);
 	if (birthday !== undefined) body.push(["Birthday", birthday.toISOString()]);
 	if (gender !== undefined) body.push(["Gender", gender]);
-	const url = URL + "users";
+	const url = apiURL + "/" +"users";
 	if (image !== undefined) {
 		await fetch(`${fixUrl}/image`, {
 			method: "POST",
@@ -184,7 +183,7 @@ interface UpdateUserParams {
  */
 export async function getPopularToDayMeditation(firebaseTokenToken?: string) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const url = URL + "meditation?popularToday=true";
+	const url = apiURL + "/" + "meditation?popularToday=true";
 	const requestServer = await fetch(url, {
 		headers: {
 			Authorization: firebaseTokenToken,
@@ -206,7 +205,7 @@ export async function getPopularToDayMeditation(firebaseTokenToken?: string) {
  */
 export async function getMeditationById(meditationId: string, firebaseTokenToken?: string) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const url = URL + "meditation?meditationId=" + meditationId;
+	const url = apiURL + "/" + "meditation?meditationId=" + meditationId;
 	const requestServer = await fetch(url, {
 		headers: {
 			Authorization: firebaseTokenToken,
@@ -225,7 +224,7 @@ export async function getMeditationById(meditationId: string, firebaseTokenToken
 
 export async function getInstructionMeditationById(meditationId: string, firebaseTokenToken?: string) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const url = URL + "meditation?meditationId=" + meditationId;
+	const url = apiURL + "/" + "meditation?meditationId=" + meditationId;
 	const requestServer = await fetch(url, {
 		headers: {
 			Authorization: firebaseTokenToken,
@@ -250,7 +249,7 @@ export async function getInstructionMeditationById(meditationId: string, firebas
  */
 export async function getMeditationsByType(meditationType: SupportType.TypeMeditation, firebaseTokenToken?: string) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const url = URL + "meditation?type=" + meditationType;
+	const url = apiURL + "/" + "meditation?type=" + meditationType;
 	const requestServer = await fetch(url, {
 		headers: {
 			Authorization: firebaseTokenToken,
@@ -275,7 +274,7 @@ export async function getCountMeditationsByType(
 	firebaseTokenToken?: string
 ) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const url = URL + "meditation?type=" + meditationType + "&count=0";
+	const url = apiURL + "/" + "meditation?type=" + meditationType + "&count=0";
 	const requestServer = await fetch(url, {
 		headers: {
 			Authorization: firebaseTokenToken,
@@ -298,7 +297,7 @@ export async function getSubscribeUserInformation(
 	firebaseTokenToken?: string
 ): Promise<ServerEntities.Subscribe | null> {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const requestServer = await fetch(URL + "subscribe/" + false, {
+	const requestServer = await fetch(apiURL + "/" + "subscribe/" + false, {
 		headers: {
 			Authorization: firebaseTokenToken,
 			"Content-Type": "application/json",
@@ -322,7 +321,7 @@ export async function getSubscribeUserInformation(
  */
 export async function getPaymentURL(subscribeType: SupportType.SubscribeType, firebaseTokenToken?: string) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const url = URL + "payment?type=" + 0 + "&needRecurrent=" + (subscribeType === "Week" ? "false" : "true");
+	const url = apiURL + "/" + "payment?type=" + 0 + "&needRecurrent=" + (subscribeType === "Week" ? "false" : "true");
 	const requestServer = await fetch(url, {
 		headers: {
 			Authorization: firebaseTokenToken,
@@ -339,7 +338,7 @@ export async function getPaymentURL(subscribeType: SupportType.SubscribeType, fi
 export async function redirectPaymentURL(subscribeType: SupportType.SubscribeType, firebaseTokenToken?: string) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
 	const url =
-		URL +
+	apiURL + "/" +
 		"payment?type=" +
 		(subscribeType === "Week" ? 0 : subscribeType === "Month" ? 1 : 2) +
 		"&needRecurrent=" +
@@ -364,7 +363,7 @@ export async function getUserByNickname(
 	options: { firebaseTokenToken?: string; signal?: AbortSignal } = {}
 ) {
 	const firebaseTokenToken = await getFirebaseToken(options.firebaseTokenToken);
-	const url = URL + "nickname?nickname=" + nickname;
+	const url = apiURL + "/" + "nickname?nickname=" + nickname;
 	try {
 		const requestServer = await fetch(url, {
 			headers: {
@@ -392,7 +391,7 @@ export async function getUserByNickname(
 //!
 export async function checkAccess() {
 	try {
-		const request = await fetch(URL + "api/204");
+		const request = await fetch(apiURL + "/" + "api/204");
 		return request.ok;
 	} catch (error) {
 		return false;
@@ -402,7 +401,7 @@ export async function checkAccess() {
 //!
 export async function reservationNickname(nickname: string, firebaseTokenToken?: string): Promise<boolean> {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const url = URL + "nickname";
+	const url = apiURL + "/" + "nickname";
 	const requestServer = await fetch(url, {
 		method: "POST",
 		headers: {
@@ -441,7 +440,7 @@ export async function getInformationUser(
 
 export async function getRecommendationMeditation(firebaseTokenToken?: string) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const url = URL + "meditation?getIsNotListened=true&countOfMeditations=1";
+	const url = apiURL + "/" + "meditation?getIsNotListened=true&countOfMeditations=1";
 
 	const requestServer = await fetch(url, {
 		headers: {
@@ -464,7 +463,7 @@ export async function getSubscribeUserInformationSubs(
 	firebaseTokenToken?: string
 ): Promise<ServerEntities.Subscribe | null> {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const requestServer = await fetch(URL + "subscribe/" + true, {
+	const requestServer = await fetch(apiURL + "/" + "subscribe/" + true, {
 		headers: {
 			Authorization: firebaseTokenToken,
 			"Content-Type": "application/json",
@@ -482,7 +481,7 @@ export async function getSubscribeUserInformationSubs(
 
 export async function removeAutoPayment(firebaseTokenToken?: string): Promise<void> {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const requestServer = await fetch(URL + "subscribe", {
+	const requestServer = await fetch(apiURL + "/" + "subscribe", {
 		method: "DELETE",
 		headers: {
 			Authorization: firebaseTokenToken,
@@ -497,7 +496,7 @@ export async function removeAutoPayment(firebaseTokenToken?: string): Promise<vo
 
 export async function removeUserImage(firebaseTokenToken?: string): Promise<void> {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const requestServer = await fetch(URL + "user.image", {
+	const requestServer = await fetch(apiURL + "/" + "user.image", {
 		method: "DELETE",
 		headers: {
 			Authorization: firebaseTokenToken,
@@ -532,7 +531,7 @@ export async function sendErrorInformation(name: string, error: Error, payload: 
 
 export async function meditationIsLisent(meditationId: string, firebaseTokenToken?: string) {
 	firebaseTokenToken = await getFirebaseToken(firebaseTokenToken);
-	const url = URL + "meditation" + "?meditationId=" + meditationId + "&meditationLanguage=ru";
+	const url = apiURL + "/" + "meditation" + "?meditationId=" + meditationId + "&meditationLanguage=ru";
 	const requestServer = await fetch(url, {
 		method: "PUT",
 		headers: {
