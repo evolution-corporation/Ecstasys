@@ -17,6 +17,9 @@ function generateConfig(): ExpoConfig {
 	let versionCode = Number(`${date.year}${date.month}${date.date}${date.hour}`);
 
 	const plugins: (string | [] | [string] | [string, any])[] = [
+		"expo-asset",
+		"expo-localization",
+		"expo-secure-store",
 		"expo-dev-client",
 		"expo-splash-screen",
 		[
