@@ -17,8 +17,7 @@ import "./notification";
 import Constants from "expo-constants";
 
 import { adapty } from "react-native-adapty";
-const { extra } = Constants.manifest ?? {};
-const { isDebug } = extra;
+
 GoogleSignin.configure({
 	webClientId: "878799007977-cj3549ni87jre2rmg4eq0hiolp08igh2.apps.googleusercontent.com",
 });
@@ -32,7 +31,7 @@ const AppCore = () => {
 	React.useEffect(() => {
 		if (Platform.OS === "ios")
 			adapty.activate(
-				isDebug ? "public_live_B5WK9eoU.NdcH8xOtr823XuWjQkgQ" : "public_live_yQp6zUhg.9v0LCJV8Yj5AfYeruMqt"
+				__DEV__ ? "public_live_B5WK9eoU.NdcH8xOtr823XuWjQkgQ" : "public_live_yQp6zUhg.9v0LCJV8Yj5AfYeruMqt"
 			); //adapty key
 		(async () => {
 			await SplashScreen.preventAutoHideAsync();

@@ -19,5 +19,7 @@ module.exports = (() => {
     sourceExts: [...resolver.sourceExts, "svg", "cjs"],
   };
 
+  config.watcher.additionalExts.push('mjs', 'cjs');
+
   return config;
 })();

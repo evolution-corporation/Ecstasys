@@ -17,7 +17,9 @@ function generateConfig(): ExpoConfig {
 	let versionCode = Number(`${date.year}${date.month}${date.date}${date.hour}`);
 
 	const plugins: (string | [] | [string] | [string, any])[] = [
-		"expo-dev-client",
+		"expo-asset",
+		"expo-localization",
+		"expo-secure-store",
 		"expo-splash-screen",
 		[
 			"expo-image-picker",
@@ -46,7 +48,7 @@ function generateConfig(): ExpoConfig {
 	];
 	// if (process.env.APP_VARIANT === "dev") plugins.push("expo-community-flipper")
 	return {
-		jsEngine: "hermes",
+		// jsEngine: "hermes",
 		name: appName,
 		owner: "evo_digital",
 		slug: "dmd-meditation",
@@ -96,7 +98,8 @@ function generateConfig(): ExpoConfig {
 				projectId: "360fff0b-5a9b-41de-9bb3-016641a64554",
 			},
 			isDebug: process.env.APP_VARIANT === "dev",
-			apiURL: "api.evodigital.one",
+			apiURL: "dev.api.evodigital.one",
+			fixUrl: "84.252.131.99:5000",
 			GoogleWebClientId: process.env.GOOGLE_WEB_CLIENT_ID,
 		},
 		runtimeVersion: {

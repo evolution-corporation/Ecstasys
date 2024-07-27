@@ -1,6 +1,8 @@
-# @format
-
 root: true
+ignorePatterns:
+  - app.config.ts
+  - scripts/**
+  - babel.config.js
 parserOptions:
   project: "tsconfig.json"
 plugins:
