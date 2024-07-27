@@ -10,7 +10,7 @@ import * as Storage from "./asyncStorage";
 import Constants from "expo-constants";
 
 const { extra } = Constants.manifest ?? {};
-const apiURL = "http://dev.api.evodigital.one";
+const apiURL = "http://51.250.8.125:8000";
 const fixUrl = "84.252.131.99:5000";
 
 /**
