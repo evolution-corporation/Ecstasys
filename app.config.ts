@@ -20,7 +20,6 @@ function generateConfig(): ExpoConfig {
 		"expo-asset",
 		"expo-localization",
 		"expo-secure-store",
-		"expo-dev-client",
 		"expo-splash-screen",
 		[
 			"expo-image-picker",
@@ -49,7 +48,7 @@ function generateConfig(): ExpoConfig {
 	];
 	// if (process.env.APP_VARIANT === "dev") plugins.push("expo-community-flipper")
 	return {
-		jsEngine: "hermes",
+		// jsEngine: "hermes",
 		name: appName,
 		owner: "evo_digital",
 		slug: "dmd-meditation",
